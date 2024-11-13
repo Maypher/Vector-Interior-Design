@@ -1,0 +1,59 @@
+version: '3.8'
+name: TQportfolio
+
+services:
+    admin-land-backend:
+        build: ./admin-land/backend/
+        ports:
+            - "8080:80"
+        volumes:
+            - data:/storage/images/
+            - data:/storage/database/
+        networks:
+            admin:
+            backend:
+        depends_on:
+            - database
+    admin-land-frontend:
+        build: ./admin-land/frontend/
+        networks:
+            admin:
+        depends_on:
+            - admin-land-backend
+    user-land-backend:
+        build: ./user-land/backend/
+        volumes:
+            - data:/storage/database/
+            - data:/storage/images/
+        networks:
+            user:
+            backend:
+        depends_on:
+            - database
+    user-land-frontend:
+        build: ./user-land/frontend/
+        depends_on:
+            - user-land-backend
+        networks:
+            user:
+    database:
+        build: ./database/
+        restart: always
+        env_file:
+            - .env
+        environment:
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_DB=main
+            - LANG=es_ES.UTF-8
+            - LANGUAGE=es_ES.UTF-8
+            - LC_ALL=es_ES.UTF-8
+        volumes:
+            - data:/storage/database/
+        networks:
+            backend:
+volumes:
+    data:
+networks:
+    user:
+    admin:
+    backend:
