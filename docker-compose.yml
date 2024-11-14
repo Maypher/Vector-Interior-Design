@@ -3,9 +3,7 @@ name: TQportfolio
 
 services:
     admin-land-backend:
-        build: ./admin-land/backend/
-        ports:
-            - "8080:80"
+        build: ./backend/admin/
         volumes:
             - data:/storage/images/
             - data:/storage/database/
@@ -14,28 +12,16 @@ services:
             backend:
         depends_on:
             - database
-    admin-land-frontend:
-        build: ./admin-land/frontend/
-        networks:
-            admin:
-        depends_on:
-            - admin-land-backend
-    user-land-backend:
-        build: ./user-land/backend/
-        volumes:
-            - data:/storage/database/
-            - data:/storage/images/
-        networks:
-            user:
-            backend:
-        depends_on:
-            - database
-    user-land-frontend:
-        build: ./user-land/frontend/
-        depends_on:
-            - user-land-backend
-        networks:
-            user:
+    # user-land-backend:
+    #     build: ./backend/user/
+    #     volumes:
+    #         - data:/storage/database/
+    #         - data:/storage/images/
+    #     networks:
+    #         user:
+    #         backend:
+    #     depends_on:
+    #         - database
     database:
         build: ./database/
         restart: always
@@ -51,6 +37,18 @@ services:
             - data:/storage/database/
         networks:
             backend:
+    nginx:
+        build: "./nginx/"
+        ports:
+            - "8080:80"
+        volumes:
+            - data:/storage/images/:ro
+            - data:/storage/frontend/user/:ro
+            - data:/storage/frontend/admin/:ro
+        depends_on:
+            - admin-land-backend
+        networks:
+            - backend
 volumes:
     data:
 networks:
