@@ -1,26 +1,18 @@
 #!/bin/bash
 
-function genPassword {
-    openssl rand -base64 $1;
-}
+set -e
 
-rootPassword=$(genPassword 12);
-
-adminName="adminBackend";
-adminPassword=$(genPassword 12);
-
-userName="userBackend";
-userPassword=$(genPassword 12);
-
-export PGPASSWORD="$POSTGRES_PASSWORD"
+# Trap errors and print the error message
+trap 'echo "Error on line $LINENO: $BASH_COMMAND"' ERR
 
 psql -U postgres << EOF
 BEGIN;
-CREATE USER $adminName WITH PASSWORD '$adminPassword';
+CREATE USER $ADMIN_USERNAME WITH PASSWORD '$ADMIN_PASSWORD';
 
-CREATE USER $userName WITH PASSWORD '$userPassword';
+CREATE USER $USER_USERNAME WITH PASSWORD '$USER_PASSWORD';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO $ADMIN_USERNAME;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO $USER_USERNAME;
+
 COMMIT;
 EOF
-
-echo "Usuario $adminName creado con contraseña: $adminPassword";
-echo "Usuario $userName reado con contraseña: $userPassword";

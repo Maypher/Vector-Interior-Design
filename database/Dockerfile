@@ -9,5 +9,3 @@ ENV LANGUAGE es_ES:es
 ENV LC_ALL es_ES.UTF-8
 
 COPY . ./docker-entrypoint-initdb.d
-
-EXPOSE 4000
