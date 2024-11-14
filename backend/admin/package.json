@@ -1,0 +1,26 @@
+{
+  "name": "admin-backend",
+  "version": "0.0.0",
+  "description": "Admin backend",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "npm run build && concurrently \"tsc --watch\" \"node --watch ./dist/index.js\"",
+    "prod": "node app/index.js"
+  },
+  "author": "Maypher",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "concurrently": "^9.1.0",
+    "typescript": "^5.6.3",
+    "@types/pg": "^8.11.10"
+  }
+}

@@ -1,17 +1,34 @@
-version: '3.8'
 name: TQportfolio
 
 services:
     admin-land-backend:
-        build: ./backend/admin/
+        build:
+            context: ./backend/admin/
+            target: ${BUILD_TARGET}
+        environment:
+            - PORT=${ADMIN_PORT}
+            - HOST=database
+            - USERNAME=${ADMIN_USERNAME}
+            - PASSWORD=${ADMIN_PASSWORD}
+            - DB_PORT=${DATABASE_PORT}
+            - DB_NAME=${DATABASE_NAME}
+            - DB_PORT=${DATABASE_PORT}
         volumes:
             - data:/storage/images/
             - data:/storage/database/
         networks:
-            admin:
-            backend:
+            - admin
+            - backend
         depends_on:
             - database
+        develop:
+            watch:
+                - action: sync
+                  path: ./backend/admin/src/
+                  target: /app/src/
+                - action: rebuild
+                  path: ./backend/admin/package.json
+                  target: /app/
     # user-land-backend:
     #     build: ./backend/user/
     #     volumes:
@@ -29,14 +46,19 @@ services:
             - .env
         environment:
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-            - POSTGRES_DB=main
+            - POSTGRES_DB=${DATABASE_NAME}
+            - ADMIN_USERNAME=${ADMIN_USERNAME}
+            - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+            - USER_USERNAME=${USER_USERNAME}
+            - USER_PASSWORD=${USER_PASSWORD}
+            - PGPORT=${DATABASE_PORT}
             - LANG=es_ES.UTF-8
             - LANGUAGE=es_ES.UTF-8
             - LC_ALL=es_ES.UTF-8
         volumes:
             - data:/storage/database/
         networks:
-            backend:
+            - backend
     nginx:
         build: "./nginx/"
         ports:
