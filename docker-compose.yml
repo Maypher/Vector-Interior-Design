@@ -1,10 +1,9 @@
 name: TQportfolio
 
 services:
-    admin-land-backend:
+    admin-backend:
         build:
             context: ./backend/admin/
-            target: ${BUILD_TARGET}
         environment:
             - PORT=${ADMIN_PORT}
             - HOST=database
@@ -12,7 +11,6 @@ services:
             - PASSWORD=${ADMIN_PASSWORD}
             - DB_PORT=${DATABASE_PORT}
             - DB_NAME=${DATABASE_NAME}
-            - DB_PORT=${DATABASE_PORT}
         volumes:
             - data:/storage/images/
             - data:/storage/database/
@@ -20,7 +18,9 @@ services:
             - admin
             - backend
         depends_on:
-            - database
+            database:
+                condition: service_healthy
+                restart: true
         develop:
             watch:
                 - action: sync
@@ -29,7 +29,8 @@ services:
                 - action: rebuild
                   path: ./backend/admin/package.json
                   target: /app/
-    # user-land-backend:
+        restart: on-failure
+    # user-backend:
     #     build: ./backend/user/
     #     volumes:
     #         - data:/storage/database/
@@ -52,6 +53,7 @@ services:
             - USER_USERNAME=${USER_USERNAME}
             - USER_PASSWORD=${USER_PASSWORD}
             - PGPORT=${DATABASE_PORT}
+            - PGUSER=postgres
             - LANG=es_ES.UTF-8
             - LANGUAGE=es_ES.UTF-8
             - LC_ALL=es_ES.UTF-8
@@ -59,6 +61,12 @@ services:
             - data:/storage/database/
         networks:
             - backend
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready", "-d", "postgres" ]
+            interval: 1m30s
+            timeout: 30s
+            retries: 5
+            start_period: 30s
     nginx:
         build: "./nginx/"
         ports:
@@ -68,7 +76,7 @@ services:
             - data:/storage/frontend/user/:ro
             - data:/storage/frontend/admin/:ro
         depends_on:
-            - admin-land-backend
+            - admin-backend
         networks:
             - backend
 volumes:
