@@ -14,7 +14,6 @@ services:
             - SECRET_KEY=${ADMIN_SERVER_SECRET_KEY}
         volumes:
             - data:/storage/images/
-            - data:/storage/database/
         networks:
             - admin
             - backend
