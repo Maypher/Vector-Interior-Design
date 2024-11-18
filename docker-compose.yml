@@ -11,6 +11,7 @@ services:
             - PASSWORD=${ADMIN_PASSWORD}
             - DB_PORT=${DATABASE_PORT}
             - DB_NAME=${DATABASE_NAME}
+            - SECRET_KEY=${SERVER_SECRET_KEY}
         volumes:
             - data:/storage/images/
             - data:/storage/database/
@@ -26,9 +27,6 @@ services:
                 - action: sync
                   path: ./backend/admin/src/
                   target: /app/src/
-                - action: rebuild
-                  path: ./backend/admin/package.json
-                  target: /app/
         restart: on-failure
     # user-backend:
     #     build: ./backend/user/

@@ -1,0 +1,73 @@
+from flask import Blueprint, request, session
+import auth.user as user_auth
+from auth.authentication import create_session, remove_session, login_required
+
+auth = Blueprint("auth", __name__, url_prefix="/auth")
+
+
+@auth.post("/crear-cuenta")
+def create_account():
+    user_count = user_auth.get_user_count()
+    if user_count > 0:
+        return "Main account already created.", 401
+
+    email = request.form.get("email")
+    name = request.form.get("name")
+    password = request.form.get("password")
+
+    if not email or not name or not password:
+        return "Incomplete data. Provide an email, name and password.", 400
+
+    if not user_auth.validate_email(email) or not user_auth.validate_password(password):
+        return (
+            "Incomplete data. Please check your email and password for correct formatting.",
+            400,
+        )
+
+    if user_auth.get_user_by_email(email):
+        return "User with this email already exists", 401
+
+    user_id = user_auth.create_user(email, name, password)
+
+    user_session = create_session(user_id)
+
+    session["session_id"] = user_session.session_id
+
+    return "", 200
+
+
+@auth.post("/iniciar-sesion")
+def login():
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    if not email or not password:
+        return "Incomplete data. Provide an email and a password.", 401
+
+    user = user_auth.login(email, password)
+
+    if not user:
+        return "Invalid credentials.", 401
+
+    user_session = create_session(user.id)
+
+    session["session_id"] = user_session.session_id
+
+    return "", 200
+
+
+@auth.post("/cerrar-sesion")
+def logout():
+    session_id: bytes = session.get("session_id")
+
+    if session_id:
+        remove_session(session_id)
+        session.pop("session_id")
+
+    return "Cierre de sesión exitoso.", 200
+
+
+@auth.route("/protected")
+@login_required
+def protected():
+    return "Protected content"

@@ -1,4 +1,4 @@
-from database.database import database
+from db.database import database
 from os import listdir, path
 import re
 import time
