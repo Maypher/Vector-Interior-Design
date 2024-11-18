@@ -11,7 +11,7 @@ services:
             - PASSWORD=${ADMIN_PASSWORD}
             - DB_PORT=${DATABASE_PORT}
             - DB_NAME=${DATABASE_NAME}
-            - SECRET_KEY=${SERVER_SECRET_KEY}
+            - SECRET_KEY=${ADMIN_SERVER_SECRET_KEY}
         volumes:
             - data:/storage/images/
             - data:/storage/database/
