@@ -55,5 +55,8 @@ def new_work():
 
 @obra_routes.delete("/borrar/<int:id>")
 def delete_obra(id: int):
-    obra.delete_obra(id)
-    return "", 200
+    obra_exists = obra.get_obra_by_id(id)
+    if obra_exists:
+        obra.delete_obra(id)
+        return f"Obra {obra_exists.name} (ID: {id}) deleted successfully.", 200
+    return f"Obra with ID {id} doesn't exist", 404
