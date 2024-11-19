@@ -37,26 +37,11 @@ def new_obra(
 
     # Zip up images and alt text to get [(image, alt text)]
     for image, alt_text in zip(images, alt_texts):
-        if not utils.verify_file(image.filename):
+        try:
+            new_image(image, alt_text, work_id)
+        except Exception as e:
             rollback()
-            return f"file {image.filename} is of an unsupported type", 400
-
-        file_extension = utils.file_extension(image.filename)
-
-        image_name = uuid.uuid4().hex
-        image.filename = image_name + file_extension
-
-        image.save(f"{STORAGE_LOCATION}{image.filename}")
-
-        print("Work id", work_id)
-
-        query(
-            """
-        INSERT INTO imagen (archivo, texto_alt, obra_id) VALUES (%s, %s, %s);
-        """,
-            (image.filename, alt_text, work_id),
-            commit=False,
-        )
+            return f"Unable to save {image.filename} due to an error. {e}", 500
 
     commit()
     return work_id
@@ -69,7 +54,7 @@ def delete_obra(id: int):
         return
 
     for image in obra.images:
-        delete_image_from_storage(image.filename)
+        delete_image(image.filename)
 
     query(
         """
@@ -77,6 +62,56 @@ def delete_obra(id: int):
     """,
         (id,),
     )
+
+
+def update_obra(
+    id: int,
+    nombre: str | None = None,
+    description: str | None = None,
+    images_to_delete: list[Image] | None = None,
+    alt_text_change: list[Image] | None = None,
+    images_to_add: list[(FileStorage, str)] | None = None,
+):
+    """Updates the obra identified by id. Name and description can be updated, images can be removed or alt text changed."""
+
+    obra = get_obra_by_id(id)
+
+    if not obra:
+        return
+
+    if nombre:
+        query(
+            """
+            UPDATE obra SET name = %s WHERE id = %s
+        """,
+            (nombre, id),
+            commit=False,
+        )
+    if description:
+        query(
+            """
+            UPDATE obra SET descripcion = %s WHERE id = %s
+        """,
+            (description, id),
+            commit=False,
+        )
+    if alt_text_change:
+        for image in alt_text_change:
+            query(
+                """
+            UPDATE imagen SET texto_alt = %s WHERE archivo = %s
+            """,
+                (image.alt_text, image.filename),
+                commit=False,
+            )
+    if images_to_delete:
+        for image in images_to_delete:
+            delete_image(image.filename)
+    if images_to_add:
+        for image, alt_text in images_to_add:
+            new_image(image, alt_text, id)
+
+    commit()
 
 
 def get_obra_by_id(id: int) -> Obra | None:
@@ -100,6 +135,23 @@ def get_obra_by_id(id: int) -> Obra | None:
     )
 
     return obra
+
+
+def get_image(filename: str) -> Image | None:
+    res = query(
+        """
+    SELECT archivo, texto_alt FROM imagen WHERE archivo = %s;
+    """,
+        (filename,),
+        1,
+    )
+
+    image = None
+
+    if res:
+        image = Image(res[0], res[1])
+
+    return image
 
 
 def get_obras(page: int = 1, page_size: int = 10) -> list[Obra]:
@@ -172,7 +224,55 @@ def get_obras_by_name(name: str, page: int = 1, page_size: int = 10):
     return list(obras.values())
 
 
-def delete_image_from_storage(filename: str):
+def new_image(image: FileStorage, alt_text: str, work_id: int) -> str | None:
+    """
+    Saves an image to disk relating it to the given work and returns its unique filename.
+    Returns None if image is unsupported or if given obra doesn't exist.
+    """
+    if not utils.verify_file(image.filename):
+        rollback()
+        return
+
+    obra = get_obra_by_id(work_id)
+
+    if not obra:
+        return
+
+    file_extension = utils.file_extension(image.filename)
+
+    image_name = uuid.uuid4().hex
+    image.filename = image_name + file_extension
+    image_location = f"{STORAGE_LOCATION}{image.filename}"
+
+    image.save(image_location)
+
+    # If for any reason the image doesn't data doesn't save to the database remove it from storage and propagate the error.
+    try:
+        query(
+            """
+        INSERT INTO imagen (archivo, texto_alt, obra_id) VALUES (%s, %s, %s);
+        """,
+            (image.filename, alt_text, work_id),
+        )
+    except Exception as e:
+        os.remove(image_location)
+        raise e
+
+    return image.filename
+
+
+def delete_image(filename: str):
+    """Deletes the given image from the database and file system."""
     location = f"{STORAGE_LOCATION}{filename}"
     if os.path.exists(location):
+        query(
+            """
+        DELETE FROM imagen WHERE archivo = %s
+        """,
+            (filename,),
+            commit=False,
+        )
+
         os.remove(location)
+
+        commit()
