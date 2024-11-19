@@ -27,16 +27,30 @@ services:
                   path: ./backend/admin/src/
                   target: /app/src/
         restart: on-failure
-    # user-backend:
-    #     build: ./backend/user/
-    #     volumes:
-    #         - data:/storage/database/
-    #         - data:/storage/images/
-    #     networks:
-    #         user:
-    #         backend:
-    #     depends_on:
-    #         - database
+    user-backend:
+        build: ./backend/user/
+        volumes:
+            - data:/storage/images/
+        networks:
+            user:
+            backend:
+        depends_on:
+            database:
+                condition: service_healthy
+                restart: true
+        develop:
+            watch:
+                - action: sync
+                  path: ./backend/user/src/
+                  target: /app/src/
+        environment:
+            - PORT=${USER_PORT}
+            - SECRET_KEY=${USER_SERVER_SECRET_KEY}
+            - USERNAME=${USER_USERNAME}
+            - PASSWORD=${USER_PASSWORD}
+            - HOST=database
+            - DB_PORT=${DATABASE_PORT}
+            - DB_NAME=${DATABASE_NAME}
     database:
         build: ./database/
         restart: always
@@ -68,10 +82,9 @@ services:
         build: "./nginx/"
         ports:
             - "8080:80"
+            - "8090:20"
         volumes:
             - data:/storage/images/:ro
-            - data:/storage/frontend/user/:ro
-            - data:/storage/frontend/admin/:ro
         depends_on:
             - admin-backend
         networks:

@@ -2,7 +2,7 @@
 
 # Estructura
 
-Utiliza Docker para contenerizar cada servicio. 
+Utiliza Docker para dividir cada servicio. 
 Los servicios son los siguientes:
 
 - **Database:** Base de dato Postgresql.
@@ -24,3 +24,79 @@ Los servicios son los siguientes:
 - USER_PORT: Puerto en el que exponer el backend del usuario en la base de datos.
 - USER_USERNAME: Nombre de usuario para el user backend en la base de datos.
 - USER_PASSWORD: Contraseña para el user backend en la base de datos.
+
+# Rutas
+
+## Usuario
+
+> /obras/
+
+**Método**: GET
+
+**Descripción**: Retorna todas las obras paginadas.
+
+**Parámetros**
+
+- **pagina**: int = Página de obras que retornar.
+- **nombre**: str = Filtrar búsqueda por nombre.
+
+--- 
+
+> /obras/id
+
+**Método**: GET
+
+**Descripción**: Retorna la información de una obra dado su id.
+
+**Parámetros**
+
+- id: El id de la obra que retornar.
+
+## Admin
+
+> /obras/
+
+**Método**: GET
+
+**Descripción**: Retorna todas las obras paginadas.
+
+**Parámetros**
+
+- **pagina**: int = Página de obras que retornar.
+- **nombre**: str = Filtrar búsqueda por nombre.
+
+--- 
+
+> /obras/id
+
+**Método**: GET
+
+**Descripción**: Retorna la información de una obra dado su id.
+
+**Parámetros**
+
+- id: El id de la obra que retornar.
+
+> /obras/crear/
+
+**Método**: POST
+
+**Descripción**: Crea una nueva obra.
+
+**Parámetros**
+
+- **name**: El nombre de la obra.
+- **description**: La descripción de la obra.
+- **images[]**: Lista de imágenes relacionadas a la obra.
+- **alt_text[]**: Lista de texto alternativo para cada imagen. 
+
+> /obras/borrar/id
+
+**Método**: DELETE
+
+**Descripción**: Borra la obra identificada por id junto a 
+todas las imágenes vinculadas a esta.
+
+**Parámetros**
+
+- **id**: El id de la obra.
