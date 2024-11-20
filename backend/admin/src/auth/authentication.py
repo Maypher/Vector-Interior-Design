@@ -100,7 +100,7 @@ def remove_session(session_id: str):
 
 def login_required(func):
     @wraps(func)
-    def wrapper():
+    def wrapper(*args, **kwargs):
         session_id = flask_session.get("session_id")
         session = get_session(session_id)
 
@@ -109,7 +109,7 @@ def login_required(func):
                 return "Session expired. Please login again.", 401
             elif should_refresh_session(session):
                 refreshes_session(session)
-            return func()
+            return func(*args, **kwargs)
         else:
             return "No credentials found. Please login.", 401
 
