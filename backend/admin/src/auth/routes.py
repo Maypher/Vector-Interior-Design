@@ -1,11 +1,11 @@
 from flask import Blueprint, request, session
-import auth.user as user_auth
-from auth.authentication import create_session, remove_session, login_required
+from auth import user as user_auth
+from auth import create_session, remove_session, login_required
 
-auth = Blueprint("auth", __name__, url_prefix="/auth")
+auth_blueprint = Blueprint("auth", __name__, url_prefix="/auth")
 
 
-@auth.post("/crear-cuenta")
+@auth_blueprint.post("/crear-cuenta")
 def create_account():
     user_count = user_auth.get_user_count()
     if user_count > 0:
@@ -36,7 +36,7 @@ def create_account():
     return "", 200
 
 
-@auth.post("/iniciar-sesion")
+@auth_blueprint.post("/iniciar-sesion")
 def login():
     email = request.form.get("email")
     password = request.form.get("password")
@@ -56,7 +56,7 @@ def login():
     return "", 200
 
 
-@auth.post("/cerrar-sesion")
+@auth_blueprint.post("/cerrar-sesion")
 def logout():
     session_id: bytes = session.get("session_id")
 
@@ -67,7 +67,7 @@ def logout():
     return "Cierre de sesión exitoso.", 200
 
 
-@auth.route("/protected")
+@auth_blueprint.route("/protected")
 @login_required
 def protected():
     return "Protected content"

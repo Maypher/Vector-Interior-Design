@@ -1,13 +1,13 @@
 from flask import Flask, jsonify
 from os import environ
 from db.migrations import apply_migrations
-from auth.routes import auth
+from auth.routes import auth_blueprint
 from resources.routes import obra_routes
 
 app = Flask(__name__)
 app.secret_key = environ.get("SECRET_KEY")
 
-app.register_blueprint(auth)
+app.register_blueprint(auth_blueprint)
 app.register_blueprint(obra_routes)
 
 
