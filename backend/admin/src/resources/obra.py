@@ -1,11 +1,10 @@
 import resources.utils as utils
 import uuid
 from werkzeug.datastructures import FileStorage
-from db.database import query, commit, rollback
+from db.database import admin_database
 from dataclasses import dataclass
 import os
 from typing import Tuple
-from validation.forms import CreateObraForm
 
 STORAGE_LOCATION = "/storage/images/"
 
@@ -34,7 +33,7 @@ def new_obra(
     ],  # Here's in the format {filename: str, alt_text: str}
 ):
     """Creates a new obra. Data validation is assumed."""
-    work_id = query(
+    work_id = admin_database.query(
         """
     INSERT INTO obra (nombre, descripcion) VALUES (%s, %s) RETURNING id;
     """,
@@ -53,10 +52,10 @@ def new_obra(
             work_id,
         )
     except Exception as e:
-        rollback()
+        admin_database.rollback()
         raise e
 
-    commit()
+    admin_database.commit()
     return work_id
 
 
@@ -69,7 +68,7 @@ def delete_obra(id: int):
     for image in obra.images:
         delete_image(image.filename)
 
-    query(
+    admin_database.query(
         """
     DELETE FROM obra WHERE id = %s
     """,
@@ -102,7 +101,7 @@ def update_obra(
         return
 
     if nombre:
-        query(
+        admin_database.query(
             """
             UPDATE obra SET nombre = %s WHERE id = %s
         """,
@@ -110,7 +109,7 @@ def update_obra(
             commit=False,
         )
     if description:
-        query(
+        admin_database.query(
             """
             UPDATE obra SET descripcion = %s WHERE id = %s
         """,
@@ -124,7 +123,7 @@ def update_obra(
             filename = image["filename"]
 
             if alt_text:
-                query(
+                admin_database.query(
                     """
                 UPDATE imagen SET texto_alt = %s WHERE archivo = %s
                 """,
@@ -134,7 +133,7 @@ def update_obra(
             if (
                 index is not None
             ):  # Not use 'if not index:' because if index = 0 then it should trigger but 0 == False
-                query(
+                admin_database.query(
                     """
                 UPDATE imagen SET indice = %s WHERE archivo = %s
                 """,
@@ -148,12 +147,12 @@ def update_obra(
         print([(image[0], image[1]["alt_text"]) for image in images_new], id)
         new_images([(image[0], image[1]["alt_text"]) for image in images_new], id)
 
-    commit()
+    admin_database.commit()
 
 
 def get_obra_by_id(id: int) -> Obra | None:
     """Returns the obra matching the given id or None."""
-    data = query(
+    data = admin_database.query(
         """
     SELECT obra.id, nombre, descripcion, archivo, texto_alt, indice FROM obra LEFT JOIN imagen ON obra.id = imagen.obra_id 
     WHERE obra.id = %s;
@@ -175,7 +174,7 @@ def get_obra_by_id(id: int) -> Obra | None:
 
 
 def get_image(filename: str) -> Image | None:
-    res = query(
+    res = admin_database.query(
         """
     SELECT archivo, texto_alt FROM imagen WHERE archivo = %s;
     """,
@@ -195,7 +194,7 @@ def get_obras(page: int = 1, page_size: int = 10) -> list[Obra]:
     """Retrieves a list of obras. Paginated by the given size"""
     offset = (page - 1) * page_size
 
-    data = query(
+    data = admin_database.query(
         """
         SELECT obra.id, nombre, descripcion, archivo, texto_alt, indice FROM obra LEFT JOIN imagen ON obra.id = imagen.obra_id 
         LIMIT %s OFFSET %s;
@@ -230,7 +229,7 @@ def get_obras_by_name(name: str, page: int = 1, page_size: int = 10):
     """Returns all the obras like a given name. Paginated."""
     # Code repetition bad and single source of truth stfu.
     offset = (page - 1) * page_size
-    data = query(
+    data = admin_database.query(
         """
         SELECT obra.id, nombre, descripcion, archivo, texto_alt FROM obra LEFT JOIN imagen ON obra.id = imagen.obra_id
         WHERE obra.nombre ILIKE %s
@@ -272,7 +271,7 @@ def new_image(
     Returns None if image is unsupported or if given obra doesn't exist.
     """
     if not utils.verify_file(image.filename):
-        rollback()
+        admin_database.rollback()
         return
 
     obra = get_obra_by_id(work_id)
@@ -290,7 +289,7 @@ def new_image(
 
     # If for any reason the image doesn't save to the database remove it from storage and propagate the error.
     try:
-        query(
+        admin_database.query(
             """
         INSERT INTO imagen (archivo, texto_alt, obra_id) VALUES (%s, %s, %s);
         """,
@@ -326,7 +325,7 @@ def delete_image(filename: str):
     """Deletes the given image from the database and file system."""
     location = f"{STORAGE_LOCATION}{filename}"
     if os.path.exists(location):
-        query(
+        admin_database.query(
             """
         DELETE FROM imagen WHERE archivo = %s
         """,
