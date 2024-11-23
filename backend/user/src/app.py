@@ -1,15 +1,10 @@
 from flask import Flask
 from os import environ
-from routes import obra_routes
+from common.routes import obra_fetch_routes
 
 app = Flask(__name__)
 app.secret_key = environ.get("SECRET_KEY")
-app.register_blueprint(obra_routes)
-
-"""
-The database and obras files are copied from the admin backend since they both have the exact same functionality.
-Not the best I know but it is what it is ＜（＾－＾）＞
-"""
+app.register_blueprint(obra_fetch_routes)
 
 
 @app.route("/")

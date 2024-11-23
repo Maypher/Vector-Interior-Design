@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from db.database import query
+from db.database import admin_database
 import bcrypt
 import re
 
@@ -49,7 +49,7 @@ def create_user(email: str, name: str, password: str):
 
     hashed_pwd = bcrypt.hashpw(pwd, salt)
 
-    user_id = query(
+    user_id = admin_database.query(
         """
     INSERT INTO administration.usuario (name, email, password_hash) VALUES (%s, %s, %s) RETURNING id;
 """,
@@ -64,7 +64,7 @@ def get_user_by_id(user_id: int) -> User | None:
     """
     Returns the user identified by id or None if no user is found.
     """
-    user_data = query(
+    user_data = admin_database.query(
         """
         SELECT id, name, email FROM administration.usuario WHERE id = %s
     """,
@@ -79,7 +79,7 @@ def get_user_by_id(user_id: int) -> User | None:
 
 def get_user_by_email(email: str) -> User | None:
     """Returns the user identified by email or None if no user is found"""
-    user_data = query(
+    user_data = admin_database.query(
         """
         SELECT id, name, email FROM administration.usuario WHERE email = %s
     """,
@@ -97,7 +97,7 @@ def get_user_count() -> int:
     Returns the amount of users created. Used for allowing only one user creation from the frontend when first starting the server.
     """
 
-    res = query(
+    res = admin_database.query(
         """
     SELECT count(*) FROM administration.usuario
 """,
@@ -108,7 +108,7 @@ def get_user_count() -> int:
 
 
 def login(email: str, password: str) -> User | None:
-    user_data = query(
+    user_data = admin_database.query(
         """
     SELECT id, name, email, password_hash FROM administration.usuario WHERE email = %s
 """,

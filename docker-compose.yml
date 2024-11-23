@@ -3,7 +3,8 @@ name: TQportfolio
 services:
     admin-backend:
         build:
-            context: ./backend/admin/
+            context: ./backend/
+            dockerfile: ./admin/Dockerfile
         environment:
             - PORT=${ADMIN_PORT}
             - HOST=database
@@ -12,6 +13,13 @@ services:
             - DB_PORT=${DATABASE_PORT}
             - DB_NAME=${DATABASE_NAME}
             - SECRET_KEY=${ADMIN_SERVER_SECRET_KEY}
+            - COMMON_PORT=${USER_PORT}
+            - COMMON_SECRET_KEY=${USER_SERVER_SECRET_KEY}
+            - COMMON_USERNAME=${USER_USERNAME}
+            - COMMON_PASSWORD=${USER_PASSWORD}
+            - COMMON_HOST=database
+            - COMMON_DB_PORT=${DATABASE_PORT}
+            - COMMON_DB_NAME=${DATABASE_NAME}
         volumes:
             - data:/storage/images/
         networks:
@@ -28,7 +36,9 @@ services:
                   target: /app/src/
         restart: on-failure
     user-backend:
-        build: ./backend/user/
+        build:
+            context: ./backend/
+            dockerfile: ./user/Dockerfile
         volumes:
             - data:/storage/images/
         networks:
@@ -51,6 +61,13 @@ services:
             - HOST=database
             - DB_PORT=${DATABASE_PORT}
             - DB_NAME=${DATABASE_NAME}
+            - COMMON_PORT=${USER_PORT}
+            - COMMON_SECRET_KEY=${USER_SERVER_SECRET_KEY}
+            - COMMON_USERNAME=${USER_USERNAME}
+            - COMMON_PASSWORD=${USER_PASSWORD}
+            - COMMON_HOST=database
+            - COMMON_DB_PORT=${DATABASE_PORT}
+            - COMMON_DB_NAME=${DATABASE_NAME}
     database:
         build: ./database/
         restart: always

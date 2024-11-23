@@ -6,10 +6,10 @@ import json
 from validation import forms
 from marshmallow import ValidationError
 
-obra_routes = Blueprint("resource_creation", __name__, url_prefix="/obras")
+obra_admin_routes = Blueprint("resource_creation", __name__, url_prefix="/obras")
 
 
-@obra_routes.post("/crear")
+@obra_admin_routes.post("/crear")
 @login_required
 def new_work():
     try:
@@ -36,7 +36,7 @@ def new_work():
     )
 
 
-@obra_routes.delete("/borrar/<int:id>")
+@obra_admin_routes.delete("/borrar/<int:id>")
 @login_required
 def delete_obra_by_id(id: int):
     try:
@@ -51,7 +51,7 @@ def delete_obra_by_id(id: int):
     return f"Obra with ID {id} doesn't exist", 404
 
 
-@obra_routes.put("/actualizar/<int:id>")
+@obra_admin_routes.put("/actualizar/<int:id>")
 @login_required
 def update_obra(id: int):
     try:

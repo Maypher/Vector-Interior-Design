@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify
-import obra
+from common import obra
 
-obra_routes = Blueprint("resource_creation", __name__, url_prefix="/obras")
+obra_fetch_routes = Blueprint("resource_fetch", __name__, url_prefix="/obras")
 
 
-@obra_routes.get("/")
+@obra_fetch_routes.get("/")
 def get_obras():
     try:
         page = request.args.get("pagina", 1)
@@ -28,7 +28,7 @@ def get_obras():
     return jsonify(obras)
 
 
-@obra_routes.get("/<int:id>")
+@obra_fetch_routes.get("/<int:id>")
 def get_obra(id: int):
     found_obra = obra.get_obra_by_id(id)
 

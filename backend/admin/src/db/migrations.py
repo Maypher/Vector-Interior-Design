@@ -39,10 +39,10 @@ class MigrationManager:
         self,
         database_manager: DatabaseManager,
         migration_folder: str,
-        migration_filename_regex: str = "^(\d+)_(\w+)_(\d+)_(up|down).sql",
-        migration_version_regex: str = ".*?_\d_(up|down).sql",
-        up_regex: str = "_down\.sql",
-        down_regex: str = "_down\.sql",
+        migration_filename_regex: str = r"^(\d+)_(\w+)_(\d+)_(up|down).sql",
+        migration_version_regex: str = r".*?_(\d+)_(up|down).sql",
+        up_regex: str = r"_up.sql",
+        down_regex: str = r"_down.sql",
     ):
         migration_regex_ends_in_sql = migration_filename_regex.endswith(".sql")
 
@@ -74,14 +74,14 @@ class MigrationManager:
             f"""
             DO $$
             BEGIN
-                CREATE SCHEMA IF NOT EXISTS {self.migration_schema}
+                CREATE SCHEMA IF NOT EXISTS {self.migration_schema};
 
                 -- Create the table if it doesn't exist and insert entry.
                 -- Not using CREATE IF NOT EXISTS because it should insert a migration entry on creation as to not have duplicate migration versions.
                 IF NOT EXISTS (
                     SELECT 1 
                     FROM information_schema.tables 
-                    WHERE table_schema = 'administration' AND table_name = 'migration'
+                    WHERE table_schema = '{self.migration_schema}' AND table_name = '{self.migration_table}'
                 ) THEN
                     -- Create the table
                     CREATE TABLE {self.migration_schema}.{self.migration_table} (
@@ -110,7 +110,7 @@ class MigrationManager:
         # Checks that every up file has a sequential order. Ex: 1, 2, 3, 4
         for file in self.yield_sql_files():
             with file:
-                version = re.match(self.up_regex, path.basename(file.name))
+                version = self.get_migration_file_version(path.basename(file.name))
                 if version > current_version_found + 1:
                     missing_version_files.append(path.basename(file.name))
 
@@ -136,7 +136,7 @@ class MigrationManager:
 
     def get_migration_file_version(self, filename: str) -> int | None:
         """Gets the number of the migration from the filename or None if not found."""
-        for match in re.match(self.migration_version_regex, filename):
+        for match in re.search(self.migration_version_regex, filename).groups():
             if match.isdigit():
                 return int(match)
 
@@ -174,22 +174,22 @@ class MigrationManager:
         down_files: list[Tuple[int, TextIOWrapper]] = []
 
         for file in listdir(self.migration_folder):
-            if not down:
-                file_version = self.up_regex.match(file)[0]
-                version = int(file_version)  # Parse version as an integer
-                up_files.append((version, open("file")))
-            else:
-                file_version = self.down_regex.match(file)[0]
-                version = int(file_version)  # Parse version as an integer
-                down_files.append((version, open(file, "r")))
+            migration_file = f"{self.migration_folder}/{file}"
+
+            if not down and re.search(self.up_regex, file):
+                file_version = self.get_migration_file_version(file)
+                up_files.append((file_version, open(migration_file, "r")))
+            elif re.search(self.down_regex, file):
+                file_version = self.get_migration_file_version(file)
+                down_files.append((file_version, open(migration_file, "r")))
 
         if not down:
-            up_files.sort(lambda x: x[0])
+            up_files.sort(key=lambda x: x[0])
             for _, file in up_files:
                 yield file
                 file.close()
         else:
-            down_files.sort(lambda x: x[0], reverse=True)
+            down_files.sort(key=lambda x: x[0], reverse=True)
             for _, file in down_files:
                 yield file
                 file.close()
@@ -205,7 +205,7 @@ class MigrationManager:
         # Update the migration version
         self.database_manager.query(
             f"""
-        UPDATE administration.migration
+        UPDATE {self.migration_schema}.{self.migration_table}
         SET version = version {"-" if rollback else "+"} 1
         WHERE id = 1;
         """,

@@ -1,4 +1,4 @@
-from db.database import query
+from db.database import admin_database
 from secrets import token_urlsafe
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -23,7 +23,7 @@ def create_session(
     session_id = token_urlsafe(16)
     expires_at = datetime.now() + session_duration
 
-    user_exists = query(
+    user_exists = admin_database.query(
         """
         SELECT id FROM administration.usuario WHERE id = %s;
     """,
@@ -35,7 +35,7 @@ def create_session(
 
         # Done in case the generated session id already exists (extremely unlikely)
 
-        query(
+        admin_database.query(
             "INSERT INTO administration.session (session_id, expires_at, user_id) VALUES (%s, %s, %s);",
             (session_id, str(expires_at), user_id),
         )
@@ -50,7 +50,7 @@ def get_session(session_id: str) -> Session | None:
     Fetches a session from the database given its id. Returns None if no session was found
     """
 
-    session_data = query(
+    session_data = admin_database.query(
         """
     SELECT expires_at, user_id FROM administration.session WHERE session_id = %s;
 """,
@@ -83,7 +83,7 @@ def should_refresh_session(
 def refreshes_session(session: Session, extend_by: timedelta = timedelta(minutes=30)):
     new_expiry = session.expires_at + extend_by
 
-    query(
+    admin_database.query(
         """
     UPDATE administration.session
     SET expires_at = %s;
@@ -95,7 +95,9 @@ def refreshes_session(session: Session, extend_by: timedelta = timedelta(minutes
 
 
 def remove_session(session_id: str):
-    query("DELETE FROM administration.session WHERE session_id=%s", (session_id,))
+    admin_database.query(
+        "DELETE FROM administration.session WHERE session_id=%s", (session_id,)
+    )
 
 
 def login_required(func):

@@ -2,10 +2,14 @@ FROM python:3
 
 WORKDIR /app/
 
-COPY ./requirements.txt .
+COPY ./common/requirements.txt ./common/
+COPY ./admin/requirements.txt ./admin/
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r ./admin/requirements.txt
 
-COPY . .
+COPY ./common/ ./common/
+COPY ./admin/ ./admin/
 
-CMD ["python", "-u", "./src/app.py"]
+ENV PYTHONPATH=/app/
+
+CMD ["python", "-u", "admin/src/app.py", "migrate"]
