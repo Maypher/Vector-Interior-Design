@@ -1,0 +1,11 @@
+{
+    "python.autoComplete.extraPaths": [
+        "${workspaceFolder}/backend/src/"
+    ],
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/backend/src/"
+    ],
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "${workspaceFolder}/backend/src/"
+    }
+}

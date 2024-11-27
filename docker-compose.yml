@@ -4,7 +4,7 @@ services:
     admin-backend:
         build:
             context: ./backend/
-            dockerfile: ./admin/Dockerfile
+            dockerfile: ./src/admin/Dockerfile
         environment:
             - PORT=${ADMIN_PORT}
             - HOST=database
@@ -35,10 +35,12 @@ services:
                   path: ./backend/admin/src/
                   target: /app/src/
         restart: on-failure
+        profiles:
+            - prod
     user-backend:
         build:
             context: ./backend/
-            dockerfile: ./user/Dockerfile
+            dockerfile: ./src/user/Dockerfile
         volumes:
             - data:/storage/images/
         networks:
@@ -68,6 +70,29 @@ services:
             - COMMON_HOST=database
             - COMMON_DB_PORT=${DATABASE_PORT}
             - COMMON_DB_NAME=${DATABASE_NAME}
+        profiles:
+            - prod
+    tests:
+        build:
+            context: ./backend/
+            dockerfile: ./tests/Dockerfile
+        profiles:
+            - tests
+        depends_on:
+            database:
+                condition: service_healthy
+                restart: true
+        networks:
+            - backend
+        environment:
+            - COMMON_PORT=${USER_PORT}
+            - COMMON_SECRET_KEY=${USER_SERVER_SECRET_KEY}
+            - COMMON_USERNAME=${USER_USERNAME}
+            - COMMON_PASSWORD=${USER_PASSWORD}
+            - COMMON_HOST=database
+            - COMMON_DB_PORT=${DATABASE_PORT}
+            - COMMON_DB_NAME=${DATABASE_NAME}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     database:
         build: ./database/
         restart: always
@@ -97,6 +122,7 @@ services:
             start_period: 30s
     nginx:
         build: "./nginx/"
+        profiles: [ prod ]
         ports:
             - "8080:80"
             - "8090:20"

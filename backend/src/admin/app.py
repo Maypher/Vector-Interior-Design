@@ -1,11 +1,11 @@
 from flask import Flask, jsonify
 from os import environ
-from db.migrations import MigrationManager
-from auth.routes import auth_blueprint
-from resources.routes import obra_admin_routes
+from admin.db.migrations import MigrationManager
+from admin.auth.routes import auth_blueprint
+from admin.resources.routes import obra_admin_routes
 from psycopg import errors
 from sys import argv
-from db.database import admin_database
+from admin.db.database import admin_database
 from common.routes import obra_fetch_routes
 
 app = Flask(__name__)
@@ -23,7 +23,7 @@ def hello_world():
 
 def apply_migrations(command: str | None = None, migrate_to: int | None = None):
     try:
-        migration_manager = MigrationManager(admin_database, "./admin/migrations/")
+        migration_manager = MigrationManager(admin_database, "./migrations/")
     except errors.InsufficientPrivilege:
         print("Unable to initialize migration system due to insufficient privileges.")
         exit(1)

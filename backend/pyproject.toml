@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "tq-portfolio-backend"
+version = "0.1.0"
+description = "Admin backend for the TQ portfolio"
+authors = ["Maypher <maypheroffcial@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "^3.1.0"
+psycopg = "^3.2.3"
+
+[tool.poetry.group.admin]
+optional = true
+
+[tool.poetry.group.admin.dependencies]
+bcrypt = "^4.2.1"
+marshmallow = "^3.23.1"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
