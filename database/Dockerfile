@@ -8,4 +8,4 @@ ENV LANG=es_ES.UTF-8
 ENV LANGUAGE=es_ES:es
 ENV LC_ALL=es_ES.UTF-8
 
-COPY . ./docker-entrypoint-initdb.d/
+COPY . /docker-entrypoint-initdb.d/
