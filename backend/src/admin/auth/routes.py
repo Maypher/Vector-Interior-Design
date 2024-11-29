@@ -1,8 +1,15 @@
 from flask import Blueprint, request, session
 from auth import user as user_auth
-from auth import create_session, remove_session, login_required
+from auth import create_session, remove_session, login_required, get_session
+from flask import session
 
 auth_blueprint = Blueprint("auth", __name__, url_prefix="/auth")
+
+
+@auth_blueprint.get("/usuario-creado")
+def main_user_created():
+    user_count = user_auth.get_user_count()
+    return str(user_count)
 
 
 @auth_blueprint.post("/crear-cuenta")
@@ -71,3 +78,17 @@ def logout():
 @login_required
 def protected():
     return "Protected content"
+
+
+@auth_blueprint.get("/info-usuario")
+@login_required
+def get_user_info():
+    session_id = session.get("session_id")
+
+    if session_id:
+        sess = get_session(session_id)
+
+        if sess:
+            return user_auth.get_user_by_id(sess.user_id).__dict__
+
+        return "", 404
