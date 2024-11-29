@@ -19,7 +19,7 @@ def create_account():
     if user_count > 0:
         return "Main account already created.", 401
 
-    request_data: dict = json.loads(request.form)
+    request_data: dict = request.json
 
     email = request_data.get("email")
     name = request_data.get("name")
@@ -48,7 +48,7 @@ def create_account():
 
 @auth_blueprint.post("/iniciar-sesion")
 def login():
-    request_data: dict = json.loads(request.json)
+    request_data: dict = request.json
     email = request_data.get("email")
     password = request_data.get("password")
 
