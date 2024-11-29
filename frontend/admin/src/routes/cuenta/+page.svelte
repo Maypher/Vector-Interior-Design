@@ -24,29 +24,36 @@
 
 	let errors: FormErrors = $state({});
 
-	function onsubmit(event: SubmitEvent) {
+	async function onsubmit(event: SubmitEvent) {
 		event.preventDefault();
 
 		errors = {};
 
-		loginSchema
-			.validate(formData, { abortEarly: false })
-			.then((validData) => {
-				console.log(validData);
-			})
-			.catch((err: ValidationError) => {
-				err.inner.forEach((e) => {
-					const errorField = e.path;
+		try {
+			let validData = await loginSchema.validate(formData, { abortEarly: false });
 
-					if (errorField) {
-						if (errors[errorField]) {
-							errors[errorField].push(...e.errors);
-						} else {
-							errors[errorField] = e.errors;
-						}
-					}
-				});
+			let res = await fetch('/api/auth/iniciar-sesion', {
+				method: 'POST',
+				body: JSON.stringify(formData)
 			});
+
+			if (res.status == 401) {
+				let res_msg = await res.text();
+				console.log(res_msg);
+			}
+		} catch (err) {
+			(err as ValidationError).inner.forEach((e) => {
+				const errorField = e.path;
+
+				if (errorField) {
+					if (errors[errorField]) {
+						errors[errorField].push(...e.errors);
+					} else {
+						errors[errorField] = e.errors;
+					}
+				}
+			});
+		}
 	}
 </script>
 
