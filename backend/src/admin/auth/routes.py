@@ -21,9 +21,9 @@ def create_account():
 
     request_data: dict = json.loads(request.form)
 
-    email = request.form.get("email")
-    name = request.form.get("name")
-    password = request.form.get("password")
+    email = request_data.get("email")
+    name = request_data.get("name")
+    password = request_data.get("password")
 
     if not email or not name or not password:
         return "Incomplete data. Provide an email, name and password.", 400
