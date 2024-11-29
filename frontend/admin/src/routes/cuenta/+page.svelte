@@ -34,7 +34,10 @@
 
 			let res = await fetch('/api/auth/iniciar-sesion', {
 				method: 'POST',
-				body: JSON.stringify(formData)
+				body: JSON.stringify(validData),
+				headers: {
+					'Content-Type': 'application/json'
+				}
 			});
 
 			if (res.status == 401) {
