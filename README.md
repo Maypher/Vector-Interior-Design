@@ -130,3 +130,43 @@ Todos los valores son opcionales al menos que se especifique lo contrario.
 
 
 
+> /auth/usuario-creado
+
+**Método**: GET
+
+**Descripción**: Retorna la cantidad de usuarios creados.
+
+> /auth/crear-cuenta
+
+**Método**: POST
+
+**Descripción**: Crea una nueva cuenta. Funciona únicamente si no hay usuarios creados.
+
+**Parámetros**:
+
+- **email**: Correo electrónico.
+- **name**: Nombre de usuario.
+- **password**: Contraseña.
+
+> /auth/iniciar-sesion
+
+**Método**: POST
+
+**Descripción**: Inicia sesión con un usuario ya creado.
+
+**Parámetros**:
+
+- **email**: Correo electrónico.
+- **password**: Contraseña.
+
+> /auth/cerrar-sesion
+
+**Método**: POST
+
+**Descripción**: Cierra la sesión del actual usuario.
+
+> /auth/info-usuario
+
+**Método**: GET
+
+**Descripción**: Retorna la información del usuario con la sesión iniciada en el formato `{id: int, name: str, email: str}`.

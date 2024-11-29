@@ -74,12 +74,6 @@ def logout():
     return "Cierre de sesión exitoso.", 200
 
 
-@auth_blueprint.route("/protected")
-@login_required
-def protected():
-    return "Protected content"
-
-
 @auth_blueprint.get("/info-usuario")
 @login_required
 def get_user_info():
