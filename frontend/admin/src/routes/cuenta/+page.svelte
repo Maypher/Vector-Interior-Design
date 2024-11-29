@@ -3,6 +3,7 @@
 	import PasswordInput from '$lib/components/input/PasswordInput.svelte';
 	import { type FormErrors } from '$lib/interfaces';
 	import { object, string, ValidationError } from 'yup';
+	import { toast } from '@zerodevx/svelte-toast';
 
 	let loginSchema = object({
 		email: string()
@@ -42,7 +43,12 @@
 
 			if (res.status == 401) {
 				let res_msg = await res.text();
-				console.log(res_msg);
+				toast.push(res_msg, {
+					theme: {
+						'--toastBackground': 'red',
+						'--toastBarBackground': '#7f0000'
+					}
+				});
 			}
 		} catch (err) {
 			(err as ValidationError).inner.forEach((e) => {
