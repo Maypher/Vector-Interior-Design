@@ -67,19 +67,19 @@
 </script>
 
 <div class="bg-red-200 w-full max-w-md p-9 rounded-lg">
-	<h1 class="text-center">Tony Quintero</h1>
+	<h1 class="text-center">NODO</h1>
 	<div class="flex justify-center">
 		<form action="POST" {onsubmit} id="form" class="flex flex-col max-w-60">
 			<TextInput
 				name="email"
-				label="Email"
+				label="Correo Electrónico"
 				type="text"
 				bind:value={formData.email}
 				errors={errors['email']}
 			/>
 			<PasswordInput
 				name="password"
-				label="Password"
+				label="Contraseña"
 				bind:value={formData.password}
 				errors={errors['password']}
 			/>
@@ -88,7 +88,4 @@
 			</button>
 		</form>
 	</div>
-	<a href="/cuenta/crear" class="block text-center mt-4 hover:text-blue-800"
-		>No tienes cuenta? Crea una.</a
-	>
 </div>
