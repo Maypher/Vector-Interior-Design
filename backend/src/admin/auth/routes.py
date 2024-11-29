@@ -2,6 +2,7 @@ from flask import Blueprint, request, session
 from auth import user as user_auth
 from auth import create_session, remove_session, login_required, get_session
 from flask import session
+import json
 
 auth_blueprint = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -17,6 +18,8 @@ def create_account():
     user_count = user_auth.get_user_count()
     if user_count > 0:
         return "Main account already created.", 401
+
+    request_data: dict = json.loads(request.form)
 
     email = request.form.get("email")
     name = request.form.get("name")
@@ -45,8 +48,9 @@ def create_account():
 
 @auth_blueprint.post("/iniciar-sesion")
 def login():
-    email = request.form.get("email")
-    password = request.form.get("password")
+    request_data: dict = json.loads(request.json)
+    email = request_data.get("email")
+    password = request_data.get("password")
 
     if not email or not password:
         return "Incomplete data. Provide an email and a password.", 401
