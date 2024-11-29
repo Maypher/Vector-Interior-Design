@@ -4,18 +4,13 @@
 	import { type FormErrors } from '$lib/interfaces';
 	import { object, string, ValidationError } from 'yup';
 	import { toast } from '@zerodevx/svelte-toast';
+	import { goto } from '$app/navigation';
 
 	let loginSchema = object({
 		email: string()
 			.required('Se require un correo electrónico.')
 			.email('Correo electrónico inválido.'),
-		password: string()
-			.required('Contraseña es requerida.')
-			.min(8, 'Contraseña debe tener al menos 8 caracteres.')
-			.matches(
-				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
-				'Contraseña debe contener al menos una letra mayúscula, una minúscula, un número y un símbolo.'
-			)
+		password: string().required('Contraseña es requerida.')
 	});
 
 	let formData = {
@@ -41,7 +36,7 @@
 				}
 			});
 
-			if (res.status == 401) {
+			if (res.status != 200) {
 				let res_msg = await res.text();
 				toast.push(res_msg, {
 					theme: {
@@ -49,6 +44,8 @@
 						'--toastBarBackground': '#7f0000'
 					}
 				});
+			} else {
+				goto('/panel');
 			}
 		} catch (err) {
 			(err as ValidationError).inner.forEach((e) => {
@@ -67,7 +64,7 @@
 </script>
 
 <div class="bg-red-200 w-full max-w-md p-9 rounded-lg">
-	<h1 class="text-center">NODO</h1>
+	<h1 class="text-center">NODO Iniciar Sesión</h1>
 	<div class="flex justify-center">
 		<form action="POST" {onsubmit} id="form" class="flex flex-col max-w-60">
 			<TextInput
