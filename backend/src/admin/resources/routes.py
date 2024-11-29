@@ -31,7 +31,7 @@ def new_work():
     )
 
     return (
-        jsonify({"msg": f"Work {name} created successfully.", "work_id": work_id}),
+        jsonify({"msg": f"Obra {name} creada con éxito.", "work_id": work_id}),
         200,
     )
 
@@ -47,8 +47,8 @@ def delete_obra_by_id(id: int):
     obra_exists = obra.get_obra_by_id(id)
     if obra_exists:
         obra.delete_obra(id)
-        return f"Obra {obra_exists.name} (ID: {id}) deleted successfully.", 200
-    return f"Obra with ID {id} doesn't exist", 404
+        return f"Obra {obra_exists.name} (ID: {id}) borrada con exitosamente.", 200
+    return f"Obra con ID {id} no existe.", 404
 
 
 @obra_admin_routes.put("/actualizar/<int:id>")
@@ -68,7 +68,7 @@ def update_obra(id: int):
     obra_model = obra.get_obra_by_id(id)
 
     if not obra_model:
-        return f"Obra with id {id} not found.", 404
+        return f"Obra con ID {id} no encontrada.", 404
 
     obra.update_obra(
         id,

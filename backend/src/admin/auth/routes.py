@@ -17,7 +17,7 @@ def main_user_created():
 def create_account():
     user_count = user_auth.get_user_count()
     if user_count > 0:
-        return "Main account already created.", 401
+        return "Cuenta principal ya creada.", 401
 
     request_data: dict = request.json
 
@@ -26,16 +26,16 @@ def create_account():
     password = request_data.get("password")
 
     if not email or not name or not password:
-        return "Incomplete data. Provide an email, name and password.", 400
+        return "Información incompleta. Correo y contraseña requeridas.", 400
 
     if not user_auth.validate_email(email) or not user_auth.validate_password(password):
         return (
-            "Incomplete data. Please check your email and password for correct formatting.",
+            "Datos incompletos. Verifique su correo electrónico y contraseña para ver si el formato es correcto.",
             400,
         )
 
     if user_auth.get_user_by_email(email):
-        return "User with this email already exists", 401
+        return "Usuario con este correo ya existe.", 401
 
     user_id = user_auth.create_user(email, name, password)
 
@@ -53,12 +53,12 @@ def login():
     password = request_data.get("password")
 
     if not email or not password:
-        return "Incomplete data. Provide an email and a password.", 401
+        return "Información incompleta. Proveer correo y contraseña.", 401
 
     user = user_auth.login(email, password)
 
     if not user:
-        return "Invalid credentials.", 401
+        return "Credenciales invalidas.", 401
 
     user_session = create_session(user.id)
 
