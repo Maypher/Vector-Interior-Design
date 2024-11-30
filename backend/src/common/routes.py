@@ -7,7 +7,7 @@ obra_fetch_routes = Blueprint("resource_fetch", __name__, url_prefix="/obras")
 @obra_fetch_routes.get("/")
 def get_obras():
     try:
-        page = request.args.get("pagina", 1)
+        page = request.args.get("page", 1)
         # This is done because if page is an empty parameter
         # it gets saved as "" not causing the raise and getting
         # passed to the function as is.
@@ -16,9 +16,9 @@ def get_obras():
         else:
             raise ValueError
     except ValueError:
-        return "Invalid page number.", 400
+        return "Número de página invalido.", 400
 
-    name = request.args.get("nombre")
+    name = request.args.get("name")
 
     if name:
         obras = obra.get_obras_by_name(name, page)

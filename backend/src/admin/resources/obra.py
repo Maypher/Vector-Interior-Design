@@ -40,7 +40,6 @@ def new_obra(
     """,
         (name, description),
         1,
-        False,
     )[0]
 
     try:
