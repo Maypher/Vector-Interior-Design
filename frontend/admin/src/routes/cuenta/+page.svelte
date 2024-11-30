@@ -1,17 +1,11 @@
 <script lang="ts">
 	import TextInput from '$lib/components/input/TextInput.svelte';
 	import PasswordInput from '$lib/components/input/PasswordInput.svelte';
-	import { type FormErrors } from '$lib/interfaces';
-	import { object, string, ValidationError } from 'yup';
-	import { toast } from '@zerodevx/svelte-toast';
+	import { type FormErrors } from '$lib/utilities/interfaces';
+	import { loginSchema } from '$lib/utilities/yupSchemas';
+	import { ValidationError } from 'yup';
+	import { createToast } from '$lib/utilities/toasts';
 	import { goto } from '$app/navigation';
-
-	let loginSchema = object({
-		email: string()
-			.required('Se require un correo electrónico.')
-			.email('Correo electrónico inválido.'),
-		password: string().required('Contraseña es requerida.')
-	});
 
 	let formData = {
 		email: '',
@@ -38,12 +32,7 @@
 
 			if (res.status != 200) {
 				let res_msg = await res.text();
-				toast.push(res_msg, {
-					theme: {
-						'--toastBackground': 'red',
-						'--toastBarBackground': '#7f0000'
-					}
-				});
+				createToast(res_msg, 'ERROR');
 			} else {
 				goto('/panel');
 			}

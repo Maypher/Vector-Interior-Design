@@ -1,25 +1,11 @@
 <script lang="ts">
-	import { object, string, ref, ValidationError } from 'yup';
+	import { ValidationError } from 'yup';
 	import TextInput from '$lib/components/input/TextInput.svelte';
 	import PasswordInput from '$lib/components/input/PasswordInput.svelte';
-	import { type FormErrors } from '$lib/interfaces';
-	import { toast } from '@zerodevx/svelte-toast';
+	import { type FormErrors } from '$lib/utilities/interfaces';
 	import { goto } from '$app/navigation';
-
-	let signUpForm = object({
-		name: string().required('Nombre requerido'),
-		email: string().required('Correo electrónico requerido.').email('Correo invalido'),
-		password: string()
-			.required('Contraseña es requerida.')
-			.min(8, 'Contraseña debe tener al menos 8 caracteres.')
-			.matches(
-				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
-				'Contraseña debe contener al menos una letra mayúscula, una minúscula, un número y un símbolo.'
-			),
-		passwordRepeat: string()
-			.required('Confirmar contraseña.')
-			.oneOf([ref('password')], 'Contraseñas no coinciden.')
-	});
+	import { signUpForm } from '$lib/utilities/yupSchemas';
+	import { createToast } from '$lib/utilities/toasts';
 
 	let formData = {
 		name: '',
@@ -32,6 +18,7 @@
 
 	async function onsubmit(e: SubmitEvent) {
 		e.preventDefault();
+		errors = {};
 
 		try {
 			let validData = await signUpForm.validate(formData, { abortEarly: false });
@@ -51,12 +38,7 @@
 
 			if (res.status != 200) {
 				let res_msg = await res.text();
-				toast.push(res_msg, {
-					theme: {
-						'--toastBackground': 'red',
-						'--toastBarBackground': '#7f0000'
-					}
-				});
+				createToast(res_msg, 'ERROR');
 			} else {
 				goto('/panel');
 			}
@@ -78,7 +60,7 @@
 
 <div class="bg-blue-400 rounded-lg flex flex-col justify-center p-9">
 	<h1 class="text-center">NODO Crear Cuenta</h1>
-	<form action="POST" {onsubmit}>
+	<form action="POST" {onsubmit} class="max-w-60">
 		<TextInput
 			name="name"
 			label="Nombre"

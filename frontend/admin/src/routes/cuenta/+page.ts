@@ -1,12 +1,7 @@
-import { goto } from '$app/navigation';
-import { redirect } from '@sveltejs/kit';
-import { browser } from '$app/environment';
+import { redirectWithToast } from '$lib/utilities/toasts.js';
 
 export async function load({ parent }) {
     let user_exists = (await parent()).user_exists;
 
-    if (!user_exists) {
-        if (browser) goto('/cuenta/crear');
-        else redirect(302, '/cuenta/crear');
-    }
+    if (!user_exists) redirectWithToast("/cuenta/crear/", "Ningún usuario encontrado. Por favor crear uno.", "WARNING");
 }
