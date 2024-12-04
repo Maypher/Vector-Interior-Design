@@ -12,7 +12,6 @@
 
 	async function fetchObras() {
 		nameRegex = new RegExp(`(${searchParams.name})`, 'gi');
-		console.log(nameRegex);
 
 		let queryParams = new URLSearchParams({
 			...searchParams,
