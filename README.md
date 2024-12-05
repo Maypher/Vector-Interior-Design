@@ -29,18 +29,47 @@ Los servicios son los siguientes:
 
 ## Usuario
 
+> /
+
+**Método**: GET
+
+**Descripción**: Retorna todas las obras públicas paginadas.
+
+**Parámetros (URL ?=)**
+
+- **pagina**: int = Página de obras que retornar.
+- **nombre**: str = Filtrar búsqueda por nombre.
+
+
+> /id
+
+**Método**: GET
+
+**Descripción**: Retorna la información de una obra dado su id si es pública.
+
+**Parámetros**
+
+- **id**: El id de la obra que retornar.
+
+## Admin
+
+--- 
+
+### Obras
+
+Una obra es la clase principal del programa. Contiene ambientes e imágenes.
+
 > /obras/
 
 **Método**: GET
 
 **Descripción**: Retorna todas las obras paginadas.
 
-**Parámetros**
+**Parámetros (URL ?=)**
 
 - **pagina**: int = Página de obras que retornar.
 - **nombre**: str = Filtrar búsqueda por nombre.
 
---- 
 
 > /obras/id
 
@@ -50,11 +79,7 @@ Los servicios son los siguientes:
 
 **Parámetros**
 
-- id: El id de la obra que retornar.
-
-## Admin
-
---- 
+- **id**: El id de la obra que retornar.
 
 > /obras/crear/
 
@@ -64,25 +89,15 @@ Los servicios son los siguientes:
 
 **Parámetros (form)**
 
-- **json**:
-```
-{
-    "name": string,
-    "description": string,
-    "alt_texts": [{
-        "filename": string // Must match filename of uploaded file,
-        "alt_text": string
-    }, ...]
-}
-```
-- **images**: `[png, jpeg, jpg]`
+- **name (str)**: El nombre de la obra.
+- **Descripción (str)**: La descripción de la obra.
 ---
 > /obras/borrar/id
 
 **Método**: DELETE
 
 **Descripción**: Borra la obra identificada por id junto a 
-todas las imágenes vinculadas a esta.
+todos los ambientes e imágenes vinculadas a esta.
 
 **Parámetros**
 
@@ -96,39 +111,94 @@ todas las imágenes vinculadas a esta.
 
 **Parámetros (form)**
 
-- **json**:
+- **name (str)**: El nuevo nombre de la obra.
+- **description (str)**: La nueva descripción de la obra.
+- **public (bool)**: Establece si una obra puede ser vista por el público. 
 
-```
-{
-    "obra_id": int,
-    "name": string,
-    "description": string,
-    "images_delete": [string], // images filename to delete
-    "images_change": [{
-        "filename": string, // The name of the image to edit,
-        "alt_text": string, // The new alt text (Optional).
-        "index": int // The index to move the image to.
-    }, ...],
-    "images_new_info": {
-        "filename": string, // The filename to associate the alt text
-        "alt_text": string
-    }
-}
-```
-- **images_new**: `[png, jpg, jpeg]`
+### Ambientes
+
+Un ambiente es una sección de una obra. Esta contiene imágenes.
+
+> /ambientes/crear
+
+**Método**: POST
+
+**Descripción**: Crea un nuevo ambiente.
+
+**Parámetros (form)**
+
+- **obra_id (int)**: El ID de la obra a la que vincular este ambiente.
+- **Nombre (str)**: El nombre de este ambiente. Dos ambientes no pueden tener el mismo nombre en una misma obra.
+- **Descripción (str) (opcional)**: La descripción del ambiente.
+
+> /ambientes/borrar/id
+
+**Método**: DELETE
+
+**Descripción**: Borra el ambiente identificado por ID junto a todas las imágenes asociadas a este.
+
+**Parámetros (form)**
+
+- **id**: El ID del ambiente para borrar.
+
+> /ambientes/actualizar/id
+
+**Método**: PUT
+
+**Descripción**: Actualiza la información de un ambiente.
+
+**Parámetros (form)**:
+
+- **name (str)**: El nuevo nombre del ambiente.
+- **description (str)**: La nueva descripción del ambiente.
+- **index (int)**: El nuevo indice del ambiente. Utilizado para ordenarlos en la UI.
+
+**Explicación**: Todos los valores son opcionales.
+
+### Imágenes
+
+Una imagen. Contiene un texto alternativo.
+
+> /imagenes/crear
+
+**Método**: POST
+
+**Descripción**: Crea una nueva imagen.
+
+**Parámetros (form)**
+
+- **ambiente_id (int)**: El ID del ambiente a la que vincular esta imagen.
+- **alt_text (str)**: El texto alternativo de esta imagen.
+- **Descripción (str) (opcional)**: La descripción del ambiente.
+
+> /imagenes/borrar/filename
+
+**Método**: DELETE
+
+**Descripción**: Borra la imagen identificado por filename.
+
+**Parámetros (form)**
+
+- **filename**: El nombre de la imagen que borrar.
+
+> /imagenes/actualizar/id
+
+**Método**: PUT
+
+**Descripción**: Actualiza la información de una imagen.
+
+**Parámetros (form)**:
+
+- **alt_text (str)**: El nuevo texto alternativo de la imagen.
+- **index (int)**: El nuevo indice de la imagen. Utilizado para ordenarlos en la UI.
+
+**Explicación**: Todos los valores son opcionales.
+****
+
+### Autenticación
 
 **Explicación**
-Todos los valores son opcionales al menos que se especifique lo contrario.
-
-- **obra_id**: El id de la obra.
-- **name**: El nuevo nombre de la obra.
-- **description**: La nueva descripción de la obra.
-- **images_delete**: Nombres de imágenes a borrar.
--  **images_change**: Utilizado para cambiar el texto alternativo o la posición de una imagen.
-- **images_new_info**: Información relacionada a cada nueva imagen. Requerido si hay nuevas imágenes y deben ser la misma cantidad.
-- **images_new**: Nuevas imágenes que añadir. Debe ser la misma cantidad que `images_new_info`.
-
-
+Todos los valores son opcionales.
 
 > /auth/usuario-creado
 
