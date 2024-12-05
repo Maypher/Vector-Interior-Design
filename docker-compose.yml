@@ -32,7 +32,7 @@ services:
         develop:
             watch:
                 - action: sync
-                  path: ./backend/admin/src/
+                  path: ./backend/
                   target: /app/src/
         restart: on-failure
         profiles:

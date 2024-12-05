@@ -6,7 +6,16 @@ from common.database import generic_database
 class Image:
     filename: str
     alt_text: str
-    indices: int
+    index: int
+
+
+@dataclass
+class Ambiente:
+    id: int
+    name: str
+    description: str | None
+    index: int
+    images: list[Image]
 
 
 @dataclass
@@ -14,15 +23,77 @@ class Obra:
     id: int
     name: str
     description: str
-    images: list[Image]
+    ambientes: list[Ambiente]
 
 
-def get_obra_by_id(id: int) -> Obra | None:
+def get_obra_by_id(id: int, allow_private: bool = False) -> Obra | None:
     """Returns the obra matching the given id or None."""
     data = generic_database.query(
+        f"""
+    SELECT obra.id, nombre, descripcion FROM obra
+    WHERE obra.id = %s {"AND publico" if not allow_private else ""};
+    """,
+        (id,),
+        1,
+    )
+
+    if not data:
+        return None
+
+    obra_id = int(data[0])
+    name = data[1]
+    description = data[2]
+
+    obra = Obra(obra_id, name, description, get_ambientes_by_obra(obra_id))
+
+    return obra
+
+
+def get_obras(
+    page: int = 1, page_size: int = 10, allow_private: bool = False
+) -> list[Obra]:
+    """Retrieves a list of obras. Paginated by the given size"""
+    offset = (page - 1) * page_size
+
+    obra_ids = generic_database.query(
+        f"""
+        SELECT obra.id FROM obra {"WHERE publico" if not allow_private else ""} 
+        LIMIT %s OFFSET %s;
+    """,
+        (page_size, offset),
+    )
+
+    print(obra_ids)
+
+    return [get_obra_by_id(id[0], allow_private) for id in obra_ids]
+
+
+def get_obras_by_name(
+    name: str, page: int = 1, page_size: int = 10, allow_private: bool = False
+):
+    """Returns all the obras like a given name. Paginated."""
+    # Code repetition bad and single source of truth stfu.
+    offset = (page - 1) * page_size
+    obra_ids = generic_database.query(
+        f"""
+        SELECT obra.id
+        WHERE obra.nombre ILIKE %s AND {"publico" if not allow_private else ""}
+        LIMIT %s OFFSET %s;
+    """,
+        (f"%{name}%", page_size, offset),
+    )
+
+    return [get_obra_by_id(id) for id in obra_ids]
+
+
+def get_ambiente_by_id(id: int) -> Ambiente | None:
+    """Returns the ambiente matching the given id or None."""
+
+    data = generic_database.query(
         """
-    SELECT obra.id, nombre, descripcion, archivo, texto_alt, indice FROM obra LEFT JOIN imagen ON obra.id = imagen.obra_id 
-    WHERE obra.id = %s;
+    SELECT ambiente.id, nombre, descripcion, ambiente.indice, archivo, texto_alt, imagen.indice 
+    FROM ambiente LEFT JOIN imagen ON ambiente.id = imagen.ambiente_id 
+    WHERE ambiente.id = %s;
     """,
         (id,),
     )
@@ -30,83 +101,36 @@ def get_obra_by_id(id: int) -> Obra | None:
     if not data:
         return None
 
-    obra = Obra(
-        data[0][0],
-        data[0][1],
-        data[0][2],
-        [Image(image[3], image[4], image[5]) for image in data],
-    )
+    ambiente_id = data[0][0]
+    nombre = data[0][1]
+    description = data[0][2]
+    index = data[0][3]
+    images = []
 
-    return obra
+    for entry in data:
+        image_data = entry[4:]
+        filename = image_data[0]
+        alt_text = image_data[1]
+        img_index = image_data[2]
+
+        if filename and alt_text and img_index is not None:
+            images.append(Image(filename, alt_text, img_index))
+
+    ambiente = Ambiente(ambiente_id, nombre, description, index, images)
+
+    return ambiente
 
 
-def get_obras(page: int = 1, page_size: int = 10) -> list[Obra]:
-    """Retrieves a list of obras. Paginated by the given size"""
-    offset = (page - 1) * page_size
+def get_ambientes_by_obra(obra_id: int) -> list[Ambiente]:
+    """Returns all ambientes for the given obra_id."""
 
-    data = generic_database.query(
+    found_ambientes = generic_database.query(
         """
-        SELECT obra.id, nombre, descripcion, archivo, texto_alt, indice FROM obra LEFT JOIN imagen ON obra.id = imagen.obra_id 
-        LIMIT %s OFFSET %s;
+    SELECT ambiente.id 
+    FROM obra INNER JOIN ambiente ON ambiente.obra_id = obra.id 
+    WHERE obra.id = %s;
     """,
-        (page_size, offset),
+        (obra_id,),
     )
 
-    obras: list[Obra] = []
-
-    for obra in data:
-        id = obra[0]
-        name = obra[1]
-        description = obra[2]
-        image = obra[3]
-        alt_text = obra[4]
-        index = obra[5]
-
-        registered_obra = next((obra for obra in obras if obra.id == id), None)
-
-        # If the current obra has been registered only save the images.
-        if registered_obra:
-            registered_obra.images.append(Image(image, alt_text, index))
-        else:
-            obra = Obra(id, name, description, [])
-            obra.images.append(Image(image, alt_text, index))
-            obras.append(obra)
-
-    return obras
-
-
-def get_obras_by_name(name: str, page: int = 1, page_size: int = 10):
-    """Returns all the obras like a given name. Paginated."""
-    # Code repetition bad and single source of truth stfu.
-    offset = (page - 1) * page_size
-    data = generic_database.query(
-        """
-        SELECT obra.id, nombre, descripcion, archivo, texto_alt, indice FROM obra LEFT JOIN imagen ON obra.id = imagen.obra_id
-        WHERE obra.nombre ILIKE %s
-        LIMIT %s OFFSET %s;
-    """,
-        (f"%{name}%", page_size, offset),
-    )
-
-    # Store it in a dict for faster id lookup. Then just return the values
-    obras: dict[int, Obra] = {}
-
-    for obra in data:
-        id = obra[0]
-        name = obra[1]
-        description = obra[2]
-        image = obra[3]
-        alt_text = obra[4]
-        index = obra[5]
-
-        registered_obra = obras.get(id)
-
-        # If the current obra has been registered only save the images.
-        if registered_obra:
-            registered_obra.images.append(Image(image, alt_text, index))
-        else:
-            obra = Obra(id, name, description, [])
-            obra.images.append(Image(image, alt_text, index))
-            obras[id] = obra
-
-    return list(obras.values())
+    return [get_ambiente_by_id(int(id[0])) for id in found_ambientes]

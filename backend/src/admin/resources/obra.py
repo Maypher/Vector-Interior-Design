@@ -2,37 +2,13 @@ import resources.utils as utils
 import uuid
 from werkzeug.datastructures import FileStorage
 from db.database import admin_database
-from dataclasses import dataclass
 import os
-from typing import Tuple
 from common.obra import *
 
 STORAGE_LOCATION = "/storage/images/"
 
 
-@dataclass
-class Image:
-    filename: str
-    alt_text: str
-    indices: int
-
-
-@dataclass
-class Obra:
-    id: int
-    name: str
-    description: str
-    images: list[Image]
-
-
-def new_obra(
-    name: str,
-    description: str,
-    images: list[FileStorage],
-    alt_texts: list[
-        dict[str, str]
-    ],  # Here's in the format {filename: str, alt_text: str}
-):
+def create_obra(name: str, description: str):
     """Creates a new obra. Data validation is assumed."""
     work_id = admin_database.query(
         """
@@ -42,24 +18,13 @@ def new_obra(
         1,
     )[0]
 
-    try:
-        # Zip up images and alt text to get [(image, alt text)]
-        new_images(
-            [
-                (image, alt_text["alt_text"])
-                for image, alt_text in zip(images, alt_texts)
-            ],
-            work_id,
-        )
-    except Exception as e:
-        admin_database.rollback()
-        raise e
-
-    admin_database.commit()
     return work_id
 
 
 def delete_obra(id: int):
+    """
+    Deletes the obra identified by id alongside its related ambientes and images.
+    """
     obra = get_obra_by_id(id)
 
     if not obra:
@@ -80,22 +45,17 @@ def update_obra(
     id: int,
     nombre: str | None = None,
     description: str | None = None,
-    images_to_delete: list[Image] | None = None,
-    images_change: list[str] | None = None,
-    images_new: Tuple[(FileStorage, dict[str, str | int])] | None = None,
+    public: bool | None = None,
 ):
     """
-    Updates the obra identified by id. Name and description can be updated, images can be removed or alt text changed.
+    Updates the obra identified by id. Name and description can be updated.
 
     :param id: The id of the obra to change.
     :param nombre: The new name of the obra.
     :param description: The new description of the obra.
-    :param images_to_delete: A list of images to delete. (filename)
-    :param images_change: A list of images to change. ({filename: "file to change", alt_text: "new alt text", "index": "new index"})
-    :param images_new: A list of new images. ((FileStorage, {filename: str, alt_text: str, index: int}), ...)
     """
 
-    obra = get_obra_by_id(id)
+    obra = get_obra_by_id(id, True)
 
     if not obra:
         return
@@ -116,44 +76,108 @@ def update_obra(
             (description, id),
             commit=False,
         )
-    if images_change:
-        for image in images_change:
-            alt_text = image.get("alt_text")
-            index = image.get("index")
-            filename = image["filename"]
 
-            if alt_text:
-                admin_database.query(
-                    """
-                UPDATE imagen SET texto_alt = %s WHERE archivo = %s
-                """,
-                    (alt_text, filename),
-                    commit=False,
-                )
-            if (
-                index is not None
-            ):  # Not use 'if not index:' because if index = 0 then it should trigger but 0 == False
-                admin_database.query(
-                    """
-                UPDATE imagen SET indice = %s WHERE archivo = %s
-                """,
-                    (index, filename),
-                    commit=False,
-                )
-    if images_to_delete:
-        for image in images_to_delete:
-            delete_image(image.filename)
-    if images_new:
-        print([(image[0], image[1]["alt_text"]) for image in images_new], id)
-        new_images([(image[0], image[1]["alt_text"]) for image in images_new], id)
+    if public is not None:
+        admin_database.query(
+            """
+            UPDATE obra SET publico = %s WHERE id = %s
+        """,
+            (public, id),
+            commit=False,
+        )
 
     admin_database.commit()
 
 
-def new_image(
+def create_ambiente(obra_id: int, name: str, description: str | None = None) -> int:
+    """Creates a new ambiente for the given obra"""
+
+    ambiente_id = admin_database.query(
+        """
+    INSERT INTO ambiente (nombre, descripcion, obra_id) VALUES (%s, %s, %s) RETURNING id;
+    """,
+        (name, description, obra_id),
+        1,
+    )[0]
+
+    return ambiente_id
+
+
+def update_ambiente(
+    id: int,
+    new_name: str | None = None,
+    new_description: str | None = None,
+    new_index: int | None = None,
+):
+    """
+    Updates the ambiente identified by id. Name and description can be updated.
+
+    :param id: The id of the ambiente to change.
+    :param new_name: The new name of the ambiente.
+    :param description: The new description of the ambiente.
+    :param index: The new index of the ambiente inside obra.
+    """
+    ambiente = get_ambiente_by_id(id)
+
+    print(ambiente)
+
+    if not ambiente:
+        return
+
+    if new_name:
+        admin_database.query(
+            """
+            UPDATE ambiente SET nombre = %s WHERE id = %s
+        """,
+            (new_name, id),
+            commit=False,
+        )
+    if new_description:
+        admin_database.query(
+            """
+            UPDATE ambiente SET descripcion = %s WHERE id = %s
+        """,
+            (new_description, id),
+            commit=False,
+        )
+    if new_index is not None:
+        # Done this way because if new_index = 0 then the condition fails
+        admin_database.query(
+            """
+            UPDATE ambiente SET indice = %s WHERE id = %s
+        """,
+            (new_index, id),
+            commit=False,
+        )
+
+    admin_database.commit()
+
+
+def delete_ambiente(id: int):
+    """
+    Deletes the ambiente identified by id alongside all images related to it.
+    """
+    ambiente = get_ambiente_by_id(id)
+
+    if not ambiente:
+        return
+
+    # Image are collated in database but they also need to be removed from the filesystem
+    for image in ambiente.images:
+        delete_image(image.filename)
+
+    admin_database.query(
+        """
+    DELETE FROM ambiente WHERE id = %s
+    """,
+        (id,),
+    )
+
+
+def create_image(
     image: FileStorage,
     alt_text: str,
-    work_id: int,
+    ambiente_id: int,
 ) -> str | None:
     """
     Saves an image to disk relating it to the given work and returns its unique filename.
@@ -163,9 +187,9 @@ def new_image(
         admin_database.rollback()
         return
 
-    obra = get_obra_by_id(work_id)
+    ambiente = get_ambiente_by_id(ambiente_id)
 
-    if not obra:
+    if not ambiente:
         return
 
     file_extension = utils.file_extension(image.filename)
@@ -180,9 +204,9 @@ def new_image(
     try:
         admin_database.query(
             """
-        INSERT INTO imagen (archivo, texto_alt, obra_id) VALUES (%s, %s, %s);
+        INSERT INTO imagen (archivo, texto_alt, ambiente_id) VALUES (%s, %s, %s);
         """,
-            (image.filename, alt_text, work_id),
+            (image.filename, alt_text, ambiente.id),
         )
     except Exception as e:
         os.remove(image_location)
@@ -191,23 +215,27 @@ def new_image(
     return image.filename
 
 
-def new_images(images: list[Tuple[FileStorage, str]], work_id):
+def update_image(filename: int, alt_text: str | None = None, index: int | None = None):
     """
-    Used to save multiple images at once. If one image fails to save all images are rolled back.
-
-    :param images: The images to create. (FileStorage, alt_text)
+    Updates the alt text of the given image.
     """
-    saved_images = []
 
-    for image, alt_text in images:
-        try:
-            filename = new_image(image, alt_text, work_id)
-            if not filename:
-                raise ValueError(f"Ninguna obra con el ID {work_id} existe.")
-        except Exception as e:
-            for image in saved_images:
-                delete_image(filename)
-            raise e
+    if alt_text:
+        admin_database.query(
+            """
+            UPDATE imagen SET texto_alt = %s WHERE archivo = %s
+            """,
+            (alt_text, filename),
+        )
+    if index is not None:
+        print("new index", index)
+        # Done this way because if index = 0 then the condition fails
+        admin_database.query(
+            """
+            UPDATE imagen SET indice = %s WHERE archivo = %s
+            """,
+            (index, filename),
+        )
 
 
 def delete_image(filename: str):

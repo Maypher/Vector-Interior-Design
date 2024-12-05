@@ -19,11 +19,9 @@ def create_account():
     if user_count > 0:
         return "Cuenta principal ya creada.", 401
 
-    request_data: dict = request.json
-
-    email = request_data.get("email")
-    name = request_data.get("name")
-    password = request_data.get("password")
+    email = request.form.get("email")
+    name = request.form.get("name")
+    password = request.form.get("password")
 
     if not email or not name or not password:
         return "Información incompleta. Correo y contraseña requeridas.", 400
@@ -48,9 +46,8 @@ def create_account():
 
 @auth_blueprint.post("/iniciar-sesion")
 def login():
-    request_data: dict = request.json
-    email = request_data.get("email")
-    password = request_data.get("password")
+    email = request.form.get("email")
+    password = request.form.get("password")
 
     if not email or not password:
         return "Información incompleta. Proveer correo y contraseña.", 401

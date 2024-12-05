@@ -2,23 +2,18 @@ from flask import Flask, jsonify
 from os import environ
 from admin.db.migrations import MigrationManager
 from admin.auth.routes import auth_blueprint
-from admin.resources.routes import obra_admin_routes
+from admin.resources import obra_admin_routes, image_admin_routes, ambiente_admin_routes
 from psycopg import errors
 from sys import argv
 from admin.db.database import admin_database
-from common.routes import obra_fetch_routes
 
 app = Flask(__name__)
 app.secret_key = environ.get("SECRET_KEY")
 
 app.register_blueprint(auth_blueprint)
 app.register_blueprint(obra_admin_routes)
-app.register_blueprint(obra_fetch_routes)
-
-
-@app.route("/")
-def hello_world():
-    return jsonify({"msg": "Hello"})
+app.register_blueprint(ambiente_admin_routes)
+app.register_blueprint(image_admin_routes)
 
 
 def apply_migrations(command: str | None = None, migrate_to: int | None = None):

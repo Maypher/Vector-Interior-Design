@@ -28,7 +28,12 @@ class DatabaseManager:
         Commit determines if queries should be automatically committed after execution.
         """
         with self.database_connection.cursor() as cur:
-            query_result = cur.execute(query, params)
+            try:
+                query_result = cur.execute(query, params)
+            except Exception as e:
+                self.database_connection.rollback()
+                raise e
+
             res = None
 
             # Check for description because if a query doesn't return anything then fetch*() panics
