@@ -25,13 +25,14 @@ class Obra:
     description: str
     imagen_principal: str | None
     ambientes: list[Ambiente]
+    public: bool
 
 
 def get_obra_by_id(id: int, allow_private: bool = False) -> Obra | None:
     """Returns the obra matching the given id or None."""
     data = generic_database.query(
         f"""
-    SELECT obra.id, nombre, descripcion, imagen_principal FROM obra
+    SELECT obra.id, nombre, descripcion, imagen_principal, publico FROM obra
     WHERE obra.id = %s {"AND publico" if not allow_private else ""};
     """,
         (id,),
@@ -45,6 +46,7 @@ def get_obra_by_id(id: int, allow_private: bool = False) -> Obra | None:
     name = data[1]
     description = data[2]
     thumbnail_id = data[3]
+    publico = data[4]
 
     thumbnail = generic_database.query(
         """
@@ -60,6 +62,7 @@ def get_obra_by_id(id: int, allow_private: bool = False) -> Obra | None:
         description,
         thumbnail[0] if thumbnail else None,
         get_ambientes_by_obra(obra_id),
+        publico,
     )
 
     return obra
