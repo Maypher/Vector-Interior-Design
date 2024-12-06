@@ -45,6 +45,7 @@ def update_obra(
     id: int,
     nombre: str | None = None,
     description: str | None = None,
+    thumbnail: str | None = None,
     public: bool | None = None,
 ):
     """
@@ -52,6 +53,7 @@ def update_obra(
 
     :param id: The id of the obra to change.
     :param nombre: The new name of the obra.
+    :param thumbnail: The image that should be the thumbnail of this obra.
     :param description: The new description of the obra.
     """
 
@@ -76,7 +78,30 @@ def update_obra(
             (description, id),
             commit=False,
         )
+    if thumbnail:
+        image = admin_database.query(
+            """
+            SELECT id FROM imagen WHERE archivo = %s;
+            """,
+            (thumbnail,),
+            1,
+        )[0]
 
+        if image:
+            print(thumbnail, image)
+            admin_database.query(
+                """
+                UPDATE obra SET imagen_principal = %s WHERE id = %s;
+                """,
+                (image, obra.id),
+            )
+    else:
+        admin_database.query(
+            """
+                UPDATE obra SET imagen_principal = NULL WHERE id = %s;
+                """,
+            (obra.id,),
+        )
     if public is not None:
         admin_database.query(
             """

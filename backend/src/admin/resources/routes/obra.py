@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from admin.resources import obra
 from auth import login_required
+from psycopg import errors
 
 obra_admin_routes = Blueprint("obra", __name__, url_prefix="/obras")
 
@@ -71,11 +72,16 @@ def update_obra(id: int):
     name = request.form.get("name")
     description = request.form.get("description")
     public = request.form.get("public")
+    thumbnail = request.form.get("thumbnail")
 
     obra_model = obra.get_obra_by_id(id, True)
 
     if not obra_model:
         return f"Obra con ID {id} no encontrada.", 404
 
-    obra.update_obra(id, name, description, public)
+    try:
+        obra.update_obra(id, name, description, thumbnail, public)
+    except errors.DatabaseError as e:
+        if e.sqlstate == "P0001":
+            return "Imagen debe pertenecer a esta obra para ser imagen principal."
     return "", 200

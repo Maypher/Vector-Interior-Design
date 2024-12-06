@@ -148,13 +148,13 @@ BEGIN
     IF NEW.imagen_principal IS NOT NULL THEN
         -- Check if the image exists and belongs to an ambiente of the same obra
         IF NOT EXISTS (
-            SELECT 1 
+            SELECT
             FROM public.imagen img
             JOIN public.ambiente amb ON img.ambiente_id = amb.id
-            WHERE img.id = NEW.imagen_principal 
+            WHERE img.id = NEW.imagen_principal
               AND amb.obra_id = NEW.id
         ) THEN
-            RAISE EXCEPTION 'Imagen principal must belong to an ambiente of the same obra';
+            RAISE EXCEPTION 'Imagen principal must belong to an ambiente of the same obra' USING ERRCODE = 'P0001';
         END IF;
     END IF;
     

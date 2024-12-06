@@ -107,12 +107,13 @@ todos los ambientes e imágenes vinculadas a esta.
 
 **Método**: PUT
 
-**Descripción**: Actualiza la información de una obra
+**Descripción**: Actualiza la información de una obra.
 
 **Parámetros (form)**
 
 - **name (str)**: El nuevo nombre de la obra.
 - **description (str)**: La nueva descripción de la obra.
+- **thumbnail (str) (optional)**: La imagen principal que aparecerá en la miniatura de la obra.
 - **public (bool)**: Establece si una obra puede ser vista por el público. 
 
 ### Ambientes
