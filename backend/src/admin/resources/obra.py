@@ -8,13 +8,13 @@ from common.obra import *
 STORAGE_LOCATION = "/storage/images/"
 
 
-def create_obra(name: str, description: str):
+def create_obra(name: str, description: str, area: int):
     """Creates a new obra. Data validation is assumed."""
     work_id = admin_database.query(
         """
-    INSERT INTO obra (nombre, descripcion) VALUES (%s, %s) RETURNING id;
+    INSERT INTO obra (nombre, descripcion, area) VALUES (%s, %s, %s) RETURNING id;
     """,
-        (name, description),
+        (name, description, area),
         1,
     )[0]
 
@@ -45,6 +45,7 @@ def update_obra(
     id: int,
     nombre: str | None = None,
     description: str | None = None,
+    area: int | None = None,
     thumbnail: str | None = None,
     public: bool | None = None,
 ):
@@ -53,6 +54,7 @@ def update_obra(
 
     :param id: The id of the obra to change.
     :param nombre: The new name of the obra.
+    :param area: The area of the obra in meters squared.
     :param thumbnail: The image that should be the thumbnail of this obra.
     :param description: The new description of the obra.
     """
@@ -76,6 +78,14 @@ def update_obra(
             UPDATE obra SET descripcion = %s WHERE id = %s
         """,
             (description, id),
+            commit=False,
+        )
+    if area:
+        admin_database.query(
+            """
+            UPDATE obra SET area = %s WHERE id = %s
+        """,
+            (area, id),
             commit=False,
         )
     if thumbnail:

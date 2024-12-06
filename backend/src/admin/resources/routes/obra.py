@@ -44,13 +44,16 @@ def new_obra():
 
     name = form.get("name")
     description = form.get("description")
+    area = form.get("area")
 
     if not name:
         return "Nueva obra requiere un nombre.", 400
     if not description:
         return "Nueva obra requiere una descripción.", 400
+    if not area:
+        return "Nueva obra requiere un área.", 400
 
-    obra_id = obra.create_obra(name, description)
+    obra_id = obra.create_obra(name, description, area)
 
     return f"{obra_id}", 200
 
@@ -72,6 +75,7 @@ def update_obra(id: int):
     name = request.form.get("name")
     description = request.form.get("description")
     public = request.form.get("public")
+    area = request.form.get("area")
     thumbnail = request.form.get("thumbnail")
 
     obra_model = obra.get_obra_by_id(id, True)
@@ -80,7 +84,7 @@ def update_obra(id: int):
         return f"Obra con ID {id} no encontrada.", 404
 
     try:
-        obra.update_obra(id, name, description, thumbnail, public)
+        obra.update_obra(id, name, description, area, thumbnail, public)
     except errors.DatabaseError as e:
         if e.sqlstate == "P0001":
             return "Imagen debe pertenecer a esta obra para ser imagen principal."

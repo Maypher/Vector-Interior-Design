@@ -16,6 +16,7 @@ CREATE TABLE public.obra (
     id SMALLSERIAL PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     descripcion TEXT NOT NULL,
+    area INT NOT NULL,
     publico BOOLEAN NOT NULL DEFAULT false
 );
 
