@@ -7,6 +7,7 @@ obra_admin_routes = Blueprint("obra", __name__, url_prefix="/obras")
 
 
 @obra_admin_routes.get("/")
+@login_required
 def get_obras():
     try:
         page = request.args.get("page", 1)
@@ -15,22 +16,35 @@ def get_obras():
         # passed to the function as is.
         if page:
             page = int(page)
+            if page < 1:
+                return "Página debe ser mayor a 0.", 400
         else:
             raise ValueError
     except ValueError:
         return "Número de página invalido.", 400
 
+    try:
+        page_size = request.args.get("page_size", 10)
+
+        if page_size:
+            page_size = int(page_size)
+        else:
+            raise ValueError
+    except ValueError:
+        return "Tamaño de página invalido.", 400
+
     name = request.args.get("name")
 
     if name:
-        obras = obra.get_obras_by_name(name, page, allow_private=True)
+        obras = obra.get_obras_by_name(name, page, page_size, True)
     else:
-        obras = obra.get_obras(page, allow_private=True)
+        obras = obra.get_obras(page, page_size, True)
 
     return jsonify(obras)
 
 
 @obra_admin_routes.get("/<int:id>")
+@login_required
 def get_obra(id: int):
     found_obra = obra.get_obra_by_id(id, True)
 

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from common.database import generic_database
+from math import ceil
 
 
 @dataclass
@@ -79,15 +80,31 @@ def get_obras(
 
     obra_ids = generic_database.query(
         f"""
-        SELECT obra.id FROM obra {"WHERE publico" if not allow_private else ""} 
+        SELECT id FROM obra {"WHERE publico" if not allow_private else ""} 
         LIMIT %s OFFSET %s;
     """,
         (page_size, offset),
     )
 
-    print(obra_ids)
+    # I know this isn't the most efficient way but there will be at most 30 obras so ＜（＾－＾）＞.
+    obras_count = generic_database.query(
+        f"""
+    SELECT COUNT(*) FROM obra {"WHERE publico" if not allow_private else ""};
+    """,
+        count=1,
+    )[0]
 
-    return [get_obra_by_id(id[0], allow_private) for id in obra_ids]
+    page_count = ceil(obras_count / page_size)
+
+    return {
+        "page": page,
+        "page_count": page_count,
+        "obras": [
+            obra
+            for id in obra_ids
+            if (obra := get_obra_by_id(id[0], allow_private)) is not None
+        ],
+    }
 
 
 def get_obras_by_name(
@@ -98,14 +115,32 @@ def get_obras_by_name(
     offset = (page - 1) * page_size
     obra_ids = generic_database.query(
         f"""
-        SELECT obra.id
-        WHERE obra.nombre ILIKE %s AND {"publico" if not allow_private else ""}
+        SELECT id FROM obra
+        WHERE obra.nombre ILIKE %s {"AND publico" if not allow_private else ""}
         LIMIT %s OFFSET %s;
     """,
         (f"%{name}%", page_size, offset),
     )
 
-    return [get_obra_by_id(id) for id in obra_ids]
+    obras_count = generic_database.query(
+        f"""
+    SELECT COUNT(*) FROM obra WHERE obra.nombre ILIKE %s {"AND publico" if not allow_private else ""};
+    """,
+        (f"%{name}%",),
+        1,
+    )[0]
+
+    page_count = ceil(obras_count / page_size)
+
+    return {
+        "page": page,
+        "page_count": page_count,
+        "obras": [
+            obra
+            for id in obra_ids
+            if (obra := get_obra_by_id(id[0], allow_private)) is not None
+        ],
+    }
 
 
 def get_ambiente_by_id(id: int) -> Ambiente | None:

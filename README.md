@@ -37,8 +37,9 @@ Los servicios son los siguientes:
 
 **Parámetros (URL ?=)**
 
-- **pagina**: int = Página de obras que retornar.
-- **nombre**: str = Filtrar búsqueda por nombre.
+- **name**: str = Filtrar búsqueda por nombre.
+- **page**: int = Página de obras que retornar.
+- **page_size**: int = Tamaño de cada página.
 
 
 > /id
@@ -67,8 +68,9 @@ Una obra es la clase principal del programa. Contiene ambientes e imágenes.
 
 **Parámetros (URL ?=)**
 
-- **pagina**: int = Página de obras que retornar.
-- **nombre**: str = Filtrar búsqueda por nombre.
+- **name**: str = Filtrar búsqueda por nombre.
+- **page**: int = Página de obras que retornar.
+- **page_size**: int =Tamaño de cada página.
 
 
 > /obras/id
