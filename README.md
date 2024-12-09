@@ -116,6 +116,7 @@ todos los ambientes e imágenes vinculadas a esta.
 - **name (str)**: El nuevo nombre de la obra.
 - **description (str)**: La nueva descripción de la obra.
 - **thumbnail (str) (optional)**: La imagen principal que aparecerá en la miniatura de la obra.
+- **index**: El nuevo índice (zero based) para esta obra. Utilizado para mostrarlo en la UI.
 - **public (bool)**: Establece si una obra puede ser vista por el público. 
 
 ### Ambientes
@@ -154,7 +155,7 @@ Un ambiente es una sección de una obra. Esta contiene imágenes.
 
 - **name (str)**: El nuevo nombre del ambiente.
 - **description (str)**: La nueva descripción del ambiente.
-- **index (int)**: El nuevo indice del ambiente. Utilizado para ordenarlos en la UI.
+- **index (int)**: El nuevo indice del ambiente (zero-based). Utilizado para ordenarlos en la UI.
 
 **Explicación**: Todos los valores son opcionales.
 
@@ -193,7 +194,7 @@ Una imagen. Contiene un texto alternativo.
 **Parámetros (form)**:
 
 - **alt_text (str)**: El nuevo texto alternativo de la imagen.
-- **index (int)**: El nuevo indice de la imagen. Utilizado para ordenarlos en la UI.
+- **index (int)**: El nuevo indice de la imagen (zero-based). Utilizado para ordenarlos en la UI.
 
 **Explicación**: Todos los valores son opcionales.
 ****
