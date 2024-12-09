@@ -7,7 +7,6 @@ from math import ceil
 class Image:
     filename: str
     alt_text: str
-    index: int
 
 
 @dataclass
@@ -15,7 +14,6 @@ class Ambiente:
     id: int
     name: str
     description: str | None
-    index: int
     images: list[Image]
 
 
@@ -81,6 +79,7 @@ def get_obras(
     obra_ids = generic_database.query(
         f"""
         SELECT id FROM obra {"WHERE publico" if not allow_private else ""} 
+        ORDER BY indice
         LIMIT %s OFFSET %s;
     """,
         (page_size, offset),
@@ -117,6 +116,7 @@ def get_obras_by_name(
         f"""
         SELECT id FROM obra
         WHERE obra.nombre ILIKE %s {"AND publico" if not allow_private else ""}
+        ORDER BY indice
         LIMIT %s OFFSET %s;
     """,
         (f"%{name}%", page_size, offset),
@@ -148,32 +148,35 @@ def get_ambiente_by_id(id: int) -> Ambiente | None:
 
     data = generic_database.query(
         """
-    SELECT ambiente.id, nombre, descripcion, ambiente.indice, archivo, texto_alt, imagen.indice 
-    FROM ambiente LEFT JOIN imagen ON ambiente.id = imagen.ambiente_id 
-    WHERE ambiente.id = %s;
+    SELECT id, nombre, descripcion
+    FROM ambiente WHERE id = %s ORDER BY indice;
     """,
         (id,),
+        1,
     )
 
     if not data:
         return None
 
-    ambiente_id = data[0][0]
-    nombre = data[0][1]
-    description = data[0][2]
-    index = data[0][3]
+    ambiente_id = data[0]
+    nombre = data[1]
+    description = data[2]
+
+    images_data = generic_database.query(
+        """
+        SELECT archivo, texto_alt FROM imagen WHERE ambiente_id = %s ORDER BY indice;
+        """,
+        (ambiente_id,),
+    )
     images = []
 
-    for entry in data:
-        image_data = entry[4:]
-        filename = image_data[0]
-        alt_text = image_data[1]
-        img_index = image_data[2]
+    for image in images_data:
+        filename = image[0]
+        alt_text = image[1]
 
-        if filename and alt_text and img_index is not None:
-            images.append(Image(filename, alt_text, img_index))
+        images.append(Image(filename, alt_text))
 
-    ambiente = Ambiente(ambiente_id, nombre, description, index, images)
+    ambiente = Ambiente(ambiente_id, nombre, description, images)
 
     return ambiente
 
@@ -185,7 +188,7 @@ def get_ambientes_by_obra(obra_id: int) -> list[Ambiente]:
         """
     SELECT ambiente.id 
     FROM obra INNER JOIN ambiente ON ambiente.obra_id = obra.id 
-    WHERE obra.id = %s;
+    WHERE obra.id = %s ORDER BY ambiente.indice;
     """,
         (obra_id,),
     )

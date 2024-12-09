@@ -90,6 +90,7 @@ def update_obra(id: int):
     description = request.form.get("description")
     public = request.form.get("public")
     area = request.form.get("area")
+    index = request.form.get("index")
     thumbnail = request.form.get("thumbnail")
 
     obra_model = obra.get_obra_by_id(id, True)
@@ -97,9 +98,14 @@ def update_obra(id: int):
     if not obra_model:
         return f"Obra con ID {id} no encontrada.", 404
 
+    if index and not index.isdecimal() and float(index) < 1:
+        return f"Indice '{index}' debe ser un dígito mayor a 0."
+
     try:
-        obra.update_obra(id, name, description, area, thumbnail, public)
+        obra.update_obra(id, name, description, area, thumbnail, int(index), public)
     except errors.DatabaseError as e:
         if e.sqlstate == "P0001":
             return "Imagen debe pertenecer a esta obra para ser imagen principal."
+        else:
+            raise e
     return "", 200

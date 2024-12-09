@@ -4,6 +4,9 @@ from werkzeug.datastructures import FileStorage
 from db.database import admin_database
 import os
 from common.obra import *
+from psycopg import errors
+from psycopg.sql import SQL, Identifier
+from math import ceil, floor
 
 STORAGE_LOCATION = "/storage/images/"
 
@@ -43,19 +46,21 @@ def delete_obra(id: int):
 
 def update_obra(
     id: int,
-    nombre: str | None = None,
+    name: str | None = None,
     description: str | None = None,
     area: int | None = None,
-    thumbnail: str | None = None,
+    thumbnail: str | None | bool = None,
+    index: int | None = None,
     public: bool | None = None,
 ):
     """
     Updates the obra identified by id. Name and description can be updated.
 
     :param id: The id of the obra to change.
-    :param nombre: The new name of the obra.
+    :param name: The new name of the obra.
     :param area: The area of the obra in meters squared.
-    :param thumbnail: The image that should be the thumbnail of this obra.
+    :param thumbnail: The image that should be the thumbnail of this obra. Set to False to remove it.
+    :param index: The new index of the obra. Used to show the obras in order in the UI.
     :param description: The new description of the obra.
     """
 
@@ -64,12 +69,12 @@ def update_obra(
     if not obra:
         return
 
-    if nombre:
+    if name:
         admin_database.query(
             """
             UPDATE obra SET nombre = %s WHERE id = %s
         """,
-            (nombre, id),
+            (name, id),
             commit=False,
         )
     if description:
@@ -105,13 +110,15 @@ def update_obra(
                 """,
                 (image, obra.id),
             )
-    else:
+    elif thumbnail == False:
         admin_database.query(
             """
                 UPDATE obra SET imagen_principal = NULL WHERE id = %s;
                 """,
             (obra.id,),
         )
+    if index is not None:
+        update_index(id, "obra", index)
     if public is not None:
         admin_database.query(
             """
@@ -150,11 +157,9 @@ def update_ambiente(
     :param id: The id of the ambiente to change.
     :param new_name: The new name of the ambiente.
     :param description: The new description of the ambiente.
-    :param index: The new index of the ambiente inside obra.
+    :param index: The new zero-based index of the ambiente inside obra.
     """
     ambiente = get_ambiente_by_id(id)
-
-    print(ambiente)
 
     if not ambiente:
         return
@@ -176,15 +181,15 @@ def update_ambiente(
             commit=False,
         )
     if new_index is not None:
-        # Done this way because if new_index = 0 then the condition fails
-        admin_database.query(
+        obra_id = admin_database.query(
             """
-            UPDATE ambiente SET indice = %s WHERE id = %s
+        SELECT obra_id FROM ambiente WHERE id = %s
         """,
-            (new_index, id),
-            commit=False,
-        )
+            (ambiente.id,),
+            count=1,
+        )[0]
 
+        update_index(id, "ambiente", new_index, "obra_id", obra_id)
     admin_database.commit()
 
 
@@ -250,27 +255,34 @@ def create_image(
     return image.filename
 
 
-def update_image(filename: int, alt_text: str | None = None, index: int | None = None):
+def update_image(
+    filename: str, alt_text: str | None = None, new_index: int | None = None
+):
     """
     Updates the alt text of the given image.
+
+    :param filename: The filename of the image to update.
+    :param alt_text: The new alt text of the image.
+    :param new_index: The zero-based index where to move the image to.
     """
+
+    image = admin_database.query(
+        """SELECT id, ambiente_id FROM imagen WHERE archivo = %s""", (filename,), 1
+    )
+
+    if not image:
+        return
 
     if alt_text:
         admin_database.query(
             """
-            UPDATE imagen SET texto_alt = %s WHERE archivo = %s
+            UPDATE imagen SET texto_alt = %s WHERE id = %s
             """,
-            (alt_text, filename),
+            (alt_text, image[0]),
+            commit=False,
         )
-    if index is not None:
-        print("new index", index)
-        # Done this way because if index = 0 then the condition fails
-        admin_database.query(
-            """
-            UPDATE imagen SET indice = %s WHERE archivo = %s
-            """,
-            (index, filename),
-        )
+    if new_index is not None:
+        update_index(image[0], "imagen", new_index, "ambiente_id", image[1])
 
 
 def delete_image(filename: str):
@@ -285,3 +297,137 @@ def delete_image(filename: str):
         )
 
         os.remove(location)
+
+
+def update_index(
+    element_id: int,
+    tablename: str,
+    new_index: int,
+    where_col: str | None = None,
+    parent_id: int | None = None,
+):
+    """
+    Updates the index of given element in the given table.
+    The new index is passed as an integer but is transformed into a float to avoid having to update every entry in the database.
+    Doesn't commit.
+
+    :param element_id: The `id` of the element to update the index of.
+    :param tablename: The table in which the element is stored.
+    :param new_index: The zero-based index of where to put the element. It should be a zero-based integer.
+    :param where_col: For ambientes and imagenes. Used to filter by obra/ambiente.
+    :param parent_id: The id of the element to filter `where_col` by.
+    For example, to put an element in the second position it should be index 1.
+    """
+
+    max_index = admin_database.query(
+        SQL(
+            f"SELECT COUNT(*) FROM {{}} {SQL("WHERE {} = {}".format(Identifier(where_col), parent_id)) if where_col else ''};"
+        ).format(Identifier(tablename)),
+        count=1,
+    )[0]
+
+    # Clamp the new index between 0 and max index
+    offset = min(max(new_index, 0), int(max_index) - 1)
+
+    # Get the indices of the elements before and after the new insertion.
+    indices_around = admin_database.query(
+        SQL(
+            f"SELECT id, indice FROM {{}} ORDER BY indice OFFSET {{}} LIMIT {2 if offset > 0 else 1};"  # Done this way because if the offset is 0 then that means it's being moved to the begging so only fetch the first element
+        ).format(Identifier(tablename), offset, element_id)
+    )
+
+    # If there's only one indice it means its being moved to the end or beginning.
+    if len(indices_around) == 1:
+        if offset > 0:
+            # If the offset is greater than zero it means the element is moved to end.
+            admin_database.query(
+                SQL("UPDATE {} SET indice = nextval({}) WHERE id = {}").format(
+                    Identifier(tablename), f"{tablename}_indice_seq", element_id
+                )
+            )
+        else:
+            # If the offset is zero it means that the element is being moved to the beginning
+
+            final_index = indices_around[0][1] / 2
+
+            try:
+                admin_database.query(
+                    SQL("UPDATE {} SET indice = {} WHERE id = {};").format(
+                        Identifier(tablename), final_index, element_id
+                    ),
+                )
+            except errors.UniqueViolation:
+                # This means that the precision limit has been reached and should be refactored
+                fix_precision_limit(tablename, final_index)
+                # Insert the element again since it failed last time
+                update_index(element_id, tablename, new_index)
+    elif indices_around[0][0] == element_id:
+        # If the element itself is selected it means the two values are being swapped around.
+
+        sel_id = indices_around[1][0]
+
+        admin_database.query(
+            SQL(
+                """
+                UPDATE {0}
+                SET indice = CASE
+                    WHEN id = {1} THEN (SELECT indice FROM {0} WHERE id = {2})
+                    WHEN id = {2} THEN (SELECT indice FROM {0} WHERE id = {1})
+                END
+                WHERE id IN ({1}, {2});
+            """
+            ).format(Identifier(tablename), element_id, sel_id)
+        )
+    elif indices_around[1][0] == element_id:
+        # If the element itself is the element after it means it's being updated to its same position so just ignore it.
+        return
+    else:
+        # Move the element to the desired position
+
+        before_index = indices_around[0][1]
+        after_index = indices_around[1][1]
+        final_index = (before_index + after_index) / 2
+
+        try:
+            admin_database.query(
+                SQL("UPDATE {} SET indice = {} WHERE id = {};").format(
+                    Identifier(tablename), final_index, element_id
+                ),
+            )
+        except errors.UniqueViolation:
+            # This means that the precision limit has been reached and should be refactored
+            fix_precision_limit(tablename, final_index)
+            # Insert the element again since it failed last time
+            update_index(element_id, tablename, new_index)
+
+
+def fix_precision_limit(tablename: str, index_range: int):
+    """
+    Reorganizes the indexes of the given tablename around the `index_range`.
+    This is used when reordering has reached its precision limit.
+    """
+
+    upper_bound = ceil(index_range)
+    lower_bound = floor(index_range)
+
+    entries_to_update = admin_database.query(
+        SQL(
+            "SELECT id, indice FROM {} WHERE indice > {} AND indice < {} SORT BY indice;"
+        ).format(Identifier(tablename), lower_bound, upper_bound),
+    )
+
+    # How much space to leave between elements to spread them evenly
+    interval_between_indices = 1 / len(entries_to_update)
+
+    for index, id in enumerate(entries_to_update, 1):
+        admin_database.query(
+            SQL(
+                """
+            UPDATE {} SET indice = {} = {} WHERE id = {};
+            """
+            ).format(
+                Identifier(tablename),
+                lower_bound + interval_between_indices * index,
+                id,
+            ),
+        )

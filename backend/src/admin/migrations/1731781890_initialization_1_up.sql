@@ -12,134 +12,43 @@ CREATE TABLE administration.session (
     user_id INTEGER REFERENCES administration.usuario ON DELETE CASCADE
 );
 
+CREATE SEQUENCE obra_indice_seq;
+
 CREATE TABLE public.obra (
     id SMALLSERIAL PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     descripcion TEXT NOT NULL,
     area INT NOT NULL,
-    publico BOOLEAN NOT NULL DEFAULT false
+    indice FLOAT NOT NULL DEFAULT nextval('obra_indice_seq')::FLOAT,
+    publico BOOLEAN NOT NULL DEFAULT false,
+    CONSTRAINT unique_indice UNIQUE (indice) DEFERRABLE INITIALLY DEFERRED
 );
+
+CREATE SEQUENCE ambiente_indice_seq;
 
 CREATE TABLE public.ambiente (
     id SMALLSERIAL PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     descripcion TEXT,
     obra_id INTEGER REFERENCES obra ON DELETE CASCADE,
-    indice INT NOT NULL,
+    indice FLOAT NOT NULL DEFAULT nextval('ambiente_indice_seq')::FLOAT,
     CONSTRAINT repeated_index_ambiente UNIQUE (obra_id, indice) DEFERRABLE INITIALLY DEFERRED,
     CONSTRAINT repeated_name UNIQUE (obra_id, nombre)
 );
+
+CREATE SEQUENCE imagen_indice_seq;
 
 CREATE TABLE public.imagen (
     id SMALLSERIAL PRIMARY KEY,
     archivo VARCHAR(255) UNIQUE NOT NULL,
     texto_alt VARCHAR(255) NOT NULL,
-    indice INT NOT NULL,
+    indice FLOAT NOT NULL DEFAULT nextval('imagen_indice_seq')::FLOAT,
     ambiente_id INTEGER REFERENCES ambiente ON DELETE CASCADE,
     CONSTRAINT repeated_index_image UNIQUE (ambiente_id, indice) DEFERRABLE INITIALLY DEFERRED
 );
+
 -- Done this way because of circular dependencies
 ALTER TABLE public.obra ADD COLUMN imagen_principal INTEGER REFERENCES imagen;
-
-CREATE OR REPLACE FUNCTION adjust_list_order()
-RETURNS TRIGGER AS $$
-DECLARE
-    old_index INT;
-    new_index INT;
-    max_index INT;
-
-    target_column text := TG_ARGV[0];
-BEGIN
-    -- Get the old and new indices
-    old_index := OLD.indice;
-    new_index := NEW.indice;
-
-    EXECUTE format(
-        'SELECT COALESCE(MAX(indice), 0) FROM %I
-        WHERE %I = $1.%s;', 
-        TG_TABLE_NAME, target_column, target_column
-    ) USING NEW INTO max_index;
-
-    -- Clamp the new index to the range [0, max_index]
-    new_index := LEAST(GREATEST(new_index, 0), max_index);
-
-    -- If the order_index is not changing, do nothing
-    IF old_index IS NOT DISTINCT FROM new_index THEN
-        NEW.indice := new_index;
-        RETURN NEW;
-    END IF;
-
-    -- Handle moving to a lower index (e.g., 2 -> 0)
-    IF new_index < old_index THEN
-       EXECUTE format (
-            'UPDATE %I
-            SET indice = indice + 1
-            WHERE %I = $1.%s
-            AND indice >= %s
-            AND indice < %s;',
-            TG_TABLE_NAME, target_column, target_column, new_index, old_index
-        ) USING NEW;
-
-    -- Handle moving to a higher index (e.g., 0 -> 2)
-    ELSIF new_index > old_index THEN
-        EXECUTE format (
-            'UPDATE %I
-            SET indice = indice - 1
-            WHERE %I = $1.%s
-            AND indice > %s
-            AND indice <= %s;',
-            TG_TABLE_NAME, target_column, target_column, old_index, new_index
-        ) USING NEW;
-    END IF;
-
-    -- Update the moved image to its final index
-    NEW.indice := new_index;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER adjust_image_order
-BEFORE UPDATE OF indice ON imagen
-FOR EACH ROW
-WHEN (pg_trigger_depth() < 1)
-EXECUTE FUNCTION adjust_list_order("ambiente_id");
-
-CREATE TRIGGER adjust_ambiente_order
-BEFORE UPDATE OF indice ON ambiente
-FOR EACH ROW
-WHEN (pg_trigger_depth() < 1)
-EXECUTE FUNCTION adjust_list_order("obra_id");
-
-CREATE OR REPLACE FUNCTION assign_indice()
-RETURNS TRIGGER AS $$
-DECLARE
-    target_column text := TG_ARGV[0];
-    new_index int;
-BEGIN
-
-    EXECUTE format(
-        'SELECT COALESCE(
-        (SELECT MAX(indice) FROM %I WHERE %I = $1.%s), 
-        -1
-        ) + 1;',
-        TG_TABLE_NAME, target_column, target_column
-    ) USING NEW INTO new_index;
-
-    NEW.indice := new_index;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_assign_indice_image
-BEFORE INSERT ON imagen
-FOR EACH ROW
-EXECUTE FUNCTION assign_indice("ambiente_id");
-
-CREATE TRIGGER trigger_assign_indice_ambiente
-BEFORE INSERT ON ambiente
-FOR EACH ROW
-EXECUTE FUNCTION assign_indice("obra_id");
 
 -- Create a function to validate the imagen_principal constraint
 CREATE OR REPLACE FUNCTION validate_imagen_principal()
