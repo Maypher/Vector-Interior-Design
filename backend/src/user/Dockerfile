@@ -23,6 +23,7 @@ ENV PATH="/app/.venv/bin:$PATH" \
 # I know Docker doesn't require venv but poetry does it this way so.
 COPY --from=dependencies /app/.venv ./.venv/
 
-COPY ./src/ ./src/
+COPY ./src/user/ ./src/user/
+COPY ./src/common/ ./src/common/
 
 CMD ["python", "-u", "/app/src/user/app.py"]

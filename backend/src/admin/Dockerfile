@@ -22,7 +22,8 @@ ENV PATH="/app/.venv/bin:$PATH" \
 
 COPY --from=dependencies /app/.venv ./.venv/
 
-COPY ./src/ ./src/
+COPY ./src/admin/ ./src/admin/
+COPY ./src/common/ ./src/common/
 
 WORKDIR /app/src/admin/
 

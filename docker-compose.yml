@@ -32,8 +32,11 @@ services:
         develop:
             watch:
                 - action: sync
-                  path: ./backend/
-                  target: /app/src/
+                  path: ./backend/src/admin/
+                  target: /app/src/admin/
+                - action: sync
+                  path: ./backend/src/common/
+                  target: /app/src/common/
         restart: on-failure
         profiles:
             - prod
@@ -53,8 +56,11 @@ services:
         develop:
             watch:
                 - action: sync
-                  path: ./backend/user/src/
+                  path: ./backend/src/user/
                   target: /app/src/
+                - action: sync
+                  path: ./backend/src/common/
+                  target: /app/src/common/
         environment:
             - PORT=${USER_PORT}
             - SECRET_KEY=${USER_SERVER_SECRET_KEY}
