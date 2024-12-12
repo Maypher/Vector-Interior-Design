@@ -1,6 +1,6 @@
 <script lang="ts">
 	import EditableInput from '$lib/components/input/EditableInput.svelte';
-	import Markdown from '$lib/components/input/Markdown.svelte';
+	import Markdown from '$lib/components/markdown/Markdown.svelte';
 
 	const { data } = $props();
 
@@ -16,6 +16,6 @@
 			errors={[]}
 			type="text"
 		/>
-		<Markdown />
+		<Markdown label="Descripción" name="description" />
 	</form>
 </div>

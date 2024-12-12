@@ -1,14 +1,15 @@
 <script lang="ts">
-	import { type ObraData } from '$lib/utilities/interfaces';
+	import { type Obra } from '$lib/utilities/interfaces';
 
 	let searchParams = $state({
 		name: '',
 		page: 1
 	});
+
 	// Used to highlight the search string in the results. Not derived because it should only update on search.
 	let nameRegex: RegExp = $state(new RegExp(`(${searchParams.name})`, 'gi'));
 
-	let obraPromise: Promise<Array<ObraData>> = $state(fetchObras());
+	let obraPromise: Promise<Array<Obra>> = $state(fetchObras());
 
 	async function fetchObras() {
 		nameRegex = new RegExp(`(${searchParams.name})`, 'gi');
@@ -22,7 +23,9 @@
 
 		if (res.ok) {
 			const data = await res.json();
-			return data;
+			console.log(data);
+			console.log(data.obras);
+			return data.obras;
 		}
 	}
 
@@ -41,7 +44,7 @@
 	<div class="my-4 max-w-md m-auto">
 		{#await obraPromise}
 			<p>Cargando...</p>
-		{:then data: Array<ObraData>}
+		{:then data: Array<Obra>}
 			<ul class="list-disc">
 				{#if data.length == 0}
 					{`Ninguna obra con el nombre ${searchParams.name}`}
@@ -51,11 +54,16 @@
 							<a href={`/panel/${obra.id}`}>
 								{@html obra.name.replace(nameRegex, '<b>$1</b>')}
 							</a>
-							<img src={`/images/${obra.images[0].filename}`} alt={obra.images[0].alt_text} />
+							{#if obra.thumbnail}<img
+									src={`/images/${obra.thumbnail.filename}`}
+									alt={obra.thumbnail.alt_text}
+								/>
+							{/if}
 						</li>
 					{/each}
 				{/if}
 			</ul>
 		{/await}
+		<a href="/obras/crear">Nueva Obra</a>
 	</div>
 </div>

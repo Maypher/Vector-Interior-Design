@@ -1,5 +1,5 @@
 <script>
-	import { redirectWithToast } from '$lib/utilities/toasts';
+	import { redirect } from '@sveltejs/kit';
 
 	let { children } = $props();
 
@@ -8,7 +8,7 @@
 			method: 'POST'
 		});
 
-		if (res.status == 200) redirectWithToast('/cuenta', 'Cierre de sesión exitoso.', 'SUCCESS');
+		if (res.status == 200) redirect(302, '/cuenta/');
 	}
 </script>
 

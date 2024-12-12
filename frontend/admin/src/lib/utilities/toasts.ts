@@ -1,42 +1,18 @@
-import { toast, type SvelteToastOptions } from "@zerodevx/svelte-toast";
-import { goto } from "$app/navigation";
-import { redirect } from "@sveltejs/kit";
-import { browser } from "$app/environment";
+import { toast } from "@zerodevx/svelte-toast";
 
-const toastStyles = {
-    "SUCCESS": {
-        theme: {
-            '--toastBackground': '#01b21f',
-            '--toastBarBackground': '#008116'
-        }
-    },
-    "ERROR": {
-        theme: {
-            '--toastBackground': '#af0000',
-            '--toastBarBackground': '#7e0000'
-        }
-    },
-    "WARNING": {
-        theme: {
-            '--toastColor': "black",
-            '--toastBackground': '#ECE81A',
-            '--toastBarBackground': '#adb502'
-        }
+export const success = (m: string) => toast.push(m, {
+    theme: {
+        '--toastBackground': 'green',
+        '--toastColor': 'white',
+        '--toastBarBackground': 'olive'
     }
-}
+})
 
-export function createToast(msg: string, style: "SUCCESS" | "ERROR" | "WARNING") {
-    toast.push(msg, toastStyles[style]);
-}
+export const error = (m: string) => toast.push(m, {
+    theme: {
+        '--toastBackground': 'red',
+        '--toastColor': 'white',
+        '--toastBarBackground': 'maroon'
+    }
+})
 
-export function redirectWithToast(url: string, msg: string, style: "SUCCESS" | 'ERROR' | 'WARNING') {
-    const query = new URLSearchParams({
-        toastMsg: msg,
-        toastStyle: style
-    }).toString();
-
-    const finalURL = `${url}?${query}`;
-
-    if (browser) goto(finalURL);
-    else redirect(302, finalURL);
-}

@@ -8,13 +8,24 @@ export interface UserData {
     id: number
 }
 
-export interface ObraData {
+export interface Obra {
     id: number,
     name: string,
+    area: number,
     description: string,
-    images: Array<{
-        filename: string,
-        alt_text: string,
-        indice: number
-    }>
+    thumbnail?: Image,
+    ambientes: Array<Ambiente>,
+    public: boolean
+}
+
+export interface Ambiente {
+    id: number,
+    name: string,
+    description?: string,
+    images: Array<Image>
+}
+
+export interface Image {
+    alt_text: string,
+    filename: string
 }

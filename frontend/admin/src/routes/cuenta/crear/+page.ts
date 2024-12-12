@@ -1,7 +1,7 @@
-import { redirectWithToast } from '$lib/utilities/toasts.js';
+import { redirect } from '@sveltejs/kit';
 
 export async function load({ parent }) {
     let user_exists = (await parent()).user_exists;
 
-    if (user_exists) redirectWithToast("/cuenta/", "Cuenta principal ya creada. Por favor iniciar sesión.", "WARNING");
+    if (user_exists) redirect(302, "/cuenta/");
 }
