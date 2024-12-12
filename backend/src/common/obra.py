@@ -23,7 +23,7 @@ class Obra:
     name: str
     description: str
     area: int
-    imagen_principal: str | None
+    thumbnail: Image | None
     ambientes: list[Ambiente]
     public: bool
 
@@ -49,20 +49,25 @@ def get_obra_by_id(id: int, allow_private: bool = False) -> Obra | None:
     publico = data[4]
     area = data[5]
 
-    thumbnail = generic_database.query(
+    thumbnail_data = generic_database.query(
         """
-        SELECT archivo FROM imagen WHERE id = %s;
+        SELECT archivo, texto_alt FROM imagen WHERE id = %s;
         """,
         (thumbnail_id,),
         1,
     )
+
+    thumbnail = None
+
+    if thumbnail_data:
+        thumbnail = Image(thumbnail_data[0], thumbnail_data[1])
 
     obra = Obra(
         obra_id,
         name,
         description,
         area,
-        thumbnail[0] if thumbnail else None,
+        thumbnail,
         get_ambientes_by_obra(obra_id),
         publico,
     )
