@@ -13,6 +13,7 @@ services:
             - DB_PORT=${DATABASE_PORT}
             - DB_NAME=${DATABASE_NAME}
             - SECRET_KEY=${ADMIN_SERVER_SECRET_KEY}
+            - FRONTEND_URL=${ADMIN_FRONTEND_URL}
             - COMMON_PORT=${USER_PORT}
             - COMMON_SECRET_KEY=${USER_SERVER_SECRET_KEY}
             - COMMON_USERNAME=${USER_USERNAME}
@@ -138,6 +139,9 @@ services:
             - admin-backend
         networks:
             - backend
+        environment:
+            - ADMIN_PORT=${ADMIN_PORT}
+            - USER_PORT=${USER_PORT}
 volumes:
     data:
 networks:

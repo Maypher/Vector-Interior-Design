@@ -1,0 +1,22 @@
+server {
+    listen 80;
+    location / {
+        proxy_pass "http://admin-backend:${ADMIN_PORT}";
+    }
+
+    location ~* ^/images/.*\.(jpg|jpeg|png)$ {
+        root /storage/;
+    }
+}
+
+server {
+    listen 20;
+    location / {
+        proxy_pass "http://user-backend:${USER_PORT}";
+    }
+
+    location ~* ^/images/.*\.(jpg|jpeg|png)$ {
+        root /storage/;
+    }
+}
+
