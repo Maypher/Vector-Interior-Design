@@ -115,6 +115,7 @@ todos los ambientes e imágenes vinculadas a esta.
 
 - **name (str)**: El nuevo nombre de la obra.
 - **description (str)**: La nueva descripción de la obra.
+- **area (int)**: La nueva área de la obra.
 - **thumbnail (str) (optional)**: La imagen principal que aparecerá en la miniatura de la obra.
 - **index**: El nuevo índice (zero based) para esta obra. Utilizado para mostrarlo en la UI.
 - **public (bool)**: Establece si una obra puede ser vista por el público. 
