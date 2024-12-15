@@ -2,7 +2,7 @@ from db.database import admin_database
 from secrets import token_urlsafe
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from flask import session as flask_session
+from flask import session as flask_session, request, Response
 from functools import wraps
 
 
@@ -103,7 +103,7 @@ def remove_session(session_id: str):
 def login_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        session_id = flask_session.get("session_id")
+        session_id = request.cookies.get("session_id")
         session = get_session(session_id)
 
         if session:
@@ -111,7 +111,18 @@ def login_required(func):
                 return "Session expired. Please login again.", 401
             elif should_refresh_session(session):
                 refreshes_session(session)
-            return func(*args, **kwargs)
+                res: Response = func(*args, **kwargs)
+                res.set_cookie(
+                    "session_id",
+                    session.session_id,
+                    expires=session.expires_at,
+                    httponly=True,
+                    samesite="None",
+                    secure=False,
+                )
+                return res
+            else:
+                return func(*args, **kwargs)
         else:
             return "No credentials found. Please login.", 401
 

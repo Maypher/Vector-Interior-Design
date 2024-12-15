@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.12"
 flask = "^3.1.0"
 psycopg = "^3.2.3"
+Flask-Cors = "^5.0.0"
 
 [tool.poetry.group.admin]
 optional = true

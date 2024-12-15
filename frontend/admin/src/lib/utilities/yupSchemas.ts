@@ -28,3 +28,8 @@ export const obraCreateSchema = object({
     area: number().default(1).min(1, "El debe ser mayor a cero."),
     description: string().required("Descripción requerida.")
 })
+
+export const ambienteCreateSchema = object({
+    name: string().required("Nombre requerido.").min(5, "Nombre debe tener un mínimo de 5 caracteres"),
+    description: string().default('')
+});

@@ -93,6 +93,16 @@ def update_obra(id: int):
     index = request.form.get("index")
     thumbnail = request.form.get("thumbnail")
 
+    try:
+        area = int(area)
+    except TypeError:
+        area = None
+
+    try:
+        index = int(index)
+    except TypeError:
+        index = None
+
     obra_model = obra.get_obra_by_id(id, True)
 
     if not obra_model:
@@ -102,7 +112,7 @@ def update_obra(id: int):
         return f"Indice '{index}' debe ser un dígito mayor a 0."
 
     try:
-        obra.update_obra(id, name, description, area, thumbnail, int(index), public)
+        obra.update_obra(id, name, description, area, thumbnail, index, public)
     except errors.DatabaseError as e:
         if e.sqlstate == "P0001":
             return "Imagen debe pertenecer a esta obra para ser imagen principal."

@@ -314,7 +314,6 @@ export function updateListOnEnter(textArea: HTMLTextAreaElement) {
                     insertAtCursor(textArea, `\n${nextOrder}. `);
                 }
                 else if (quoteStartRegex.test(lastLine) || (/^\>/.test(lastLine) && textAfterCursor)) {
-                    console.log("quote");
                     // If the last line is a quote block continue it.
                     insertAtCursor(textArea, "\n> ");
                 }

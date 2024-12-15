@@ -2,6 +2,7 @@ import { loginSchema } from '$lib/utilities/yupSchemas';
 import { fail, redirect } from '@sveltejs/kit';
 import { superValidate } from "sveltekit-superforms";
 import { yup } from 'sveltekit-superforms/adapters';
+import { PUBLIC_apiUrl } from '$env/static/public';
 
 export const actions = {
     default: async ({ request }) => {
@@ -11,7 +12,7 @@ export const actions = {
             return fail(400, { form });
         }
 
-        const res = await fetch("/api/auth/iniciar-sesion", {
+        const res = await fetch(PUBLIC_apiUrl + "/auth/iniciar-sesion", {
             body: await request.formData()
         });
 

@@ -1,17 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import basicSsl from '@vitejs/plugin-basic-ssl'
 
 export default defineConfig({
-	plugins: [sveltekit()],
-	server: {
-		proxy: {
-			"/api": {
-				target: "http://localhost:8080/",
-				rewrite: (path) => path.replace(/^\/api/, ""),
-			},
-			"/images": {
-				target: "http://localhost:8080/",
-			}
-		}
-	}
+	plugins: [sveltekit(), basicSsl()],
 });

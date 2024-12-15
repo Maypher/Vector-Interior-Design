@@ -5,7 +5,8 @@
 	import { type FormErrors } from '$lib/utilities/interfaces';
 	import { goto } from '$app/navigation';
 	import { signUpForm } from '$lib/utilities/yupSchemas';
-	import { createToast } from '$lib/utilities/toasts';
+	import { error } from '$lib/utilities/toasts';
+	import { PUBLIC_apiUrl } from '$env/static/public';
 
 	let formData = {
 		name: '',
@@ -28,7 +29,7 @@
 				password: validData.password
 			};
 
-			let res = await fetch('/api/auth/crear-cuenta', {
+			let res = await fetch(PUBLIC_apiUrl + '/auth/crear-cuenta', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -38,7 +39,7 @@
 
 			if (res.status != 200) {
 				let res_msg = await res.text();
-				createToast(res_msg, 'ERROR');
+				error(res_msg);
 			} else {
 				goto('/panel');
 			}

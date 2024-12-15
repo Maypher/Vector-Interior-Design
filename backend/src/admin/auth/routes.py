@@ -1,8 +1,7 @@
-from flask import Blueprint, request, session
+from flask import Blueprint, request, session, make_response
 from auth import user as user_auth
 from auth import create_session, remove_session, login_required, get_session
-from flask import session
-import json
+from datetime import datetime, timedelta
 
 auth_blueprint = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -59,26 +58,35 @@ def login():
 
     user_session = create_session(user.id)
 
-    session["session_id"] = user_session.session_id
+    res = make_response("", 200)
+    res.set_cookie(
+        "session_id",
+        user_session.session_id,
+        expires=user_session.expires_at,
+        httponly=True,
+        samesite="None",
+        secure=True,
+    )
 
-    return "", 200
+    return res
 
 
 @auth_blueprint.post("/cerrar-sesion")
 def logout():
-    session_id: bytes = session.get("session_id")
+    session_id: bytes = request.cookies.get("session_id")
+    res = make_response("Cierre de sesión exitoso.", 200)
 
     if session_id:
         remove_session(session_id)
-        session.pop("session_id")
+        res.delete_cookie("session_id", httponly=True, samesite="None", secure=True)
 
-    return "Cierre de sesión exitoso.", 200
+    return res
 
 
 @auth_blueprint.get("/info-usuario")
 @login_required
 def get_user_info():
-    session_id = session.get("session_id")
+    session_id = request.cookies.get("session_id")
 
     if session_id:
         sess = get_session(session_id)

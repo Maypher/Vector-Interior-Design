@@ -4,27 +4,34 @@
 	interface props {
 		label: string;
 		name: string;
-		value: string;
-		type: string;
-		errors: Array<string>;
+		value: string | number;
+		type: 'text' | 'number';
+		errors: Array<string> | undefined;
 	}
 
 	let input: HTMLInputElement;
 
 	function onfocusout() {
-		input.disabled = true;
 		input.classList.add('text-gray-400');
+		input.disabled = true;
 	}
 
 	function enableInput() {
-		const end = input.value.length;
-		input.setSelectionRange(end, end);
 		input.disabled = false;
+		const end = input.value.length;
+		if (type === 'text') input.setSelectionRange(end, end);
 		input.focus();
 		input.classList.remove('text-gray-400');
 	}
 
-	let { label, name, value = $bindable(''), type, errors }: props = $props();
+	let {
+		label,
+		name,
+		type,
+		value = $bindable(type === 'text' ? '' : 1),
+		errors,
+		...constrains
+	}: props = $props();
 </script>
 
 <div class="my-2 flex flex-col">
@@ -38,6 +45,7 @@
 			class="focus:outline-none text-gray-400"
 			{onfocusout}
 			disabled
+			{...constrains}
 		/>
 		<button
 			class="material-symbols-outlined size-min pl-2 border-l-2"
@@ -47,5 +55,5 @@
 			edit
 		</button>
 	</div>
-	<Errors {errors} />
+	{#if errors}<Errors {errors} />{/if}
 </div>

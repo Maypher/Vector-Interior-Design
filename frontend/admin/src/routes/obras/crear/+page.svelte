@@ -8,6 +8,7 @@
 	import { yup } from 'sveltekit-superforms/adapters';
 	import type { PageData } from './$types';
 	import { error } from '$lib/utilities/toasts';
+	import { PUBLIC_apiUrl } from '$env/static/public';
 
 	const { data }: { data: PageData } = $props();
 
@@ -18,7 +19,7 @@
 			submitting = true;
 
 			if (form.valid) {
-				const res = await fetch('/api/obras/crear', {
+				const res = await fetch(PUBLIC_apiUrl + '/obras/crear', {
 					method: 'POST',
 					body: objectToFormData(form.data)
 				});

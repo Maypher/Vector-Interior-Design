@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { type Obra } from '$lib/utilities/interfaces';
+	import { PUBLIC_apiUrl } from '$env/static/public';
 
 	let searchParams = $state({
 		name: '',
@@ -19,12 +20,12 @@
 			page: searchParams.page.toString()
 		}).toString();
 
-		const res = await fetch(`/api/obras/?${queryParams}`);
+		const res = await fetch(PUBLIC_apiUrl + `/obras/?${queryParams}`, {
+			credentials: 'include'
+		});
 
 		if (res.ok) {
 			const data = await res.json();
-			console.log(data);
-			console.log(data.obras);
 			return data.obras;
 		}
 	}
@@ -51,7 +52,7 @@
 				{:else}
 					{#each data as obra}
 						<li>
-							<a href={`/panel/${obra.id}`}>
+							<a href={`/obras/${obra.id}`}>
 								{@html obra.name.replace(nameRegex, '<b>$1</b>')}
 							</a>
 							{#if obra.thumbnail}<img

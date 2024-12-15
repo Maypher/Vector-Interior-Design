@@ -1,14 +1,17 @@
 <script>
 	import { redirect } from '@sveltejs/kit';
+	import { PUBLIC_apiUrl } from '$env/static/public';
+	import { goto } from '$app/navigation';
 
 	let { children } = $props();
 
 	async function onclick() {
-		let res = await fetch('/api/auth/cerrar-sesion', {
-			method: 'POST'
+		let res = await fetch(PUBLIC_apiUrl + '/auth/cerrar-sesion', {
+			method: 'POST',
+			credentials: 'include'
 		});
 
-		if (res.status == 200) redirect(302, '/cuenta/');
+		if (res.ok) goto('/cuenta/');
 	}
 </script>
 
