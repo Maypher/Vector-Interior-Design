@@ -2,7 +2,7 @@ from db.database import admin_database
 from secrets import token_urlsafe
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from flask import session as flask_session, request, Response
+from flask import request, Response, make_response
 from functools import wraps
 
 
@@ -111,7 +111,8 @@ def login_required(func):
                 return "Session expired. Please login again.", 401
             elif should_refresh_session(session):
                 refreshes_session(session)
-                res: Response = func(*args, **kwargs)
+                data = func(*args, **kwargs)
+                res = make_response(*data)
                 res.set_cookie(
                     "session_id",
                     session.session_id,
