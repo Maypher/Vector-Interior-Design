@@ -40,7 +40,7 @@
 		<input
 			{type}
 			{name}
-			{value}
+			bind:value
 			bind:this={input}
 			class="focus:outline-none text-gray-400"
 			{onfocusout}

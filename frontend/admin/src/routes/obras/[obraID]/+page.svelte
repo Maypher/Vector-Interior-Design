@@ -1,0 +1,92 @@
+<script lang="ts">
+	import EditableInput from '$lib/components/input/EditableInput.svelte';
+	import Markdown from '$lib/components/markdown/Markdown.svelte';
+	import { yup } from 'sveltekit-superforms/adapters';
+	import type { PageData } from './$types';
+	import { superForm } from 'sveltekit-superforms';
+	import { obraCreateSchema } from '$lib/utilities/yupSchemas';
+	import { PUBLIC_apiUrl } from '$env/static/public';
+	import objectToFormData from '$lib/utilities/formData';
+	import { goto, invalidate } from '$app/navigation';
+
+	const { data }: { data: PageData } = $props();
+	let submitting: boolean = $state(false);
+
+	let { form, errors, enhance, constraints } = superForm(data.updateForm!, {
+		SPA: true,
+		validators: yup(obraCreateSchema), // Uses obraCreateScheme since this will only update name, description and area. All others will be dedicated pages.
+		invalidateAll: true,
+		async onUpdate({ form }) {
+			if (form.valid) {
+				const res = await fetch(PUBLIC_apiUrl + `/obras/actualizar/${data.obraData!.id}`, {
+					method: 'PUT',
+					body: objectToFormData(form.data),
+					credentials: 'include'
+				});
+
+				if (res.ok) await goto(`/obras/`);
+			}
+		}
+	});
+
+	async function changeObraStatus() {
+		let formData = new FormData();
+		formData.append('public', `${!data.obraData!.public}`);
+		const res = await fetch(PUBLIC_apiUrl + `/obras/actualizar/${data.obraData!.id}`, {
+			method: 'PUT',
+			body: formData,
+			credentials: 'include'
+		});
+
+		if (res.ok) window.location.reload();
+		else throw res.status;
+	}
+</script>
+
+<div class="bg-green-700 h-screen">
+	<div>
+		<button
+			class={`${data.obraData!.public ? 'bg-red-500' : 'bg-blue-500'} p-3 m-3 rounded-md`}
+			onclick={changeObraStatus}>{data.obraData!.public ? 'Privatizar' : 'Publicar'}</button
+		>
+	</div>
+	<!-- Name, area and description -->
+	<form class="bg-purple-900 m-auto p-4" use:enhance>
+		<fieldset disabled={submitting}>
+			<EditableInput
+				name="name"
+				label="Nombre"
+				bind:value={$form.name}
+				errors={$errors.name}
+				type="text"
+				{...$constraints.name}
+			/>
+			<EditableInput
+				name="area"
+				label="Área (m²)"
+				bind:value={$form.area}
+				errors={$errors.area}
+				type="number"
+				{...$constraints.area}
+			/>
+			<div class="max-w-xl">
+				<Markdown
+					label="Descripción"
+					name="description"
+					bind:value={$form.description}
+					errors={$errors.description}
+					{...$constraints.description}
+				/>
+			</div>
+			<button class="bg-red-400 p-1 m-1 rounded-md">Actualizar</button>
+		</fieldset>
+	</form>
+	<hr class="m-3" />
+	<!-- Ambientes -->
+	<ul>
+		{#each data.obraData!.ambientes as ambiente}
+			<li><button>{ambiente.name}</button></li>
+		{/each}
+	</ul>
+	<a href={`/obras/${data.obraData!.id}/ambientes/crear/`}>Nuevo</a>
+</div>

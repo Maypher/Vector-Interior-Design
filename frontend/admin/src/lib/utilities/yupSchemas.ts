@@ -30,6 +30,6 @@ export const obraCreateSchema = object({
 })
 
 export const ambienteCreateSchema = object({
-    name: string().required("Nombre requerido.").min(5, "Nombre debe tener un mínimo de 5 caracteres"),
+    name: string().required("Nombre requerido.").min(4, "Nombre debe tener un mínimo de 4 caracteres"),
     description: string().default('')
 });
