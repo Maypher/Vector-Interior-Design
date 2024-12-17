@@ -1,38 +1,16 @@
-from dataclasses import dataclass
 from common.database import generic_database
 from math import ceil
+from common.common_graphql import schemas
+import typing
 
 
-@dataclass
-class Image:
-    filename: str
-    alt_text: str
-
-
-@dataclass
-class Ambiente:
-    id: int
-    name: str
-    description: str | None
-    images: list[Image]
-
-
-@dataclass
-class Obra:
-    id: int
-    name: str
-    description: str
-    area: int
-    thumbnail: Image | None
-    ambientes: list[Ambiente]
-    public: bool
-
-
-def get_obra_by_id(id: int, allow_private: bool = False) -> Obra | None:
+def get_obra_by_id(
+    id: int, allow_private: bool = False
+) -> typing.Optional[schemas.Obra]:
     """Returns the obra matching the given id or None."""
     data = generic_database.query(
         f"""
-    SELECT obra.id, nombre, descripcion, imagen_principal, publico, area FROM obra
+    SELECT obra.id, nombre, descripcion, publico, area, indice FROM obra
     WHERE obra.id = %s {"AND publico" if not allow_private else ""};
     """,
         (id,),
@@ -45,31 +23,17 @@ def get_obra_by_id(id: int, allow_private: bool = False) -> Obra | None:
     obra_id = int(data[0])
     name = data[1]
     description = data[2]
-    thumbnail_id = data[3]
-    publico = data[4]
-    area = data[5]
+    publico = data[3]
+    area = data[4]
+    index = data[5]
 
-    thumbnail_data = generic_database.query(
-        """
-        SELECT archivo, texto_alt FROM imagen WHERE id = %s;
-        """,
-        (thumbnail_id,),
-        1,
-    )
-
-    thumbnail = None
-
-    if thumbnail_data:
-        thumbnail = Image(thumbnail_data[0], thumbnail_data[1])
-
-    obra = Obra(
-        obra_id,
-        name,
-        description,
-        area,
-        thumbnail,
-        get_ambientes_by_obra(obra_id),
-        publico,
+    obra = schemas.Obra(
+        id=obra_id,
+        name=name,
+        description=description,
+        area=area,
+        index=index,
+        public=publico,
     )
 
     return obra
@@ -77,7 +41,7 @@ def get_obra_by_id(id: int, allow_private: bool = False) -> Obra | None:
 
 def get_obras(
     page: int = 1, page_size: int = 10, allow_private: bool = False
-) -> list[Obra]:
+) -> schemas.ObraResult:
     """Retrieves a list of obras. Paginated by the given size"""
     offset = (page - 1) * page_size
 
@@ -100,20 +64,20 @@ def get_obras(
 
     page_count = ceil(obras_count / page_size)
 
-    return {
-        "page": page,
-        "page_count": page_count,
-        "obras": [
+    return schemas.ObraResult(
+        page=page,
+        page_count=page_count,
+        obras=[
             obra
             for id in obra_ids
             if (obra := get_obra_by_id(id[0], allow_private)) is not None
         ],
-    }
+    )
 
 
 def get_obras_by_name(
     name: str, page: int = 1, page_size: int = 10, allow_private: bool = False
-):
+) -> schemas.AmbienteResult:
     """Returns all the obras like a given name. Paginated."""
     # Code repetition bad and single source of truth stfu.
     offset = (page - 1) * page_size
@@ -137,24 +101,28 @@ def get_obras_by_name(
 
     page_count = ceil(obras_count / page_size)
 
-    return {
-        "page": page,
-        "page_count": page_count,
-        "obras": [
+    return schemas.ObraResult(
+        page=page,
+        page_count=page_count,
+        obras=[
             obra
             for id in obra_ids
             if (obra := get_obra_by_id(id[0], allow_private)) is not None
         ],
-    }
+    )
 
 
-def get_ambiente_by_id(id: int) -> Ambiente | None:
+def get_ambiente_by_id(
+    id: int, allow_private: bool = False
+) -> typing.Optional[schemas.Ambiente]:
     """Returns the ambiente matching the given id or None."""
 
     data = generic_database.query(
-        """
-    SELECT id, nombre, descripcion
-    FROM ambiente WHERE id = %s ORDER BY indice;
+        f"""
+    SELECT ambiente.id, ambiente.nombre, ambiente.descripcion, ambiente.indice
+    FROM ambiente 
+    {"JOIN obra ON ambiente.obra_id = obra.id" if not allow_private else ""}
+    WHERE ambiente.id = %s {"AND obra.publico" if not allow_private else ""};
     """,
         (id,),
         1,
@@ -166,27 +134,14 @@ def get_ambiente_by_id(id: int) -> Ambiente | None:
     ambiente_id = data[0]
     nombre = data[1]
     description = data[2]
+    index = data[3]
 
-    images_data = generic_database.query(
-        """
-        SELECT archivo, texto_alt FROM imagen WHERE ambiente_id = %s ORDER BY indice;
-        """,
-        (ambiente_id,),
+    return schemas.Ambiente(
+        id=ambiente_id, name=nombre, description=description, index=index
     )
-    images = []
-
-    for image in images_data:
-        filename = image[0]
-        alt_text = image[1]
-
-        images.append(Image(filename, alt_text))
-
-    ambiente = Ambiente(ambiente_id, nombre, description, images)
-
-    return ambiente
 
 
-def get_ambientes_by_obra(obra_id: int) -> list[Ambiente]:
+def get_ambientes_by_obra(obra_id: int) -> list[schemas.Ambiente]:
     """Returns all ambientes for the given obra_id."""
 
     found_ambientes = generic_database.query(
@@ -199,3 +154,18 @@ def get_ambientes_by_obra(obra_id: int) -> list[Ambiente]:
     )
 
     return [get_ambiente_by_id(int(id[0])) for id in found_ambientes]
+
+
+def get_image_by_filename(filename: str) -> typing.Optional[schemas.Image]:
+    data = generic_database.query(
+        """
+        SELECT id, archivo, texto_alt, indice FROM imagen WHERE archivo = %s;
+        """,
+        (filename,),
+        count=1,
+    )
+
+    if data:
+        return schemas.Image(
+            id=data[0], filename=data[1], alt_text=data[2], index=data[3]
+        )

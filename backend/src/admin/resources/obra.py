@@ -7,41 +7,56 @@ from common.obra import *
 from psycopg import errors
 from psycopg.sql import SQL, Identifier
 from math import ceil, floor
+from common.common_graphql import schemas
+from admin.resources.admin_graphql import errors as GraphqlErrors
 
 STORAGE_LOCATION = "/storage/images/"
 
 
-def create_obra(name: str, description: str, area: int):
+def create_obra(name: str, description: str, area: int) -> schemas.Obra:
     """Creates a new obra. Data validation is assumed."""
-    work_id = admin_database.query(
+    obra_data = admin_database.query(
         """
-    INSERT INTO obra (nombre, descripcion, area) VALUES (%s, %s, %s) RETURNING id;
+    INSERT INTO obra (nombre, descripcion, area) VALUES (%s, %s, %s) RETURNING id, nombre, descripcion, area, indice, publico;
     """,
         (name, description, area),
         1,
-    )[0]
+    )
 
-    return work_id
+    return schemas.Obra(
+        id=obra_data[0],
+        name=obra_data[1],
+        description=obra_data[2],
+        area=obra_data[3],
+        index=obra_data[4],
+        public=obra_data[5],
+    )
 
 
-def delete_obra(id: int):
+def delete_obra(id: int) -> typing.Optional[schemas.Obra]:
     """
     Deletes the obra identified by id alongside its related ambientes and images.
     """
-    obra = get_obra_by_id(id)
+    obra = get_obra_by_id(id, allow_private=True)
+
+    print(obra)
 
     if not obra:
         return
 
-    for image in obra.images:
-        delete_image(image.filename)
+    for ambiente in obra.ambientes():
+        for image in ambiente.images():
+            delete_image(image.filename)
 
     admin_database.query(
         """
-    DELETE FROM obra WHERE id = %s
+    DELETE FROM obra WHERE id = %s RETURNING id;
     """,
         (id,),
-    )
+        count=1,
+    )[0]
+
+    return obra
 
 
 def update_obra(
@@ -52,9 +67,9 @@ def update_obra(
     thumbnail: str | None | bool = None,
     index: int | None = None,
     public: bool | None = None,
-):
+) -> typing.Optional[schemas.Image]:
     """
-    Updates the obra identified by id. Name and description can be updated.
+    Updates the obra identified by id returning the updated obra or None if no obra was found.
 
     :param id: The id of the obra to change.
     :param name: The new name of the obra.
@@ -103,7 +118,6 @@ def update_obra(
         )[0]
 
         if image:
-            print(thumbnail, image)
             admin_database.query(
                 """
                 UPDATE obra SET imagen_principal = %s WHERE id = %s;
@@ -129,20 +143,30 @@ def update_obra(
         )
 
     admin_database.commit()
+    return get_obra_by_id(id, True)
 
 
-def create_ambiente(obra_id: int, name: str, description: str | None = None) -> int:
+def create_ambiente(
+    obra_id: int, name: str, description: typing.Optional[str]
+) -> typing.Optional[schemas.Ambiente]:
     """Creates a new ambiente for the given obra"""
 
-    ambiente_id = admin_database.query(
+    obra = get_obra_by_id(obra_id, True)
+
+    if not obra:
+        return GraphqlErrors.ObraNotFoundAmbiente(obra_id=obra_id)
+
+    ambiente = admin_database.query(
         """
-    INSERT INTO ambiente (nombre, descripcion, obra_id) VALUES (%s, %s, %s) RETURNING id;
+    INSERT INTO ambiente (nombre, descripcion, obra_id) VALUES (%s, %s, %s) RETURNING id, nombre, descripcion, indice;
     """,
         (name, description, obra_id),
         1,
-    )[0]
+    )
 
-    return ambiente_id
+    return schemas.Ambiente(
+        id=ambiente[0], name=ambiente[1], description=ambiente[2], index=ambiente[3]
+    )
 
 
 def update_ambiente(
@@ -159,7 +183,7 @@ def update_ambiente(
     :param description: The new description of the ambiente.
     :param index: The new zero-based index of the ambiente inside obra.
     """
-    ambiente = get_ambiente_by_id(id)
+    ambiente = get_ambiente_by_id(id, True)
 
     if not ambiente:
         return
@@ -190,14 +214,16 @@ def update_ambiente(
         )[0]
 
         update_index(id, "ambiente", new_index, "obra_id", obra_id)
+
     admin_database.commit()
+    return get_ambiente_by_id(id, True)
 
 
-def delete_ambiente(id: int):
+def delete_ambiente(id: int) -> typing.Optional[schemas.Ambiente]:
     """
     Deletes the ambiente identified by id alongside all images related to it.
     """
-    ambiente = get_ambiente_by_id(id)
+    ambiente = get_ambiente_by_id(id, True)
 
     if not ambiente:
         return
@@ -213,24 +239,30 @@ def delete_ambiente(id: int):
         (id,),
     )
 
+    return ambiente
+
 
 def create_image(
     image: FileStorage,
     alt_text: str,
     ambiente_id: int,
-) -> str | None:
+) -> typing.Union[
+    schemas.Image,
+    GraphqlErrors.UnsupportedFileType,
+    GraphqlErrors.AmbienteNotFoundImage,
+]:
     """
     Saves an image to disk relating it to the given work and returns its unique filename.
     Returns None if image is unsupported or if given obra doesn't exist.
     """
     if not utils.verify_file(image.filename):
         admin_database.rollback()
-        return
+        return GraphqlErrors.UnsupportedFileType(filetype=image.mimetype)
 
-    ambiente = get_ambiente_by_id(ambiente_id)
+    ambiente = get_ambiente_by_id(ambiente_id, True)
 
     if not ambiente:
-        return
+        return GraphqlErrors.AmbienteNotFoundImage(ambiente_id=ambiente_id)
 
     file_extension = utils.file_extension(image.filename)
 
@@ -242,22 +274,24 @@ def create_image(
 
     # If for any reason the image doesn't save to the database remove it from storage and propagate the error.
     try:
-        admin_database.query(
+        data = admin_database.query(
             """
-        INSERT INTO imagen (archivo, texto_alt, ambiente_id) VALUES (%s, %s, %s);
+        INSERT INTO imagen (archivo, texto_alt, ambiente_id) VALUES (%s, %s, %s)
+        RETURNING id, archivo, texto_alt, indice;
         """,
             (image.filename, alt_text, ambiente.id),
+            count=1,
         )
     except Exception as e:
         os.remove(image_location)
         raise e
 
-    return image.filename
+    return schemas.Image(id=data[0], filename=data[1], alt_text=data[2], index=data[3])
 
 
 def update_image(
     filename: str, alt_text: str | None = None, new_index: int | None = None
-):
+) -> typing.Optional[schemas.Image]:
     """
     Updates the alt text of the given image.
 
@@ -284,9 +318,18 @@ def update_image(
     if new_index is not None:
         update_index(image[0], "imagen", new_index, "ambiente_id", image[1])
 
+    admin_database.commit()
+    return get_image_by_filename(filename)
 
-def delete_image(filename: str):
+
+def delete_image(filename: str) -> typing.Optional[schemas.Image]:
     """Deletes the given image from the database and file system."""
+
+    image = get_image_by_filename(filename)
+
+    if not image:
+        return
+
     location = f"{STORAGE_LOCATION}{filename}"
     if os.path.exists(location):
         admin_database.query(
@@ -297,6 +340,7 @@ def delete_image(filename: str):
         )
 
         os.remove(location)
+        return image
 
 
 def update_index(

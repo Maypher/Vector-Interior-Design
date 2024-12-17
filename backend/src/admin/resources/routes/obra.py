@@ -2,8 +2,21 @@ from flask import Blueprint, request, jsonify
 from admin.resources import obra
 from auth import login_required
 from psycopg import errors
+from strawberry import Schema
+from strawberry.flask.views import GraphQLView
+from admin.resources.admin_graphql import AuthGraphQLView, Query, Mutation
 
 obra_admin_routes = Blueprint("obra", __name__, url_prefix="/obras")
+
+obra_admin_routes.add_url_rule(
+    "/graphql",
+    view_func=GraphQLView.as_view(
+        "graphql_view",
+        schema=Schema(query=Query, mutation=Mutation),
+        graphql_ide="graphiql",
+        multipart_uploads_enabled=True,
+    ),
+)
 
 
 @obra_admin_routes.get("/")
