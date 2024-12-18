@@ -1,0 +1,2171 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nodo admin Graphql API</title>
+    <style>#spectaql{padding:0;margin:0}#spectaql pre{overflow:auto;margin-top:0;margin-bottom:20px}#spectaql pre code{display:block;background:#ccc}#spectaql table{width:100%;table-layout:fixed;text-align:left;border-collapse:collapse}#spectaql table td,#spectaql table th{margin:0;padding:0}#spectaql #introduction .example-section>*,#spectaql .definition-heading,#spectaql .doc-heading,#spectaql .introduction-item-title,#spectaql .operation-heading{overflow:hidden;text-overflow:ellipsis}#spectaql #page{display:flex}#spectaql #page *{box-sizing:border-box}#spectaql #page.drawer-open #sidebar{z-index:1000;transform:translateX(0)}#spectaql #page.drawer-open .drawer-overlay{display:block;background:rgba(0,0,0,.5);z-index:10}#spectaql #sidebar{position:fixed;min-width:250px;max-width:250px;flex-shrink:0;transition:transform .2s ease-out;transform:translateX(-100%);z-index:10;padding-top:20px;background:#fff}@media (min-width:48em){#spectaql #sidebar{position:relative;transform:none}}@media (min-width:64em){#spectaql #sidebar{min-width:300px;max-width:300px}}#spectaql .sidebar-top-container{display:flex;align-items:center;padding:0 20px}#spectaql #mobile-navbar{display:flex;align-items:center;position:sticky;top:0}@media (min-width:48em){#spectaql #mobile-navbar{display:none}}#spectaql .sidebar-open-button{display:flex;align-items:flex-start;margin:0;padding:0;border:none;background:0 0}#spectaql .sidebar-open-button .hamburger{width:16px;height:14px;cursor:pointer}#spectaql .sidebar-open-button .hamburger::after{display:block;content:"";height:2px;background:#222;box-shadow:0 5px 0 #222,0 10px 0 #222}#spectaql .sidebar-open-button .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#spectaql .close-button{display:block}#spectaql .close-button .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media (min-width:48em){#spectaql .close-button{display:none}}#spectaql .drawer-overlay{display:none;position:absolute;top:0;left:0;bottom:0;right:0;background:rgba(0,0,0,0)}@media (min-width:48em){#spectaql .drawer-overlay{display:none!important}}#spectaql #nav{display:flex;flex-direction:column;max-height:calc(100vh - 0px);padding:0 20px;padding-bottom:20px;position:sticky;top:0;overflow:auto}#spectaql #logo{margin-right:auto}#spectaql #logo img{display:block;width:100%;max-width:100%}#spectaql .nav-group-items,#spectaql .nav-group-section-items{padding:0;margin:0}#spectaql .nav-group-items>li,#spectaql .nav-group-section-items>li{list-style:none}#spectaql .nav-group-items .nav-group-section-title,#spectaql .nav-group-items>li,#spectaql .nav-group-section-items .nav-group-section-title,#spectaql .nav-group-section-items>li{overflow:hidden;text-overflow:ellipsis}#spectaql .nav-group-section-items{display:none}#spectaql .nav-scroll-expand .nav-group-section-items{display:block}#spectaql #docs{position:relative;margin:0 auto;min-width:100px;max-width:88em;flex-grow:1;flex-shrink:1;padding:20px}@media (min-width:48em){#spectaql .doc-row{display:flex;flex-wrap:wrap}}#spectaql .doc-row .doc-copy,#spectaql .doc-row .doc-examples{width:100%}@media (min-width:48em){#spectaql .doc-row .doc-copy,#spectaql .doc-row .doc-examples{width:50%}}@media (min-width:48em){#spectaql .doc-row .doc-copy{padding-right:20px}}@media (min-width:48em){#spectaql .doc-row .doc-examples{padding-left:20px}}.hljs{display:block;overflow-x:auto;padding:.5em;background:#23241f}.hljs,.hljs-subst,.hljs-tag{color:#f8f8f2}.hljs-emphasis,.hljs-strong{color:#a8a8a2}.hljs-bullet,.hljs-link,.hljs-literal,.hljs-number,.hljs-quote,.hljs-regexp{color:#ae81ff}.hljs-code,.hljs-section,.hljs-selector-class,.hljs-title{color:#a6e22e}.hljs-strong{font-weight:700}.hljs-emphasis{font-style:italic}.hljs-attr,.hljs-keyword,.hljs-name,.hljs-selector-tag{color:#f92672}.hljs-attribute,.hljs-symbol{color:#66d9ef}.hljs-class .hljs-title,.hljs-params{color:#f8f8f2}.hljs-addition,.hljs-built_in,.hljs-builtin-name,.hljs-selector-attr,.hljs-selector-id,.hljs-selector-pseudo,.hljs-string,.hljs-template-variable,.hljs-type,.hljs-variable{color:#e6db74}.hljs-comment,.hljs-deletion,.hljs-meta{color:#75715e}#spectaql{font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";font-size:14px;line-height:1.6;background:#fff;color:#222}@media (min-width:32em){#spectaql{font-size:16px}}#spectaql a{color:#0298bf;text-decoration:none}#spectaql a:hover{color:#0182a2}#spectaql a:active,#spectaql a:focus{color:#0298bf}#spectaql code{font-size:.875em;font-family:Consolas,Monaco,Andale Mono,Ubuntu Mono,monospace}#spectaql pre{color:#fff}#spectaql pre code{background:#222}#spectaql pre code,#spectaql pre code.hljs{font-size:.82em;line-height:1.4;padding:15px 20px}#spectaql .doc-heading{line-height:1.2;font-size:2.25em;margin-top:10px}@media (min-width:48em){#spectaql .doc-heading{margin-top:-10px}}#spectaql .close-button{background:0 0;border:none;padding:5px;font-size:16px;font-weight:700;color:#222}#spectaql #introduction{margin-bottom:60px}#spectaql #introduction .example-section:not(.example-section-is-code){margin-bottom:20px}#spectaql #introduction .example-section:not(.example-section-is-code) h5,#spectaql #introduction .example-section:not(.example-section-is-code) p{margin:0;font-size:1em}#spectaql #docs,#spectaql #mobile-navbar,#spectaql #sidebar{padding-top:20px;padding-bottom:20px}@media (min-width:32em){#spectaql #docs,#spectaql #mobile-navbar,#spectaql #sidebar{padding-top:30px;padding-bottom:30px}}@media (min-width:48em){#spectaql #docs,#spectaql #mobile-navbar,#spectaql #sidebar{padding-top:40px;padding-bottom:40px}}#spectaql #docs,#spectaql #mobile-navbar,#spectaql #nav,#spectaql .sidebar-top-container{padding-left:20px;padding-right:20px}@media (min-width:32em){#spectaql #docs,#spectaql #mobile-navbar,#spectaql #nav,#spectaql .sidebar-top-container{padding-left:30px;padding-right:30px}}@media (min-width:48em){#spectaql #docs,#spectaql #mobile-navbar,#spectaql #nav,#spectaql .sidebar-top-container{padding-left:50px;padding-right:50px}}#spectaql #sidebar{padding-bottom:0;background:#fff}#spectaql #sidebar a{color:#222}#spectaql #sidebar a.nav-scroll-active,#spectaql #sidebar a:hover{font-weight:700}#spectaql #sidebar a.nav-scroll-active{color:#222}#spectaql #sidebar a:hover{color:#0182a2}@media (min-width:48em){#spectaql #sidebar{border-right:2px solid #d8d8d8}}#spectaql #mobile-navbar{background:#fff;margin-top:-20px;margin-left:-20px;margin-right:-20px}@media (min-width:32em){#spectaql #mobile-navbar{margin-top:-30px;margin-left:-30px;margin-right:-30px}}#spectaql #mobile-navbar .sidebar-open-button::after{display:block;content:"All Topics";margin-left:10px;color:#222}#spectaql #nav .nav-group{margin-top:20px}#spectaql #nav .nav-group li{margin-bottom:5px}#spectaql #nav .nav-group-title{font-size:.875em;font-weight:400;margin:0 0 6px 0;color:#999}#spectaql #nav .nav-group-section-title{font-size:inherit;margin:0;margin-bottom:5px;font-weight:400}#spectaql #nav .nav-group-section-items{margin-left:.75em}#spectaql .definition,#spectaql .operation{margin-bottom:60px}#spectaql .definition .definition-heading,#spectaql .definition .operation-heading,#spectaql .operation .definition-heading,#spectaql .operation .operation-heading{font-size:1.72em}#spectaql .definition .definition-heading code,#spectaql .definition .operation-heading code,#spectaql .operation .definition-heading code,#spectaql .operation .operation-heading code{font-family:inherit;font-size:inherit;font-weight:inherit}@media (min-width:32em){#spectaql .definition .definition-heading,#spectaql .definition .operation-heading,#spectaql .operation .definition-heading,#spectaql .operation .operation-heading{font-size:2.25em}}#spectaql .definition-group-name,#spectaql .group-heading,#spectaql .operation-group-name{border-top:2px solid #d8d8d8;padding-top:3px;color:#999;font-size:inherit;font-weight:inherit}#spectaql .definition-group-name a,#spectaql .group-heading a,#spectaql .operation-group-name a{color:#999}#spectaql .definition-group-name a:hover,#spectaql .group-heading a:hover,#spectaql .operation-group-name a:hover{font-weight:700}#spectaql .doc-examples{margin-top:20px}#spectaql .doc-examples .example-heading{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#spectaql .doc-examples .example-section-is-code h5{color:#999;text-transform:uppercase;background:#000;font-size:.75em;font-weight:700;padding:.6em 0 .6em 20px;margin:0;opacity:1}@media (min-width:48em){#spectaql .doc-examples{margin-top:0}}#spectaql .doc-copy p{margin:0 0 20px 0}#spectaql .doc-copy p:last-child{margin-bottom:0}#spectaql .doc-copy table tr th{font-weight:400;border-bottom:2px solid #d8d8d8}#spectaql .doc-copy table tr td{border-bottom:1px solid #e0e0e0}#spectaql .doc-copy table tr.row-has-field-arguments td,#spectaql .doc-copy table tr:last-child td{border-bottom:none}#spectaql .doc-copy table tr td,#spectaql .doc-copy table tr th{padding:5px}#spectaql .doc-copy table tr td:first-child,#spectaql .doc-copy table tr th:first-child{padding-left:0}#spectaql .doc-copy table tr td:last-child,#spectaql .doc-copy table tr th:last-child{padding-right:0}#spectaql .doc-copy .doc-copy-section{margin-bottom:30px}#spectaql .doc-copy .doc-copy-section>h5{margin:0 0 5px 0;font-size:inherit;font-weight:inherit;color:#999}#spectaql .doc-copy .definition-description>h5,#spectaql .doc-copy .definition-properties>h5,#spectaql .doc-copy .operation-description>h5{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#spectaql .field-arguments{font-size:.875em;background-color:#fafbfc;border:1px solid #e0e0e0;padding:10px;margin-bottom:5px}#spectaql .field-arguments p{margin:10px 0 0 0}#spectaql .field-arguments h5.field-arguments-heading{margin:0;padding:0 0 10px 0;font-weight:inherit;color:#999}#spectaql .field-arguments .field-argument{border-top:1px #e0e0e0 solid;padding:10px 0}#spectaql .field-arguments .field-argument:last-child{padding-bottom:0}#spectaql .field-arguments .field-argument-name{margin:0;font-size:inherit;font-weight:inherit}#spectaql .deprecation-reason{word-break:break-word}#spectaql .deprecation-reason::before{display:inline;content:"Deprecated";padding:2px 5px;margin-right:5px;background:#fed7d8;color:#c60609;font-weight:700;font-size:.875em}</style>
+    <script>function scrollSpy(){var l=5,e=document.querySelector("html"),c=(e&&(e=window.getComputedStyle(e).scrollPaddingTop)&&"string"==typeof e&&"auto"!==e&&e.endsWith("px")&&(l+=parseInt(e.split("px")[0])),"nav-scroll-active"),i=null,d=[];function t(){i=null;var e=document.querySelectorAll("[data-traverse-target]");Array.prototype.forEach.call(e,function(e){d.push({id:e.id,top:e.offsetTop})})}var n=debounce(function(){t(),o()},500),o=debounce(function(){var e,t,n,o,r=(e=>{for(var t=e+l,n=0;n<d.length;n++){var o=d[n+1];if(t>=d[n].top&&(!o||t<o.top))return n}return-1})(document.documentElement.scrollTop||document.body.scrollTop);r!==i&&(r=d[i=r],e=document.querySelector("."+c),t=s(r=r?document.querySelector('#nav a[href="#'+r.id+'"]'):null),n=(o=s(e))!==t,o&&n&&u(o,!1),t&&n&&u(t,!0),r&&(r.classList.add(c),r.scrollIntoViewIfNeeded?r.scrollIntoViewIfNeeded():!r.scrollIntoView||0<=(o=(o=r).getBoundingClientRect()).top&&0<=o.left&&o.bottom<=(window.innerHeight||document.documentElement.clientHeight)&&o.right<=(window.innerWidth||document.documentElement.clientWidth)||r.scrollIntoView({block:"center",inline:"start"})),e)&&e.classList.remove(c)},100);function u(e,t){for(var n=t?"add":"remove";e;)e.classList[n]("nav-scroll-expand"),e=s(e.parentNode)}function s(e){return e&&e.closest?e.closest(".nav-group-section"):null}setTimeout(function(){t(),o(),window.addEventListener("scroll",o),window.addEventListener("resize",n)},300)}function toggleMenu(){var t="drawer-open",e=document.querySelector("#spectaql .sidebar-open-button"),n=document.querySelector("#spectaql #sidebar .close-button"),o=document.querySelector("#spectaql .drawer-overlay");function r(){var e=document.querySelector("#spectaql #page");e.classList.contains(t)?e.classList.remove(t):e.classList.add(t)}e.addEventListener("click",r),n.addEventListener("click",r),o.addEventListener("click",r)}function debounce(e,t){var n=null;return function(){clearTimeout(n),n=setTimeout(function(){e.apply(null)},t)}}window.addEventListener("DOMContentLoaded",e=>{toggleMenu(),scrollSpy()});</script>
+  </head>
+  <body id="spectaql">
+    <div id="page" class="drawer-layout">
+      <div id="sidebar">
+        <div class="sidebar-top-container">
+          <div id="logo">
+          </div>
+          <button class="close-button" type="button">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close menu</span>
+          </button>
+        </div>
+        <nav id="nav" role="navigation">
+          <div class="nav-group">
+            <h4 class="nav-group-title">Introduction</h4>
+            <ul class="nav-group-items">
+              <li><a href="#introduction">Welcome</a></li>
+            </ul>
+          </div>
+          <div class="nav-group">
+            <h4 class="nav-group-title">Operations</h4>
+            <ul class="nav-group-items">
+              <li class="nav-group-section">
+                <h5 class="nav-group-section-title">
+                  <a href="#group-Operations-Queries">Queries</a>
+                </h5>
+                <ul class="nav-group-section-items">
+                  <li><a href="#query-ambiente">ambiente</a></li>
+                  <li><a href="#query-image">image</a></li>
+                  <li><a href="#query-obra">obra</a></li>
+                  <li><a href="#query-obras">obras</a></li>
+                </ul>
+              </li>
+              <li class="nav-group-section">
+                <h5 class="nav-group-section-title">
+                  <a href="#group-Operations-Mutations">Mutations</a>
+                </h5>
+                <ul class="nav-group-section-items">
+                  <li><a href="#mutation-createAmbiente">createAmbiente</a></li>
+                  <li><a href="#mutation-createImage">createImage</a></li>
+                  <li><a href="#mutation-createObra">createObra</a></li>
+                  <li><a href="#mutation-deleteAmbiente">deleteAmbiente</a></li>
+                  <li><a href="#mutation-deleteImage">deleteImage</a></li>
+                  <li><a href="#mutation-deleteObra">deleteObra</a></li>
+                  <li><a href="#mutation-updateAmbiente">updateAmbiente</a></li>
+                  <li><a href="#mutation-updateImage">updateImage</a></li>
+                  <li><a href="#mutation-updateObra">updateObra</a></li>
+                </ul>
+              </li>
+              <li><a href="#"></a></li>
+            </ul>
+          </div>
+          <div class="nav-group">
+            <h4 class="nav-group-title">Types</h4>
+            <ul class="nav-group-items">
+              <li><a href="#definition-Ambiente">Ambiente</a></li>
+              <li><a href="#definition-AmbienteNotFoundImage">AmbienteNotFoundImage</a></li>
+              <li><a href="#definition-AmbienteObraNotFoundAmbiente">AmbienteObraNotFoundAmbiente</a></li>
+              <li><a href="#definition-Boolean">Boolean</a></li>
+              <li><a href="#definition-Float">Float</a></li>
+              <li><a href="#definition-Image">Image</a></li>
+              <li><a href="#definition-ImageAmbienteNotFoundImageUnsupportedFileType">ImageAmbienteNotFoundImageUnsupportedFileType</a></li>
+              <li><a href="#definition-Int">Int</a></li>
+              <li><a href="#definition-Obra">Obra</a></li>
+              <li><a href="#definition-ObraNotFoundAmbiente">ObraNotFoundAmbiente</a></li>
+              <li><a href="#definition-ObraResult">ObraResult</a></li>
+              <li><a href="#definition-String">String</a></li>
+              <li><a href="#definition-UnsupportedFileType">UnsupportedFileType</a></li>
+              <li><a href="#definition-Upload">Upload</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <div id="docs">
+        <div id="mobile-navbar">
+          <button class="sidebar-open-button" type="button">
+            <span class="hamburger"></span>
+            <span class="sr-only">All topics</span>
+          </button>
+        </div>
+        <article id="content">
+          <h1 class="doc-heading">Nodo admin Graphql API</h1>
+          <div id="introduction" data-traverse-target="introduction">
+            <div id="welcome" class="doc-row">
+              <div class="doc-copy">
+                <p>Here are all the endpoints available to the admin backend of the <strong>Nodo website</strong>. It includes queries with access to private data and mutations to edit the data.</p>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section welcome-api-endpoints-section example-section-is-code">
+                  <h5>API Endpoints</h5>
+                  <pre><code>http://localhost:8080/obras/graphql</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h1 id="group-Operations-Queries" class="group-heading" data-traverse-target="group-Operations-Queries">Queries</h1>
+          <section id="query-ambiente" class="operation operation-query" data-traverse-target="query-ambiente">
+            <h2 class="operation-heading ">
+              <code>ambiente</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Returns the ambiente matching the given ID or null.</p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-Ambiente"><code>Ambiente</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The ID of ambiente to get. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> ambiente<span class="hljs-tag">(<span class="hljs-code">$id</span>:<span class="hljs-type"> Int!</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">ambiente<span class="hljs-tag">(id: <span class="hljs-code">$id</span>)</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">name</span>
+    <span class="hljs-symbol">description</span>
+    <span class="hljs-symbol">index</span>
+    <span class="hljs-symbol">obra <span class="hljs-tag">{
+      <span class="hljs-type">...ObraFragment</span>
+    }</span></span>
+    <span class="hljs-symbol">images <span class="hljs-tag">{
+      <span class="hljs-type">...ImageFragment</span>
+    }</span></span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"ambiente"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"obra"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Obra</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"images"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Image</span><span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="query-image" class="operation operation-query" data-traverse-target="query-image">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Queries">Queries</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>image</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Returns the image matching the given filename or null.</p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-Image"><code>Image</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>filename</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The filename of the image to get. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> image<span class="hljs-tag">(<span class="hljs-code">$filename</span>:<span class="hljs-type"> String!</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">image<span class="hljs-tag">(filename: <span class="hljs-code">$filename</span>)</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">filename</span>
+    <span class="hljs-symbol">altText</span>
+    <span class="hljs-symbol">index</span>
+    <span class="hljs-symbol">ambiente <span class="hljs-tag">{
+      <span class="hljs-type">...AmbienteFragment</span>
+    }</span></span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"image"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"ambiente"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Ambiente</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="query-obra" class="operation operation-query" data-traverse-target="query-obra">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Queries">Queries</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>obra</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Returns the obra matching the given ID or null.</p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-Obra"><code>Obra</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The ID of the obra to get. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> obra<span class="hljs-tag">(<span class="hljs-code">$id</span>:<span class="hljs-type"> Int!</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">obra<span class="hljs-tag">(id: <span class="hljs-code">$id</span>)</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">name</span>
+    <span class="hljs-symbol">description</span>
+    <span class="hljs-symbol">area</span>
+    <span class="hljs-symbol">index</span>
+    <span class="hljs-symbol">public</span>
+    <span class="hljs-symbol">thumbnail <span class="hljs-tag">{
+      <span class="hljs-type">...ImageFragment</span>
+    }</span></span>
+    <span class="hljs-symbol">ambientes <span class="hljs-tag">{
+      <span class="hljs-type">...AmbienteFragment</span>
+    }</span></span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"obra"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"thumbnail"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"ambientes"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Ambiente</span><span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="query-obras" class="operation operation-query" data-traverse-target="query-obras">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Queries">Queries</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>obras</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Returns all the obras ordered by index limited by page_size. Can be filtered by name.</p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-ObraResult"><code>ObraResult!</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>page</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The page to get. Default = <code>1</code> </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>pageSize</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The size of each page. Default = <code>10</code> </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>name</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        </td>
+                        <td> Filter obras by name. Default = <code>null</code> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">query</span> obras<span class="hljs-tag">(
+  <span class="hljs-code">$page</span>:<span class="hljs-type"> Int!</span>,
+  <span class="hljs-code">$pageSize</span>:<span class="hljs-type"> Int!</span>,
+  <span class="hljs-code">$name</span>:<span class="hljs-type"> String
+</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">obras<span class="hljs-tag">(
+    page: <span class="hljs-code">$page</span>,
+    pageSize: <span class="hljs-code">$pageSize</span>,
+    name: <span class="hljs-code">$name</span>
+  )</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">page</span>
+    <span class="hljs-symbol">pageCount</span>
+    <span class="hljs-symbol">obras <span class="hljs-tag">{
+      <span class="hljs-type">...ObraFragment</span>
+    }</span></span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"page"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"pageSize"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"obras"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"page"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"pageCount"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"obras"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Obra</span><span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <h1 id="group-Operations-Mutations" class="group-heading" data-traverse-target="group-Operations-Mutations">Mutations</h1>
+          <section id="mutation-createAmbiente" class="operation operation-mutation" data-traverse-target="mutation-createAmbiente">
+            <h2 class="operation-heading ">
+              <code>createAmbiente</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Creates a new ambiente.</p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-AmbienteObraNotFoundAmbiente"><code>AmbienteObraNotFoundAmbiente!</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>obraId</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The ID of the obra this ambiente will belong to. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>name</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The name of the new ambiente. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>description</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        </td>
+                        <td> The description of the new ambiente in markdown format. <strong>Can be left blank.</strong>. Default = <code>null</code> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> createAmbiente<span class="hljs-tag">(
+  <span class="hljs-code">$obraId</span>:<span class="hljs-type"> Int!</span>,
+  <span class="hljs-code">$name</span>:<span class="hljs-type"> String!</span>,
+  <span class="hljs-code">$description</span>:<span class="hljs-type"> String
+</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">createAmbiente<span class="hljs-tag">(
+    obraId: <span class="hljs-code">$obraId</span>,
+    name: <span class="hljs-code">$name</span>,
+    description: <span class="hljs-code">$description</span>
+  )</span> <span class="hljs-tag">{
+   <span class="hljs-type"> ... on Ambiente <span class="hljs-tag">{
+      <span class="hljs-type">...AmbienteFragment</span>
+    }</span>
+    ... on ObraNotFoundAmbiente <span class="hljs-tag">{
+      <span class="hljs-type">...ObraNotFoundAmbienteFragment</span>
+    }</span>
+  }</span>
+}</span></span></span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"obraId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">"createAmbiente"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Ambiente</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="mutation-createImage" class="operation operation-mutation" data-traverse-target="mutation-createImage">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Mutations">Mutations</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>createImage</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Creates a a new image for the given ambiente. Returns an error if the ambiente wasn&#39;t found or the filetype isn&#39;t supported.</p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-ImageAmbienteNotFoundImageUnsupportedFileType"><code>ImageAmbienteNotFoundImageUnsupportedFileType!</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>ambienteId</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The ID of the ambiente this image will belong to. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>image</code></span> - <span class="property-type"><a href="#definition-Upload"><code>Upload!</code></a></span>
+                        </td>
+                        <td> The image file to upload. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>altText</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The alt text of the image. This is meant for impaired vision, not a description. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> createImage<span class="hljs-tag">(
+  <span class="hljs-code">$ambienteId</span>:<span class="hljs-type"> Int!</span>,
+  <span class="hljs-code">$image</span>:<span class="hljs-type"> Upload!</span>,
+  <span class="hljs-code">$altText</span>:<span class="hljs-type"> String!</span>
+)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">createImage<span class="hljs-tag">(
+    ambienteId: <span class="hljs-code">$ambienteId</span>,
+    image: <span class="hljs-code">$image</span>,
+    altText: <span class="hljs-code">$altText</span>
+  )</span> <span class="hljs-tag">{
+   <span class="hljs-type"> ... on Image <span class="hljs-tag">{
+      <span class="hljs-type">...ImageFragment</span>
+    }</span>
+    ... on AmbienteNotFoundImage <span class="hljs-tag">{
+      <span class="hljs-type">...AmbienteNotFoundImageFragment</span>
+    }</span>
+    ... on UnsupportedFileType <span class="hljs-tag">{
+      <span class="hljs-type">...UnsupportedFileTypeFragment</span>
+    }</span>
+  }</span>
+}</span></span></span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"ambienteId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"image"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Upload</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">"createImage"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="mutation-createObra" class="operation operation-mutation" data-traverse-target="mutation-createObra">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Mutations">Mutations</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>createObra</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Creates a new obra.</p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-Obra"><code>Obra!</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>name</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The name of the new obra. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>description</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The description of the new obra in markdown syntax. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>area</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The area of the new obra in square meters. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> createObra<span class="hljs-tag">(
+  <span class="hljs-code">$name</span>:<span class="hljs-type"> String!</span>,
+  <span class="hljs-code">$description</span>:<span class="hljs-type"> String!</span>,
+  <span class="hljs-code">$area</span>:<span class="hljs-type"> Int!</span>
+)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">createObra<span class="hljs-tag">(
+    name: <span class="hljs-code">$name</span>,
+    description: <span class="hljs-code">$description</span>,
+    area: <span class="hljs-code">$area</span>
+  )</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">name</span>
+    <span class="hljs-symbol">description</span>
+    <span class="hljs-symbol">area</span>
+    <span class="hljs-symbol">index</span>
+    <span class="hljs-symbol">public</span>
+    <span class="hljs-symbol">thumbnail <span class="hljs-tag">{
+      <span class="hljs-type">...ImageFragment</span>
+    }</span></span>
+    <span class="hljs-symbol">ambientes <span class="hljs-tag">{
+      <span class="hljs-type">...AmbienteFragment</span>
+    }</span></span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"createObra"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"thumbnail"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"ambientes"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Ambiente</span><span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="mutation-deleteAmbiente" class="operation operation-mutation" data-traverse-target="mutation-deleteAmbiente">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Mutations">Mutations</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>deleteAmbiente</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Deletes a given ambiente alongside all its images returning the deleted data. <strong>If null it means the ambiente wasn&#39;t found.</strong></p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-Ambiente"><code>Ambiente</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The ID of the ambiente to delete. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> deleteAmbiente<span class="hljs-tag">(<span class="hljs-code">$id</span>:<span class="hljs-type"> Int!</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">deleteAmbiente<span class="hljs-tag">(id: <span class="hljs-code">$id</span>)</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">name</span>
+    <span class="hljs-symbol">description</span>
+    <span class="hljs-symbol">index</span>
+    <span class="hljs-symbol">obra <span class="hljs-tag">{
+      <span class="hljs-type">...ObraFragment</span>
+    }</span></span>
+    <span class="hljs-symbol">images <span class="hljs-tag">{
+      <span class="hljs-type">...ImageFragment</span>
+    }</span></span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"deleteAmbiente"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"obra"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Obra</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"images"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Image</span><span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="mutation-deleteImage" class="operation operation-mutation" data-traverse-target="mutation-deleteImage">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Mutations">Mutations</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>deleteImage</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Deletes the image identified by filename returning the deleted entry. <strong>Returns null if no image was found.</strong></p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-Image"><code>Image</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>filename</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The filename of the image to delete. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> deleteImage<span class="hljs-tag">(<span class="hljs-code">$filename</span>:<span class="hljs-type"> String!</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">deleteImage<span class="hljs-tag">(filename: <span class="hljs-code">$filename</span>)</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">filename</span>
+    <span class="hljs-symbol">altText</span>
+    <span class="hljs-symbol">index</span>
+    <span class="hljs-symbol">ambiente <span class="hljs-tag">{
+      <span class="hljs-type">...AmbienteFragment</span>
+    }</span></span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"deleteImage"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"ambiente"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Ambiente</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="mutation-deleteObra" class="operation operation-mutation" data-traverse-target="mutation-deleteObra">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Mutations">Mutations</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>deleteObra</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Deletes a given obra alongside all its ambientes and images returning the deleted data. <strong>If null it means the obra wasn&#39;t found.</strong></p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-Obra"><code>Obra</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The ID of the obra to delete. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> deleteObra<span class="hljs-tag">(<span class="hljs-code">$id</span>:<span class="hljs-type"> Int!</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">deleteObra<span class="hljs-tag">(id: <span class="hljs-code">$id</span>)</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">name</span>
+    <span class="hljs-symbol">description</span>
+    <span class="hljs-symbol">area</span>
+    <span class="hljs-symbol">index</span>
+    <span class="hljs-symbol">public</span>
+    <span class="hljs-symbol">thumbnail <span class="hljs-tag">{
+      <span class="hljs-type">...ImageFragment</span>
+    }</span></span>
+    <span class="hljs-symbol">ambientes <span class="hljs-tag">{
+      <span class="hljs-type">...AmbienteFragment</span>
+    }</span></span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"deleteObra"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"thumbnail"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"ambientes"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Ambiente</span><span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="mutation-updateAmbiente" class="operation operation-mutation" data-traverse-target="mutation-updateAmbiente">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Mutations">Mutations</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>updateAmbiente</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Updates the ambiente identified by id with the given parameters. All are optional. <strong>Returns the updated data or null if no ambiente was found.</strong></p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-Ambiente"><code>Ambiente</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The ID of the ambiente to update. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>name</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        </td>
+                        <td> The new name of the ambiente. Default = <code>null</code> </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>description</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        </td>
+                        <td> The new description of the ambiente in markdown format. *<strong>Leave blank to remove description.</strong>. Default = <code>null</code> </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>index</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int</code></a></span>
+                        </td>
+                        <td> The zero based index of where to position the ambiente relative to all others within the same obra. Default = <code>null</code> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> updateAmbiente<span class="hljs-tag">(
+  <span class="hljs-code">$id</span>:<span class="hljs-type"> Int!</span>,
+  <span class="hljs-code">$name</span>:<span class="hljs-type"> String,</span>
+  <span class="hljs-code">$description</span>:<span class="hljs-type"> String,</span>
+  <span class="hljs-code">$index</span>:<span class="hljs-type"> Int
+</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">updateAmbiente<span class="hljs-tag">(
+    id: <span class="hljs-code">$id</span>,
+    name: <span class="hljs-code">$name</span>,
+    description: <span class="hljs-code">$description</span>,
+    index: <span class="hljs-code">$index</span>
+  )</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">name</span>
+    <span class="hljs-symbol">description</span>
+    <span class="hljs-symbol">index</span>
+    <span class="hljs-symbol">obra <span class="hljs-tag">{
+      <span class="hljs-type">...ObraFragment</span>
+    }</span></span>
+    <span class="hljs-symbol">images <span class="hljs-tag">{
+      <span class="hljs-type">...ImageFragment</span>
+    }</span></span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"updateAmbiente"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"obra"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Obra</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"images"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Image</span><span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="mutation-updateImage" class="operation operation-mutation" data-traverse-target="mutation-updateImage">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Mutations">Mutations</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>updateImage</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Updates the image identified by filename. All parameters are optional. <strong>Returns the updated image or null if no image was found.</strong></p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-Image"><code>Image</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>filename</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The filename of the image to update. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>altText</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        </td>
+                        <td> The new alt text of the image. Default = <code>null</code> </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>index</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int</code></a></span>
+                        </td>
+                        <td> The zero based index of where to position the image relative to all others. Default = <code>null</code> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> updateImage<span class="hljs-tag">(
+  <span class="hljs-code">$filename</span>:<span class="hljs-type"> String!</span>,
+  <span class="hljs-code">$altText</span>:<span class="hljs-type"> String,</span>
+  <span class="hljs-code">$index</span>:<span class="hljs-type"> Int
+</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">updateImage<span class="hljs-tag">(
+    filename: <span class="hljs-code">$filename</span>,
+    altText: <span class="hljs-code">$altText</span>,
+    index: <span class="hljs-code">$index</span>
+  )</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">filename</span>
+    <span class="hljs-symbol">altText</span>
+    <span class="hljs-symbol">index</span>
+    <span class="hljs-symbol">ambiente <span class="hljs-tag">{
+      <span class="hljs-type">...AmbienteFragment</span>
+    }</span></span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"updateImage"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"ambiente"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Ambiente</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="mutation-updateObra" class="operation operation-mutation" data-traverse-target="mutation-updateObra">
+            <div class="operation-group-name">
+              <a href="#group-Operations-Mutations">Mutations</a>
+            </div>
+            <h2 class="operation-heading ">
+              <code>updateObra</code>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>Updates the obra identified by ID with the given parameters. All are optional, leave blank to not update. <strong>If null it means the obra wasn&#39;t found.</strong></p>
+                </div>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="operation-response doc-copy-section">
+                  <h5>Response</h5>
+                  <p> Returns an <a href="#definition-Obra"><code>Obra</code></a>
+                  </p>
+                </div>
+                <div class="operation-arguments doc-copy-section">
+                  <h5>Arguments</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The ID of the obra to update. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>name</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        </td>
+                        <td> The new name of the obra. Default = <code>null</code> </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>description</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        </td>
+                        <td> The new description of the obra in markdown format. Default = <code>null</code> </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>area</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int</code></a></span>
+                        </td>
+                        <td> The new area of the obra in square meters. Default = <code>null</code> </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>thumbnail</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        </td>
+                        <td> The filename of the thumbnail to set for this obra. <strong>Set to null to remove the thumbnail</strong>. Default = <code>null</code> </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>index</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int</code></a></span>
+                        </td>
+                        <td> The zero based index of where to position the obra relative to all others. Default = <code>null</code> </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>public</code></span> - <span class="property-type"><a href="#definition-Boolean"><code>Boolean</code></a></span>
+                        </td>
+                        <td> Sets an obra to be publicly available in the public website. Default = <code>null</code> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <h4 class="example-heading">Example</h4>
+                <div class="example-section example-section-is-code operation-query-example">
+                  <h5>Query</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> updateObra<span class="hljs-tag">(
+  <span class="hljs-code">$id</span>:<span class="hljs-type"> Int!</span>,
+  <span class="hljs-code">$name</span>:<span class="hljs-type"> String,</span>
+  <span class="hljs-code">$description</span>:<span class="hljs-type"> String,</span>
+  <span class="hljs-code">$area</span>:<span class="hljs-type"> Int,</span>
+  <span class="hljs-code">$thumbnail</span>:<span class="hljs-type"> String,</span>
+  <span class="hljs-code">$index</span>:<span class="hljs-type"> Int,</span>
+  <span class="hljs-code">$public</span>:<span class="hljs-type"> Boolean
+</span>)</span> <span class="hljs-tag">{
+  <span class="hljs-symbol">updateObra<span class="hljs-tag">(
+    id: <span class="hljs-code">$id</span>,
+    name: <span class="hljs-code">$name</span>,
+    description: <span class="hljs-code">$description</span>,
+    area: <span class="hljs-code">$area</span>,
+    thumbnail: <span class="hljs-code">$thumbnail</span>,
+    index: <span class="hljs-code">$index</span>,
+    public: <span class="hljs-code">$public</span>
+  )</span> <span class="hljs-tag">{
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">name</span>
+    <span class="hljs-symbol">description</span>
+    <span class="hljs-symbol">area</span>
+    <span class="hljs-symbol">index</span>
+    <span class="hljs-symbol">public</span>
+    <span class="hljs-symbol">thumbnail <span class="hljs-tag">{
+      <span class="hljs-type">...ImageFragment</span>
+    }</span></span>
+    <span class="hljs-symbol">ambientes <span class="hljs-tag">{
+      <span class="hljs-type">...AmbienteFragment</span>
+    }</span></span>
+  }</span></span>
+}</span></span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-variables-example">
+                  <h5>Variables</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"thumbnail"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+                <div class="example-section example-section-is-code operation-response-example">
+                  <h5>Response</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"updateObra"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"thumbnail"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"ambientes"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Ambiente</span><span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <h1 id="group-Types" class="group-heading" data-traverse-target="group-Types">Types</h1>
+          <section id="definition-Ambiente" class="definition definition-object" data-traverse-target="definition-Ambiente">
+            <h2 class="definition-heading">Ambiente</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>An ambiente is a section of an obra. It contains images.</p>
+                </div>
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Field Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The ID of the ambiente in the database. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>name</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The name of the ambiente. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>description</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        </td>
+                        <td> The description of the ambiente in markdown format. Can be null. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>index</code></span> - <span class="property-type"><a href="#definition-Float"><code>Float!</code></a></span>
+                        </td>
+                        <td> The index of the ambiente for UI ordering purposes. It's a float due to how the database handles reordering. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>obra</code></span> - <span class="property-type"><a href="#definition-Obra"><code>Obra!</code></a></span>
+                        </td>
+                        <td> The obra this ambiente belongs to. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>images</code></span> - <span class="property-type"><a href="#definition-Image"><code>[Image!]!</code></a></span>
+                        </td>
+                        <td> The images of this ambiente. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"obra"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Obra</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"images"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Image</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-AmbienteNotFoundImage" class="definition definition-object" data-traverse-target="definition-AmbienteNotFoundImage">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">AmbienteNotFoundImage</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>An error indicating that the given ambiente wasn&#39;t found when creating an image.</p>
+                </div>
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Field Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>ambienteId</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The given non-existent ambiente ID. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"ambienteId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-AmbienteObraNotFoundAmbiente" class="definition definition-union" data-traverse-target="definition-AmbienteObraNotFoundAmbiente">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">AmbienteObraNotFoundAmbiente</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-properties doc-copy-section">
+                  <h5>Types</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Union Types</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <p><a href="#definition-Ambiente"><code>Ambiente</code></a></p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p><a href="#definition-ObraNotFoundAmbiente"><code>ObraNotFoundAmbiente</code></a></p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol">Ambiente</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-Boolean" class="definition definition-scalar" data-traverse-target="definition-Boolean">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">Boolean</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>The <code>Boolean</code> scalar type represents <code>true</code> or <code>false</code>.</p>
+                </div>
+              </div>
+              <div class="doc-examples">
+              </div>
+            </div>
+          </section>
+          <section id="definition-Float" class="definition definition-scalar" data-traverse-target="definition-Float">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">Float</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>The <code>Float</code> scalar type represents signed double-precision fractional values as specified by <a href="https://en.wikipedia.org/wiki/IEEE_floating_point">IEEE 754</a>.</p>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-number">123.45</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-Image" class="definition definition-object" data-traverse-target="definition-Image">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">Image</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>An image along a description of it.</p>
+                </div>
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Field Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The ID of the image in the database. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>filename</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The unique filename of the image. <strong>Use this to fetch the actual image.</strong> </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>altText</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The alt text of the image. Not to be shown in the UI. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>index</code></span> - <span class="property-type"><a href="#definition-Float"><code>Float!</code></a></span>
+                        </td>
+                        <td> The index of the image for UI ordering purposes. It's a float due to how the database handles reordering. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>ambiente</code></span> - <span class="property-type"><a href="#definition-Ambiente"><code>Ambiente!</code></a></span>
+                        </td>
+                        <td> The ambiente this image belongs to. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"ambiente"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Ambiente</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-ImageAmbienteNotFoundImageUnsupportedFileType" class="definition definition-union" data-traverse-target="definition-ImageAmbienteNotFoundImageUnsupportedFileType">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">ImageAmbienteNotFoundImageUnsupportedFileType</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-properties doc-copy-section">
+                  <h5>Types</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Union Types</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <p><a href="#definition-Image"><code>Image</code></a></p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p><a href="#definition-AmbienteNotFoundImage"><code>AmbienteNotFoundImage</code></a></p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p><a href="#definition-UnsupportedFileType"><code>UnsupportedFileType</code></a></p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol">Image</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-Int" class="definition definition-scalar" data-traverse-target="definition-Int">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">Int</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>The <code>Int</code> scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.</p>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-number">123</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-Obra" class="definition definition-object" data-traverse-target="definition-Obra">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">Obra</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>The main structure of the database.</p>
+                </div>
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Field Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>id</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The ID of the obra in the database. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>name</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The name of the obra. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>description</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The description of the obra written in markdown format. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>area</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The area of the obra in meters squared. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>index</code></span> - <span class="property-type"><a href="#definition-Float"><code>Float!</code></a></span>
+                        </td>
+                        <td> The index of the obra for UI ordering purposes. It's a float due to how the database handles reordering. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>public</code></span> - <span class="property-type"><a href="#definition-Boolean"><code>Boolean!</code></a></span>
+                        </td>
+                        <td> Indicates if the obra is available in the public end of the website. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>thumbnail</code></span> - <span class="property-type"><a href="#definition-Image"><code>Image</code></a></span>
+                        </td>
+                        <td> An obra can have a thumbnail that will be the first thing shown in the UI. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>ambientes</code></span> - <span class="property-type"><a href="#definition-Ambiente"><code>[Ambiente!]!</code></a></span>
+                        </td>
+                        <td> All the ambientes belonging to this obra. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"thumbnail"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"ambientes"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Ambiente</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-ObraNotFoundAmbiente" class="definition definition-object" data-traverse-target="definition-ObraNotFoundAmbiente">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">ObraNotFoundAmbiente</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>An error indicating that the given obra doesn&#39;t exist when creating an ambiente.</p>
+                </div>
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Field Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>obraId</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The obra ID given by the user. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"obraId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-ObraResult" class="definition definition-object" data-traverse-target="definition-ObraResult">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">ObraResult</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>The result of an obra query. It contains the page and page count of the result.</p>
+                </div>
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Field Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>page</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The current page of the result. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>pageCount</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td> The amount of pages that can be queried for results. </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>obras</code></span> - <span class="property-type"><a href="#definition-Obra"><code>[Obra!]!</code></a></span>
+                        </td>
+                        <td> All the obras returned by the current page. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"page"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"pageCount"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"obras"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Obra</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-String" class="definition definition-scalar" data-traverse-target="definition-String">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">String</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>The <code>String</code> scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.</p>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol">"xyz789"</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-UnsupportedFileType" class="definition definition-object" data-traverse-target="definition-UnsupportedFileType">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">UnsupportedFileType</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>An error indicating an uploaded image isn&#39;t the correct file type.</p>
+                </div>
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Field Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>filetype</code></span> - <span class="property-type"><a href="#definition-String"><code>String!</code></a></span>
+                        </td>
+                        <td> The type of the uploaded file. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"filetype"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-Upload" class="definition definition-scalar" data-traverse-target="definition-Upload">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">Upload</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol">Upload</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <div class="doc-row no-margin">
+            <div class="doc-copy doc-separator">
+              <a class="powered-by" href="https://github.com/anvilco/spectaql">Documentation by <span>Anvil SpectaQL</span></a>
+            </div>
+          </div>
+        </article>
+        <div class="drawer-overlay"></div>
+      </div>
+    </div>
+  </body>
+</html>

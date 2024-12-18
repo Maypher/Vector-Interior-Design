@@ -1,0 +1,13 @@
+spectaql:
+  oneFile: true
+  targetDir: "docs/"
+
+introspection:
+  url: http://localhost:8080/obras/graphql 
+
+info:
+  description: |    
+    Here are all the endpoints available to the admin backend of the **Nodo website**.
+    It includes queries with access to private data and mutations to edit the data.
+
+  title: Nodo admin Graphql API

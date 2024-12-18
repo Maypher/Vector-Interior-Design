@@ -64,7 +64,7 @@ def update_obra(
     name: str | None = None,
     description: str | None = None,
     area: int | None = None,
-    thumbnail: str | None | bool = None,
+    thumbnail: str | None = None,
     index: int | None = None,
     public: bool | None = None,
 ) -> typing.Optional[schemas.Image]:
@@ -124,7 +124,7 @@ def update_obra(
                 """,
                 (image, obra.id),
             )
-    elif thumbnail == False:
+    elif not thumbnail:
         admin_database.query(
             """
                 UPDATE obra SET imagen_principal = NULL WHERE id = %s;
@@ -196,7 +196,9 @@ def update_ambiente(
             (new_name, id),
             commit=False,
         )
-    if new_description:
+    if (
+        new_description or new_description == ""
+    ):  # Done this way because if the new description is blank it should be removed
         admin_database.query(
             """
             UPDATE ambiente SET descripcion = %s WHERE id = %s
