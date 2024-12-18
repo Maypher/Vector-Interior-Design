@@ -6,25 +6,44 @@ import { yup } from 'sveltekit-superforms/adapters';
 import { PUBLIC_apiUrl } from '$env/static/public';
 
 export async function load({ params, fetch }) {
-    const obraID = params.obraID;
+    const obraID: number = +params.obraID;
 
-    const res = await fetch(PUBLIC_apiUrl + `/obras/${obraID}`, {
-        credentials: "include"
+    if (Number.isNaN(obraID)) error(404, `Obra con ID ${obraID} no existe.`);
+
+    const res = await fetch(PUBLIC_apiUrl, {
+        method: "POST",
+        body: JSON.stringify({
+            query: `
+                query GetObra($id: Int!) {
+                    obra(id: $id) {
+                        id
+                        name
+                        description
+                        area
+                        ambientes {
+                            id
+                            name
+                        }
+                    }
+                }
+           `,
+            variables: { id: obraID }
+        }),
+        credentials: "include",
+        headers: {
+            "Content-type": "application/json"
+        }
     });
 
     if (res.ok) {
-        let obraData: Obra = await res.json();
-        const strippedObra = {
-            name: obraData.name,
-            area: obraData.area,
-            description: obraData.description
-        }; // Remove all other values that come with the obra since they mess up server side
+        const obraData = (await res.json()).data.obra;
+        const formData = { name: obraData.name, description: obraData.description, area: obraData.area };
+        const updateForm = await superValidate(formData, yup(obraCreateSchema));
 
-        const updateForm = await superValidate(strippedObra, yup(obraCreateSchema));
-
-        return { updateForm, obraData };
+        if (obraData) return { updateForm, obraData };
+        else error(404, `Obra con ID ${obraID} no existe.`);
     }
-    else if (res.status === 404) {
-        error(404, `Obra con ID ${obraID} no existe.`);
+    else {
+        console.error(await res.json())
     }
 }

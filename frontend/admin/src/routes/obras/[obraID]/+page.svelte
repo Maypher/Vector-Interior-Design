@@ -6,33 +6,60 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { obraCreateSchema } from '$lib/utilities/yupSchemas';
 	import { PUBLIC_apiUrl } from '$env/static/public';
-	import objectToFormData from '$lib/utilities/formData';
-	import { goto, invalidate } from '$app/navigation';
+	import { success } from '$lib/utilities/toasts';
 
 	const { data }: { data: PageData } = $props();
+	let obraData = $state(data.obraData!);
 	let submitting: boolean = $state(false);
 
-	let { form, errors, enhance, constraints } = superForm(data.updateForm!, {
+	const { form, errors, enhance, constraints } = superForm(data.updateForm!, {
 		SPA: true,
 		validators: yup(obraCreateSchema), // Uses obraCreateScheme since this will only update name, description and area. All others will be dedicated pages.
-		invalidateAll: true,
-		async onUpdate({ form }) {
-			if (form.valid) {
-				const res = await fetch(PUBLIC_apiUrl + `/obras/actualizar/${data.obraData!.id}`, {
-					method: 'PUT',
-					body: objectToFormData(form.data),
-					credentials: 'include'
+		async onUpdate({ form: updateForm }) {
+			if (updateForm.valid) {
+				// TODO: Query obra data for update
+				const query = `
+					mutation updateObra($id: Int!, $name: String, $description: String, $area: Int) {
+						updateObra(id: $id, name: $name, description: $description, area: $area) {
+							name
+							description
+							area
+						}
+					}
+				`;
+				const variables = {
+					id: data.obraData.id,
+					name: updateForm.data.name,
+					description: updateForm.data.description,
+					area: updateForm.data.area
+				};
+
+				const res = await fetch(PUBLIC_apiUrl, {
+					method: 'POST',
+					body: JSON.stringify({ query, variables }),
+					credentials: 'include',
+					headers: {
+						'Content-type': 'application/json'
+					}
 				});
 
-				if (res.ok) await goto(`/obras/`);
+				if (res.ok) {
+					const updatedObra = (await res.json()).data.updateObra;
+
+					$form.name = updatedObra.name;
+					$form.description = updatedObra.description;
+					$form.area = updatedObra.area;
+
+					success(`Obra "${updatedObra.name}" actualizada con exito.`);
+				}
 			}
 		}
 	});
 
 	async function changeObraStatus() {
 		let formData = new FormData();
-		formData.append('public', `${!data.obraData!.public}`);
-		const res = await fetch(PUBLIC_apiUrl + `/obras/actualizar/${data.obraData!.id}`, {
+		formData.append('public', `${!obraData.public}`);
+		const res = await fetch(PUBLIC_apiUrl + `/obras/actualizar/${obraData.id}`, {
 			method: 'PUT',
 			body: formData,
 			credentials: 'include'
@@ -46,8 +73,8 @@
 <div class="bg-green-700 h-screen">
 	<div>
 		<button
-			class={`${data.obraData!.public ? 'bg-red-500' : 'bg-blue-500'} p-3 m-3 rounded-md`}
-			onclick={changeObraStatus}>{data.obraData!.public ? 'Privatizar' : 'Publicar'}</button
+			class={`${obraData.public ? 'bg-red-500' : 'bg-blue-500'} p-3 m-3 rounded-md`}
+			onclick={changeObraStatus}>{obraData.public ? 'Privatizar' : 'Publicar'}</button
 		>
 	</div>
 	<!-- Name, area and description -->
@@ -83,10 +110,10 @@
 	</form>
 	<hr class="m-3" />
 	<!-- Ambientes -->
-	<ul>
-		{#each data.obraData!.ambientes as ambiente}
-			<li><button>{ambiente.name}</button></li>
+	<ul class="m-4">
+		{#each obraData.ambientes as ambiente}
+			<li><a href={`/obras/${obraData.id}/ambientes/${ambiente.id}`}>{ambiente.name}</a></li>
 		{/each}
 	</ul>
-	<a href={`/obras/${data.obraData!.id}/ambientes/crear/`}>Nuevo</a>
+	<a href={`/obras/${obraData.id}/ambientes/crear/`}>Nuevo</a>
 </div>

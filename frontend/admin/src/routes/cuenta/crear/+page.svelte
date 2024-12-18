@@ -29,7 +29,7 @@
 				password: validData.password
 			};
 
-			let res = await fetch(PUBLIC_apiUrl + '/auth/crear-cuenta', {
+			let res = await fetch('http://localhost:8080/auth/crear-cuenta', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'

@@ -1,7 +1,5 @@
-import { PUBLIC_apiUrl } from '$env/static/public';
-
 export async function load({ fetch }) {
-    let res = await fetch(PUBLIC_apiUrl + "/auth/usuario-creado");
+    let res = await fetch("http://localhost:8080/auth/usuario-creado");
 
     let user_count = parseInt(await res.text());
 

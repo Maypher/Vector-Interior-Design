@@ -4,7 +4,7 @@
 	interface props {
 		label: string;
 		name: string;
-		value: string | number;
+		value?: string | number;
 		type: 'text' | 'number';
 		errors: Array<string> | undefined;
 	}
@@ -24,14 +24,7 @@
 		input.classList.remove('text-gray-400');
 	}
 
-	let {
-		label,
-		name,
-		type,
-		value = $bindable(type === 'text' ? '' : 1),
-		errors,
-		...constrains
-	}: props = $props();
+	let { label, name, type, value = $bindable(), errors, ...constrains }: props = $props();
 </script>
 
 <div class="my-2 flex flex-col">

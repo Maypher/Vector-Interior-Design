@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { type Obra } from '$lib/utilities/interfaces';
 	import { PUBLIC_apiUrl } from '$env/static/public';
+	import { onMount } from 'svelte';
+	import type internal from 'stream';
 
 	let searchParams = $state({
 		name: '',
@@ -10,29 +12,52 @@
 	// Used to highlight the search string in the results. Not derived because it should only update on search.
 	let nameRegex: RegExp = $state(new RegExp(`(${searchParams.name})`, 'gi'));
 
-	let obraPromise: Promise<Array<Obra>> = $state(fetchObras());
+	let obraPromise: Promise<{ page: number; pageCount: number; obras: Obra[] }> =
+		$state(fetchObras());
 
 	async function fetchObras() {
 		nameRegex = new RegExp(`(${searchParams.name})`, 'gi');
 
-		let queryParams = new URLSearchParams({
-			...searchParams,
-			page: searchParams.page.toString()
-		}).toString();
+		const query = `
+			query GetObras($page: Int, $name: String) {
+				obras(page: $page, name: $name) {
+					page
+					pageCount
+					obras {
+						id
+						name
+						thumbnail {
+							filename
+							altText
+						}
+					}
+				}
+			}	
+		`;
 
-		const res = await fetch(PUBLIC_apiUrl + `/obras/?${queryParams}`, {
+		const res = await fetch(PUBLIC_apiUrl, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				query,
+				variables: searchParams
+			}),
 			credentials: 'include'
 		});
 
 		if (res.ok) {
 			const data = await res.json();
-			return data.obras;
+			return data.data.obras;
 		}
 	}
 
 	function onclick() {
 		obraPromise = fetchObras();
 	}
+
+	onMount(() => onclick());
 </script>
 
 <div class="bg-red-400 min-h-screen p-4">
@@ -45,12 +70,12 @@
 	<div class="my-4 max-w-md m-auto">
 		{#await obraPromise}
 			<p>Cargando...</p>
-		{:then data: Array<Obra>}
-			<ul class="list-disc">
-				{#if data.length == 0}
-					{`Ninguna obra con el nombre ${searchParams.name}`}
-				{:else}
-					{#each data as obra}
+		{:then data}
+			{#if data.obras.length == 0}
+				{`Ninguna obra con el nombre ${searchParams.name}`}
+			{:else}
+				<ul class="list-disc">
+					{#each data.obras as obra}
 						<li>
 							<a href={`/obras/${obra.id}`}>
 								{@html obra.name.replace(nameRegex, '<b>$1</b>')}
@@ -62,8 +87,9 @@
 							{/if}
 						</li>
 					{/each}
-				{/if}
-			</ul>
+				</ul>
+			{/if}
+			<div><p>{data.page}/{data.pageCount}</p></div>
 		{/await}
 		<a href="/obras/crear">Nueva Obra</a>
 	</div>
