@@ -6,6 +6,8 @@ import { imageUpdateSchema } from '$lib/utilities/yupSchemas.js';
 
 export const load = async ({ fetch, params }) => {
     const filename = params.filename;
+    const ambienteId: number = +params.ambienteID;
+    const obraId: number = +params.obraID;
 
     const query = `
         query GetImage($filename: String!) {
@@ -34,7 +36,7 @@ export const load = async ({ fetch, params }) => {
         else {
             const updateForm = await superValidate({ altText: imageData.altText }, yup(imageUpdateSchema));
 
-            return { imageData, updateForm }
+            return { imageData, updateForm, ambienteId, obraId }
         };
     }
 };

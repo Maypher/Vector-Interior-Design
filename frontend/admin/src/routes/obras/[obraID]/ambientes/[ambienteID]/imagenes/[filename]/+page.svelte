@@ -2,15 +2,17 @@
 	import { yup } from 'sveltekit-superforms/adapters';
 	import type { PageData } from './$types';
 	import { superForm } from 'sveltekit-superforms';
-	import SuperDebug from 'sveltekit-superforms';
 	import { imageUpdateSchema } from '$lib/utilities/yupSchemas';
 	import EditableInput from '$lib/components/input/EditableInput.svelte';
 	import { PUBLIC_apiUrl } from '$env/static/public';
 	import { success } from '$lib/utilities/toasts';
+	import confirmationDialog from '$lib/utilities/dialog';
+	import { goto } from '$app/navigation';
 
 	const { data }: { data: PageData } = $props();
 	let imageData = $state(data.imageData!);
 	let submitting: boolean = $state(false);
+	let deleteDialog: HTMLDialogElement | null | undefined = $state();
 
 	const { form, errors, enhance, constraints } = superForm(data.updateForm!, {
 		SPA: true,
@@ -49,11 +51,40 @@
 			submitting = false;
 		}
 	});
+
+	async function deleteImage() {
+		if (
+			await confirmationDialog(
+				'Seguro que deseas eliminar esta imagen? Esta acción no puede ser revertida.'
+			)
+		) {
+			const query = `
+			mutation deleteImage($filename: String!) {
+				deleteImage(filename: $filename) {
+					filename
+				}
+			}
+		`;
+
+			const variables = { filename: imageData.filename };
+
+			const res = await fetch(PUBLIC_apiUrl, {
+				method: 'POST',
+				body: JSON.stringify({ query, variables }),
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (res.ok) await goto(`/obras/${data.obraId}/ambientes/${data.ambienteId}`);
+		}
+	}
 </script>
 
 <div class="w-full bg-green-600">
+	<button onclick={deleteImage}>Borrar Imagen</button>
 	<img src={`http://localhost:8080/images/${imageData.filename}`} alt={imageData.altText} />
-	<p>{$form.altText}</p>
 
 	<form use:enhance>
 		<fieldset disabled={submitting}>
