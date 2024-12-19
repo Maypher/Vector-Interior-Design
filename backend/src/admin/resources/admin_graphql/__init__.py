@@ -54,7 +54,7 @@ class Query:
             int, strawberry.argument(description="The ID of ambiente to get.")
         ],
     ) -> typing.Optional[schemas.Ambiente]:
-        return obra.get_ambiente_by_id(id, False)
+        return obra.get_ambiente_by_id(id, True)
 
     @strawberry.field(
         description="Returns the image matching the given filename or null."
