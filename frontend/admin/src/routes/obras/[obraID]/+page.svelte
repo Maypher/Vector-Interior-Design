@@ -57,16 +57,33 @@
 	});
 
 	async function changeObraStatus() {
-		let formData = new FormData();
-		formData.append('public', `${!obraData.public}`);
-		const res = await fetch(PUBLIC_apiUrl + `/obras/actualizar/${obraData.id}`, {
-			method: 'PUT',
-			body: formData,
-			credentials: 'include'
+		const query = `
+			mutation changePublicStatus($id: Int!, $public: Boolean!) {
+				updateObra(id: $id, public: $public) {
+					public
+				}
+			}
+		`;
+
+		const variables = { id: obraData.id, public: !obraData.public };
+
+		const res = await fetch(PUBLIC_apiUrl, {
+			method: 'POST',
+			body: JSON.stringify({
+				query,
+				variables
+			}),
+			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json'
+			}
 		});
 
-		if (res.ok) window.location.reload();
-		else throw res.status;
+		if (res.ok) {
+			const updatedPublic = (await res.json()).data.updateObra.public;
+			success(updatedPublic ? 'Obra publicada con éxito.' : 'Obra privatizada con éxito.');
+			obraData.public = updatedPublic;
+		} else throw res.status;
 	}
 </script>
 
