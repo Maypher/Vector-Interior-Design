@@ -63,21 +63,24 @@
 	}
 </script>
 
-<div class="w-full bg-green-600">
-	<button onclick={deleteImage}>Borrar Imagen</button>
-	<img src={`http://localhost:8080/images/${imageData.filename}`} alt={imageData.altText} />
-
-	<form use:enhance>
+<div class="w-full bg-green-600 p-3">
+	<form use:enhance class="max-w-xl m-auto bg-zinc-600 p-3 rounded-md">
+		<button
+			onclick={deleteImage}
+			type="button"
+			class="block w-fit ml-auto m-1 p-2 bg-red-500 hover:bg-blue-700">Borrar Imagen</button
+		>
+		<img src={`http://localhost:8080/images/${imageData.filename}`} alt={imageData.altText} />
 		<fieldset disabled={submitting}>
 			<EditableInput
-				name="name"
-				label="Nombre"
+				name="altText"
+				label="Texto Alternativo"
 				bind:value={$form.altText}
 				errors={$errors.altText}
 				type="text"
 				{...$constraints.altText}
 			/>
-			<button>Actualizar</button>
+			<button class="bg-green-500 p-2 rounded-md hover:bg-orange-800">Actualizar</button>
 		</fieldset>
 	</form>
 </div>

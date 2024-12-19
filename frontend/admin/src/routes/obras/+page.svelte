@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { type Obra } from '$lib/utilities/interfaces';
-	import { PUBLIC_apiUrl } from '$env/static/public';
 	import { onMount } from 'svelte';
 	import graphql from '$lib/utilities/api';
 
@@ -57,8 +55,8 @@
 			{:else}
 				<ul class="list-disc">
 					{#each data.obras as obra}
-						<li>
-							<a href={`/obras/${obra.id}`}>
+						<li class="bg-green-300 my-1">
+							<a href={`/obras/${obra.id}`} class="block w-full hover:bg-gray-600">
 								{@html obra.name.replace(nameRegex, '<b>$1</b>')}
 							</a>
 							{#if obra.thumbnail}<img
@@ -72,6 +70,8 @@
 			{/if}
 			<div><p>{data.page}/{data.pageCount}</p></div>
 		{/await}
-		<a href="/obras/crear">Nueva Obra</a>
+		<a href="/obras/crear" class="block bg-green-200 w-fit p-2 m-1 rounded-lg hover:bg-violet-700"
+			>Nueva Obra</a
+		>
 	</div>
 </div>

@@ -63,15 +63,14 @@
 	}
 </script>
 
-<div class="bg-green-700 h-screen">
-	<div>
+<div class="bg-green-700 p-4">
+	<!-- Name, area and description -->
+	<form class="bg-purple-900 m-auto p-4 max-w-xl rounded-lg" use:enhance>
 		<button
-			class={`${obraData.public ? 'bg-red-500' : 'bg-blue-500'} p-3 m-3 rounded-md`}
+			type="button"
+			class={`${obraData.public ? 'bg-red-500' : 'bg-blue-500'} block w-fit ml-auto p-3 m-3 rounded-md`}
 			onclick={changeObraStatus}>{obraData.public ? 'Privatizar' : 'Publicar'}</button
 		>
-	</div>
-	<!-- Name, area and description -->
-	<form class="bg-purple-900 m-auto p-4" use:enhance>
 		<fieldset disabled={submitting}>
 			<EditableInput
 				name="name"
@@ -103,10 +102,16 @@
 	</form>
 	<hr class="m-3" />
 	<!-- Ambientes -->
-	<ul class="m-4">
+	<h1 class="text-xl m-3 font-bold text-center">Ambientes</h1>
+	<ul class="m-auto w-fit list-disc">
 		{#each obraData.ambientes as ambiente}
-			<li><a href={`/obras/${obraData.id}/ambientes/${ambiente.id}`}>{ambiente.name}</a></li>
+			<li class="bg-purple-300 my-2 hover:bg-slate-600">
+				<a href={`/obras/${obraData.id}/ambientes/${ambiente.id}`}>{ambiente.name}</a>
+			</li>
 		{/each}
 	</ul>
-	<a href={`/obras/${obraData.id}/ambientes/crear/`}>Nuevo</a>
+	<a
+		href={`/obras/${obraData.id}/ambientes/crear/`}
+		class="block w-fit m-auto bg-blue-700 p-1 rounded-md">Nuevo</a
+	>
 </div>

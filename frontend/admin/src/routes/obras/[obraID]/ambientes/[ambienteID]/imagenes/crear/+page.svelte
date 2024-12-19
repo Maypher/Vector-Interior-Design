@@ -99,8 +99,8 @@
 	});
 </script>
 
-<div>
-	<form use:enhance class="bg-amber-600">
+<div class="m-5">
+	<form use:enhance class="bg-amber-600 max-w-xl m-auto p-3">
 		<fieldset disabled={submitting}>
 			<input type="file" accept="image/png, image/jpeg" bind:files={inputFile} />
 			<Errors errors={fileErrors} />
@@ -112,7 +112,7 @@
 				errors={$errors.altText}
 				{...$constraints}
 			/>
-			<button>Crear</button>
+			<button class="bg-green-200 hover:bg-amber-200 p-2 rounded-md">Crear</button>
 		</fieldset>
 	</form>
 </div>

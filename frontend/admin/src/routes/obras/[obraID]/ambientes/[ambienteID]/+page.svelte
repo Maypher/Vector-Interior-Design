@@ -5,7 +5,6 @@
 	import { ambienteCreateSchema } from '$lib/utilities/yupSchemas';
 	import EditableInput from '$lib/components/input/EditableInput.svelte';
 	import Markdown from '$lib/components/markdown/Markdown.svelte';
-	import { PUBLIC_apiUrl } from '$env/static/public';
 	import { success } from '$lib/utilities/toasts';
 	import graphql from '$lib/utilities/api';
 
@@ -42,8 +41,8 @@
 	});
 </script>
 
-<div class="w-full bg-green">
-	<form action="POST" use:enhance>
+<div class="w-full bg-green-300 min-h-screen p-3">
+	<form action="POST" use:enhance class="max-w-xl p-3 rounded-md m-auto bg-red-700">
 		<fieldset disabled={submitting}>
 			<EditableInput
 				name="nombre"
@@ -59,15 +58,26 @@
 				bind:value={$form.description}
 				errors={$errors.description}
 			/>
-			<button type="submit">Actualizar</button>
+			<button type="submit" class="bg-violet-300 hover:bg-stone-50 m-2 rounded-sm p-3"
+				>Actualizar</button
+			>
 		</fieldset>
 	</form>
-	<div>
-		{#each ambiente.images as image}
-			<a href={`/obras/${data.obraID}/ambientes/${ambiente.id}/imagenes/${image.filename}`}>
-				<img src={`http://localhost:8080/images/${image.filename}`} alt={ambiente.altText} />
-			</a>
-		{/each}
-		<a href={`/obras/${data.obraID}/ambientes/${ambiente.id}/imagenes/crear/`}>Nueva imagen</a>
+	<hr class="m-2 border-blue-700" />
+	<div class="m-2">
+		<h1 class="text-xl text-center">Imágenes</h1>
+		<ul class="w-fit mx-auto my-2">
+			{#each ambiente.images as image}
+				<li class="size-48">
+					<a href={`/obras/${data.obraID}/ambientes/${ambiente.id}/imagenes/${image.filename}`}>
+						<img src={`http://localhost:8080/images/${image.filename}`} alt={ambiente.altText} />
+					</a>
+				</li>
+			{/each}
+		</ul>
+		<a
+			href={`/obras/${data.obraID}/ambientes/${ambiente.id}/imagenes/crear/`}
+			class="block w-fit m-auto bg-amber-400 hover:bg-white p-2 rounded-md">Nueva imagen</a
+		>
 	</div>
 </div>
