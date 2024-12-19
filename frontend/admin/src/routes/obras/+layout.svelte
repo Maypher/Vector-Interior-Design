@@ -1,6 +1,4 @@
 <script>
-	import { redirect } from '@sveltejs/kit';
-	import { PUBLIC_apiUrl } from '$env/static/public';
 	import { goto } from '$app/navigation';
 
 	let { children } = $props();
