@@ -15,6 +15,7 @@
 	const { form, errors, enhance, constraints } = superForm(data.updateForm!, {
 		SPA: true,
 		validators: yup(obraCreateSchema), // Uses obraCreateScheme since this will only update name, description and area. All others will be dedicated pages.
+		resetForm: false,
 		async onUpdate({ form: updateForm }) {
 			if (updateForm.valid) {
 				// TODO: Query obra data for update

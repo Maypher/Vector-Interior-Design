@@ -33,3 +33,7 @@ export const ambienteCreateSchema = object({
     name: string().required("Nombre requerido.").min(4, "Nombre debe tener un mínimo de 4 caracteres"),
     description: string().default('')
 });
+
+export const imageUpdateSchema = object({
+    altText: string().required("Texto alternativo requerido."),
+});

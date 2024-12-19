@@ -9,26 +9,54 @@
 	import type { PageData } from './$types';
 	import { PUBLIC_apiUrl } from '$env/static/public';
 	import { goto } from '$app/navigation';
+	import { error } from '$lib/utilities/toasts';
 
 	const { data }: { data: PageData } = $props();
 	let submitting: boolean = $state(false);
 
 	const { form, errors, enhance } = superForm(data.createForm, {
 		SPA: true,
+		resetForm: false,
 		validators: yup(ambienteCreateSchema),
 		async onUpdate({ form }) {
 			if (form.valid) {
-				const finalData = { obra_id: data.obraID, ...form.data };
-				const formData = objectToFormData(finalData);
+				const query = `
+					mutation newAmbiente($obraId: Int!, $name: String!, $description: String) {
+						createAmbiente(obraId: $obraId, name: $name, description: $description) {
+							__typename
+							... on ObraNotFoundAmbiente {
+								obraId
+							}
+							... on Ambiente {
+								name
+								description
+							}
+						}
+					}
+				`;
 
-				const res = await fetch(PUBLIC_apiUrl + '/ambientes/crear', {
+				const variables = { obraId: Number.parseInt(data.obraID), ...form.data };
+
+				const res = await fetch(PUBLIC_apiUrl, {
 					method: 'POST',
-					body: formData,
-					credentials: 'include'
+					body: JSON.stringify({ query, variables }),
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json'
+					}
 				});
 
-				if (res.ok) await goto(`/obras/${data.obraID}`);
-				else throw res.status;
+				if (res.ok) {
+					const ambienteData = (await res.json()).data.createAmbiente;
+
+					switch (ambienteData.__typename) {
+						case 'ObraNotFoundAmbiente':
+							error(`Obra con ID ${ambienteData.obraId} no existe.`);
+						case 'Ambiente':
+							await goto(`/obras/${data.obraID}`);
+							break;
+					}
+				} else throw res.status;
 			}
 		}
 	});

@@ -15,6 +15,7 @@
 	const { form, errors, enhance, constraints } = superForm(data.createForm, {
 		SPA: true,
 		validators: yup(obraCreateSchema),
+		resetForm: false,
 		async onUpdate({ form }) {
 			submitting = true;
 
