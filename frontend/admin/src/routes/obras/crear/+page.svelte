@@ -2,15 +2,14 @@
 	import TextInput from '$lib/components/input/TextInput.svelte';
 	import Markdown from '$lib/components/markdown/Markdown.svelte';
 	import { obraCreateSchema } from '$lib/utilities/yupSchemas';
-	import objectToFormData from '$lib/utilities/formData';
 	import { goto } from '$app/navigation';
 	import { superForm, superValidate } from 'sveltekit-superforms';
 	import { yup } from 'sveltekit-superforms/adapters';
 	import type { PageData } from './$types';
-	import { error } from '$lib/utilities/toasts';
 	import { PUBLIC_apiUrl } from '$env/static/public';
 
 	const { data }: { data: PageData } = $props();
+	let dialog: HTMLDialogElement | null | undefined = $state();
 
 	const { form, errors, enhance, constraints } = superForm(data.createForm, {
 		SPA: true,
@@ -20,15 +19,28 @@
 			submitting = true;
 
 			if (form.valid) {
-				const res = await fetch(PUBLIC_apiUrl + '/obras/crear', {
+				const query = `
+					mutation createObra($name: String!, $description: String!, $area: Int!) {
+						createObra(name; $name, description: $description, area: $area) {
+							id
+						}
+					}
+				`;
+
+				const variables = { ...form.data };
+
+				const res = await fetch(PUBLIC_apiUrl, {
 					method: 'POST',
-					body: objectToFormData(form.data)
+					body: JSON.stringify({ query, variables }),
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json'
+					}
 				});
 
-				const resText = await res.text();
+				const newObraId = (await res.json()).data.createObra.id;
 
-				if (res.ok) goto(`/obras/${resText}`);
-				else error(resText);
+				if (res.ok) await goto(`/obras/${newObraId}`);
 			}
 
 			submitting = false;
