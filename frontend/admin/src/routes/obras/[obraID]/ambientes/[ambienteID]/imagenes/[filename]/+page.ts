@@ -3,6 +3,7 @@ import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';
 import { imageUpdateSchema } from '$lib/utilities/yupSchemas.js';
+import graphql from '$lib/utilities/api.js';
 
 export const load = async ({ fetch, params }) => {
     const filename = params.filename;
@@ -17,26 +18,14 @@ export const load = async ({ fetch, params }) => {
             }
         }
     `;
-
     const variables = { filename: filename };
 
-    const res = await fetch(PUBLIC_apiUrl, {
-        method: "POST",
-        body: JSON.stringify({ query, variables }),
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
+    const imageData = (await graphql(query, variables)).image;
 
-    if (res.ok) {
-        const imageData = (await res.json()).data.image;
+    if (!imageData) error(404, `Imagen ${filename} no existe.`);
+    else {
+        const updateForm = await superValidate({ altText: imageData.altText }, yup(imageUpdateSchema));
 
-        if (!imageData) error(404, `Imagen ${filename} no existe.`);
-        else {
-            const updateForm = await superValidate({ altText: imageData.altText }, yup(imageUpdateSchema));
-
-            return { imageData, updateForm, ambienteId, obraId }
-        };
-    }
+        return { imageData, updateForm, ambienteId, obraId }
+    };
 };

@@ -7,6 +7,7 @@
 	import { obraCreateSchema } from '$lib/utilities/yupSchemas';
 	import { PUBLIC_apiUrl } from '$env/static/public';
 	import { success } from '$lib/utilities/toasts';
+	import graphql from '$lib/utilities/api';
 
 	const { data }: { data: PageData } = $props();
 	let obraData = $state(data.obraData!);
@@ -35,24 +36,12 @@
 					area: updateForm.data.area
 				};
 
-				const res = await fetch(PUBLIC_apiUrl, {
-					method: 'POST',
-					body: JSON.stringify({ query, variables }),
-					credentials: 'include',
-					headers: {
-						'Content-type': 'application/json'
-					}
-				});
+				const updatedObra = (await graphql(query, variables)).updateObra;
+				$form.name = updatedObra.name;
+				$form.description = updatedObra.description;
+				$form.area = updatedObra.area;
 
-				if (res.ok) {
-					const updatedObra = (await res.json()).data.updateObra;
-
-					$form.name = updatedObra.name;
-					$form.description = updatedObra.description;
-					$form.area = updatedObra.area;
-
-					success(`Obra "${updatedObra.name}" actualizada con exito.`);
-				}
+				success(`Obra "${updatedObra.name}" actualizada con éxito.`);
 			}
 		}
 	});
@@ -68,23 +57,9 @@
 
 		const variables = { id: obraData.id, public: !obraData.public };
 
-		const res = await fetch(PUBLIC_apiUrl, {
-			method: 'POST',
-			body: JSON.stringify({
-				query,
-				variables
-			}),
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
-
-		if (res.ok) {
-			const updatedPublic = (await res.json()).data.updateObra.public;
-			success(updatedPublic ? 'Obra publicada con éxito.' : 'Obra privatizada con éxito.');
-			obraData.public = updatedPublic;
-		} else throw res.status;
+		const updatedPublic = (await graphql(query, variables)).updateObra.public;
+		success(updatedPublic ? 'Obra publicada con éxito.' : 'Obra privatizada con éxito.');
+		obraData.public = updatedPublic;
 	}
 </script>
 

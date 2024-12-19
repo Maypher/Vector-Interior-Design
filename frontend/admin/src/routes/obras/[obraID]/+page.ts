@@ -4,16 +4,14 @@ import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';
 import { PUBLIC_apiUrl } from '$env/static/public';
+import graphql from '$lib/utilities/api.js';
 
 export async function load({ params, fetch }) {
     const obraID: number = +params.obraID;
 
     if (Number.isNaN(obraID)) error(404, `Obra con ID ${obraID} no existe.`);
 
-    const res = await fetch(PUBLIC_apiUrl, {
-        method: "POST",
-        body: JSON.stringify({
-            query: `
+    const query = `
                 query GetObra($id: Int!) {
                     obra(id: $id) {
                         id
@@ -26,24 +24,14 @@ export async function load({ params, fetch }) {
                         }
                     }
                 }
-           `,
-            variables: { id: obraID }
-        }),
-        credentials: "include",
-        headers: {
-            "Content-type": "application/json"
-        }
-    });
+           `;
+    const variables = { id: obraID };
 
-    if (res.ok) {
-        const obraData = (await res.json()).data.obra;
-        const formData = { name: obraData.name, description: obraData.description, area: obraData.area };
-        const updateForm = await superValidate(formData, yup(obraCreateSchema));
+    const obraData = (await graphql(query, variables)).obra;
 
-        if (obraData) return { updateForm, obraData };
-        else error(404, `Obra con ID ${obraID} no existe.`);
-    }
-    else {
-        console.error(await res.json())
-    }
+    const formData = { name: obraData.name, description: obraData.description, area: obraData.area };
+    const updateForm = await superValidate(formData, yup(obraCreateSchema));
+
+    if (obraData) return { updateForm, obraData };
+    else error(404, `Obra con ID ${obraID} no existe.`);
 }

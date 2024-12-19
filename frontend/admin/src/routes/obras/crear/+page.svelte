@@ -7,6 +7,7 @@
 	import { yup } from 'sveltekit-superforms/adapters';
 	import type { PageData } from './$types';
 	import { PUBLIC_apiUrl } from '$env/static/public';
+	import graphql from '$lib/utilities/api';
 
 	const { data }: { data: PageData } = $props();
 	let dialog: HTMLDialogElement | null | undefined = $state();
@@ -26,21 +27,11 @@
 						}
 					}
 				`;
-
 				const variables = { ...form.data };
 
-				const res = await fetch(PUBLIC_apiUrl, {
-					method: 'POST',
-					body: JSON.stringify({ query, variables }),
-					credentials: 'include',
-					headers: {
-						'Content-Type': 'application/json'
-					}
-				});
+				const newObraId = (await graphql(query, variables)).createObra.id;
 
-				const newObraId = (await res.json()).data.createObra.id;
-
-				if (res.ok) await goto(`/obras/${newObraId}`);
+				await goto(`/obras/${newObraId}`);
 			}
 
 			submitting = false;

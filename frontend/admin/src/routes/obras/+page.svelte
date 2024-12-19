@@ -2,7 +2,7 @@
 	import { type Obra } from '$lib/utilities/interfaces';
 	import { PUBLIC_apiUrl } from '$env/static/public';
 	import { onMount } from 'svelte';
-	import type internal from 'stream';
+	import graphql from '$lib/utilities/api';
 
 	let searchParams = $state({
 		name: '',
@@ -12,8 +12,7 @@
 	// Used to highlight the search string in the results. Not derived because it should only update on search.
 	let nameRegex: RegExp = $state(new RegExp(`(${searchParams.name})`, 'gi'));
 
-	let obraPromise: Promise<{ page: number; pageCount: number; obras: Obra[] }> =
-		$state(fetchObras());
+	let obraPromise = $state(fetchObras());
 
 	async function fetchObras() {
 		nameRegex = new RegExp(`(${searchParams.name})`, 'gi');
@@ -34,28 +33,10 @@
 				}
 			}	
 		`;
-
-		const res = await fetch(PUBLIC_apiUrl, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				query,
-				variables: searchParams
-			}),
-			credentials: 'include'
-		});
-
-		if (res.ok) {
-			const data = await res.json();
-			return data.data.obras;
-		}
+		return (await graphql(query, searchParams)).obras;
 	}
 
-	function onclick() {
-		obraPromise = fetchObras();
-	}
+	const onclick = () => (obraPromise = fetchObras());
 
 	onMount(() => onclick());
 </script>

@@ -3,6 +3,7 @@ import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';
 import { ambienteCreateSchema } from '$lib/utilities/yupSchemas';
+import graphql from '$lib/utilities/api.js';
 
 export const load = async ({ fetch, params }) => {
     const ambienteID: number = +params.ambienteID;
@@ -26,18 +27,7 @@ export const load = async ({ fetch, params }) => {
 
     const variables = { id: ambienteID };
 
-    const res = await fetch(PUBLIC_apiUrl, {
-        method: "POST",
-        body: JSON.stringify({
-            query, variables
-        }),
-        credentials: "include",
-        headers: {
-            "Content-type": "application/json"
-        }
-    });
-
-    const ambienteData = (await res.json()).data.ambiente;
+    const ambienteData = (await graphql(query, variables)).ambiente;
     const formData = { name: ambienteData.name, description: ambienteData.description };
     const updateForm = await superValidate(formData, yup(ambienteCreateSchema));
     return { ambienteData, updateForm, obraID };

@@ -7,6 +7,7 @@
 	import Markdown from '$lib/components/markdown/Markdown.svelte';
 	import { PUBLIC_apiUrl } from '$env/static/public';
 	import { success } from '$lib/utilities/toasts';
+	import graphql from '$lib/utilities/api';
 
 	const { data }: { data: PageData } = $props();
 	let ambiente = $state(data.ambienteData);
@@ -30,22 +31,11 @@
 
 				const variables = { id: ambiente.id, ...updateForm.data };
 
-				const res = await fetch(PUBLIC_apiUrl, {
-					method: 'POST',
-					body: JSON.stringify({ query, variables }),
-					credentials: 'include',
-					headers: {
-						'Content-type': 'application/json'
-					}
-				});
+				const updatedAmbiente = (await graphql(query, variables)).updateAmbiente;
+				$form.name = updatedAmbiente.name;
+				$form.description = updatedAmbiente.description;
 
-				if (res.ok) {
-					const updatedAmbiente = (await res.json()).data.updateAmbiente;
-					$form.name = updatedAmbiente.name;
-					$form.description = updatedAmbiente.description;
-
-					success(`Ambiente "${updatedAmbiente.name}" actualizada con éxito.`);
-				}
+				success(`Ambiente "${updatedAmbiente.name}" actualizado con éxito.`);
 			}
 			submitting = false;
 		}

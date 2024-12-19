@@ -8,6 +8,7 @@
 	import { success } from '$lib/utilities/toasts';
 	import confirmationDialog from '$lib/utilities/dialog';
 	import { goto } from '$app/navigation';
+	import graphql from '$lib/utilities/api';
 
 	const { data }: { data: PageData } = $props();
 	let imageData = $state(data.imageData!);
@@ -31,22 +32,9 @@
 
 				const variables = { filename: imageData.filename, ...updateForm.data };
 
-				const res = await fetch(PUBLIC_apiUrl, {
-					method: 'POST',
-					body: JSON.stringify({ query, variables }),
-					credentials: 'include',
-					headers: {
-						'Content-Type': 'application/json'
-					}
-				});
-
-				if (res.ok) {
-					const updatedImageData = (await res.json()).data.updateImage;
-
-					success(`Imagen actualizada con éxito.`);
-
-					$form.altText = updatedImageData.altText;
-				}
+				const updatedImageData = (await graphql(query, variables)).updateImage;
+				success(`Imagen actualizada con éxito.`);
+				$form.altText = updatedImageData.altText;
 			}
 			submitting = false;
 		}
@@ -68,16 +56,9 @@
 
 			const variables = { filename: imageData.filename };
 
-			const res = await fetch(PUBLIC_apiUrl, {
-				method: 'POST',
-				body: JSON.stringify({ query, variables }),
-				credentials: 'include',
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
+			await graphql(query, variables);
 
-			if (res.ok) await goto(`/obras/${data.obraId}/ambientes/${data.ambienteId}`);
+			await goto(`/obras/${data.obraId}/ambientes/${data.ambienteId}`);
 		}
 	}
 </script>
