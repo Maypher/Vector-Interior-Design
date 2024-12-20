@@ -1,11 +1,10 @@
-import { PUBLIC_apiUrl } from '$env/static/public';
 import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';
 import { ambienteCreateSchema } from '$lib/utilities/yupSchemas';
 import graphql from '$lib/utilities/api.js';
 
-export const load = async ({ fetch, params }) => {
+export const load = async ({ params }) => {
     const ambienteID: number = +params.ambienteID;
     const obraID: number = +params.obraID;
 
@@ -21,6 +20,10 @@ export const load = async ({ fetch, params }) => {
                     filename
                     altText
                 }
+                obra {
+                    id
+                    name
+                }
             }
         }
     `;
@@ -30,5 +33,5 @@ export const load = async ({ fetch, params }) => {
     const ambienteData = (await graphql(query, variables)).ambiente;
     const formData = { name: ambienteData.name, description: ambienteData.description };
     const updateForm = await superValidate(formData, yup(ambienteCreateSchema));
-    return { ambienteData, updateForm, obraID };
+    return { ambienteData, updateForm };
 };

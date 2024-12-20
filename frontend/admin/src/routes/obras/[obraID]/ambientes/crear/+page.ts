@@ -6,5 +6,5 @@ import type { PageLoad } from './$types';
 export const load: PageLoad = async ({ params }) => {
     const createForm = await superValidate(yup(ambienteCreateSchema));
 
-    return { createForm, obraID: params.obraID }
+    return { createForm, obraId: params.obraID }
 }

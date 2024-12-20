@@ -22,7 +22,7 @@
 			if (form.valid) {
 				const query = `
 					mutation createObra($name: String!, $description: String!, $area: Int!) {
-						createObra(name; $name, description: $description, area: $area) {
+						createObra(name: $name, description: $description, area: $area) {
 							id
 						}
 					}

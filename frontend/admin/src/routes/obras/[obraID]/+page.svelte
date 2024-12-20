@@ -5,9 +5,11 @@
 	import type { PageData } from './$types';
 	import { superForm } from 'sveltekit-superforms';
 	import { obraCreateSchema } from '$lib/utilities/yupSchemas';
-	import { PUBLIC_apiUrl } from '$env/static/public';
 	import { success } from '$lib/utilities/toasts';
 	import graphql from '$lib/utilities/api';
+	import confirmationDialog from '$lib/utilities/dialog';
+	import { goto } from '$app/navigation';
+	import { error } from '@sveltejs/kit';
 
 	const { data }: { data: PageData } = $props();
 	let obraData = $state(data.obraData!);
@@ -61,6 +63,30 @@
 		success(updatedPublic ? 'Obra publicada con éxito.' : 'Obra privatizada con éxito.');
 		obraData.public = updatedPublic;
 	}
+
+	async function deleteObra() {
+		if (
+			await confirmationDialog(`Seguro que quieres borrar la obra <b>${obraData.name}</b> 
+		junto a todos sus ambientes e imágenes?
+		Esta acción no puede ser revertida.
+		`)
+		) {
+			const query = `
+				mutation deleteObra($id: Int!) {
+					deleteObra(id: $id) {
+						name
+					}
+				}
+			`;
+
+			const variables = { id: obraData.id };
+
+			const deletedObra = (await graphql(query, variables)).deleteObra;
+
+			if (deletedObra) goto('/obras/');
+			else error(404, `Obra con ID ${obraData.id} no existe.`);
+		}
+	}
 </script>
 
 <div class="bg-green-700 p-4">
@@ -70,6 +96,11 @@
 			type="button"
 			class={`${obraData.public ? 'bg-red-500' : 'bg-blue-500'} block w-fit ml-auto p-3 m-3 rounded-md`}
 			onclick={changeObraStatus}>{obraData.public ? 'Privatizar' : 'Publicar'}</button
+		>
+		<button
+			type="button"
+			class="block w-fit ml-auto p-3 m-1 bg-red-500 hover:bg-green-600"
+			onclick={deleteObra}>Borrar obra</button
 		>
 		<fieldset disabled={submitting}>
 			<EditableInput

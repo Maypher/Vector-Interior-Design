@@ -1,9 +1,7 @@
 <script lang="ts">
-	import type { Ambiente } from '$lib/utilities/interfaces';
-	import { superForm, defaults } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import { yup } from 'sveltekit-superforms/adapters';
 	import { ambienteCreateSchema } from '$lib/utilities/yupSchemas';
-	import objectToFormData from '$lib/utilities/formData';
 	import TextInput from '$lib/components/input/TextInput.svelte';
 	import Markdown from '$lib/components/markdown/Markdown.svelte';
 	import type { PageData } from './$types';
@@ -35,7 +33,7 @@
 					}
 				`;
 
-				const variables = { obraId: Number.parseInt(data.obraID), ...form.data };
+				const variables = { obraId: Number.parseInt(data.obraId), ...form.data };
 
 				const res = await fetch(PUBLIC_apiUrl, {
 					method: 'POST',
@@ -53,7 +51,7 @@
 						case 'ObraNotFoundAmbiente':
 							error(`Obra con ID ${ambienteData.obraId} no existe.`);
 						case 'Ambiente':
-							await goto(`/obras/${data.obraID}`);
+							await goto(`/obras/${data.obraId}`);
 							break;
 					}
 				} else throw res.status;

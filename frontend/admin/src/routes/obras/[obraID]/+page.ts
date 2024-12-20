@@ -1,9 +1,7 @@
-import { type Obra } from '$lib/utilities/interfaces.js';
 import { obraCreateSchema } from '$lib/utilities/yupSchemas.js';
 import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';
-import { PUBLIC_apiUrl } from '$env/static/public';
 import graphql from '$lib/utilities/api.js';
 
 export async function load({ params, fetch }) {

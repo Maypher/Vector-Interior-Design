@@ -7,6 +7,9 @@
 	import Markdown from '$lib/components/markdown/Markdown.svelte';
 	import { success } from '$lib/utilities/toasts';
 	import graphql from '$lib/utilities/api';
+	import confirmationDialog from '$lib/utilities/dialog';
+	import { goto } from '$app/navigation';
+	import { error } from '@sveltejs/kit';
 
 	const { data }: { data: PageData } = $props();
 	let ambiente = $state(data.ambienteData);
@@ -16,6 +19,7 @@
 		SPA: true,
 		validators: yup(ambienteCreateSchema),
 		resetForm: false,
+		invalidateAll: false,
 		async onUpdate({ form: updateForm }) {
 			submitting = true;
 			if (updateForm.valid) {
@@ -39,11 +43,42 @@
 			submitting = false;
 		}
 	});
+
+	async function deleteAmbiente() {
+		if (
+			await confirmationDialog(
+				`Seguro que quieres borrar el ambiente <b>${ambiente.name}</b> 
+				de la obra <b>${data.ambienteData.obra.name}</b>? 
+				Esta acción no puede ser revertida.`
+			)
+		) {
+			const query = `
+				mutation deleteAmbiente($id: Int!) {
+					deleteAmbiente(id: $id) {
+						name
+					}
+				}
+			`;
+
+			const variables = { id: ambiente.id };
+
+			const deletedAmbiente = (await graphql(query, variables)).deleteAmbiente;
+
+			if (deletedAmbiente) {
+				await goto(`/obras/${data.ambienteData.obra.id}/`);
+			} else error(404, `Ambiente con ID ${ambiente.id} no existe.`);
+		}
+	}
 </script>
 
 <div class="w-full bg-green-300 min-h-screen p-3">
 	<form action="POST" use:enhance class="max-w-xl p-3 rounded-md m-auto bg-red-700">
 		<fieldset disabled={submitting}>
+			<button
+				type="button"
+				class="block w-fit ml-auto p-2 rounded-sm bg-blue-600 hover:bg-amber-600"
+				onclick={deleteAmbiente}>Eliminar</button
+			>
 			<EditableInput
 				name="nombre"
 				label="Nombre"
@@ -69,14 +104,16 @@
 		<ul class="w-fit mx-auto my-2">
 			{#each ambiente.images as image}
 				<li class="size-48">
-					<a href={`/obras/${data.obraID}/ambientes/${ambiente.id}/imagenes/${image.filename}`}>
+					<a
+						href={`/obras/${data.ambienteData.obra.id}/ambientes/${ambiente.id}/imagenes/${image.filename}`}
+					>
 						<img src={`http://localhost:8080/images/${image.filename}`} alt={ambiente.altText} />
 					</a>
 				</li>
 			{/each}
 		</ul>
 		<a
-			href={`/obras/${data.obraID}/ambientes/${ambiente.id}/imagenes/crear/`}
+			href={`/obras/${data.ambienteData.obra.id}/ambientes/${ambiente.id}/imagenes/crear/`}
 			class="block w-fit m-auto bg-amber-400 hover:bg-white p-2 rounded-md">Nueva imagen</a
 		>
 	</div>
