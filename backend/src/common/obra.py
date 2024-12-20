@@ -65,7 +65,9 @@ def get_obras(
     page_count = ceil(obras_count / page_size)
 
     return schemas.ObraResult(
-        page=page,
+        page=min(
+            page, page_count
+        ),  # Getting the min because if there are no obras then it would show up as 1/0
         page_count=page_count,
         obras=[
             obra
@@ -102,7 +104,9 @@ def get_obras_by_name(
     page_count = ceil(obras_count / page_size)
 
     return schemas.ObraResult(
-        page=page,
+        page=min(
+            page, page_count
+        ),  # Getting the min because if there are no obras then it would show up as 1/0
         page_count=page_count,
         obras=[
             obra
