@@ -231,7 +231,7 @@ def delete_ambiente(id: int) -> typing.Optional[schemas.Ambiente]:
         return
 
     # Image are collated in database but they also need to be removed from the filesystem
-    for image in ambiente.images:
+    for image in ambiente.images():
         delete_image(image.filename)
 
     admin_database.query(
