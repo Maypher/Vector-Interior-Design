@@ -20,7 +20,6 @@ export const signUpForm = object({
         ),
     passwordRepeat: string()
         .required('Confirmar contraseña.')
-        .oneOf([ref('password')], 'Contraseñas no coinciden.')
 });
 
 export const obraCreateSchema = object({

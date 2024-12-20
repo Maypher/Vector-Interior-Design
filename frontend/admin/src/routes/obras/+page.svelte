@@ -51,7 +51,7 @@
 			<p>Cargando...</p>
 		{:then data}
 			{#if data.obras.length == 0}
-				{`Ninguna obra con el nombre ${searchParams.name}`}
+				{`Ninguna obra encontrada.`}
 			{:else}
 				<ul class="list-disc">
 					{#each data.obras as obra}
