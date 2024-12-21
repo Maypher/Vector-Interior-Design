@@ -33,16 +33,14 @@ def create_obra(name: str, description: str, area: int) -> schemas.Obra:
     )
 
 
-def delete_obra(id: int) -> typing.Optional[schemas.Obra]:
+def delete_obra(id: int) -> bool:
     """
     Deletes the obra identified by id alongside its related ambientes and images.
     """
     obra = get_obra_by_id(id, allow_private=True)
 
-    print(obra)
-
     if not obra:
-        return
+        return False
 
     for ambiente in obra.ambientes():
         for image in ambiente.images():
@@ -56,7 +54,7 @@ def delete_obra(id: int) -> typing.Optional[schemas.Obra]:
         count=1,
     )[0]
 
-    return obra
+    return True
 
 
 def update_obra(
@@ -221,14 +219,14 @@ def update_ambiente(
     return get_ambiente_by_id(id, True)
 
 
-def delete_ambiente(id: int) -> typing.Optional[schemas.Ambiente]:
+def delete_ambiente(id: int) -> bool:
     """
     Deletes the ambiente identified by id alongside all images related to it.
     """
     ambiente = get_ambiente_by_id(id, True)
 
     if not ambiente:
-        return
+        return False
 
     # Image are collated in database but they also need to be removed from the filesystem
     for image in ambiente.images():
@@ -241,7 +239,7 @@ def delete_ambiente(id: int) -> typing.Optional[schemas.Ambiente]:
         (id,),
     )
 
-    return ambiente
+    return True
 
 
 def create_image(
@@ -324,25 +322,26 @@ def update_image(
     return get_image_by_filename(filename)
 
 
-def delete_image(filename: str) -> typing.Optional[schemas.Image]:
+def delete_image(filename: str) -> bool:
     """Deletes the given image from the database and file system."""
 
     image = get_image_by_filename(filename)
 
     if not image:
-        return
+        return False
 
     location = f"{STORAGE_LOCATION}{filename}"
     if os.path.exists(location):
         admin_database.query(
             """
-        DELETE FROM imagen WHERE archivo = %s
+        DELETE FROM imagen WHERE archivo = %s;
         """,
             (filename,),
         )
 
         os.remove(location)
-        return image
+        return True
+    return False
 
 
 def update_index(

@@ -99,7 +99,7 @@ class Mutation:
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of the obra to delete.")
         ],
-    ) -> typing.Optional[schemas.Obra]:
+    ) -> bool:
         return adminObra.delete_obra(id)
 
     @strawberry.mutation(
@@ -206,7 +206,7 @@ class Mutation:
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of the ambiente to delete.")
         ],
-    ) -> typing.Optional[schemas.Ambiente]:
+    ) -> bool:
         return adminObra.delete_ambiente(id)
 
     @strawberry.mutation(
@@ -265,5 +265,5 @@ class Mutation:
             str,
             strawberry.argument(description="The filename of the image to delete."),
         ],
-    ) -> typing.Optional[schemas.Image]:
+    ) -> bool:
         return adminObra.delete_image(filename)
