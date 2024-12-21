@@ -10,10 +10,14 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 app.secret_key = environ.get("SECRET_KEY")
-CORS(app, supports_credentials=True, origins=[environ.get("FRONTEND_URL")])
+CORS(
+    app,
+    supports_credentials=True,
+    origins=[environ.get("FRONTEND_URL"), "https://192.168.0.8:5173"],
+)
 app.config.update(
     SESSION_COOKIE_SAMESITE="None",
-    SESSION_COOKIE_SECURE=False,  # Required for "None", set to False if not using HTTPS
+    SESSION_COOKIE_SECURE=True,  # Required for "None", set to False if not using HTTPS
 )
 
 app.register_blueprint(auth_blueprint)
