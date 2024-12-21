@@ -4,16 +4,15 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { imageUpdateSchema } from '$lib/utilities/yupSchemas';
 	import EditableInput from '$lib/components/input/EditableInput.svelte';
-	import { PUBLIC_apiUrl } from '$env/static/public';
 	import { success } from '$lib/utilities/toasts';
 	import confirmationDialog from '$lib/utilities/dialog';
 	import { goto } from '$app/navigation';
 	import graphql from '$lib/utilities/api';
+	import { PUBLIC_imageURL } from '$env/static/public';
 
 	const { data }: { data: PageData } = $props();
 	let imageData = $state(data.imageData!);
 	let submitting: boolean = $state(false);
-	let deleteDialog: HTMLDialogElement | null | undefined = $state();
 
 	const { form, errors, enhance, constraints } = superForm(data.updateForm!, {
 		SPA: true,
@@ -47,19 +46,33 @@
 			)
 		) {
 			const query = `
-			mutation deleteImage($filename: String!) {
-				deleteImage(filename: $filename) {
-					filename
+				mutation deleteImage($filename: String!) {
+					deleteImage(filename: $filename)
+				}
+			`;
+
+			const variables = { filename: imageData.filename };
+
+			const deleted = (await graphql(query, variables)).deleteImage;
+
+			await goto(`/obras/${data.obraId}/ambientes/${data.ambienteId}`);
+		}
+	}
+
+	async function setThumbnail() {
+		const query = `
+			mutation setThumbnail($obraId: Int!, $thumbnail: String!) {
+				updateObra(id: $obraId, thumbnail: $thumbnail) {
+					name
 				}
 			}
 		`;
 
-			const variables = { filename: imageData.filename };
+		const variables = { obraId: data.obraId, thumbnail: imageData.filename };
 
-			await graphql(query, variables);
+		const obraName = (await graphql(query, variables)).updateObra.name;
 
-			await goto(`/obras/${data.obraId}/ambientes/${data.ambienteId}`);
-		}
+		success(`Imagen colocada como imagen principal de "${obraName}"`);
 	}
 </script>
 
@@ -70,7 +83,14 @@
 			type="button"
 			class="block w-fit ml-auto m-1 p-2 bg-red-500 hover:bg-blue-700">Borrar Imagen</button
 		>
-		<img src={`http://localhost:8080/images/${imageData.filename}`} alt={imageData.altText} />
+		<button
+			onclick={setThumbnail}
+			type="button"
+			class="block w-fit ml-auto m-1 p-2 bg-green-500 hover:bg-blue-700"
+		>
+			Colocar como imagen principal
+		</button>
+		<img src={`${PUBLIC_imageURL}${imageData.filename}`} alt={imageData.altText} />
 		<fieldset disabled={submitting}>
 			<EditableInput
 				name="altText"

@@ -8,6 +8,7 @@
 	import { loginSchema } from '$lib/utilities/yupSchemas';
 	import { goto } from '$app/navigation';
 	import { error } from '$lib/utilities/toasts';
+	import { PUBLIC_apiURL } from '$env/static/public';
 
 	const { data }: { data: PageData } = $props();
 	const { form, errors, constraints, enhance } = superForm(data.loginForm, {
@@ -18,7 +19,7 @@
 			submitting = true;
 
 			if (form.valid) {
-				const res = await fetch('http://localhost:8080/auth/iniciar-sesion', {
+				const res = await fetch(`${PUBLIC_apiURL}auth/iniciar-sesion`, {
 					method: 'POST',
 					body: objectToFormData(form.data),
 					credentials: 'include'

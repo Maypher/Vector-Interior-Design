@@ -4,7 +4,7 @@
 	import { yup } from 'sveltekit-superforms/adapters';
 	import { imageUpdateSchema } from '$lib/utilities/yupSchemas';
 	import TextInput from '$lib/components/input/TextInput.svelte';
-	import { PUBLIC_apiUrl } from '$env/static/public';
+	import { PUBLIC_graphql } from '$env/static/public';
 	import { error } from '$lib/utilities/toasts';
 	import { goto } from '$app/navigation';
 	import Errors from '$lib/components/input/Errors.svelte';
@@ -69,7 +69,7 @@
 				formData.append('map', map);
 				formData.append('file', file);
 
-				const res = await fetch(PUBLIC_apiUrl, {
+				const res = await fetch(PUBLIC_graphql, {
 					method: 'POST',
 					body: formData,
 					credentials: 'include'
@@ -88,7 +88,7 @@
 							fileErrors.push(`Archivo tipo ${imageData.fileType} no es válido.`);
 							break;
 						case 'Image':
-							await goto(`/obras/${data.ambienteID}/ambientes/${data.ambienteID}/`);
+							await goto(`/obras/${data.obraID}/ambientes/${data.ambienteID}/`);
 							break;
 					}
 				}

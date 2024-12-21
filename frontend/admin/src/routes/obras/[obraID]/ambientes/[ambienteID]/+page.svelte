@@ -10,6 +10,7 @@
 	import confirmationDialog from '$lib/utilities/dialog';
 	import { goto } from '$app/navigation';
 	import { error } from '@sveltejs/kit';
+	import { PUBLIC_imageURL } from '$env/static/public';
 
 	const { data }: { data: PageData } = $props();
 	let ambiente = $state(data.ambienteData);
@@ -54,9 +55,7 @@
 		) {
 			const query = `
 				mutation deleteAmbiente($id: Int!) {
-					deleteAmbiente(id: $id) {
-						name
-					}
+					deleteAmbiente(id: $id)
 				}
 			`;
 
@@ -106,8 +105,14 @@
 				<li class="size-48">
 					<a
 						href={`/obras/${data.ambienteData.obra.id}/ambientes/${ambiente.id}/imagenes/${image.filename}`}
+						class="relative"
 					>
-						<img src={`http://localhost:8080/images/${image.filename}`} alt={ambiente.altText} />
+						{#if ambiente.obra.thumbnail?.filename === image.filename}
+							<span class="material-symbols-outlined absolute top-5 z-10 text-red-500">
+								favorite
+							</span>
+						{/if}
+						<img src={`${PUBLIC_imageURL}${image.filename}`} alt={ambiente.altText} />
 					</a>
 				</li>
 			{/each}

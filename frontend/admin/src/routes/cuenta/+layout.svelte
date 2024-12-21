@@ -1,5 +1,4 @@
 <script>
-	import { PUBLIC_apiUrl } from '$env/static/public';
 	let { children } = $props();
 </script>
 

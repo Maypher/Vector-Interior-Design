@@ -73,9 +73,7 @@
 		) {
 			const query = `
 				mutation deleteObra($id: Int!) {
-					deleteObra(id: $id) {
-						name
-					}
+					deleteObra(id: $id)
 				}
 			`;
 

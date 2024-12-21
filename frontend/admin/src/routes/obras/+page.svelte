@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import graphql from '$lib/utilities/api';
+	import { PUBLIC_imageURL } from '$env/static/public';
 
 	let searchParams = $state({
 		name: '',
@@ -59,12 +60,13 @@
 							<li class="bg-green-300 my-1">
 								<a href={`/obras/${obra.id}`} class="block w-full hover:bg-gray-600">
 									{@html obra.name.replace(nameRegex, '<b>$1</b>')}
+									{#if obra.thumbnail}
+										<img
+											src={`${PUBLIC_imageURL}${obra.thumbnail.filename}`}
+											alt={obra.thumbnail.alt_text}
+										/>
+									{/if}
 								</a>
-								{#if obra.thumbnail}<img
-										src={`/images/${obra.thumbnail.filename}`}
-										alt={obra.thumbnail.alt_text}
-									/>
-								{/if}
 							</li>
 						{/each}
 					</ul>

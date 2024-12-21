@@ -1,4 +1,4 @@
-import { PUBLIC_apiUrl } from "$env/static/public";
+import { PUBLIC_graphql } from "$env/static/public";
 
 /**
  * Helper function to query or mutate the Graphql API with all the required parameters.
@@ -7,7 +7,7 @@ import { PUBLIC_apiUrl } from "$env/static/public";
  * @returns The data requested by the query. Throws an error if the return status isn't ok.
  */
 export default async function graphql(query: string, variables: Record<string, any>): Promise<Record<string, any>> {
-    const res = await fetch(PUBLIC_apiUrl, {
+    const res = await fetch(PUBLIC_graphql, {
         method: "POST",
         body: JSON.stringify({ query, variables }),
         credentials: "include",

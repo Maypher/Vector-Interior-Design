@@ -6,7 +6,7 @@
 	import { superForm, superValidate } from 'sveltekit-superforms';
 	import { yup } from 'sveltekit-superforms/adapters';
 	import type { PageData } from './$types';
-	import { PUBLIC_apiUrl } from '$env/static/public';
+	import { PUBLIC_graphql } from '$env/static/public';
 	import graphql from '$lib/utilities/api';
 
 	const { data }: { data: PageData } = $props();

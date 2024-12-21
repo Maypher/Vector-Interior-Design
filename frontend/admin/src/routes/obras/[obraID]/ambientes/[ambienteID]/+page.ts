@@ -23,6 +23,9 @@ export const load = async ({ params }) => {
                 obra {
                     id
                     name
+                    thumbnail {
+                        filename
+                    }
                 }
             }
         }

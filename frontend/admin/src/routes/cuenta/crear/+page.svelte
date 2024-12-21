@@ -8,6 +8,7 @@
 	import type { PageData } from './$types';
 	import { setError, superForm } from 'sveltekit-superforms';
 	import { yup } from 'sveltekit-superforms/adapters';
+	import { PUBLIC_apiURL } from '$env/static/public';
 
 	const { data }: { data: PageData } = $props();
 
@@ -30,9 +31,10 @@
 				formData.append('password', form.data.password);
 				formData.append('name', form.data.name);
 
-				let res = await fetch('http://localhost:8080/auth/crear-cuenta', {
+				const res = await fetch(`${PUBLIC_apiURL}auth/crear-cuenta`, {
 					method: 'POST',
-					body: formData
+					body: formData,
+					credentials: 'include'
 				});
 
 				if (res.ok) await goto('/obras/');

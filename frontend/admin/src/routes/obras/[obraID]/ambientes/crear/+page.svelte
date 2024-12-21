@@ -5,7 +5,7 @@
 	import TextInput from '$lib/components/input/TextInput.svelte';
 	import Markdown from '$lib/components/markdown/Markdown.svelte';
 	import type { PageData } from './$types';
-	import { PUBLIC_apiUrl } from '$env/static/public';
+	import { PUBLIC_graphql } from '$env/static/public';
 	import { goto } from '$app/navigation';
 	import { error } from '$lib/utilities/toasts';
 
@@ -35,7 +35,7 @@
 
 				const variables = { obraId: Number.parseInt(data.obraId), ...form.data };
 
-				const res = await fetch(PUBLIC_apiUrl, {
+				const res = await fetch(PUBLIC_graphql, {
 					method: 'POST',
 					body: JSON.stringify({ query, variables }),
 					credentials: 'include',

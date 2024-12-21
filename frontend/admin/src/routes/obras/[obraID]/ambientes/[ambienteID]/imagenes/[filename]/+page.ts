@@ -1,4 +1,4 @@
-import { PUBLIC_apiUrl } from '$env/static/public';
+import { PUBLIC_graphql } from '$env/static/public';
 import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';

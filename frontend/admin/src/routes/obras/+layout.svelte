@@ -1,10 +1,11 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { PUBLIC_apiURL } from '$env/static/public';
 
 	let { children } = $props();
 
 	async function onclick() {
-		let res = await fetch('http://localhost:8080/auth/cerrar-sesion', {
+		let res = await fetch(`${PUBLIC_apiURL}/auth/cerrar-sesion`, {
 			method: 'POST',
 			credentials: 'include'
 		});
