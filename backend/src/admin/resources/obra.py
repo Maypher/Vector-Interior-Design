@@ -9,6 +9,7 @@ from psycopg.sql import SQL, Identifier
 from math import ceil, floor
 from common.common_graphql import schemas
 from admin.resources.admin_graphql import errors as GraphqlErrors
+from strawberry import UNSET
 
 STORAGE_LOCATION = "/storage/images/"
 
@@ -106,7 +107,7 @@ def update_obra(
             (area, id),
             commit=False,
         )
-    if thumbnail:
+    if thumbnail is not UNSET:
         image = admin_database.query(
             """
             SELECT id FROM imagen WHERE archivo = %s;
@@ -122,13 +123,6 @@ def update_obra(
                 """,
                 (image, obra.id),
             )
-    elif not thumbnail:
-        admin_database.query(
-            """
-                UPDATE obra SET imagen_principal = NULL WHERE id = %s;
-                """,
-            (obra.id,),
-        )
     if index is not None:
         update_index(id, "obra", index)
     if public is not None:

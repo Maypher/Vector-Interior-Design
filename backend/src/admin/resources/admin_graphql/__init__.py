@@ -131,7 +131,7 @@ class Mutation:
             strawberry.argument(
                 description="The filename of the thumbnail to set for this obra. **Set to null to remove the thumbnail**."
             ),
-        ] = None,
+        ] = strawberry.UNSET,
         index: typing.Annotated[
             typing.Optional[int],
             strawberry.argument(
