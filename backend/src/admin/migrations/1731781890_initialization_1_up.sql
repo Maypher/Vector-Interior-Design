@@ -48,7 +48,7 @@ CREATE TABLE public.imagen (
 );
 
 -- Done this way because of circular dependencies
-ALTER TABLE public.obra ADD COLUMN imagen_principal INTEGER REFERENCES imagen;
+ALTER TABLE public.obra ADD COLUMN imagen_principal INTEGER REFERENCES imagen ON DELETE SET NULL;
 
 -- Create a function to validate the imagen_principal constraint
 CREATE OR REPLACE FUNCTION validate_imagen_principal()
