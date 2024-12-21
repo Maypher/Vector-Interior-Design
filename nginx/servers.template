@@ -1,5 +1,10 @@
 server {
-    listen 80;
+    listen 80 ssl;
+
+    ssl_certificate     /etc/nginx/certs/127.168.0.8.pem;
+    ssl_certificate_key /etc/nginx/certs/127.168.0.8-key.pem;
+    ssl_verify_client off;
+
     location / {
         proxy_pass "http://admin-backend:${ADMIN_PORT}";
     }

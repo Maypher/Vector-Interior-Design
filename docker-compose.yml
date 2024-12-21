@@ -131,8 +131,8 @@ services:
         build: "./nginx/"
         profiles: [ prod ]
         ports:
-            - "8080:80"
-            - "8090:20"
+            - "0.0.0.0:8080:80"
+            - "0.0.0.0:8090:20"
         volumes:
             - data:/storage/images/:ro
         depends_on:

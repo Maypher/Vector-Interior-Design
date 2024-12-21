@@ -38,9 +38,17 @@ def create_account():
 
     user_session = create_session(user_id)
 
-    session["session_id"] = user_session.session_id
+    res = make_response("", 200)
+    res.set_cookie(
+        "session_id",
+        user_session.session_id,
+        expires=user_session.expires_at,
+        httponly=True,
+        samesite="None",
+        secure=True,
+    )
 
-    return "", 200
+    return res
 
 
 @auth_blueprint.post("/iniciar-sesion")

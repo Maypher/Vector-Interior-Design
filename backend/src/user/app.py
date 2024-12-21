@@ -1,52 +1,27 @@
-from flask import Flask, request, jsonify
-from os import environ, getenv
-from common import obra
+from flask import Flask
+from os import environ
+from strawberry.flask.views import GraphQLView
+from strawberry import Schema
+from user.user_graphql import Query
+from flask_cors import CORS
+from flask import request
 
 app = Flask(__name__)
 app.secret_key = environ.get("SECRET_KEY")
+CORS(app, origins="*")
+
+
+app.add_url_rule(
+    "/graphql",
+    view_func=GraphQLView.as_view("graphql_user", schema=Schema(query=Query)),
+)
 
 
 @app.get("/")
-def get_obras():
-    try:
-        page = request.args.get("page", 1)
-        # This is done because if page is an empty parameter
-        # it gets saved as "" not causing the raise and getting
-        # passed to the function as is.
-        if page:
-            page = int(page)
-            if page < 1:
-                return "Página debe ser mayor a 0.", 400
-        else:
-            raise ValueError
-    except ValueError:
-        return "Número de página invalido.", 400
+def test():
+    print(request.headers)
 
-    try:
-        page_size = request.args.get("page_size", 10)
-
-        if page_size:
-            page_size = int(page_size)
-        else:
-            raise ValueError
-    except ValueError:
-        return "Tamaño de página invalido.", 400
-
-    name = request.args.get("name")
-
-    if name:
-        obras = obra.get_obras_by_name(name, page)
-    else:
-        obras = obra.get_obras(page)
-
-    return jsonify(obras)
-
-
-@app.get("/<int:id>")
-def get_obra(id: int):
-    found_obra = obra.get_obra_by_id(id)
-
-    return (jsonify(found_obra), 200) if found_obra else ("", 404)
+    return ""
 
 
 if __name__ == "__main__":
