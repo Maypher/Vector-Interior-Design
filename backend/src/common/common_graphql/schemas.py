@@ -24,11 +24,12 @@ class Obra:
     def thumbnail(self) -> typing.Optional["Image"]:
         image_data = generic_database.query(
             """
-            SELECT imagen.id archivo, texto_alt, imagen.indice FROM imagen 
+            SELECT imagen.id, archivo, texto_alt, imagen.indice FROM imagen 
             JOIN obra ON obra.imagen_principal = imagen.id
             WHERE obra.id = %s;
         """,
             (self.id,),
+            1,
         )
 
         if image_data:
