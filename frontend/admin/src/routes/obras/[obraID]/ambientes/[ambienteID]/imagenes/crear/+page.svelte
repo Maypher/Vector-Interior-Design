@@ -29,6 +29,12 @@
 					return;
 				}
 
+				if (file.size > 10000) {
+					fileErrors.push('Imagen debe ser menor a 10 Mb.');
+					submitting = false;
+					return;
+				}
+
 				const query = `
                     mutation createImage(
                         $ambienteId: Int!,
@@ -91,6 +97,8 @@
 							await goto(`/obras/${data.obraID}/ambientes/${data.ambienteID}/`);
 							break;
 					}
+				} else if (res.status === 413) {
+					fileErrors.push('Imagen debe ser menor a 10 Mb.');
 				}
 			}
 
