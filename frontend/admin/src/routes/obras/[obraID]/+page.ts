@@ -16,6 +16,7 @@ export async function load({ params, fetch }) {
                         name
                         description
                         area
+                        public
                         ambientes {
                             id
                             name
