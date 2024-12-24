@@ -29,7 +29,7 @@
 					return;
 				}
 
-				if (file.size > 10000) {
+				if (file.size > 1e7) {
 					fileErrors.push('Imagen debe ser menor a 10 Mb.');
 					submitting = false;
 					return;
