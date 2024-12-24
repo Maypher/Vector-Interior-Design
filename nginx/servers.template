@@ -7,7 +7,7 @@ server {
 
     location / {
         proxy_pass "http://admin-backend:${ADMIN_PORT}";
-        client_max_body_size 10.2M;
+        client_max_body_size 10M;
     }
 
     location ~* ^/images/.*\.(jpg|jpeg|png)$ {
