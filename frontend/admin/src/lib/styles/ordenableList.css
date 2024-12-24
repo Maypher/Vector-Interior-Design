@@ -1,0 +1,18 @@
+#sortable {
+    max-height: 25rem;
+    overflow-y: scroll;
+}
+
+.item {
+    background-color: blanchedalmond;
+    border: 0.1rem solid black;
+    height: 5rem;
+}
+
+.item-chosen {
+    background: rgb(190, 174, 151);
+}
+
+.item-ghost {
+    background-color: rgb(133, 121, 105);
+}
