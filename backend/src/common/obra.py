@@ -160,10 +160,14 @@ def get_ambientes_by_obra(obra_id: int) -> list[schemas.Ambiente]:
     return [get_ambiente_by_id(int(id[0])) for id in found_ambientes]
 
 
-def get_image_by_filename(filename: str) -> typing.Optional[schemas.Image]:
+def get_image_by_filename(
+    filename: str, allow_private: bool = False
+) -> typing.Optional[schemas.Image]:
     data = generic_database.query(
-        """
-        SELECT id, archivo, texto_alt, indice FROM imagen WHERE archivo = %s;
+        f"""
+        SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice FROM imagen 
+        {"JOIN ambiente ON imagen.ambiente_id = ambiente.id JOIN obra ON ambiente.obra_id = obra.id" if not allow_private else ""}
+        WHERE archivo = %s {"AND obra.publico" if not allow_private else ""};
         """,
         (filename,),
         count=1,

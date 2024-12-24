@@ -65,7 +65,7 @@ class Query:
             str, strawberry.argument(description="The filename of the image to get.")
         ],
     ) -> typing.Optional[schemas.Image]:
-        return obra.get_image_by_filename(filename)
+        return obra.get_image_by_filename(filename, True)
 
 
 @strawberry.type

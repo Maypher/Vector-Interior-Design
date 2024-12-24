@@ -313,13 +313,13 @@ def update_image(
         update_index(image[0], "imagen", new_index, "ambiente_id", image[1])
 
     admin_database.commit()
-    return get_image_by_filename(filename)
+    return get_image_by_filename(filename, True)
 
 
 def delete_image(filename: str) -> bool:
     """Deletes the given image from the database and file system."""
 
-    image = get_image_by_filename(filename)
+    image = get_image_by_filename(filename, True)
 
     if not image:
         return False
