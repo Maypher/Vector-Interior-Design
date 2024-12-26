@@ -72,7 +72,7 @@
 					<SortableList bind:sortable {sortableOptions} sortableId="sortable">
 						<div id="sortable">
 							{#each data.obras as obra (obra.id)}
-								<div class="item flex items-center">
+								<div class={`item flex items-center ${!obra.public ? 'bg-red-300' : ''}`}>
 									{#if sortableEnabled}
 										<span
 											class="material-symbols-outlined handle border-r-2 p-2 h-full content-center border-gray-800 hover:cursor-pointer"
@@ -82,11 +82,21 @@
 									{/if}
 									<a
 										href={`/obras/${obra.id}`}
-										class="size-full flex justify-between items-center pl-2 hover:bg-yellow-600"
+										class={`size-full flex justify-between items-center pl-2 ${!obra.public ? 'hover:bg-red-400' : 'hover:bg-amber-600'}`}
 									>
-										<p>
-											{@html obra.name.replace(nameRegex, '<b>$1</b>')}
-										</p>
+										<div class="flex gap-2 items-center">
+											{#if !obra.public}
+												<span
+													class="material-symbols-outlined text-red-500"
+													title="Esta obra es privada. No será visible al público"
+												>
+													visibility_off
+												</span>
+											{/if}
+											<p>
+												{@html obra.name.replace(nameRegex, '<b>$1</b>')}
+											</p>
+										</div>
 										{#if obra.thumbnail}
 											<img
 												src={`${PUBLIC_imageURL}${obra.thumbnail?.filename}`}
