@@ -284,7 +284,10 @@ def create_image(
 
 
 def update_image(
-    filename: str, alt_text: str | None = None, new_index: int | None = None
+    filename: str,
+    alt_text: str | None = None,
+    new_index: int | None = None,
+    main_page: bool | None = None,
 ) -> typing.Optional[schemas.Image]:
     """
     Updates the alt text of the given image.
@@ -301,16 +304,37 @@ def update_image(
     if not image:
         return
 
+    image_id = image[0]
+
     if alt_text:
         admin_database.query(
             """
             UPDATE imagen SET texto_alt = %s WHERE id = %s
             """,
-            (alt_text, image[0]),
+            (alt_text, image_id),
             commit=False,
         )
     if new_index is not None:
         update_index(image[0], "imagen", new_index, "ambiente_id", image[1])
+    if main_page is not None:
+        admin_database.query(
+            """
+            UPDATE imagen SET pagina_principal = %s WHERE id = %s;
+            """,
+            (main_page, image_id),
+            commit=False,
+        )
+
+        if main_page:
+            # Checks if the image already has config and if so it doesn't create a new one.
+            admin_database.query(
+                """
+                INSERT INTO imagenConfig (imagen_id) SELECT %s
+                WHERE NOT EXISTS 
+                (SELECT 1 FROM imagenConfig JOIN imagen ON imagenConfig.imagen_id = imagen.id WHERE imagen.id = %s);
+            """,
+                (image_id, image_id),
+            )
 
     admin_database.commit()
     return get_image_by_filename(filename, True)
@@ -348,14 +372,13 @@ def update_index(
     """
     Updates the index of given element in the given table.
     The new index is passed as an integer but is transformed into a float to avoid having to update every entry in the database.
-    Doesn't commit.
+    Doesn't commit. For example, to put an element in the second position it should be index 1.
 
     :param element_id: The `id` of the element to update the index of.
     :param tablename: The table in which the element is stored.
     :param new_index: The zero-based index of where to put the element. It should be a zero-based integer.
     :param where_col: For ambientes and imagenes. Used to filter by obra/ambiente.
     :param parent_id: The id of the element to filter `where_col` by.
-    For example, to put an element in the second position it should be index 1.
     """
 
     max_index = admin_database.query(
@@ -366,66 +389,72 @@ def update_index(
     )[0]
 
     # Clamp the new index between 0 and max index
-    offset = min(max(new_index, 0), int(max_index) - 1)
+    # -1 because postgres offsets exclude the given value so offset 3 would remove 3 values and give the 4th
+    new_index = min(max(new_index, 0), int(max_index) - 1)
 
-    # Get the indices of the elements before and after the new insertion.
-    indices_around = admin_database.query(
+    # region get indices of elements around the selected one
+
+    # Transform the index from zero based to the database float version
+    element_data = admin_database.query(
         SQL(
-            f"SELECT id, indice FROM {{}} ORDER BY indice OFFSET {{}} LIMIT {2 if offset > 0 else 1};"  # Done this way because if the offset is 0 then that means it's being moved to the begging so only fetch the first element
-        ).format(Identifier(tablename), offset, element_id)
+            f"""
+        SELECT id, indice FROM {{}} ORDER BY indice OFFSET {{}}; 
+        """,
+        ).format(Identifier(tablename), new_index),
+        count=1,
     )
 
-    # If there's only one indice it means its being moved to the end or beginning.
-    if len(indices_around) == 1:
-        if offset > 0:
-            # If the offset is greater than zero it means the element is moved to end.
-            admin_database.query(
-                SQL("UPDATE {} SET indice = nextval({}) WHERE id = {}").format(
-                    Identifier(tablename), f"{tablename}_indice_seq", element_id
-                )
-            )
-        else:
-            # If the offset is zero it means that the element is being moved to the beginning
+    selected_element_id = element_data[0] if element_data else None
+    element_index = element_data[1] if element_data else None
 
-            final_index = indices_around[0][1] / 2
+    index_before = admin_database.query(
+        SQL(
+            f"""
+            SELECT indice FROM {{}} WHERE indice < {{}} ORDER BY indice DESC LIMIT 1;
+        """
+        ).format(Identifier(tablename), element_index),
+        count=1,
+    )
 
-            try:
-                admin_database.query(
-                    SQL("UPDATE {} SET indice = {} WHERE id = {};").format(
-                        Identifier(tablename), final_index, element_id
-                    ),
-                )
-            except errors.UniqueViolation:
-                # This means that the precision limit has been reached and should be refactored
-                fix_precision_limit(tablename, final_index)
-                # Insert the element again since it failed last time
-                update_index(element_id, tablename, new_index)
-    elif indices_around[0][0] == element_id:
-        # If the element itself is selected it means the two values are being swapped around.
+    index_before = index_before[0] if index_before else None
 
-        sel_id = indices_around[1][0]
+    # Setting the index after to the index moving because of the following.
+    # Say there are indices (2.0, 3.0, 4.0)
+    # If you want to move to the position '1' (second pos) it would be between 2.0 and 3.0
+    # So the calculation would be (2 + 3) / 2
+    index_after = element_index
 
-        admin_database.query(
-            SQL(
-                """
-                UPDATE {0}
-                SET indice = CASE
-                    WHEN id = {1} THEN (SELECT indice FROM {0} WHERE id = {2})
-                    WHEN id = {2} THEN (SELECT indice FROM {0} WHERE id = {1})
-                END
-                WHERE id IN ({1}, {2});
-            """
-            ).format(Identifier(tablename), element_id, sel_id)
-        )
-    elif indices_around[1][0] == element_id:
+    # endregion
+
+    if selected_element_id == element_id:
         # If the element itself is the element after it means it's being updated to its same position so just ignore it.
         return
+    elif index_before and not index_after:
+        # If moved to the end set it to the next available value
+        admin_database.query(
+            SQL("UPDATE {} SET indice = DEFAULT WHERE id = {}").format(
+                Identifier(tablename), element_id
+            )
+        )
+    elif index_after and not index_before:
+        # If the offset is zero it means that the element is being moved to the beginning
+
+        final_index = index_after / 2
+
+        try:
+            admin_database.query(
+                SQL("UPDATE {} SET indice = {} WHERE id = {};").format(
+                    Identifier(tablename), final_index, element_id
+                ),
+            )
+        except errors.UniqueViolation:
+            # This means that the precision limit has been reached and should be refactored
+            fix_precision_limit(tablename, final_index)
+            # Insert the element again since it failed last time
+            update_index(element_id, tablename, new_index)
     else:
         # Move the element to the desired position
-
-        before_index = indices_around[0][1]
-        after_index = indices_around[1][1]
-        final_index = (before_index + after_index) / 2
+        final_index = (index_before + index_after) / 2
 
         try:
             admin_database.query(
