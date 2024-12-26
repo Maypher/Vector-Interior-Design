@@ -27,4 +27,4 @@ COPY ./src/common/ ./src/common/
 
 WORKDIR /app/src/admin/
 
-CMD ["python", "-u", "app.py", "migrate"]
+ENTRYPOINT ["python", "-u", "app.py"]

@@ -46,6 +46,14 @@ def apply_migrations(command: str | None = None, migrate_to: int | None = None):
             else:
                 migration_manager.apply_migrations()
                 print("Applied all migrations")
+        elif command == "rollback":
+            print("Rolling back...")
+            if migrate_to:
+                migration_manager.rollback_migrations(final=migrate_to)
+                print(f"Rolled back migrations up to version {migrate_to}")
+            else:
+                migration_manager.rollback_migrations()
+                print(f"Rolled back all migrations")
     except (errors.InsufficientPrivilege, errors.ProgrammingError):
         exit(-1)
 

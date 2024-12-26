@@ -213,7 +213,7 @@ class MigrationManager:
         )
 
     def apply_migrations(self, final: int = -1):
-        """Applies all migrations inside the migrations directory. Up to migration final. Leave at -1 to apply all"""
+        """Applies all migrations inside the migrations directory. Up to migration final (inclusive). Leave at -1 to apply all"""
         db_version: int = self.get_migration_version()
         version_to_apply = db_version + 1
         # List of applied migrations used to log the final message
@@ -265,7 +265,7 @@ class MigrationManager:
             )
 
     def rollback_migrations(self, final: int = -1):
-        """Rolls back all migrations up to final. Leave as is to rollback everything."""
+        """Rolls back all migrations up to final (exclusive). Leave as is to rollback everything."""
 
         db_version = self.get_migration_version()
 
@@ -278,10 +278,10 @@ class MigrationManager:
             rollback_to_apply = db_version - index
 
             # Stop the rollbacks at the given final or when end is reached.
-            if rollback_to_apply <= 0 or rollback == final - 1:
+            if rollback_to_apply <= 0 or rollback_to_apply == final:
                 break
             # Skip rollbacks of unapplied migrations
-            elif rollback > db_version:
+            elif rollback_to_apply > db_version:
                 continue
 
             try:
