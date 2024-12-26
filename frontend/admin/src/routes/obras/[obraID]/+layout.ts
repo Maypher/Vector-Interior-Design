@@ -1,7 +1,7 @@
 import graphql from "$lib/utilities/api";
 import { error } from "@sveltejs/kit";
 
-export async function load({ params }) {
+export async function load({ params, fetch }) {
     const obraID: number = +params.obraID;
 
     if (isNaN(obraID)) error(404, `Obra con ID ${obraID} no existe.`);
@@ -16,7 +16,7 @@ export async function load({ params }) {
                `;
     const variables = { id: obraID };
 
-    const obraData = (await graphql(query, variables)).obra;
+    const obraData = (await graphql(query, variables, fetch)).obra;
 
     if (!obraData) error(404, `Obra con ID ${obraID} no existe.`);
 }

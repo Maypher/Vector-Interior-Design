@@ -1,4 +1,3 @@
-import { PUBLIC_graphql } from '$env/static/public';
 import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';
@@ -20,7 +19,7 @@ export const load = async ({ fetch, params }) => {
     `;
     const variables = { filename: filename };
 
-    const imageData = (await graphql(query, variables)).image;
+    const imageData = (await graphql(query, variables, fetch)).image;
 
     if (!imageData) error(404, `Imagen ${filename} no existe.`);
     else {

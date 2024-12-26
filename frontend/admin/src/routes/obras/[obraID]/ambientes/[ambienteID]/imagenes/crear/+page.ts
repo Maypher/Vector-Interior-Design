@@ -3,7 +3,7 @@ import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';
 
-export const load = async ({ fetch, params }) => {
+export const load = async ({ params }) => {
     const ambienteID: number = +params.ambienteID;
     const obraID: number = +params.obraID;
 

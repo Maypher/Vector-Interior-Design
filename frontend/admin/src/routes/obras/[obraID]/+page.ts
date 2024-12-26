@@ -26,7 +26,7 @@ export async function load({ params, fetch }) {
            `;
     const variables = { id: obraID };
 
-    const obraData = (await graphql(query, variables)).obra;
+    const obraData = (await graphql(query, variables, fetch)).obra;
 
     const formData = { name: obraData.name, description: obraData.description, area: obraData.area };
     const updateForm = await superValidate(formData, yup(obraCreateSchema));
