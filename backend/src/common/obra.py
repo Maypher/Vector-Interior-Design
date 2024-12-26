@@ -165,7 +165,7 @@ def get_image_by_filename(
 ) -> typing.Optional[schemas.Image]:
     data = generic_database.query(
         f"""
-        SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice FROM imagen 
+        SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice, imagen.pagina_principal FROM imagen 
         {"JOIN ambiente ON imagen.ambiente_id = ambiente.id JOIN obra ON ambiente.obra_id = obra.id" if not allow_private else ""}
         WHERE archivo = %s {"AND obra.publico" if not allow_private else ""};
         """,
@@ -175,5 +175,9 @@ def get_image_by_filename(
 
     if data:
         return schemas.Image(
-            id=data[0], filename=data[1], alt_text=data[2], index=data[3]
+            id=data[0],
+            filename=data[1],
+            alt_text=data[2],
+            index=data[3],
+            main_page=data[4],
         )

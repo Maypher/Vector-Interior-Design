@@ -5,6 +5,7 @@ from strawberry.flask.views import GraphQLView
 from auth.authentication import login_required
 from common.common_graphql import schemas
 from common import obra
+from common.common_graphql.enums import Direction
 from admin.resources import obra as adminObra
 from admin.resources.admin_graphql import errors
 
@@ -66,6 +67,20 @@ class Query:
         ],
     ) -> typing.Optional[schemas.Image]:
         return obra.get_image_by_filename(filename, True)
+
+    @strawberry.field(description="All the images shown in the main page")
+    def mainPageImages(self) -> typing.List[schemas.Image]:
+        image_filenames = adminObra.admin_database.query(
+            """
+            SELECT archivo from imagen JOIN imagenConfig on imagenConfig.imagen_id = imagen.id 
+            WHERE imagen.pagina_principal ORDER BY imagenConfig.indice;
+            """
+        )
+
+        return [
+            adminObra.get_image_by_filename(filename[0], True)
+            for filename in image_filenames
+        ]
 
 
 @strawberry.type
@@ -253,8 +268,141 @@ class Mutation:
                 description="The zero based index of where to position the image relative to all others."
             ),
         ] = None,
+        main_page: typing.Annotated[
+            typing.Optional[bool],
+            strawberry.argument(
+                description="Set this image to be shown in the main page."
+            ),
+        ] = None,
     ) -> typing.Optional[schemas.Image]:
-        return adminObra.update_image(filename, alt_text, index)
+        return adminObra.update_image(filename, alt_text, index, main_page)
+
+    @strawberry.mutation(
+        description="Updates an mainImageConfig to be displayed in the sites main page."
+    )
+    def updateImageConfig(
+        self,
+        id: typing.Annotated[
+            int, strawberry.argument(description="The ID of the imageConfig to update.")
+        ],
+        description: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(description="The description of the image in Spanish."),
+        ] = None,
+        description_en: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(description="The description of the image in English"),
+        ] = None,
+        logo_pos: typing.Annotated[
+            typing.Optional[Direction],
+            strawberry.argument(
+                description="The position of where to put the logo relative to the image."
+            ),
+        ] = strawberry.UNSET,
+        description_pos: typing.Annotated[
+            typing.Optional[Direction],
+            strawberry.argument(
+                description="The position of where to put the description relative to the image."
+            ),
+        ] = strawberry.UNSET,
+        overflow: typing.Annotated[
+            typing.Optional[bool],
+            strawberry.argument(
+                description="Determines if the image should overflow to the edge of the screen or not."
+            ),
+        ] = strawberry.UNSET,
+        index: typing.Annotated[
+            typing.Optional[int],
+            strawberry.argument(
+                description="The new zero based index of where to put the image in the main page."
+            ),
+        ] = None,
+    ) -> typing.Optional[schemas.MainImageConfig]:
+        image = adminObra.admin_database.query(
+            """
+            SELECT 1 FROM imagenConfig WHERE id = %s;
+        """,
+            (id,),
+            1,
+        )[0]
+
+        if image:
+            if description:
+                adminObra.admin_database.query(
+                    """
+                UPDATE imagenConfig SET descripcion = %s WHERE id = %s;
+                """,
+                    (description, id),
+                    commit=False,
+                )
+            if description_en:
+                adminObra.admin_database.query(
+                    """
+                UPDATE imagenConfig SET descripcion_en = %s WHERE id = %s;
+                """,
+                    (description_en, id),
+                    commit=False,
+                )
+            if description_pos is not strawberry.UNSET:
+                value = None
+
+                if description_pos:
+                    value = description_pos.value
+
+                adminObra.admin_database.query(
+                    """
+                UPDATE imagenConfig SET texto_ubicacion = %s WHERE id = %s;
+                """,
+                    (value, id),
+                    commit=False,
+                )
+            if logo_pos is not strawberry.UNSET:
+                value = None
+
+                if logo_pos:
+                    value = logo_pos.value
+
+                adminObra.admin_database.query(
+                    """
+                UPDATE imagenConfig SET logo_ubicacion = %s WHERE id = %s;
+                """,
+                    (value, id),
+                    commit=False,
+                )
+
+                if overflow is not strawberry.UNSET:
+                    adminObra.admin_database.query(
+                        """
+                    UPDATE imagenConfig SET sangrar = %s WHERE id = %s;
+                    """,
+                        (overflow, id),
+                        commit=False,
+                    )
+            if index:
+                # Tablename in lowercase because postgres saves imagenConfig in lowercase and
+                # by doing "imagenConfig" it fails because it searches case sensitive.
+                adminObra.update_index(id, "imagenconfig", index)
+
+            adminObra.admin_database.commit()
+
+            data = adminObra.admin_database.query(
+                """
+                SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar 
+                FROM imagenConfig WHERE id = %s;
+                """,
+                (id,),
+                1,
+            )
+
+            if data:
+                return schemas.MainImageConfig(
+                    id=data[0],
+                    description=data[1],
+                    description_en=data[2],
+                    logo_pos=data[3],
+                    description_pos=data[4],
+                    overflow=data[5],
+                )
 
     @strawberry.mutation(
         description="Deletes the image identified by filename returning the deleted entry. **Returns null if no image was found.**"
