@@ -108,21 +108,25 @@ def update_obra(
             commit=False,
         )
     if thumbnail is not UNSET:
-        image = admin_database.query(
-            """
-            SELECT id FROM imagen WHERE archivo = %s;
-            """,
-            (thumbnail,),
-            1,
-        )[0]
-
-        if image:
-            admin_database.query(
+        if thumbnail is None:
+            image = None
+        else:
+            image = admin_database.query(
                 """
-                UPDATE obra SET imagen_principal = %s WHERE id = %s;
+                SELECT id FROM imagen WHERE archivo = %s;
                 """,
-                (image, obra.id),
+                (thumbnail,),
+                1,
             )
+
+            image = image[0] if image else None
+
+        admin_database.query(
+            """
+            UPDATE obra SET imagen_principal = %s WHERE id = %s;
+            """,
+            (image, obra.id),
+        )
     if index is not None:
         update_index(id, "obra", index)
     if public is not None:
@@ -271,7 +275,7 @@ def create_image(
         data = admin_database.query(
             """
         INSERT INTO imagen (archivo, texto_alt, ambiente_id) VALUES (%s, %s, %s)
-        RETURNING id, archivo, texto_alt, indice;
+        RETURNING id, archivo, texto_alt, indice, pagina_principal;
         """,
             (image.filename, alt_text, ambiente.id),
             count=1,
@@ -280,7 +284,9 @@ def create_image(
         os.remove(image_location)
         raise e
 
-    return schemas.Image(id=data[0], filename=data[1], alt_text=data[2], index=data[3])
+    return schemas.Image(
+        id=data[0], filename=data[1], alt_text=data[2], index=data[3], main_page=data[4]
+    )
 
 
 def update_image(
@@ -394,39 +400,63 @@ def update_index(
 
     # region get indices of elements around the selected one
 
-    # Transform the index from zero based to the database float version
-    element_data = admin_database.query(
+    # The index of the element before being updated
+    current_index = admin_database.query(
         SQL(
             f"""
-        SELECT id, indice FROM {{}} ORDER BY indice OFFSET {{}}; 
+        SELECT indice FROM {{}} WHERE {f' "{where_col}" = {parent_id} and' if where_col else ''} id = {{}};
+    """
+        ).format(Identifier(tablename), element_id),
+        count=1,
+    )[0]
+
+    # Transform the index from zero based to the database float version
+    desired_pos_data = admin_database.query(
+        SQL(
+            f"""
+        SELECT id, indice FROM {{}} {f'WHERE "{where_col}" = {parent_id}' if where_col else ''} ORDER BY indice OFFSET {{}} LIMIT 1; 
         """,
         ).format(Identifier(tablename), new_index),
         count=1,
     )
 
-    selected_element_id = element_data[0] if element_data else None
-    element_index = element_data[1] if element_data else None
+    desired_element_id = desired_pos_data[0] if desired_pos_data else None
+    desired_index = desired_pos_data[1] if desired_pos_data else None
 
-    index_before = admin_database.query(
-        SQL(
-            f"""
-            SELECT indice FROM {{}} WHERE indice < {{}} ORDER BY indice DESC LIMIT 1;
-        """
-        ).format(Identifier(tablename), element_index),
-        count=1,
-    )
+    if current_index > desired_index:
+        index_before = admin_database.query(
+            SQL(
+                f"""
+                SELECT indice FROM {{}} WHERE indice < {{}} 
+                {f'and "{where_col}" = {parent_id} ' if where_col else ''} 
+                ORDER BY indice DESC LIMIT 1;
+            """
+            ).format(Identifier(tablename), desired_index),
+            count=1,
+        )
+        index_before = index_before[0] if index_before else None
+    else:
+        index_before = desired_index
 
-    index_before = index_before[0] if index_before else None
+    if current_index < desired_index:
+        index_after = admin_database.query(
+            SQL(
+                f"""
+                SELECT indice FROM {{}} WHERE indice > {{}}
+                {f'and "{where_col}" = {parent_id}' if where_col else ''}
+                ORDER BY indice LIMIT 1;
+            """
+            ).format(Identifier(tablename), desired_index),
+            count=1,
+        )
 
-    # Setting the index after to the index moving because of the following.
-    # Say there are indices (2.0, 3.0, 4.0)
-    # If you want to move to the position '1' (second pos) it would be between 2.0 and 3.0
-    # So the calculation would be (2 + 3) / 2
-    index_after = element_index
+        index_after = index_after[0] if index_after else None
+    else:
+        index_after = desired_index
 
     # endregion
 
-    if selected_element_id == element_id:
+    if desired_element_id == element_id or desired_index == current_index:
         # If the element itself is the element after it means it's being updated to its same position so just ignore it.
         return
     elif index_before and not index_after:
@@ -437,8 +467,7 @@ def update_index(
             )
         )
     elif index_after and not index_before:
-        # If the offset is zero it means that the element is being moved to the beginning
-
+        # If moved to the beginning do the regular calculation with the first index only
         final_index = index_after / 2
 
         try:
