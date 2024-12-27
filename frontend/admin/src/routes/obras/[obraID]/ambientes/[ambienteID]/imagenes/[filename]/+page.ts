@@ -14,6 +14,14 @@ export const load = async ({ fetch, params }) => {
             image(filename: $filename) {
                 filename
                 altText
+                mainPage
+                ambiente {
+                    obra {
+                        thumbnail {
+                            filename
+                        }
+                    }
+                }
             }
         }
     `;

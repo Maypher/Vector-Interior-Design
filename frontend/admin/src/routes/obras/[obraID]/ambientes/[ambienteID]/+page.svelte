@@ -11,10 +11,30 @@
 	import { goto } from '$app/navigation';
 	import { error } from '@sveltejs/kit';
 	import { PUBLIC_imageURL } from '$env/static/public';
+	import SortableList from '$lib/components/input/SortableList.svelte';
+	import Sortable, { type Options } from 'sortablejs';
+	import getArrayDifference from '$lib/utilities/arrayOrder';
 
 	const { data }: { data: PageData } = $props();
 	let ambiente = $state(data.ambienteData);
 	let submitting: boolean = $state(false);
+	let originalOrder: string[] = $state(
+		ambiente.images.map((image: { filename: string }) => image.filename)
+	);
+	// svelte-ignore state_referenced_locally
+	let updatedElements: string[] = $state(originalOrder);
+	let saveDisabled = $derived(updatedElements.toString() === originalOrder.toString());
+
+	let sortable: Sortable | undefined = $state();
+
+	const sortableOptions: Options = {
+		draggable: '.image',
+		chosenClass: 'image-chosen',
+		ghostClass: 'image-ghost',
+		animation: 150,
+		dataIdAttr: 'data-imageFilename',
+		onEnd: () => (updatedElements = sortable!.toArray())
+	};
 
 	const { form, errors, enhance, constraints } = superForm(data.updateForm, {
 		SPA: true,
@@ -68,6 +88,26 @@
 			} else error(404, `Ambiente con ID ${ambiente.id} no existe.`);
 		}
 	}
+
+	async function updateImagesOrder() {
+		const query = `
+			mutation updateImage($filename: String!, $index: Int!) {
+				updateImage(filename: $filename, index: $index) {
+					filename
+				}
+			}
+		`;
+
+		const updates = getArrayDifference(originalOrder, updatedElements);
+
+		updates.forEach(async ({ id, newPos }) => {
+			await graphql(query, { filename: id, index: newPos });
+		});
+
+		originalOrder = updatedElements;
+
+		success('Orden actualizado con éxito.');
+	}
 </script>
 
 <div class="w-full bg-green-300 min-h-screen p-3">
@@ -98,28 +138,45 @@
 		</fieldset>
 	</form>
 	<hr class="m-2 border-blue-700" />
-	<div class="m-2">
-		<h1 class="text-xl text-center">Imágenes</h1>
-		<ul class="w-fit mx-auto my-2">
-			{#each ambiente.images as image}
-				<li class="size-48">
-					<a
-						href={`/obras/${data.ambienteData.obra.id}/ambientes/${ambiente.id}/imagenes/${image.filename}`}
-						class="relative"
-					>
-						{#if ambiente.obra.thumbnail?.filename === image.filename}
-							<span class="material-symbols-outlined absolute top-5 z-10 text-red-500">
-								favorite
-							</span>
-						{/if}
-						<img src={`${PUBLIC_imageURL}${image.filename}`} alt={ambiente.altText} />
-					</a>
-				</li>
-			{/each}
-		</ul>
+	<div class="m-auto my-10 max-w-5xl w-fit">
+		<h1 class="text-xl text-center mb-4">Imágenes</h1>
+		<SortableList bind:sortable sortableId="imageSort" {sortableOptions}>
+			<div id="imageSort" class="bg-gray-600 rounded-t-md p-5 flex gap-3">
+				{#each ambiente.images as image, i (image.filename)}
+					<div class="image h-32 relative" data-imageFilename={image.filename}>
+						<a
+							href={`/obras/${ambiente.obra.id}/ambientes/${ambiente.id}/imagenes/${image.filename}`}
+						>
+							<p class="absolute top-0 left-0 bg-white p-2 rounded-br-md">{i + 1}</p>
+							<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altText} class="h-full" />
+						</a>
+					</div>
+				{/each}
+			</div>
+		</SortableList>
+		<div class="flex w-full border-2 border-black rounded-sm">
+			<button
+				type="button"
+				onclick={updateImagesOrder}
+				disabled={saveDisabled}
+				class="w-full bg-blue-300 p-1 disabled:bg-gray-600 disabled:text-gray-400 hover:bg-gray-200 transition-colors disabled:cursor-not-allowed border-r-2"
+				>Guardar nuevo orden</button
+			>
+			<button
+				type="button"
+				onclick={() => {
+					sortable?.sort(originalOrder!);
+					updatedElements = originalOrder;
+				}}
+				disabled={saveDisabled}
+				class="w-full bg-blue-300 p-1 disabled:bg-gray-600 disabled:text-gray-400 hover:bg-gray-200 transition-colors disabled:cursor-not-allowed border-l-2"
+				>Cancelar</button
+			>
+		</div>
 		<a
 			href={`/obras/${data.ambienteData.obra.id}/ambientes/${ambiente.id}/imagenes/crear/`}
-			class="block w-fit m-auto bg-amber-400 hover:bg-white p-2 rounded-md">Nueva imagen</a
+			class="block w-full text-center m-auto bg-amber-400 hover:bg-white p-2 border-2 border-black"
+			>Nueva imagen</a
 		>
 	</div>
 </div>

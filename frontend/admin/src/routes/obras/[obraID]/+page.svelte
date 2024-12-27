@@ -10,10 +10,31 @@
 	import confirmationDialog from '$lib/utilities/dialog';
 	import { goto } from '$app/navigation';
 	import { error } from '@sveltejs/kit';
+	import SortableList from '$lib/components/input/SortableList.svelte';
+	import Sortable, { type Options } from 'sortablejs';
+	import '$lib/styles/ordenableList.css';
+	import { PUBLIC_imageURL } from '$env/static/public';
+	import getArrayDifference from '$lib/utilities/arrayOrder';
 
 	const { data }: { data: PageData } = $props();
 	let obraData = $state(data.obraData!);
 	let submitting: boolean = $state(false);
+
+	let sortable: Sortable | undefined = $state();
+	let originalOrder: string[] = $state(obraData.ambientes.map((x: { id: string }) => x.id));
+	// svelte-ignore state_referenced_locally
+	let updatedElements: string[] = $state(originalOrder);
+	let saveDisabled = $derived(updatedElements.toString() === originalOrder.toString());
+
+	const sortableOptions: Options = {
+		handle: '.handle',
+		draggable: '.item',
+		chosenClass: 'item-chosen',
+		ghostClass: 'item-ghost',
+		animation: 150,
+		dataIdAttr: 'data-ambienteId',
+		onEnd: () => (updatedElements = sortable!.toArray())
+	};
 
 	const { form, errors, enhance, constraints } = superForm(data.updateForm!, {
 		SPA: true,
@@ -85,9 +106,29 @@
 			else error(404, `Obra con ID ${obraData.id} no existe.`);
 		}
 	}
+
+	async function updateOrder() {
+		const query = `
+				mutation UpdateIndex($id: Int!, $index: Int!) {
+					updateAmbiente(id: $id, index: $index) {
+						id
+					}
+				}			
+		`;
+
+		const updates = getArrayDifference(originalOrder, updatedElements);
+
+		updates.forEach(
+			async ({ id, newPos }) => await graphql(query, { id: parseInt(id), index: newPos })
+		);
+
+		originalOrder = updatedElements;
+
+		success('Orden actualizado con éxito.');
+	}
 </script>
 
-<div class="bg-green-700 p-4">
+<div class="bg-green-700 py-20">
 	<!-- Name, area and description -->
 	<form class="bg-purple-900 m-auto p-4 max-w-xl rounded-lg" use:enhance>
 		<button
@@ -132,15 +173,60 @@
 	<hr class="m-3" />
 	<!-- Ambientes -->
 	<h1 class="text-xl m-3 font-bold text-center">Ambientes</h1>
-	<ul class="m-auto w-fit list-disc">
-		{#each obraData.ambientes as ambiente}
-			<li class="bg-purple-300 my-2 hover:bg-slate-600">
-				<a href={`/obras/${obraData.id}/ambientes/${ambiente.id}`}>{ambiente.name}</a>
-			</li>
-		{/each}
-	</ul>
-	<a
-		href={`/obras/${obraData.id}/ambientes/crear/`}
-		class="block w-fit m-auto bg-blue-700 p-1 rounded-md">Nuevo</a
-	>
+	<div class="max-w-md m-auto">
+		<SortableList bind:sortable sortableId="sortable" {sortableOptions}>
+			<div id="sortable">
+				{#each obraData.ambientes as ambiente (ambiente.id)}
+					<div class="item flex items-center" data-ambienteId={ambiente.id}>
+						<span
+							class="material-symbols-outlined handle border-r-2 p-2 h-full content-center border-gray-800 hover:cursor-pointer"
+						>
+							drag_indicator
+						</span>
+						<div class="size-full">
+							<a
+								href={`/obras/${obraData.id}/ambientes/${ambiente.id}`}
+								class="size-full pl-2 flex justify-between items-center hover:bg-amber-600"
+							>
+								<p>
+									{ambiente.name}
+								</p>
+								{#if ambiente.images.at(0)}
+									<img
+										src={`${PUBLIC_imageURL}${ambiente.images[0].filename}`}
+										alt={ambiente.images[0].altText}
+										class="h-full"
+									/>
+								{/if}
+							</a>
+						</div>
+					</div>
+				{/each}
+			</div>
+		</SortableList>
+		<div class="flex w-full border-2 border-black rounded-sm">
+			<button
+				type="button"
+				onclick={updateOrder}
+				disabled={saveDisabled}
+				class="w-full bg-blue-300 p-1 disabled:bg-gray-600 disabled:text-gray-400 hover:bg-gray-200 transition-colors disabled:cursor-not-allowed border-r-2"
+				>Guardar nuevo orden</button
+			>
+			<button
+				type="button"
+				onclick={() => {
+					sortable?.sort(originalOrder!);
+					updatedElements = originalOrder;
+				}}
+				disabled={saveDisabled}
+				class="w-full bg-blue-300 p-1 disabled:bg-gray-600 disabled:text-gray-400 hover:bg-gray-200 transition-colors disabled:cursor-not-allowed border-l-2"
+				>Cancelar</button
+			>
+		</div>
+		<a
+			href={`/obras/${obraData.id}/ambientes/crear/`}
+			class="block bg-amber-400 hover:bg-amber-600 w-full text-center p-2 border-2 border-black sticky bottom-0"
+			>Nuevo Ambiente</a
+		>
+	</div>
 </div>

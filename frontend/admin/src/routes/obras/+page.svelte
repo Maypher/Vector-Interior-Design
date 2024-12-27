@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { onMount, untrack } from 'svelte';
+	import { untrack } from 'svelte';
 	import graphql from '$lib/utilities/api';
 	import { PUBLIC_imageURL } from '$env/static/public';
 	import SortableList from '$lib/components/input/SortableList.svelte';
 	import Sortable, { type Options } from 'sortablejs';
 	import '$lib/styles/ordenableList.css';
+	import getArrayDifference from '$lib/utilities/arrayOrder';
+	import { success } from '$lib/utilities/toasts';
 
 	let searchParams = $state({
 		name: '',
@@ -16,8 +18,15 @@
 
 	let obraPromise: Promise<any> | undefined = $derived.by(() => fetchObras());
 
-	let sortable: Sortable = $state()!;
+	let sortable: Sortable | undefined = $state();
 	let sortableEnabled: boolean = $derived(searchParams.name === '');
+	let originalOrder: string[] | undefined = $state();
+	let updatedElements: string[] = $state([]);
+	let saveDisabled = $derived(
+		!originalOrder ||
+			updatedElements.length === 0 ||
+			originalOrder?.toString() === updatedElements?.toString()
+	);
 
 	$effect(() => {
 		const searchQuery = searchParams;
@@ -31,7 +40,9 @@
 		draggable: '.item',
 		chosenClass: 'item-chosen',
 		ghostClass: 'item-ghost',
-		animation: 150
+		animation: 150,
+		dataIdAttr: 'data-obraId',
+		onEnd: () => (updatedElements = sortable!.toArray())
 	};
 
 	async function fetchObras() {
@@ -52,7 +63,35 @@
 				}
 			}	
 		`;
+		const obras = (await graphql(query, searchParams)).obras;
+
+		// Due to how the structure is setup this makes sure the original order is only set on first load.
+		// To later compare it and only update those values that were moved.
+		if (!originalOrder) {
+			originalOrder = obras.obras.map(({ id }: { id: number }) => id.toString());
+		}
+
 		return (await graphql(query, searchParams)).obras;
+	}
+
+	async function updateOrder() {
+		const query = `
+				mutation UpdateIndex($id: Int!, $index: Int!) {
+					updateObra(id: $id, index: $index) {
+						id
+					}
+				}			
+		`;
+
+		const updates = getArrayDifference(originalOrder!, updatedElements);
+
+		updates.forEach(
+			async ({ id, newPos }) => await graphql(query, { id: parseInt(id), index: newPos })
+		);
+
+		originalOrder = updatedElements;
+
+		success('Orden actualizado con éxito.');
 	}
 </script>
 
@@ -72,7 +111,10 @@
 					<SortableList bind:sortable {sortableOptions} sortableId="sortable">
 						<div id="sortable">
 							{#each data.obras as obra (obra.id)}
-								<div class={`item flex items-center ${!obra.public ? 'bg-red-300' : ''}`}>
+								<div
+									class={`item flex items-center ${!obra.public ? 'bg-red-300' : ''}`}
+									data-obraId={obra.id}
+								>
 									{#if sortableEnabled}
 										<span
 											class="material-symbols-outlined handle border-r-2 p-2 h-full content-center border-gray-800 hover:cursor-pointer"
@@ -109,6 +151,22 @@
 							{/each}
 						</div>
 					</SortableList>
+					<div class="flex w-full border-2 border-black rounded-sm">
+						<button
+							type="button"
+							onclick={updateOrder}
+							disabled={saveDisabled}
+							class="w-full bg-blue-300 p-1 disabled:bg-gray-600 disabled:text-gray-400 hover:bg-gray-200 transition-colors disabled:cursor-not-allowed border-r-2"
+							>Guardar nuevo orden</button
+						>
+						<button
+							type="button"
+							onclick={() => sortable?.sort(originalOrder!)}
+							disabled={saveDisabled}
+							class="w-full bg-blue-300 p-1 disabled:bg-gray-600 disabled:text-gray-400 hover:bg-gray-200 transition-colors disabled:cursor-not-allowed border-l-2"
+							>Cancelar</button
+						>
+					</div>
 					<a
 						href="/obras/crear"
 						class="block bg-amber-400 hover:bg-amber-600 w-full text-center p-2 border-2 border-black sticky bottom-0"

@@ -20,6 +20,10 @@ export async function load({ params, fetch }) {
                         ambientes {
                             id
                             name
+                            images {
+                                filename
+                                altText
+                            }
                         }
                     }
                 }

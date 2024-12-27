@@ -12,6 +12,8 @@
 
 	const { data }: { data: PageData } = $props();
 	let imageData = $state(data.imageData!);
+	let isThumbnail = $derived(imageData.ambiente.obra.thumbnail?.filename === imageData.filename);
+	let isInMainPage = $derived(imageData.mainPage);
 	let submitting: boolean = $state(false);
 
 	const { form, errors, enhance, constraints } = superForm(data.updateForm!, {
@@ -61,18 +63,49 @@
 
 	async function setThumbnail() {
 		const query = `
-			mutation setThumbnail($obraId: Int!, $thumbnail: String!) {
+			mutation setThumbnail($obraId: Int!, $thumbnail: String) {
 				updateObra(id: $obraId, thumbnail: $thumbnail) {
 					name
+					thumbnail {
+						filename
+					}
 				}
 			}
 		`;
 
-		const variables = { obraId: data.obraId, thumbnail: imageData.filename };
+		const variables = { obraId: data.obraId, thumbnail: isThumbnail ? null : imageData.filename };
 
-		const obraName = (await graphql(query, variables)).updateObra.name;
+		const obraData = (await graphql(query, variables)).updateObra;
 
-		success(`Imagen colocada como imagen principal de "${obraName}"`);
+		imageData.ambiente.obra.thumbnail = obraData.thumbnail;
+
+		success(
+			isThumbnail
+				? `Imagen colocada como imagen principal de "${obraData.name}"`
+				: `Imagen removida como imagen principal de ${obraData.name}`
+		);
+	}
+
+	async function setMainPage() {
+		const query = `
+			mutation setMainPage($filename: String!, $mainPage: Boolean) {
+				updateImage(filename: $filename, mainPage: $mainPage) {
+					mainPage
+				}
+			}
+		`;
+
+		const variables = { filename: imageData.filename, mainPage: !imageData.mainPage };
+
+		const obraData = (await graphql(query, variables)).updateImage;
+
+		imageData.mainPage = obraData.mainPage;
+
+		success(
+			isInMainPage
+				? 'Imagen removida de la página principal.'
+				: 'Imagen colocada en la página principal'
+		);
 	}
 </script>
 
@@ -86,9 +119,16 @@
 		<button
 			onclick={setThumbnail}
 			type="button"
-			class="block w-fit ml-auto m-1 p-2 bg-green-500 hover:bg-blue-700"
+			class={`block w-fit ml-auto m-1 p-2 ${isThumbnail ? 'bg-red-500' : 'bg-green-500'} hover:bg-blue-700`}
 		>
-			Colocar como imagen principal
+			{isThumbnail ? 'Quitar como imagen principal' : 'Colocar como imagen principal'}
+		</button>
+		<button
+			onclick={setMainPage}
+			type="button"
+			class={`block w-fit ml-auto m-1 p-2 ${isInMainPage ? 'bg-red-500' : 'bg-gray-500'} hover:bg-gray-200`}
+		>
+			{isInMainPage ? 'Remover de la página principal' : 'Colocar en página principal'}
 		</button>
 		<img src={`${PUBLIC_imageURL}${imageData.filename}`} alt={imageData.altText} />
 		<fieldset disabled={submitting}>
