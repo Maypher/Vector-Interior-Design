@@ -54,7 +54,7 @@ class Obra:
             """
         SELECT ambiente.id, ambiente.nombre, ambiente.descripcion, ambiente.indice FROM ambiente
         JOIN obra ON ambiente.obra_id = obra.id
-        WHERE obra.id = %s;
+        WHERE obra.id = %s ORDER BY indice;
         """,
             (self.id,),
         )
@@ -108,7 +108,7 @@ class Ambiente:
             """
         SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice, pagina_principal FROM imagen
         JOIN ambiente ON imagen.ambiente_id = ambiente.id
-        WHERE ambiente.id = %s;
+        WHERE ambiente.id = %s ORDER BY indice;
         """,
             (self.id,),
         )
