@@ -147,7 +147,20 @@
 						<a
 							href={`/obras/${ambiente.obra.id}/ambientes/${ambiente.id}/imagenes/${image.filename}`}
 						>
-							<p class="absolute top-0 left-0 bg-white p-2 rounded-br-md">{i + 1}</p>
+							<p class="absolute top-0 left-0 bg-white opacity-70 p-2 rounded-br-md">{i + 1}</p>
+							<div class="absolute top-0 right-0 flex flex-col bg-white opacity-70 rounded-bl-md">
+								{#if ambiente.obra.thumbnail.filename === image.filename}
+									<span class="material-symbols-outlined" title="Imagen Principal"> favorite </span>
+								{/if}
+								{#if image.mainPage}
+									<span
+										class="material-symbols-outlined"
+										title="Esta imagen aparece en la página principal"
+									>
+										home
+									</span>
+								{/if}
+							</div>
 							<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altText} class="h-full" />
 						</a>
 					</div>

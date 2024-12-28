@@ -14,10 +14,11 @@
 	}
 </script>
 
-<header class="p-3 flex justify-between items-center bg-gray-400">
-	<a href="/obras/" class="hover:bg-red-500 p-3 rounded-md"
-		><span class="material-symbols-outlined text-4xl"> home </span></a
-	>
+<header class="p-3 flex justify-between items-center bg-gray-400 h-20">
+	<div class="flex items-center h-full">
+		<a href="/obras/" class="hover:bg-red-500 p-3 rounded-md">Obras</a>
+		<a href="/obras/paginaPrincipal" class="hover:bg-red-500 p-3 rounded-md">Página Principal</a>
+	</div>
 	<button type="button" {onclick} class="m-4 hover:bg-blue-400 p-3 rounded-lg">
 		Cerrar Sesión
 	</button>

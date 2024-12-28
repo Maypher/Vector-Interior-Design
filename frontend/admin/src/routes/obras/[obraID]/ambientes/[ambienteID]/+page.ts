@@ -19,6 +19,7 @@ export const load = async ({ params, fetch }) => {
                 images {
                     filename
                     altText
+                    mainPage
                 }
                 obra {
                     id
