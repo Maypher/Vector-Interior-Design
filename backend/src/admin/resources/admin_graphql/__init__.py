@@ -327,7 +327,7 @@ class Mutation:
         )[0]
 
         if image:
-            if description:
+            if description is not None:
                 adminObra.admin_database.query(
                     """
                 UPDATE imagenConfig SET descripcion = %s WHERE id = %s;
@@ -335,7 +335,7 @@ class Mutation:
                     (description, id),
                     commit=False,
                 )
-            if description_en:
+            if description_en is not None:
                 adminObra.admin_database.query(
                     """
                 UPDATE imagenConfig SET descripcion_en = %s WHERE id = %s;
