@@ -14,11 +14,24 @@ export const load = async ({ fetch }) => {
                     descriptionPos
                     logoPos
                     overflow
+                    imageBorders {
+                        n
+                        s
+                        e
+                        o
+                    }
+                    logoBorders {
+                        n
+                        s
+                        e
+                        o
+                    }
                 }
                 ambiente {
                     id
                     obra {
                         id
+                        public
                     }
                 }
             }

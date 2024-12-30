@@ -112,7 +112,8 @@
 						<div id="sortable">
 							{#each data.obras as obra (obra.id)}
 								<div
-									class={`item flex items-center ${!obra.public ? 'bg-red-300' : ''}`}
+									class="item flex items-center"
+									class:!bg-red-300={!obra.public}
 									data-obraId={obra.id}
 								>
 									{#if sortableEnabled}

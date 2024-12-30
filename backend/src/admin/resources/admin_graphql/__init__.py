@@ -8,12 +8,29 @@ from common import obra
 from common.common_graphql.enums import Direction
 from admin.resources import obra as adminObra
 from admin.resources.admin_graphql import errors
+from psycopg.sql import SQL, Identifier
 
 
 class AuthGraphQLView(GraphQLView):
     @login_required
     def dispatch_request(self):
         return super().dispatch_request()
+
+
+@strawberry.input(description="Determines what borders a resource should have.")
+class BordersInput:
+    n: typing.Optional[bool] = strawberry.field(
+        description="Determines if the resource should have a border on the top."
+    )
+    s: typing.Optional[bool] = strawberry.field(
+        description="Determines if the resource should have a border on the bottom."
+    )
+    e: typing.Optional[bool] = strawberry.field(
+        description="Determines if the resource should have a border on left."
+    )
+    o: typing.Optional[bool] = strawberry.field(
+        description="Determines if the resource should have a border on right."
+    )
 
 
 @strawberry.type()
@@ -285,6 +302,10 @@ class Mutation:
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of the imageConfig to update.")
         ],
+        image_borders: typing.Annotated[
+            typing.Optional[BordersInput],
+            strawberry.argument("What borders should the image have"),
+        ] = None,
         description: typing.Annotated[
             typing.Optional[str],
             strawberry.argument(description="The description of the image in Spanish."),
@@ -299,6 +320,10 @@ class Mutation:
                 description="The position of where to put the logo relative to the image."
             ),
         ] = strawberry.UNSET,
+        logo_borders: typing.Annotated[
+            typing.Optional[BordersInput],
+            strawberry.argument("What borders should the logo have"),
+        ] = None,
         description_pos: typing.Annotated[
             typing.Optional[Direction],
             strawberry.argument(
@@ -378,7 +403,39 @@ class Mutation:
                         (overflow, id),
                         commit=False,
                     )
-            if index:
+            if logo_borders:
+                for border, direction in (
+                    (logo_borders.n, "n"),
+                    (logo_borders.s, "s"),
+                    (logo_borders.e, "e"),
+                    (logo_borders.o, "o"),
+                ):
+                    if border is not None:
+                        adminObra.admin_database.query(
+                            SQL(
+                                """
+                        UPDATE imagenConfig SET {} = {} WHERE id = {};
+                        """
+                            ).format(Identifier(f"logo_borde_{direction}"), border, id)
+                        )
+            if image_borders:
+                for border, direction in (
+                    (image_borders.n, "n"),
+                    (image_borders.s, "s"),
+                    (image_borders.e, "e"),
+                    (image_borders.o, "o"),
+                ):
+                    if border is not None:
+                        adminObra.admin_database.query(
+                            SQL(
+                                """
+                        UPDATE imagenConfig SET {} = {} WHERE id = {};
+                        """
+                            ).format(
+                                Identifier(f"imagen_borde_{direction}"), border, id
+                            )
+                        )
+            if index is not None:
                 # Tablename in lowercase because postgres saves imagenConfig in lowercase and
                 # by doing "imagenConfig" it fails because it searches case sensitive.
                 adminObra.update_index(id, "imagenconfig", index)
@@ -387,7 +444,9 @@ class Mutation:
 
             data = adminObra.admin_database.query(
                 """
-                SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar 
+                SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar,
+                imagen_borde_n, imagen_borde_s, imagen_borde_e, imagen_borde_o,
+                logo_borde_n, logo_borde_s, logo_borde_e, logo_borde_o
                 FROM imagenConfig WHERE id = %s;
                 """,
                 (id,),
@@ -402,6 +461,12 @@ class Mutation:
                     logo_pos=data[3],
                     description_pos=data[4],
                     overflow=data[5],
+                    image_borders=schemas.Borders(
+                        n=data[6], s=data[7], e=data[8], o=data[9]
+                    ),
+                    logo_borders=schemas.Borders(
+                        n=data[10], s=data[11], e=data[12], o=data[13]
+                    ),
                 )
 
     @strawberry.mutation(

@@ -149,7 +149,7 @@
 						>
 							<p class="absolute top-0 left-0 bg-white opacity-70 p-2 rounded-br-md">{i + 1}</p>
 							<div class="absolute top-0 right-0 flex flex-col bg-white opacity-70 rounded-bl-md">
-								{#if ambiente.obra.thumbnail.filename === image.filename}
+								{#if ambiente.obra.thumbnail?.filename === image.filename}
 									<span class="material-symbols-outlined" title="Imagen Principal"> favorite </span>
 								{/if}
 								{#if image.mainPage}

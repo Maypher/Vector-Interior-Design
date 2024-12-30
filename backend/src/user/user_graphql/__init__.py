@@ -1,6 +1,7 @@
 import strawberry
 from common import obra
 from common.common_graphql import schemas
+from common.database import generic_database
 import typing
 
 
@@ -55,3 +56,14 @@ class Query:
         ],
     ) -> typing.Optional[schemas.Image]:
         return obra.get_image_by_filename(filename)
+
+    @strawberry.field(description="All the images shown in the main page")
+    def mainPageImages(self) -> typing.List[schemas.Image]:
+        image_filenames = generic_database.query(
+            """
+            SELECT archivo from imagen JOIN imagenConfig on imagenConfig.imagen_id = imagen.id 
+            WHERE imagen.pagina_principal ORDER BY imagenConfig.indice;
+            """
+        )
+
+        return [obra.get_image_by_filename(filename[0]) for filename in image_filenames]

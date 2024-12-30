@@ -12,6 +12,18 @@
 		descriptionPos: string | null;
 		logoPos: string | null;
 		overflow: boolean;
+		logoBorders: {
+			n: boolean;
+			s: boolean;
+			e: boolean;
+			o: boolean;
+		};
+		imageBorders: {
+			n: boolean;
+			s: boolean;
+			e: boolean;
+			o: boolean;
+		};
 	}
 
 	interface Props {
@@ -32,9 +44,7 @@
 	let originalConfig: ImageConfig = $state(configClone);
 	let updatedConfig: ImageConfig = $state(configClone);
 	let shouldUpdate: boolean = $derived(
-		Object.entries(updatedConfig).some(
-			([key, val]) => originalConfig[key as keyof ImageConfig] !== val
-		)
+		JSON.stringify(originalConfig) !== JSON.stringify(updatedConfig)
 	);
 
 	let showDescriptions: boolean = $state(false);
@@ -43,16 +53,33 @@
 	async function onsubmit(evt: SubmitEvent) {
 		evt.preventDefault();
 
+		console.log($state.snapshot(updatedConfig));
+
 		const query = `
 			mutation updateImageConfig($id: Int!, $description: String, $descriptionEn: String, 
-			$logoPos: Direction, $descriptionPos: Direction, $overflow: Boolean) {
+			$logoPos: Direction, $descriptionPos: Direction, $overflow: Boolean, $imageBorders: BordersInput, 
+			$logoBorders: BordersInput) {
 				updateImageConfig(id: $id, description: $description, descriptionEn: $descriptionEn,
-				logoPos: $logoPos, descriptionPos: $descriptionPos, overflow: $overflow) {
+				logoPos: $logoPos, descriptionPos: $descriptionPos, overflow: $overflow, 
+				imageBorders: $imageBorders, logoBorders: $logoBorders) {
+					id
 					description
 					descriptionEn
 					logoPos
 					descriptionPos
 					overflow
+					imageBorders {
+						n
+						s
+						e
+						o
+					}
+					logoBorders {
+						n
+						s
+						e
+						o
+					}
 				}
 			}
 		`;
@@ -68,109 +95,144 @@
 	}
 </script>
 
-<div class="flex justify-between pl-2 w-full">
-	<a href={`/obras/${image.obraId}/ambientes/${image.ambienteId}/imagenes/${image.filename}`}>
-		<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altText} class="h-36" />
-	</a>
-	<form {onsubmit} class="flex">
-		<div>
-			<div class="flex gap-5 p-5 items-center">
-				<div>
-					<label for="overflow">Sangrar</label>
-					<input type="checkbox" name="overflow" bind:checked={updatedConfig.overflow} />
-				</div>
-				<div class="flex flex-col items-center gap-2">
-					<label for="logoPos">Posición del Logo</label>
-					<select name="logoPos" bind:value={updatedConfig.logoPos}>
-						{#each Object.entries(Directions) as [direction, value] (direction)}
-							<option {value} selected={value === imageConfig.logoPos}>{direction}</option>
-						{/each}
-					</select>
-				</div>
-				<div class="flex flex-col items-center gap-2">
-					<label for="textPos">Posición de Descripción</label>
-					<select name="textPos" bind:value={updatedConfig.descriptionPos}>
-						{#each Object.entries(Directions) as [direction, value] (direction)}
-							<option {value} selected={value === imageConfig.descriptionPos}>{direction} </option>
-						{/each}
-					</select>
-				</div>
-			</div>
+<form {onsubmit} class="flex justify-between pl-2 w-full">
+	<div class="flex flex-col gap-2 accent-[#ff4800] m-2">
+		<input type="checkbox" bind:checked={updatedConfig.imageBorders.n} />
+		<div class="flex gap-2">
+			<input type="checkbox" bind:checked={updatedConfig.imageBorders.o} />
+			<a href={`/obras/${image.obraId}/ambientes/${image.ambienteId}/imagenes/${image.filename}`}>
+				<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altText} class="h-36" />
+			</a>
+			<input type="checkbox" bind:checked={updatedConfig.imageBorders.e} />
+		</div>
+		<input type="checkbox" bind:checked={updatedConfig.imageBorders.s} />
+	</div>
+	<div>
+		<div class="flex gap-5 p-5 items-center">
 			<div>
-				<div class="w-full bg-green-300 flex items-center p-2">
-					<label for={`showDescription-${imageConfig.id}`} class="w-full select-none"
-						>Descripciones</label
-					>
+				<label for="overflow">Sangrar</label>
+				<input
+					type="checkbox"
+					name="overflow"
+					id={`overflow-${imageConfig.id}`}
+					bind:checked={updatedConfig.overflow}
+				/>
+			</div>
+			<div class="flex flex-col gap-2">
+				<input
+					type="checkbox"
+					bind:checked={updatedConfig.logoBorders.n}
+					class="accent-[#ff4800]"
+				/>
+				<div class="flex gap-2">
 					<input
 						type="checkbox"
-						id={`showDescription-${imageConfig.id}`}
-						form={null}
-						bind:checked={showDescriptions}
-						class="hidden"
+						bind:checked={updatedConfig.logoBorders.o}
+						class="accent-[#ff4800]"
 					/>
-					<span
-						class="material-symbols-outlined transition-transform"
-						class:rotate-180={showDescriptions}
-					>
-						keyboard_arrow_up
-					</span>
+					<div class="flex flex-col">
+						<label for="logoPos" class="m-auto">Logo</label>
+						<select name="logoPos" bind:value={updatedConfig.logoPos}>
+							{#each Object.entries(Directions) as [direction, value] (direction)}
+								<option {value} selected={value === imageConfig.logoPos}>{direction}</option>
+							{/each}
+						</select>
+					</div>
+					<input
+						type="checkbox"
+						bind:checked={updatedConfig.logoBorders.e}
+						class="accent-[#ff4800]"
+					/>
 				</div>
-				<div
-					class="transition-all overflow-hidden"
-					class:max-h-0={!showDescriptions}
-					class:max-h-screen={showDescriptions}
+				<input
+					type="checkbox"
+					bind:checked={updatedConfig.logoBorders.s}
+					class="accent-[#ff4800]"
+				/>
+			</div>
+			<div class="flex flex-col items-center gap-2">
+				<label for="textPos">Posición de Descripción</label>
+				<select name="textPos" bind:value={updatedConfig.descriptionPos}>
+					{#each Object.entries(Directions) as [direction, value] (direction)}
+						<option {value} selected={value === imageConfig.descriptionPos}>{direction} </option>
+					{/each}
+				</select>
+			</div>
+		</div>
+		<div>
+			<div class="w-full bg-green-300 flex items-center p-2">
+				<label for={`showDescription-${imageConfig.id}`} class="w-full select-none"
+					>Descripciones</label
 				>
-					<div class="flex w-full">
-						<button
-							type="button"
-							class="bg-red-200 w-full hover:bg-red-500"
-							class:bg-red-500={!descriptionEn}
-							onclick={() => (descriptionEn = false)}>Español</button
-						>
-						<button
-							type="button"
-							class="bg-red-200 w-full hover:bg-red-500"
-							class:bg-red-500={descriptionEn}
-							onclick={() => (descriptionEn = true)}>Ingles</button
-						>
-					</div>
-					<div class:hidden={!descriptionEn}>
-						<Markdown
-							label="Descripción (Ingles)"
-							name="descriptionEn"
-							bind:value={updatedConfig.descriptionEn}
-							errors={[]}
-						/>
-					</div>
-					<div class:hidden={descriptionEn}>
-						<Markdown
-							label="Descripción"
-							name="description"
-							bind:value={updatedConfig.description}
-							errors={[]}
-						/>
-					</div>
+				<input
+					type="checkbox"
+					id={`showDescription-${imageConfig.id}`}
+					form={null}
+					bind:checked={showDescriptions}
+					class="hidden"
+				/>
+				<span
+					class="material-symbols-outlined transition-transform"
+					class:rotate-180={showDescriptions}
+				>
+					keyboard_arrow_up
+				</span>
+			</div>
+			<div
+				class="transition-all overflow-hidden"
+				class:max-h-0={!showDescriptions}
+				class:max-h-screen={showDescriptions}
+			>
+				<div class="flex w-full">
+					<button
+						type="button"
+						class="bg-red-200 w-full hover:bg-red-500"
+						class:bg-red-500={!descriptionEn}
+						onclick={() => (descriptionEn = false)}>Español</button
+					>
+					<button
+						type="button"
+						class="bg-red-200 w-full hover:bg-red-500"
+						class:bg-red-500={descriptionEn}
+						onclick={() => (descriptionEn = true)}>Ingles</button
+					>
+				</div>
+				<div class:hidden={!descriptionEn}>
+					<Markdown
+						label="Descripción (Ingles)"
+						name="descriptionEn"
+						bind:value={updatedConfig.descriptionEn}
+						errors={[]}
+					/>
+				</div>
+				<div class:hidden={descriptionEn}>
+					<Markdown
+						label="Descripción"
+						name="description"
+						bind:value={updatedConfig.description}
+						errors={[]}
+					/>
 				</div>
 			</div>
 		</div>
-		<div
-			class="flex flex-col justify-center gap-2 overflow-hidden transition-all ease-out duration-500"
-			class:max-w-0={!shouldUpdate}
-			class:p-2={shouldUpdate}
+	</div>
+	<div
+		class="flex flex-col justify-center gap-2 overflow-hidden transition-all ease-out duration-500"
+		class:max-w-0={!shouldUpdate}
+		class:p-2={shouldUpdate}
+	>
+		<button
+			type="submit"
+			class="text-green-600 hover:bg-green-600 hover:text-white rounded-md transition-all"
+			title="Guardar cambios"
+			><span class="material-symbols-outlined h-full content-center"> check </span></button
 		>
-			<button
-				type="submit"
-				class="text-green-600 hover:bg-green-600 hover:text-white rounded-md transition-all"
-				title="Guardar cambios"
-				><span class="material-symbols-outlined h-full content-center"> check </span></button
-			>
-			<button
-				type="button"
-				class="text-red-600 hover:bg-red-600 hover:text-white rounded-md transition-all"
-				title="Revertir cambios"
-				onclick={() => (updatedConfig = configClone)}
-				><span class="material-symbols-outlined h-full content-center"> cancel </span></button
-			>
-		</div>
-	</form>
-</div>
+		<button
+			type="button"
+			class="text-red-600 hover:bg-red-600 hover:text-white rounded-md transition-all"
+			title="Revertir cambios"
+			onclick={() => (updatedConfig = configClone)}
+			><span class="material-symbols-outlined h-full content-center"> cancel </span></button
+		>
+	</div>
+</form>

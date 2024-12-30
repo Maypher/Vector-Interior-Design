@@ -166,7 +166,9 @@ class Image:
     def mainImageConfig(self) -> typing.Optional["MainImageConfig"]:
         data = generic_database.query(
             """
-            SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar 
+            SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar,
+            imagen_borde_n, imagen_borde_s, imagen_borde_e, imagen_borde_o,
+            logo_borde_n, logo_borde_s, logo_borde_e, logo_borde_o
             FROM imagenConfig JOIN imagen on imagenConfig.imagen_id = imagen.id 
             WHERE imagen.id = %s AND imagen.pagina_principal;
             """,
@@ -182,6 +184,8 @@ class Image:
                 logo_pos=data[3],
                 description_pos=data[4],
                 overflow=data[5],
+                image_borders=Borders(n=data[6], s=data[7], e=data[8], o=data[9]),
+                logo_borders=Borders(n=data[10], s=data[11], e=data[12], o=data[13]),
             )
 
 
@@ -204,6 +208,8 @@ class MainImageConfig:
     logo_pos: typing.Optional[Direction] = strawberry.field(
         description="The position of the logo relative to the image. Null means it shouldn't be shown."
     )
+    logo_borders: "Borders"
+    image_borders: "Borders"
     overflow: bool = strawberry.field(
         description="Indicates if the image should reach the border of the screen."
     )
@@ -265,4 +271,20 @@ class ImageResult:
     )
     images: typing.List[Image] = strawberry.field(
         description="All the images returned by the current page."
+    )
+
+
+@strawberry.type(description="Determines what borders a resource should have.")
+class Borders:
+    n: bool = strawberry.field(
+        description="Determines if the resource should have a border on the top."
+    )
+    s: bool = strawberry.field(
+        description="Determines if the resource should have a border on the bottom."
+    )
+    e: bool = strawberry.field(
+        description="Determines if the resource should have a border on left."
+    )
+    o: bool = strawberry.field(
+        description="Determines if the resource should have a border on right."
     )

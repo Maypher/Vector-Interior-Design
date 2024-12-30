@@ -324,6 +324,10 @@ export function updateListOnEnter(textArea: HTMLTextAreaElement) {
 
 export async function MdtoHTML(text: string): Promise<string> {
     const renderer = new marked.Renderer();
+    marked.use({
+        gfm: true,
+        breaks: true
+    });
 
     renderer.link = ({ href, title, text }) => {
         return `<a href="${href}" title="${title || ''}" target="_blank" rel="noopener noreferrer">${text}</a>`;

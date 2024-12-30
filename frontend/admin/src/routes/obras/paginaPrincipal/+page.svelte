@@ -58,6 +58,10 @@
 					<div
 						class="image flex items-stretch border-2 border-black"
 						data-imageId={image.mainImageConfig.id}
+						class:bg-red-600={!image.ambiente.obra.public}
+						title={!image.ambiente.obra.public
+							? 'Obra es privada. No se mostrará en la página principal'
+							: null}
 					>
 						<span class="material-symbols-outlined p-2 border-r-2 handle content-center my-2">
 							drag_indicator
