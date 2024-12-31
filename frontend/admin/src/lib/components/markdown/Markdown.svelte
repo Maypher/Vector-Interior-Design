@@ -34,7 +34,7 @@
 	onMount(() => markdown.updateListOnEnter(textArea));
 </script>
 
-<div class="w-full max-w">
+<div class="w-full max-w-2xl">
 	<label for={name} class="block m-2 font-semibold">{label}</label>
 	<div class="flex justify-between items-center text-gray-400 bg-gray-700 rounded-t-md">
 		<div class="h-12 mx-3 whitespace-nowrap">
@@ -122,11 +122,11 @@
 		</div>
 	</div>
 	{#if preview}
-		<div
-			class="w-full bg-black h-60 overflow-scroll outline-none text-white p-4 markdownDescription"
-		>
+		<div class="w-full bg-black h-60 outline-none text-white p-4 markdownDescription">
 			{#await markdown.MdtoHTML(value) then render}
-				{@html render}
+				<p>
+					{@html render}
+				</p>
 			{/await}
 		</div>
 	{:else}

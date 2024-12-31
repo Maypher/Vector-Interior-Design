@@ -1,5 +1,5 @@
 import DOMPurify from 'isomorphic-dompurify';
-import { marked } from 'marked';
+import showdown from "showdown";
 
 /**
  * Get's the position of the start and end of selection inside the given textarea.
@@ -322,18 +322,10 @@ export function updateListOnEnter(textArea: HTMLTextAreaElement) {
     });
 }
 
-export async function MdtoHTML(text: string): Promise<string> {
-    const renderer = new marked.Renderer();
-    marked.use({
-        gfm: true,
-        breaks: true
-    });
+export function MdtoHTML(text: string): string {
+    const renderer = new showdown.Converter({ openLinksInNewWindow: true });
 
-    renderer.link = ({ href, title, text }) => {
-        return `<a href="${href}" title="${title || ''}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-    };
-
-    const html: string = await marked.parse(text, { renderer: renderer });
+    const html: string = renderer.makeHtml(text);
     const purifiedHTML = DOMPurify.sanitize(html, { ADD_ATTR: ['target'] });
 
     return purifiedHTML;
