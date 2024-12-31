@@ -314,6 +314,18 @@ class Mutation:
             typing.Optional[str],
             strawberry.argument(description="The description of the image in English"),
         ] = None,
+        description_font: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument("The font that should be used for the description"),
+        ] = None,
+        description_alignment: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument("The alignment of the description"),
+        ] = None,
+        description_font_size: typing.Annotated[
+            typing.Optional[float],
+            strawberry.argument("The size used for the description in rem units"),
+        ] = None,
         logo_pos: typing.Annotated[
             typing.Optional[Direction],
             strawberry.argument(
@@ -381,6 +393,30 @@ class Mutation:
                     (value, id),
                     commit=False,
                 )
+            if description_font:
+                adminObra.admin_database.query(
+                    """
+                    UPDATE imagenConfig SET descripcionTipografia = %s WHERE id = %s;
+                """,
+                    (description_font, id),
+                    commit=False,
+                )
+            if description_alignment:
+                adminObra.admin_database.query(
+                    """
+                    UPDATE imagenConfig SET descripcionDistribucion = %s WHERE id = %s;
+                """,
+                    (description_alignment, id),
+                    commit=False,
+                )
+            if description_font_size is not None:
+                adminObra.admin_database.query(
+                    """
+                    UPDATE imagenConfig SET descripcionTamano = %s WHERE id = %s;
+                """,
+                    (description_font_size, id),
+                    commit=False,
+                )
             if logo_pos is not strawberry.UNSET:
                 value = None
 
@@ -446,7 +482,8 @@ class Mutation:
                 """
                 SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar,
                 imagen_borde_n, imagen_borde_s, imagen_borde_e, imagen_borde_o,
-                logo_borde_n, logo_borde_s, logo_borde_e, logo_borde_o
+                logo_borde_n, logo_borde_s, logo_borde_e, logo_borde_o,
+                descripcionDistribucion, descripcionTamano, descripcionTipografia
                 FROM imagenConfig WHERE id = %s;
                 """,
                 (id,),
@@ -467,6 +504,9 @@ class Mutation:
                     logo_borders=schemas.Borders(
                         n=data[10], s=data[11], e=data[12], o=data[13]
                     ),
+                    description_alignment=data[14],
+                    description_font_size=data[15],
+                    description_font=data[16],
                 )
 
     @strawberry.mutation(

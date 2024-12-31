@@ -168,7 +168,8 @@ class Image:
             """
             SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar,
             imagen_borde_n, imagen_borde_s, imagen_borde_e, imagen_borde_o,
-            logo_borde_n, logo_borde_s, logo_borde_e, logo_borde_o
+            logo_borde_n, logo_borde_s, logo_borde_e, logo_borde_o,
+            descripcionTamano, descripcionDistribucion, descripcionTipografia
             FROM imagenConfig JOIN imagen on imagenConfig.imagen_id = imagen.id 
             WHERE imagen.id = %s AND imagen.pagina_principal;
             """,
@@ -186,6 +187,9 @@ class Image:
                 overflow=data[5],
                 image_borders=Borders(n=data[6], s=data[7], e=data[8], o=data[9]),
                 logo_borders=Borders(n=data[10], s=data[11], e=data[12], o=data[13]),
+                description_font_size=data[14],
+                description_alignment=data[15],
+                description_font=data[16],
             )
 
 
@@ -204,6 +208,15 @@ class MainImageConfig:
     )
     description_pos: typing.Optional[Direction] = strawberry.field(
         description="The position of the description relative to the image. Null means it shouldn't be shown."
+    )
+    description_alignment: str = strawberry.field(
+        description="The alignment of the description text."
+    )
+    description_font: str = strawberry.field(
+        description="The font of the description text."
+    )
+    description_font_size: float = strawberry.field(
+        description="The font size of the description text in rem units."
     )
     logo_pos: typing.Optional[Direction] = strawberry.field(
         description="The position of the logo relative to the image. Null means it shouldn't be shown."
