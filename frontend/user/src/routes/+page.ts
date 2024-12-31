@@ -1,20 +1,36 @@
 import graphql from '$lib/utilities/api.js'
 
-export const load = async () => {
+export const load = async ({ fetch }) => {
     const query = `
-        query getObras($pageSize: Int) {
-            obras(pageSize: $pageSize) {
-                obras {
-                    name
-                    thumbnail {
-                        filename
-                        altText
+        query mainPageImages {
+            mainPageImages {
+                filename
+                altText
+                mainImageConfig {
+                    description
+                    descriptionPos
+                    descriptionFont
+                    descriptionAlignment
+                    descriptionFontSize
+                    logoPos
+                    overflow
+                    logoBorders {
+                        n
+                        s
+                        e
+                        o
+                    }
+                    imageBorders {
+                        n
+                        s
+                        e
+                        o
                     }
                 }
             }
         }
     `;
 
-    const obras = (await graphql(query, { pageSize: 50 })).obras;
-    return { obras };
+    const mainImages = (await graphql(query, {}, fetch)).mainPageImages;
+    return { mainImages };
 }

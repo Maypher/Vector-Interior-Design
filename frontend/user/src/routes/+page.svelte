@@ -6,82 +6,103 @@
 	import type { PageData } from './$types';
 	import tony from '$lib/images/tony.jpg';
 	import tonyContact from '$lib/images/contact.jpg';
+	import { Direction } from '$lib/utilities/enums';
+
+	interface Borders {
+		n: boolean;
+		s: boolean;
+		e: boolean;
+		o: Boolean;
+	}
+
+	interface mainImageData {
+		filename: string;
+		altText: string;
+		mainImageConfig: {
+			description?: string;
+			descriptionPos?: 'N' | 'S' | 'E' | 'O';
+			logoPos?: 'N' | 'S' | 'E' | 'O';
+			descriptionFontSize: string;
+			descriptionFont: string;
+			descriptionAlignment: string;
+			overflow?: boolean;
+			imageBorders: Borders;
+			logoBorders: Borders;
+		};
+	}
 
 	const { data }: { data: PageData } = $props();
-	console.log(data.obras.obras.at(-1));
+	const mainImages: mainImageData[] = data.mainImages;
 </script>
 
-<div class="flex h-screen flex-col bg-black">
-	<header class="flex items-center justify-between p-5" style="height: 35%;">
-		<img src={logo} alt="" class="m-auto h-fit w-72" id="logo" />
-	</header>
-
-	<div class="flex basis-full flex-col">
-		<div class="flex basis-full items-center justify-center">
-			<p
-				class="text-center text-4xl text-white sm:block"
-				style="font-family: Agency-FB; line-height: 3rem"
+{#snippet mainImage(imageData: mainImageData)}
+	<div
+		class="mt-10 flex flex-col gap-10"
+		class:flex={imageData.mainImageConfig.logoPos}
+		class:flex-col={imageData.mainImageConfig.logoPos === Direction.N}
+		class:flex-col-reverse={imageData.mainImageConfig.logoPos === Direction.S}
+		class:flex-row-reverse={imageData.mainImageConfig.logoPos === Direction.E}
+	>
+		{#if imageData.mainImageConfig.logoPos}
+			<div
+				class={`m-auto w-10/12 border-[#ff4800] ${imageData.mainImageConfig.logoBorders.n ? 'border-t-2 pt-10' : ''} ${imageData.mainImageConfig.logoBorders.s ? 'border-b-2 pb-10' : ''} ${imageData.mainImageConfig.logoBorders.e ? 'border-r-2 pr-10' : ''} ${imageData.mainImageConfig.logoBorders.o ? 'border-l-2 pl-10' : ''}`}
 			>
-				{`Trazando líneas con
-				 dirección, pasión y estilo.`}
-			</p>
-		</div>
-		{#if data.obras.obras[0]}
-			{#if data.obras.obras[0].thumbnail}
-				<img
-					src={`${PUBLIC_imagesUrl}${data.obras.obras[0].thumbnail?.filename}`}
-					alt={data.obras.obras[0].thumbnail.altText}
-				/>
-			{/if}
-		{/if}
-	</div>
-</div>
-
-<div class="flex min-h-screen flex-col bg-black">
-	<div class="flex basis-full flex-col">
-		<div class="flex basis-full items-center justify-center">
-			<div class="p-8 text-justify indent-3 text-lg text-white">
-				<p>
-					{'Mediante los atributos del diseñador el glamour y el buen gusto logran la fusión perfecta entre arquitectura, artes gráficas y diseño interior marcando sin duda alguna distinción'}
-				</p>
-				<br />
-				<p>
-					{`El punto de partida para sus creaciones es una inerte obra gris que finalmente entrega convertida en una obra de arte llena de espacios confortables totalmente decorados y listos para su disfrute.`}
-				</p>
-				<br />
-				<p>
-					{'Especializado en imagen corporativa y diseño interior, con una experiencia laboral de más de 20 años, este artista presta un servicio integral, dedicado al diseño y decoración de viviendas, oficinas y espacios comerciales.'}
-				</p>
+				<img src={symbol} alt="symbol" class="mx-auto w-20" />
 			</div>
-		</div>
-		{#if data.obras.obras[1]}
-			{#if data.obras.obras[1].thumbnail}
-				<img
-					src={`${PUBLIC_imagesUrl}${data.obras.obras[1].thumbnail.filename}`}
-					alt={data.obras.obras[1].thumbnail.altText}
-				/>
-			{/if}
 		{/if}
-	</div>
-</div>
-
-{#each data.obras.obras.slice(2, 6) as obra}
-	<div class="m-auto flex min-h-screen w-10/12 flex-col bg-black">
-		<div class="m-auto">
-			<img src={symbol} alt="symbol" class="mx-auto w-20" />
-		</div>
-		<div>
+		<div
+			class="gap-10"
+			class:flex={imageData.mainImageConfig.descriptionPos && imageData.mainImageConfig.description}
+			class:flex-col={imageData.mainImageConfig.descriptionPos === Direction.N}
+			class:flex-col-reverse={imageData.mainImageConfig.descriptionPos === Direction.S}
+			class:flex-row-reverse={imageData.mainImageConfig.descriptionPos === Direction.E}
+		>
+			{#if imageData.mainImageConfig.description}
+				<div class="m-auto w-10/12">
+					{#each imageData.mainImageConfig.description.split('\n\n') as paragraph, i}
+						<p
+							class={`size-fit indent-2 text-white ${imageData.mainImageConfig.descriptionAlignment}`}
+							style={`font-family: ${imageData.mainImageConfig.descriptionFont}; 
+							font-size: ${imageData.mainImageConfig.descriptionFontSize}rem; line-height: 1.8;`}
+						>
+							{paragraph}
+						</p>
+						{#if i !== 2}<br />{/if}
+					{/each}
+				</div>
+			{/if}
 			<img
-				src={`${PUBLIC_imagesUrl}${obra.thumbnail.filename}`}
-				alt={obra.thumbnail.altText}
-				class="border-b-2 pb-16"
-				style="border-color: #FF4800;"
+				src={`${PUBLIC_imagesUrl}${imageData.filename}`}
+				alt={imageData.altText}
+				class={`m-auto border-[#ff4800] ${!imageData.mainImageConfig.overflow ? 'w-10/12' : ''} ${imageData.mainImageConfig.imageBorders.n ? 'border-t-2 pt-10' : ''} ${imageData.mainImageConfig.imageBorders.s ? 'border-b-2 pb-10' : ''} ${imageData.mainImageConfig.imageBorders.e ? 'border-r-2 pr-10' : ''} ${imageData.mainImageConfig.imageBorders.o ? 'border-l-2 pl-10' : ''}`}
 			/>
 		</div>
 	</div>
-{/each}
+{/snippet}
 
-<div class="mt-16 flex flex-col bg-black">
+<div class="flex h-screen flex-col justify-between bg-black">
+	<header class="flex h-1/4 items-center justify-between p-5">
+		<img src={logo} alt="" class="m-auto h-fit w-72" id="logo" />
+	</header>
+
+	<div>
+		<p class="text-center text-4xl text-white" style="font-family: Agency-FB; line-height: 3rem">
+			{`Trazando líneas con
+				 dirección, pasión y estilo.`}
+		</p>
+	</div>
+	{#each mainImages.slice(0, 1) as image (image.filename)}
+		{@render mainImage(image)}
+	{/each}
+</div>
+
+<div>
+	{#each mainImages.slice(1, 6) as image (image.filename)}
+		{@render mainImage(image)}
+	{/each}
+</div>
+
+<div class="my-10 flex flex-col bg-black">
 	<img src={tony} alt="Diseñador" class="ml-auto w-5/6" />
 	<p class="my-8 px-8 text-justify indent-3 text-lg text-white">
 		{`De lo sublime a lo majestuoso, el límite de este  este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero y a veces hasta inimaginable.`}
@@ -90,51 +111,30 @@
 </div>
 
 <div>
-	{#each data.obras.obras.slice(6, -1) as obra, i}
-		<div class="flex flex-col bg-black">
-			{#if i !== 0 && i !== 2}
-				<div class="m-auto w-10/12 border-b-2 pb-16" style="border-color: #FF4800;">
-					<img src={symbol} alt="symbol" class="mx-auto w-20" />
-				</div>
-			{/if}
-			<div class={`my-16 ${i === 4 ? 'm-auto w-10/12' : ''}`}>
-				<img src={`${PUBLIC_imagesUrl}${obra.thumbnail?.filename}`} alt={obra.thumbnail?.altText} />
-			</div>
-			{#if i === 1}
-				<div class="mx-auto my-6 w-9/12 border-2 py-8" style="border-color: #FF4800;">
-					<p
-						style="font-family: Bahnschrift; word-spacing: 0.5rem; letter-spacing: 0.5rem;"
-						class="m-auto text-center text-2xl text-white"
-					>
-						Interior Design
-					</p>
-				</div>
-			{/if}
-			{#if i === 3}
-				<div class="m-auto mb-16 w-10/12">
-					<p
-						class="text-center text-3xl text-white"
-						style="font-family: Agency-FB; line-height: 3rem;"
-					>
-						{`"Los elementos decorativos
-						son parte integral de 
-						toda decoración"`}
-					</p>
-				</div>
-			{/if}
-		</div>
+	{#each mainImages.slice(6, 8) as image (image.filename)}
+		{@render mainImage(image)}
 	{/each}
 </div>
 
-<div class="relative flex h-screen flex-col overflow-hidden py-4">
+<div
+	class="m-auto my-20 w-10/12 border-2 border-[#ff4800] py-8 text-center font-[Bahnschrift] text-2xl font-thin tracking-[0.5rem] text-white"
+	style="word-spacing: 1rem;"
+>
+	Interior Design
+</div>
+
+<div>
+	{#each mainImages.slice(8, -1) as image (image.filename)}
+		{@render mainImage(image)}
+	{/each}
+</div>
+
+<div class="relative mt-10 flex h-screen flex-col overflow-hidden py-4">
 	<div class="absolute right-40 -z-10 flex w-20 flex-col" id="pencil">
 		<img src={symbol} alt="Logo" />
 	</div>
 	<div class="mt-44 w-full">
-		<img
-			src={`${PUBLIC_imagesUrl}${data.obras.obras.at(-1).thumbnail?.filename}`}
-			alt={data.obras.obras.at(-1).thumbnail?.altText}
-		/>
+		{@render mainImage(mainImages.at(-1)!)}
 	</div>
 	<div class="my-12 flex flex-col gap-32">
 		<p class="ml-auto mr-14 w-fit text-4xl text-white" style="font-family: Agency-FB;">
@@ -169,7 +169,7 @@
 				>
 					TO
 				</p>
-				<p class="absolute bottom-0 right-16 text-white">contacto@vector.com</p>
+				<p class="absolute -bottom-1 right-16 text-white">contact@vector.com</p>
 			</div>
 		</div>
 	</div>
@@ -189,7 +189,7 @@
 	@font-face {
 		font-family: 'Bahnschrift';
 		font-style: normal;
-		font-weight: 400;
+		font-weight: 100;
 		src: url('/fonts/bahnschrift.ttf');
 	}
 
