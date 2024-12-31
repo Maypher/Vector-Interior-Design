@@ -7,6 +7,7 @@
 	import tony from '$lib/images/tony.jpg';
 	import tonyContact from '$lib/images/contact.jpg';
 	import { Direction } from '$lib/utilities/enums';
+	import { onMount } from 'svelte';
 
 	interface Borders {
 		n: boolean;
@@ -33,11 +34,34 @@
 
 	const { data }: { data: PageData } = $props();
 	const mainImages: mainImageData[] = data.mainImages;
+
+	onMount(() => {
+		const pencilObserver = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						const pencil = document.getElementById('pencil');
+						if (pencil) {
+							pencil.id = '';
+							pencil.classList.add('pencil-animate');
+							pencilObserver.unobserve(entry.target);
+						}
+					}
+				});
+			},
+			{
+				threshold: 0.6
+			}
+		);
+
+		const pencil = document.getElementById('pencil-wrapper');
+		if (pencil) pencilObserver.observe(pencil);
+	});
 </script>
 
 {#snippet mainImage(imageData: mainImageData)}
 	<div
-		class="mt-10 flex flex-col gap-10"
+		class="mt-20 flex flex-col gap-20"
 		class:flex={imageData.mainImageConfig.logoPos}
 		class:flex-col={imageData.mainImageConfig.logoPos === Direction.N}
 		class:flex-col-reverse={imageData.mainImageConfig.logoPos === Direction.S}
@@ -51,17 +75,17 @@
 			</div>
 		{/if}
 		<div
-			class="gap-10"
+			class="gap-16"
 			class:flex={imageData.mainImageConfig.descriptionPos && imageData.mainImageConfig.description}
 			class:flex-col={imageData.mainImageConfig.descriptionPos === Direction.N}
 			class:flex-col-reverse={imageData.mainImageConfig.descriptionPos === Direction.S}
 			class:flex-row-reverse={imageData.mainImageConfig.descriptionPos === Direction.E}
 		>
-			{#if imageData.mainImageConfig.description}
+			{#if imageData.mainImageConfig.descriptionPos && imageData.mainImageConfig.description}
 				<div class="m-auto w-10/12">
 					{#each imageData.mainImageConfig.description.split('\n\n') as paragraph, i}
 						<p
-							class={`size-fit indent-2 text-white ${imageData.mainImageConfig.descriptionAlignment}`}
+							class={`indent-2 text-white ${imageData.mainImageConfig.descriptionAlignment}`}
 							style={`font-family: ${imageData.mainImageConfig.descriptionFont}; 
 							font-size: ${imageData.mainImageConfig.descriptionFontSize}rem; line-height: 1.8;`}
 						>
@@ -71,16 +95,41 @@
 					{/each}
 				</div>
 			{/if}
-			<img
-				src={`${PUBLIC_imagesUrl}${imageData.filename}`}
-				alt={imageData.altText}
-				class={`m-auto border-[#ff4800] ${!imageData.mainImageConfig.overflow ? 'w-10/12' : ''} ${imageData.mainImageConfig.imageBorders.n ? 'border-t-2 pt-10' : ''} ${imageData.mainImageConfig.imageBorders.s ? 'border-b-2 pb-10' : ''} ${imageData.mainImageConfig.imageBorders.e ? 'border-r-2 pr-10' : ''} ${imageData.mainImageConfig.imageBorders.o ? 'border-l-2 pl-10' : ''}`}
-			/>
+			<div
+				class={(() => {
+					let classStr = 'm-auto border-[#ff4800]';
+
+					if (!imageData.mainImageConfig.overflow) {
+						classStr = classStr.concat(' ', 'w-10/12');
+
+						if (imageData.mainImageConfig.imageBorders.n)
+							classStr = classStr.concat(' ', 'border-t-2 pt-20');
+						if (imageData.mainImageConfig.imageBorders.s)
+							classStr = classStr.concat(' ', 'border-b-2 pb-20');
+						if (imageData.mainImageConfig.imageBorders.e)
+							classStr = classStr.concat(' ', 'border-r-2 pr-20');
+						if (imageData.mainImageConfig.imageBorders.o)
+							classStr = classStr.concat(' ', 'border-l-2 pl-20');
+					}
+
+					return classStr;
+				})()}
+			>
+				{#if imageData.mainImageConfig.overflow && imageData.mainImageConfig.imageBorders.n}
+					<div class="m-auto mb-20 h-[2px] w-10/12 bg-[#ff4800]"></div>
+				{/if}
+
+				<img src={`${PUBLIC_imagesUrl}${imageData.filename}`} alt={imageData.altText} />
+
+				{#if imageData.mainImageConfig.overflow && imageData.mainImageConfig.imageBorders.s}
+					<div class="m-auto mt-20 h-[2px] w-10/12 bg-[#ff4800]"></div>
+				{/if}
+			</div>
 		</div>
 	</div>
 {/snippet}
 
-<div class="flex h-screen flex-col justify-between bg-black">
+<div class="-mb-4 flex h-screen flex-col justify-between bg-black">
 	<header class="flex h-1/4 items-center justify-between p-5">
 		<img src={logo} alt="" class="m-auto h-fit w-72" id="logo" />
 	</header>
@@ -88,11 +137,11 @@
 	<div>
 		<p class="text-center text-4xl text-white" style="font-family: Agency-FB; line-height: 3rem">
 			{`Trazando líneas con
-				 dirección, pasión y estilo.`}
+				dirección, pasión y estilo.`}
 		</p>
 	</div>
 	{#each mainImages.slice(0, 1) as image (image.filename)}
-		{@render mainImage(image)}
+		<img src={`${PUBLIC_imagesUrl}${image.filename}`} alt={image.altText} />
 	{/each}
 </div>
 
@@ -102,7 +151,7 @@
 	{/each}
 </div>
 
-<div class="my-10 flex flex-col bg-black">
+<div class="my-20 flex flex-col bg-black">
 	<img src={tony} alt="Diseñador" class="ml-auto w-5/6" />
 	<p class="my-8 px-8 text-justify indent-3 text-lg text-white">
 		{`De lo sublime a lo majestuoso, el límite de este  este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero y a veces hasta inimaginable.`}
@@ -129,18 +178,24 @@
 	{/each}
 </div>
 
-<div class="relative mt-10 flex h-screen flex-col overflow-hidden py-4">
+<div class="relative mt-10 flex h-screen flex-col overflow-hidden" id="pencil-wrapper">
 	<div class="absolute right-40 -z-10 flex w-20 flex-col" id="pencil">
 		<img src={symbol} alt="Logo" />
 	</div>
-	<div class="mt-44 w-full">
+	<div class="mt-32 w-full">
 		{@render mainImage(mainImages.at(-1)!)}
 	</div>
-	<div class="my-12 flex flex-col gap-32">
-		<p class="ml-auto mr-14 w-fit text-4xl text-white" style="font-family: Agency-FB;">
+	<div class="my-12 flex flex-col justify-around gap-20">
+		<a
+			href="*"
+			class="ml-auto mr-14 w-fit bg-white bg-gradient-to-tr bg-clip-text text-4xl text-transparent"
+			style="font-family: Agency-FB;"
+		>
 			Esculturas
-		</p>
-		<p class="ml-auto mr-56 w-fit text-4xl text-white" style="font-family: Agency-FB;">Proyectos</p>
+		</a>
+		<a href="*" class="ml-auto mr-56 w-fit text-4xl text-white" style="font-family: Agency-FB;"
+			>Proyectos</a
+		>
 	</div>
 </div>
 
@@ -173,7 +228,7 @@
 			</div>
 		</div>
 	</div>
-	<footer class="flex h-2/5 items-center justify-center">
+	<footer class="flex h-1/3 items-center justify-center">
 		<img src={logoWhite} alt="Logo white" class="w-1/2" />
 	</footer>
 </div>
@@ -209,10 +264,16 @@
 	}
 
 	#pencil {
+		position: absolute;
+		top: 100%;
+	}
+
+	.pencil-animate {
+		position: absolute;
 		animation: pencil-draw 2s ease-in-out;
 	}
 
-	#pencil::after {
+	.pencil-animate::after {
 		position: relative;
 		content: '';
 		width: 2px;
@@ -223,7 +284,7 @@
 	}
 
 	@media (max-width: 500px) {
-		#pencil::after {
+		.pencil-animate::after {
 			top: -1rem;
 		}
 	}
@@ -236,9 +297,5 @@
 		to {
 			top: 0;
 		}
-	}
-
-	.grid > * {
-		border: 2px solid red;
 	}
 </style>
