@@ -12,6 +12,9 @@ export const load = async ({ fetch }) => {
                     description
                     descriptionEn
                     descriptionPos
+                    descriptionAlignment
+                    descriptionFont
+                    descriptionFontSize
                     logoPos
                     overflow
                     imageBorders {

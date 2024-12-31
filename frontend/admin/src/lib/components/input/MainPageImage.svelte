@@ -10,6 +10,9 @@
 		description: string | undefined;
 		descriptionEn: string | undefined;
 		descriptionPos: string | null;
+		descriptionFontSize: number;
+		descriptionFont: string;
+		descriptionAlignment: string;
 		logoPos: string | null;
 		overflow: boolean;
 		logoBorders: {
@@ -57,16 +60,23 @@
 
 		const query = `
 			mutation updateImageConfig($id: Int!, $description: String, $descriptionEn: String, 
-			$logoPos: Direction, $descriptionPos: Direction, $overflow: Boolean, $imageBorders: BordersInput, 
+			$logoPos: Direction, $descriptionPos: Direction, $descriptionAlignment: String, 
+			$descriptionFont: String, $descriptionFontSize: Float,
+			$overflow: Boolean, $imageBorders: BordersInput, 
 			$logoBorders: BordersInput) {
 				updateImageConfig(id: $id, description: $description, descriptionEn: $descriptionEn,
-				logoPos: $logoPos, descriptionPos: $descriptionPos, overflow: $overflow, 
+				logoPos: $logoPos, descriptionPos: $descriptionPos,
+				descriptionAlignment: $descriptionAlignment, descriptionFont: $descriptionFont, 
+				descriptionFontSize: $descriptionFontSize, overflow: $overflow, 
 				imageBorders: $imageBorders, logoBorders: $logoBorders) {
 					id
 					description
 					descriptionEn
 					logoPos
 					descriptionPos
+					descriptionAlignment
+					descriptionFont
+					descriptionFontSize
 					overflow
 					imageBorders {
 						n
@@ -88,6 +98,7 @@
 
 		const updatedData = (await graphql(query, updates)).updateImageConfig;
 
+		console.log(updatedData);
 		originalConfig = updatedData;
 		updatedConfig = updatedData;
 
@@ -110,7 +121,7 @@
 	<div>
 		<div class="flex gap-5 p-5 items-center">
 			<div>
-				<label for="overflow">Sangrar</label>
+				<label for={`overflow-${imageConfig.id}`}>Sangrar</label>
 				<input
 					type="checkbox"
 					name="overflow"
@@ -151,12 +162,57 @@
 				/>
 			</div>
 			<div class="flex flex-col items-center gap-2">
-				<label for="textPos">Posición de Descripción</label>
-				<select name="textPos" bind:value={updatedConfig.descriptionPos}>
-					{#each Object.entries(Directions) as [direction, value] (direction)}
-						<option {value} selected={value === imageConfig.descriptionPos}>{direction} </option>
-					{/each}
-				</select>
+				<div>
+					<label for="textPos">Posición de Descripción</label>
+					<select name="textPos" bind:value={updatedConfig.descriptionPos}>
+						{#each Object.entries(Directions) as [direction, value] (direction)}
+							<option {value} selected={value === imageConfig.descriptionPos}>{direction} </option>
+						{/each}
+					</select>
+				</div>
+				<div>
+					<label for={`descriptionFont-${imageConfig.id}`}>Tipografía de descripción</label>
+					<select
+						name="descriptionFont"
+						id={`descriptionFont-${imageConfig.id}`}
+						bind:value={updatedConfig.descriptionFont}
+					>
+						<option value="Arial" class="font-[Arial]">Arial</option>
+						<option value="Agency-FB" class="font-[Agency-FB]">Agency-FB</option>
+						<option value="Bahnschrift" class="font-[Agency-FB]">Bahnschrift</option>
+					</select>
+				</div>
+				<div>
+					<label for={`descriptionAlignment-${imageConfig.id}`}>Alineación de descripción</label>
+					<select
+						name="descriptionAlignment"
+						id={`descriptionAlignment-${imageConfig.id}`}
+						bind:value={updatedConfig.descriptionAlignment}
+					>
+						<option value="text-center">Centrar</option>
+						<option value="text-justify">Justificar</option>
+						<option value="text-left">Izquierda</option>
+						<option value="text-right">Derecha</option>
+					</select>
+				</div>
+				<div class="flex items-center">
+					<label for={`descriptionFontSize-${imageConfig.id}`}>Tamaño de descripción</label>
+					<input
+						type="range"
+						min="0.5"
+						max="8"
+						step="0.1"
+						name="fontSize"
+						bind:value={updatedConfig.descriptionFontSize}
+					/>
+					<input
+						type="number"
+						step="0.1"
+						name="fontSize"
+						bind:value={updatedConfig.descriptionFontSize}
+						class="w-10"
+					/>
+				</div>
 			</div>
 		</div>
 		<div>
@@ -236,3 +292,19 @@
 		>
 	</div>
 </form>
+
+<style>
+	@font-face {
+		font-family: 'Agency-FB';
+		font-style: normal;
+		font-weight: 400;
+		src: url('/fonts/agency-fb.ttf');
+	}
+
+	@font-face {
+		font-family: 'Bahnschrift';
+		font-style: normal;
+		font-weight: 100;
+		src: url('/fonts/bahnschrift.ttf');
+	}
+</style>
