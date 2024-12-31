@@ -53,7 +53,7 @@
 	<h1 class="font-bold text-xl my-6">Imágenes en Página Principal</h1>
 	<div>
 		<SortableList bind:sortable sortableId="mainPageSortable" {sortableOptions}>
-			<div id="mainPageSortable" class="bg-gray-500">
+			<div id="mainPageSortable" class="bg-gray-500 max-h-[39rem] overflow-scroll">
 				{#each mainPageImages as image (image.filename)}
 					<div
 						class="image flex items-stretch border-2 border-black"

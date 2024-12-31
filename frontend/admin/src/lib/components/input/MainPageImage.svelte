@@ -106,179 +106,188 @@
 	}
 </script>
 
-<form {onsubmit} class="flex justify-between pl-2 w-full">
-	<div class="flex flex-col gap-2 accent-[#ff4800] m-2">
-		<input type="checkbox" bind:checked={updatedConfig.imageBorders.n} />
-		<div class="flex gap-2">
-			<input type="checkbox" bind:checked={updatedConfig.imageBorders.o} />
-			<a href={`/obras/${image.obraId}/ambientes/${image.ambienteId}/imagenes/${image.filename}`}>
-				<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altText} class="h-36" />
-			</a>
-			<input type="checkbox" bind:checked={updatedConfig.imageBorders.e} />
-		</div>
-		<input type="checkbox" bind:checked={updatedConfig.imageBorders.s} />
-	</div>
-	<div>
-		<div class="flex gap-5 p-5 items-center">
-			<div>
-				<label for={`overflow-${imageConfig.id}`}>Sangrar</label>
-				<input
-					type="checkbox"
-					name="overflow"
-					id={`overflow-${imageConfig.id}`}
-					bind:checked={updatedConfig.overflow}
-				/>
+<div class="flex w-full">
+	<form
+		{onsubmit}
+		id={`main-image-form-${imageConfig.id}`}
+		class="flex justify-between pl-2 w-full"
+	>
+		<div class=" flex flex-col gap-2 accent-[#ff4800] m-2">
+			<input type="checkbox" bind:checked={updatedConfig.imageBorders.n} />
+			<div class="flex gap-2">
+				<input type="checkbox" bind:checked={updatedConfig.imageBorders.o} />
+				<a href={`/obras/${image.obraId}/ambientes/${image.ambienteId}/imagenes/${image.filename}`}>
+					<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altText} class="h-36" />
+				</a>
+				<input type="checkbox" bind:checked={updatedConfig.imageBorders.e} />
 			</div>
-			<div class="flex flex-col gap-2">
-				<input
-					type="checkbox"
-					bind:checked={updatedConfig.logoBorders.n}
-					class="accent-[#ff4800]"
-				/>
-				<div class="flex gap-2">
+			<input type="checkbox" bind:checked={updatedConfig.imageBorders.s} />
+		</div>
+		<div>
+			<div class="flex gap-5 p-5 items-center">
+				<div>
+					<label for={`overflow-${imageConfig.id}`}>Sangrar</label>
 					<input
 						type="checkbox"
-						bind:checked={updatedConfig.logoBorders.o}
+						name="overflow"
+						id={`overflow-${imageConfig.id}`}
+						bind:checked={updatedConfig.overflow}
+					/>
+				</div>
+				<div class="flex flex-col gap-2">
+					<input
+						type="checkbox"
+						bind:checked={updatedConfig.logoBorders.n}
 						class="accent-[#ff4800]"
 					/>
-					<div class="flex flex-col">
-						<label for="logoPos" class="m-auto">Logo</label>
-						<select name="logoPos" bind:value={updatedConfig.logoPos}>
-							{#each Object.entries(Directions) as [direction, value] (direction)}
-								<option {value} selected={value === imageConfig.logoPos}>{direction}</option>
-							{/each}
-						</select>
+					<div class="flex gap-2">
+						<input
+							type="checkbox"
+							bind:checked={updatedConfig.logoBorders.o}
+							class="accent-[#ff4800]"
+						/>
+						<div class="flex flex-col">
+							<label for="logoPos" class="m-auto">Logo</label>
+							<select name="logoPos" bind:value={updatedConfig.logoPos}>
+								{#each Object.entries(Directions) as [direction, value] (direction)}
+									<option {value} selected={value === imageConfig.logoPos}>{direction}</option>
+								{/each}
+							</select>
+						</div>
+						<input
+							type="checkbox"
+							bind:checked={updatedConfig.logoBorders.e}
+							class="accent-[#ff4800]"
+						/>
 					</div>
 					<input
 						type="checkbox"
-						bind:checked={updatedConfig.logoBorders.e}
+						bind:checked={updatedConfig.logoBorders.s}
 						class="accent-[#ff4800]"
 					/>
 				</div>
-				<input
-					type="checkbox"
-					bind:checked={updatedConfig.logoBorders.s}
-					class="accent-[#ff4800]"
-				/>
+				<div class="flex flex-col items-center gap-2">
+					<div>
+						<label for="textPos">Posición de Descripción</label>
+						<select name="textPos" bind:value={updatedConfig.descriptionPos}>
+							{#each Object.entries(Directions) as [direction, value] (direction)}
+								<option {value} selected={value === imageConfig.descriptionPos}
+									>{direction}
+								</option>
+							{/each}
+						</select>
+					</div>
+					<div>
+						<label for={`descriptionFont-${imageConfig.id}`}>Tipografía de descripción</label>
+						<select
+							name="descriptionFont"
+							id={`descriptionFont-${imageConfig.id}`}
+							bind:value={updatedConfig.descriptionFont}
+						>
+							<option value="Arial" class="font-[Arial]">Arial</option>
+							<option value="Agency-FB" class="font-[Agency-FB]">Agency-FB</option>
+							<option value="Bahnschrift" class="font-[Agency-FB]">Bahnschrift</option>
+						</select>
+					</div>
+					<div>
+						<label for={`descriptionAlignment-${imageConfig.id}`}>Alineación de descripción</label>
+						<select
+							name="descriptionAlignment"
+							id={`descriptionAlignment-${imageConfig.id}`}
+							bind:value={updatedConfig.descriptionAlignment}
+						>
+							<option value="text-center">Centrar</option>
+							<option value="text-justify">Justificar</option>
+							<option value="text-left">Izquierda</option>
+							<option value="text-right">Derecha</option>
+						</select>
+					</div>
+					<div class="flex items-center">
+						<label for={`descriptionFontSize-${imageConfig.id}`}>Tamaño de descripción</label>
+						<input
+							type="range"
+							min="0.5"
+							max="8"
+							step="0.1"
+							name="fontSize"
+							bind:value={updatedConfig.descriptionFontSize}
+						/>
+						<input
+							type="number"
+							step="0.1"
+							name="fontSize"
+							bind:value={updatedConfig.descriptionFontSize}
+							class="w-10"
+						/>
+					</div>
+				</div>
 			</div>
-			<div class="flex flex-col items-center gap-2">
-				<div>
-					<label for="textPos">Posición de Descripción</label>
-					<select name="textPos" bind:value={updatedConfig.descriptionPos}>
-						{#each Object.entries(Directions) as [direction, value] (direction)}
-							<option {value} selected={value === imageConfig.descriptionPos}>{direction} </option>
-						{/each}
-					</select>
-				</div>
-				<div>
-					<label for={`descriptionFont-${imageConfig.id}`}>Tipografía de descripción</label>
-					<select
-						name="descriptionFont"
-						id={`descriptionFont-${imageConfig.id}`}
-						bind:value={updatedConfig.descriptionFont}
+			<div>
+				<div class="w-full bg-green-300 flex items-center p-2">
+					<label for={`showDescription-${imageConfig.id}`} class="w-full select-none"
+						>Descripciones</label
 					>
-						<option value="Arial" class="font-[Arial]">Arial</option>
-						<option value="Agency-FB" class="font-[Agency-FB]">Agency-FB</option>
-						<option value="Bahnschrift" class="font-[Agency-FB]">Bahnschrift</option>
-					</select>
-				</div>
-				<div>
-					<label for={`descriptionAlignment-${imageConfig.id}`}>Alineación de descripción</label>
-					<select
-						name="descriptionAlignment"
-						id={`descriptionAlignment-${imageConfig.id}`}
-						bind:value={updatedConfig.descriptionAlignment}
+					<input
+						type="checkbox"
+						id={`showDescription-${imageConfig.id}`}
+						form={null}
+						bind:checked={showDescriptions}
+						class="hidden"
+					/>
+					<span
+						class="material-symbols-outlined transition-transform"
+						class:rotate-180={showDescriptions}
 					>
-						<option value="text-center">Centrar</option>
-						<option value="text-justify">Justificar</option>
-						<option value="text-left">Izquierda</option>
-						<option value="text-right">Derecha</option>
-					</select>
+						keyboard_arrow_up
+					</span>
 				</div>
-				<div class="flex items-center">
-					<label for={`descriptionFontSize-${imageConfig.id}`}>Tamaño de descripción</label>
-					<input
-						type="range"
-						min="0.5"
-						max="8"
-						step="0.1"
-						name="fontSize"
-						bind:value={updatedConfig.descriptionFontSize}
-					/>
-					<input
-						type="number"
-						step="0.1"
-						name="fontSize"
-						bind:value={updatedConfig.descriptionFontSize}
-						class="w-10"
-					/>
+				<div
+					class="transition-all overflow-hidden"
+					class:max-h-0={!showDescriptions}
+					class:max-h-screen={showDescriptions}
+				>
+					<div class="flex w-full">
+						<button
+							type="button"
+							class="bg-red-200 w-full hover:bg-red-500"
+							class:bg-red-500={!descriptionEn}
+							onclick={() => (descriptionEn = false)}>Español</button
+						>
+						<button
+							type="button"
+							class="bg-red-200 w-full hover:bg-red-500"
+							class:bg-red-500={descriptionEn}
+							onclick={() => (descriptionEn = true)}>Ingles</button
+						>
+					</div>
+					<div class:hidden={!descriptionEn}>
+						<Markdown
+							label="Descripción (Ingles)"
+							name="descriptionEn"
+							bind:value={updatedConfig.descriptionEn}
+							errors={[]}
+						/>
+					</div>
+					<div class:hidden={descriptionEn}>
+						<Markdown
+							label="Descripción"
+							name="description"
+							bind:value={updatedConfig.description}
+							errors={[]}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div>
-			<div class="w-full bg-green-300 flex items-center p-2">
-				<label for={`showDescription-${imageConfig.id}`} class="w-full select-none"
-					>Descripciones</label
-				>
-				<input
-					type="checkbox"
-					id={`showDescription-${imageConfig.id}`}
-					form={null}
-					bind:checked={showDescriptions}
-					class="hidden"
-				/>
-				<span
-					class="material-symbols-outlined transition-transform"
-					class:rotate-180={showDescriptions}
-				>
-					keyboard_arrow_up
-				</span>
-			</div>
-			<div
-				class="transition-all overflow-hidden"
-				class:max-h-0={!showDescriptions}
-				class:max-h-screen={showDescriptions}
-			>
-				<div class="flex w-full">
-					<button
-						type="button"
-						class="bg-red-200 w-full hover:bg-red-500"
-						class:bg-red-500={!descriptionEn}
-						onclick={() => (descriptionEn = false)}>Español</button
-					>
-					<button
-						type="button"
-						class="bg-red-200 w-full hover:bg-red-500"
-						class:bg-red-500={descriptionEn}
-						onclick={() => (descriptionEn = true)}>Ingles</button
-					>
-				</div>
-				<div class:hidden={!descriptionEn}>
-					<Markdown
-						label="Descripción (Ingles)"
-						name="descriptionEn"
-						bind:value={updatedConfig.descriptionEn}
-						errors={[]}
-					/>
-				</div>
-				<div class:hidden={descriptionEn}>
-					<Markdown
-						label="Descripción"
-						name="description"
-						bind:value={updatedConfig.description}
-						errors={[]}
-					/>
-				</div>
-			</div>
-		</div>
-	</div>
+	</form>
 	<div
-		class="flex flex-col justify-center gap-2 overflow-hidden transition-all ease-out duration-500"
+		class="flex flex-col justify-center gap-2 overflow-hidden transition-all ease-out duration-500 bg-gray-800"
 		class:max-w-0={!shouldUpdate}
 		class:p-2={shouldUpdate}
 	>
 		<button
 			type="submit"
+			form={`main-image-form-${imageConfig.id}`}
 			class="text-green-600 hover:bg-green-600 hover:text-white rounded-md transition-all"
 			title="Guardar cambios"
 			><span class="material-symbols-outlined h-full content-center"> check </span></button
@@ -291,7 +300,7 @@
 			><span class="material-symbols-outlined h-full content-center"> cancel </span></button
 		>
 	</div>
-</form>
+</div>
 
 <style>
 	@font-face {
