@@ -323,7 +323,7 @@ export function updateListOnEnter(textArea: HTMLTextAreaElement) {
 }
 
 export function MdtoHTML(text: string): string {
-    const renderer = new showdown.Converter({ openLinksInNewWindow: true });
+    const renderer = new showdown.Converter({ openLinksInNewWindow: true, simpleLineBreaks: true });
 
     const html: string = renderer.makeHtml(text);
     const purifiedHTML = DOMPurify.sanitize(html, { ADD_ATTR: ['target'] });

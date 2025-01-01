@@ -10,6 +10,9 @@
 		name: string;
 		value?: string;
 		previewDefault?: boolean;
+		fontSize?: number;
+		fontFamily?: string;
+		fontAlignment?: string;
 		errors: Array<string> | undefined;
 	}
 
@@ -18,6 +21,9 @@
 		name,
 		value = $bindable(''),
 		previewDefault = false,
+		fontSize = 1,
+		fontFamily = 'Arial',
+		fontAlignment = 'text-left',
 		errors,
 		...constrains
 	}: Props = $props();
@@ -122,12 +128,11 @@
 		</div>
 	</div>
 	{#if preview}
-		<div class="w-full bg-black h-60 outline-none text-white p-4 markdownDescription">
-			{#await markdown.MdtoHTML(value) then render}
-				<p>
-					{@html render}
-				</p>
-			{/await}
+		<div
+			class={`w-full bg-black h-60 outline-none text-white p-4 markdownDescription overflow-y-scroll ${fontAlignment}`}
+			style={`font-family: ${fontFamily};`}
+		>
+			{@html markdown.MdtoHTML(value)}
 		</div>
 	{:else}
 		<div>

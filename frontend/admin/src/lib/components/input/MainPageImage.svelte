@@ -265,6 +265,9 @@
 							label="Descripción (Ingles)"
 							name="descriptionEn"
 							bind:value={updatedConfig.descriptionEn}
+							fontFamily={updatedConfig.descriptionFont}
+							fontSize={updatedConfig.descriptionFontSize}
+							fontAlignment={updatedConfig.descriptionAlignment}
 							errors={[]}
 						/>
 					</div>
@@ -272,6 +275,9 @@
 						<Markdown
 							label="Descripción"
 							name="description"
+							fontFamily={updatedConfig.descriptionFont}
+							fontSize={updatedConfig.descriptionFontSize}
+							fontAlignment={updatedConfig.descriptionAlignment}
 							bind:value={updatedConfig.description}
 							errors={[]}
 						/>

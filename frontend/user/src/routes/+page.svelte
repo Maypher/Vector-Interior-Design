@@ -8,6 +8,8 @@
 	import tonyContact from '$lib/images/contact.jpg';
 	import { Direction } from '$lib/utilities/enums';
 	import { onMount } from 'svelte';
+	import showdown from 'showdown';
+	import '$lib/styles/markdown.css';
 
 	interface Borders {
 		n: boolean;
@@ -34,6 +36,11 @@
 
 	const { data }: { data: PageData } = $props();
 	const mainImages: mainImageData[] = data.mainImages;
+
+	const converter = new showdown.Converter({
+		openLinksInNewWindow: true,
+		simpleLineBreaks: true
+	});
 
 	onMount(() => {
 		const pencilObserver = new IntersectionObserver(
@@ -82,17 +89,11 @@
 			class:flex-row-reverse={imageData.mainImageConfig.descriptionPos === Direction.E}
 		>
 			{#if imageData.mainImageConfig.descriptionPos && imageData.mainImageConfig.description}
-				<div class="m-auto w-10/12">
-					{#each imageData.mainImageConfig.description.split('\n\n') as paragraph, i}
-						<p
-							class={`indent-2 text-white ${imageData.mainImageConfig.descriptionAlignment}`}
-							style={`font-family: ${imageData.mainImageConfig.descriptionFont}; 
-							font-size: ${imageData.mainImageConfig.descriptionFontSize}rem; line-height: 1.8;`}
-						>
-							{paragraph}
-						</p>
-						{#if i !== 2}<br />{/if}
-					{/each}
+				<div
+					class={`class m-auto w-10/12 text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription`}
+					style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
+				>
+					{@html converter.makeHtml(imageData.mainImageConfig.description)}
 				</div>
 			{/if}
 			<div
@@ -130,16 +131,17 @@
 {/snippet}
 
 <div class="-mb-4 flex h-screen flex-col justify-between bg-black">
-	<header class="flex h-1/4 items-center justify-between p-5">
-		<img src={logo} alt="" class="m-auto h-fit w-72" id="logo" />
+	<header class="flex h-1/4 items-center justify-between bg-[#e6e6e6] p-5">
+		<img src={logo} alt="" class="m-auto h-fit w-3/4" id="logo" />
 	</header>
 
-	<div>
-		<p class="text-center text-4xl text-white" style="font-family: Agency-FB; line-height: 3rem">
-			{`Trazando líneas con
+	<h1
+		class="mx-3 text-center text-4xl text-white"
+		style="font-family: Agency-FB; line-height: 3rem"
+	>
+		{`Trazando líneas con
 				dirección, pasión y estilo.`}
-		</p>
-	</div>
+	</h1>
 	{#each mainImages.slice(0, 1) as image (image.filename)}
 		<img src={`${PUBLIC_imagesUrl}${image.filename}`} alt={image.altText} />
 	{/each}
@@ -193,8 +195,10 @@
 		>
 			Esculturas
 		</a>
-		<a href="*" class="ml-auto mr-56 w-fit text-4xl text-white" style="font-family: Agency-FB;"
-			>Proyectos</a
+		<a
+			href="/proyectos/"
+			class="ml-auto mr-56 w-fit text-4xl text-white"
+			style="font-family: Agency-FB;">Proyectos</a
 		>
 	</div>
 </div>
@@ -250,17 +254,6 @@
 
 	:global(body) {
 		background-color: black;
-	}
-
-	header {
-		background-color: #e6e6e6;
-	}
-
-	p {
-		font-family: Arial, Helvetica, sans-serif;
-		font-weight: normal;
-		line-height: 1.5rem;
-		white-space: pre-line;
 	}
 
 	#pencil {
