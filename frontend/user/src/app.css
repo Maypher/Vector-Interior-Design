@@ -1,3 +1,16 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+
+@font-face {
+    font-family: 'Agency-FB';
+    font-style: normal;
+    src: url('/fonts/agency-fb.ttf');
+}
+
+@font-face {
+    font-family: 'Bahnschrift';
+    font-style: normal;
+    src: url('/fonts/bahnschrift.ttf');
+}

@@ -112,7 +112,7 @@
 		id={`main-image-form-${imageConfig.id}`}
 		class="flex justify-between pl-2 w-full"
 	>
-		<div class=" flex flex-col gap-2 accent-[#ff4800] m-2">
+		<div class=" flex flex-col gap-2 accent-vector-orange m-2">
 			<input type="checkbox" bind:checked={updatedConfig.imageBorders.n} />
 			<div class="flex gap-2">
 				<input type="checkbox" bind:checked={updatedConfig.imageBorders.o} />
@@ -138,13 +138,13 @@
 					<input
 						type="checkbox"
 						bind:checked={updatedConfig.logoBorders.n}
-						class="accent-[#ff4800]"
+						class="accent-vector-orange"
 					/>
 					<div class="flex gap-2">
 						<input
 							type="checkbox"
 							bind:checked={updatedConfig.logoBorders.o}
-							class="accent-[#ff4800]"
+							class="accent-vector-orange"
 						/>
 						<div class="flex flex-col">
 							<label for="logoPos" class="m-auto">Logo</label>
@@ -157,13 +157,13 @@
 						<input
 							type="checkbox"
 							bind:checked={updatedConfig.logoBorders.e}
-							class="accent-[#ff4800]"
+							class="accent-vector-orange"
 						/>
 					</div>
 					<input
 						type="checkbox"
 						bind:checked={updatedConfig.logoBorders.s}
-						class="accent-[#ff4800]"
+						class="accent-vector-orange"
 					/>
 				</div>
 				<div class="flex flex-col items-center gap-2">

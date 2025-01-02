@@ -76,7 +76,7 @@
 	>
 		{#if imageData.mainImageConfig.logoPos}
 			<div
-				class={`m-auto w-10/12 border-[#ff4800] ${imageData.mainImageConfig.logoBorders.n ? 'border-t-2 pt-10' : ''} ${imageData.mainImageConfig.logoBorders.s ? 'border-b-2 pb-10' : ''} ${imageData.mainImageConfig.logoBorders.e ? 'border-r-2 pr-10' : ''} ${imageData.mainImageConfig.logoBorders.o ? 'border-l-2 pl-10' : ''}`}
+				class={`border-vector-orange m-auto w-10/12 ${imageData.mainImageConfig.logoBorders.n ? 'border-t-2 pt-10' : ''} ${imageData.mainImageConfig.logoBorders.s ? 'border-b-2 pb-10' : ''} ${imageData.mainImageConfig.logoBorders.e ? 'border-r-2 pr-10' : ''} ${imageData.mainImageConfig.logoBorders.o ? 'border-l-2 pl-10' : ''}`}
 			>
 				<img src={symbol} alt="symbol" class="mx-auto w-20" />
 			</div>
@@ -98,7 +98,7 @@
 			{/if}
 			<div
 				class={(() => {
-					let classStr = 'm-auto border-[#ff4800]';
+					let classStr = 'border-vector-orange m-auto';
 
 					if (!imageData.mainImageConfig.overflow) {
 						classStr = classStr.concat(' ', 'w-10/12');
@@ -117,13 +117,13 @@
 				})()}
 			>
 				{#if imageData.mainImageConfig.overflow && imageData.mainImageConfig.imageBorders.n}
-					<div class="m-auto mb-20 h-[2px] w-10/12 bg-[#ff4800]"></div>
+					<div class="bg-vector-orange m-auto mb-20 h-[2px] w-10/12"></div>
 				{/if}
 
 				<img src={`${PUBLIC_imagesUrl}${imageData.filename}`} alt={imageData.altText} />
 
 				{#if imageData.mainImageConfig.overflow && imageData.mainImageConfig.imageBorders.s}
-					<div class="m-auto mt-20 h-[2px] w-10/12 bg-[#ff4800]"></div>
+					<div class="bg-vector-orange m-auto mt-20 h-[2px] w-10/12"></div>
 				{/if}
 			</div>
 		</div>
@@ -131,7 +131,7 @@
 {/snippet}
 
 <div class="-mb-4 flex h-screen flex-col justify-between bg-black">
-	<header class="flex h-1/4 items-center justify-between bg-[#e6e6e6] p-5">
+	<header class="bg-vector-grey flex h-1/5 items-center justify-between p-5">
 		<img src={logo} alt="" class="m-auto h-fit w-3/4" id="logo" />
 	</header>
 
@@ -168,7 +168,7 @@
 </div>
 
 <div
-	class="m-auto my-20 w-10/12 border-2 border-[#ff4800] py-8 text-center font-[Bahnschrift] text-2xl font-thin tracking-[0.5rem] text-white"
+	class="border-vector-orange m-auto my-20 w-10/12 border-2 py-8 text-center font-[Bahnschrift] text-2xl font-thin tracking-[0.5rem] text-white"
 	style="word-spacing: 1rem;"
 >
 	Interior Design
@@ -238,20 +238,6 @@
 </div>
 
 <style>
-	@font-face {
-		font-family: 'Agency-FB';
-		font-style: normal;
-		font-weight: 400;
-		src: url('/fonts/agency-fb.ttf');
-	}
-
-	@font-face {
-		font-family: 'Bahnschrift';
-		font-style: normal;
-		font-weight: 100;
-		src: url('/fonts/bahnschrift.ttf');
-	}
-
 	:global(body) {
 		background-color: black;
 	}

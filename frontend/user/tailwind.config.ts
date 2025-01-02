@@ -4,7 +4,16 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			fontFamily: {
+				"Agency-FB": ["Agency-FB", "Arial", "sans-serif"],
+				"Bahnschrift": ["Bahnschrift", "Arial", "sans-serif"],
+			},
+			colors: {
+				"vector-grey": "#e6e6e6",
+				"vector-orange": "#ff4800"
+			}
+		},
 	},
 
 	plugins: []
