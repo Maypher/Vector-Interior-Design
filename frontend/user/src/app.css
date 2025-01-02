@@ -14,3 +14,7 @@
     font-style: normal;
     src: url('/fonts/bahnschrift.ttf');
 }
+
+body {
+    background-color: black;
+}

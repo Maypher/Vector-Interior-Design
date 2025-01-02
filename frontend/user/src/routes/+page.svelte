@@ -238,10 +238,6 @@
 </div>
 
 <style>
-	:global(body) {
-		background-color: black;
-	}
-
 	#pencil {
 		position: absolute;
 		top: 100%;
