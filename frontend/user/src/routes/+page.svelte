@@ -8,7 +8,7 @@
 	import tonyContact from '$lib/images/contact.jpg';
 	import { Direction } from '$lib/utilities/enums';
 	import { onMount } from 'svelte';
-	import showdown from 'showdown';
+	import mdToHtml from '$lib/utilities/markdown';
 	import '$lib/styles/markdown.css';
 
 	interface Borders {
@@ -36,11 +36,6 @@
 
 	const { data }: { data: PageData } = $props();
 	const mainImages: mainImageData[] = data.mainImages;
-
-	const converter = new showdown.Converter({
-		openLinksInNewWindow: true,
-		simpleLineBreaks: true
-	});
 
 	onMount(() => {
 		const pencilObserver = new IntersectionObserver(
@@ -93,7 +88,7 @@
 					class={`class m-auto w-10/12 text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription`}
 					style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
 				>
-					{@html converter.makeHtml(imageData.mainImageConfig.description)}
+					{@html mdToHtml(imageData.mainImageConfig.description)}
 				</div>
 			{/if}
 			<div
