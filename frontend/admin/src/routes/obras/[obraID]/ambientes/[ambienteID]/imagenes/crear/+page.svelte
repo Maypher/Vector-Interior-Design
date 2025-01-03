@@ -8,11 +8,9 @@
 	import { error } from '$lib/utilities/toasts';
 	import { goto } from '$app/navigation';
 	import Errors from '$lib/components/input/Errors.svelte';
-	import { preventDefault } from 'svelte/legacy';
 
 	const { data }: { data: PageData } = $props();
 	let inputFile: File | undefined | null = $state();
-	$inspect(inputFile);
 	let fileErrors: Array<string> = $state([]);
 	let submitting: boolean = $state(false);
 
