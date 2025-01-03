@@ -9,6 +9,8 @@
 	import { goto } from '$app/navigation';
 	import graphql from '$lib/utilities/api';
 	import { PUBLIC_imageURL } from '$env/static/public';
+	import Markdown from '$lib/components/markdown/Markdown.svelte';
+	import { Alignment, Directions } from '$lib/utilities/enums';
 
 	const { data }: { data: PageData } = $props();
 	let imageData = $state(data.imageData!);
@@ -24,9 +26,10 @@
 			submitting = true;
 			if (updateForm.valid) {
 				const query = `
-					mutation updateImage($filename: String!, $altText: String!) {
-						updateImage(filename: $filename, altText: $altText) {
+					mutation updateImage($filename: String!, $altText: String!, $description: String) {
+						updateImage(filename: $filename, altText: $altText, description: $description) {
 							altText
+							description
 						}
 					}
 				`;
@@ -40,6 +43,8 @@
 			submitting = false;
 		}
 	});
+
+	let phoneConfig = $state($state.snapshot(imageData.phoneConfig));
 
 	async function deleteImage() {
 		if (
@@ -103,9 +108,41 @@
 
 		success(
 			isInMainPage
-				? 'Imagen removida de la página principal.'
-				: 'Imagen colocada en la página principal'
+				? 'Imagen colocada en la página principal.'
+				: 'Imagen removida de la página principal'
 		);
+	}
+
+	async function updatePhoneConfig(event: SubmitEvent) {
+		event.preventDefault();
+
+		const query = `
+			mutation updatePhoneConfig($filename: String!, $phoneConfig: phoneConfigInput) {
+				updateImage(filename: $filename, phoneConfig: $phoneConfig) {
+					phoneConfig {
+						borders {
+							n
+							e
+							s
+							o
+						}
+						alignment
+						descriptionPos
+					}
+				}
+			}
+		`;
+
+		const updatedConfig = (
+			await graphql(query, {
+				filename: imageData.filename,
+				phoneConfig
+			})
+		).updateImage.phoneConfig;
+
+		phoneConfig = updatedConfig;
+
+		success('Configuración de teléfono actualizada.');
 	}
 </script>
 
@@ -140,7 +177,49 @@
 				type="text"
 				{...$constraints.altText}
 			/>
-			<button class="bg-green-500 p-2 rounded-md hover:bg-orange-800">Actualizar</button>
+			<Markdown
+				label="Descripción"
+				name="description"
+				bind:value={$form.description}
+				errors={$errors.description}
+			/>
+			<button class="bg-green-500 p-2 rounded-md hover:bg-orange-800 my-5">Actualizar</button>
 		</fieldset>
+	</form>
+	<hr class="my-3" />
+	<h1 class="text-xl text-center">Configuración de Teléfono</h1>
+	<form onsubmit={updatePhoneConfig} class="bg-blue-500 p-2 max-w-lg m-auto my-10">
+		<div class="flex gap-4 items-center">
+			<div class="accent-vector-orange flex items-center gap-2">
+				<input type="checkbox" bind:checked={phoneConfig.borders.o} />
+				<div class="flex flex-col justify-center items-center gap-2">
+					<input type="checkbox" bind:checked={phoneConfig.borders.n} />
+					<p>Bordes</p>
+					<input type="checkbox" bind:checked={phoneConfig.borders.s} />
+				</div>
+				<input type="checkbox" bind:checked={phoneConfig.borders.e} />
+			</div>
+			<div>
+				<label for="phoneAlignment">Alineación</label>
+				<select id="phoneAlignment" bind:value={phoneConfig.alignment}>
+					{#each Object.entries(Alignment) as [alignment, value] (alignment)}
+						<option {value}>{alignment}</option>
+					{/each}
+				</select>
+			</div>
+			<div>
+				<label for="descriptionPosition">Posición de Descripción</label>
+				<select id="descriptionPosition" bind:value={phoneConfig.descriptionPos}>
+					{#each Object.entries(Directions) as [alignment, value] (alignment)}
+						<option {value}>{alignment}</option>
+					{/each}
+				</select>
+			</div>
+		</div>
+		<div class="mx-auto size-fit">
+			<button type="submit" class="my-5 bg-violet-700 p-2 rounded-md hover:bg-violet-500"
+				>Actualizar</button
+			>
+		</div>
 	</form>
 </div>

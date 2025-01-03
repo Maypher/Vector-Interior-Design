@@ -9,6 +9,7 @@ from psycopg.sql import SQL, Identifier
 from math import ceil, floor
 from common.common_graphql import schemas
 from admin.resources.admin_graphql import errors as GraphqlErrors
+from admin.resources.admin_graphql import inputs
 from strawberry import UNSET
 
 STORAGE_LOCATION = "/storage/images/"
@@ -275,7 +276,7 @@ def create_image(
         data = admin_database.query(
             """
         INSERT INTO imagen (archivo, texto_alt, ambiente_id) VALUES (%s, %s, %s)
-        RETURNING id, archivo, texto_alt, indice, pagina_principal;
+        RETURNING id, archivo, texto_alt, indice, pagina_principal descripcion;
         """,
             (image.filename, alt_text, ambiente.id),
             count=1,
@@ -285,7 +286,12 @@ def create_image(
         raise e
 
     return schemas.Image(
-        id=data[0], filename=data[1], alt_text=data[2], index=data[3], main_page=data[4]
+        id=data[0],
+        filename=data[1],
+        alt_text=data[2],
+        index=data[3],
+        main_page=data[4],
+        description=data[5],
     )
 
 
@@ -294,6 +300,8 @@ def update_image(
     alt_text: str | None = None,
     new_index: int | None = None,
     main_page: bool | None = None,
+    description: str | None = None,
+    phone_config: inputs.phoneConfigInput | None = None,
 ) -> typing.Optional[schemas.Image]:
     """
     Updates the alt text of the given image.
@@ -341,6 +349,36 @@ def update_image(
             """,
                 (image_id, image_id),
             )
+    if description is not None:
+        admin_database.query(
+            """
+            UPDATE imagen SET descripcion = %s WHERE id = %s;
+            """,
+            (description, image_id),
+            commit=False,
+        )
+    if phone_config:
+        bit_string = "".join(
+            "1" if b else "0" for b in (vars(phone_config.borders).values())
+        )
+
+        # Transform it into binary and then a string because if only binary
+        # postgres treats it as a smallint and it fails
+        borders = bin(int(bit_string, 2))
+        borders = f"{bit_string}"
+
+        admin_database.query(
+            """
+            UPDATE imagen SET tlfnConfig = ROW(%s, %s, %s)::imagenTlfnConfig WHERE archivo = %s;
+        """,
+            (
+                borders,
+                phone_config.alignment,
+                phone_config.descriptionPos,
+                filename,
+            ),
+            commit=False,
+        )
 
     admin_database.commit()
     return get_image_by_filename(filename, True)

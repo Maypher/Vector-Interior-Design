@@ -1,7 +1,7 @@
 import typing
 import strawberry
 from common.database import generic_database
-from common.common_graphql.enums import Direction
+from common.common_graphql import enums
 
 
 @strawberry.type(description="The main structure of the database.")
@@ -25,7 +25,7 @@ class Obra:
     def thumbnail(self) -> typing.Optional["Image"]:
         image_data = generic_database.query(
             """
-            SELECT imagen.id, archivo, texto_alt, imagen.indice, pagina_principal FROM imagen 
+            SELECT imagen.id, archivo, texto_alt, imagen.indice, pagina_principal, imagen.descripcion FROM imagen 
             JOIN obra ON obra.imagen_principal = imagen.id
             WHERE obra.id = %s;
         """,
@@ -39,6 +39,7 @@ class Obra:
             alt_text = image_data[2]
             image_index = image_data[3]
             main_page = image_data[4]
+            description = image_data[5]
 
             return Image(
                 id=image_id,
@@ -46,6 +47,7 @@ class Obra:
                 alt_text=alt_text,
                 index=image_index,
                 main_page=main_page,
+                description=description,
             )
 
     @strawberry.field(description="All the ambientes belonging to this obra.")
@@ -106,7 +108,7 @@ class Ambiente:
     def images(self) -> typing.List["Image"]:
         images_data = generic_database.query(
             """
-        SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice, pagina_principal FROM imagen
+        SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice, pagina_principal, imagen.descripcion FROM imagen
         JOIN ambiente ON imagen.ambiente_id = ambiente.id
         WHERE ambiente.id = %s ORDER BY indice;
         """,
@@ -120,6 +122,7 @@ class Ambiente:
                 alt_text=image[2],
                 index=image[3],
                 main_page=image[4],
+                description=image[5],
             )
             for image in images_data
         ]
@@ -134,12 +137,48 @@ class Image:
     alt_text: str = strawberry.field(
         description="The alt text of the image. Not to be shown in the UI."
     )
+    description: typing.Optional[str] = strawberry.field(
+        description="The description of the image."
+    )
     index: float = strawberry.field(
         description="The index of the image for UI ordering purposes. It's a float due to how the database handles reordering."
     )
     main_page: bool = strawberry.field(
         description="Indicates if an image should be shown in the main page of the website."
     )
+
+    @strawberry.field(
+        description="The configuration for this image when shown in a obra page in mobile."
+    )
+    def phone_config(self) -> "PhoneImageConfig":
+        # Done with a function since images are returned from multiple different places
+        # wit slightly different queries then a generic resolver doesn't work and
+        # having to repeat this code everywhere isn't good.
+        # This may cause some performance issues since it's a new query for every image
+        # but this ain't a critical app ¯\_(ツ)_/¯.
+        phone_config_data = generic_database.query(
+            """
+            SELECT (tlfnConfig).* FROM imagen WHERE imagen.id = %s;
+        """,
+            (self.id,),
+            count=1,
+        )
+
+        borders_data = int(phone_config_data[0], 2)
+
+        borders = Borders(
+            n=borders_data & 0b1000,
+            s=borders_data & 0b0100,
+            e=borders_data & 0b0010,
+            o=borders_data & 0b0001,
+        )
+        return PhoneImageConfig(
+            borders=borders,
+            alignment=enums.Alignment[phone_config_data[1]],
+            descriptionPos=(
+                enums.Direction[phone_config_data[2]] if phone_config_data[2] else None
+            ),
+        )
 
     @strawberry.field(description="The ambiente this image belongs to.")
     def ambiente(self) -> Ambiente:
@@ -194,6 +233,21 @@ class Image:
 
 
 @strawberry.type(
+    description="The configuration for an image when shown in a specific obra page in mobile."
+)
+class PhoneImageConfig:
+    borders: "Borders" = strawberry.field(
+        description="Indicates what borders the image should have."
+    )
+    alignment: enums.Alignment = strawberry.field(
+        description="The alignment of the image."
+    )
+    descriptionPos: typing.Optional[enums.Direction] = strawberry.field(
+        description="The position of the description relative to the image."
+    )
+
+
+@strawberry.type(
     description="The configuration for an image that it's shown in the main page."
 )
 class MainImageConfig:
@@ -206,7 +260,7 @@ class MainImageConfig:
     description_en: typing.Optional[str] = strawberry.field(
         description="The description of this image in English."
     )
-    description_pos: typing.Optional[Direction] = strawberry.field(
+    description_pos: typing.Optional[enums.Direction] = strawberry.field(
         description="The position of the description relative to the image. Null means it shouldn't be shown."
     )
     description_alignment: str = strawberry.field(
@@ -218,7 +272,7 @@ class MainImageConfig:
     description_font_size: float = strawberry.field(
         description="The font size of the description text in rem units."
     )
-    logo_pos: typing.Optional[Direction] = strawberry.field(
+    logo_pos: typing.Optional[enums.Direction] = strawberry.field(
         description="The position of the logo relative to the image. Null means it shouldn't be shown."
     )
     logo_borders: "Borders"
@@ -231,7 +285,7 @@ class MainImageConfig:
     def image(self) -> Image:
         data = generic_database.query(
             """
-            SELECT * FROM imagen 
+            SELECT id, archivo, textoAlt, indice, imagen_principal, descripcion FROM imagen 
             JOIN imagenConfig ON imagenConfig.imagen_id = imagen.id
             WHERE imagenConfig.id = %s;
         """,
@@ -245,6 +299,7 @@ class MainImageConfig:
             alt_text=data[2],
             index=data[3],
             main_page=data[4],
+            description=data[5],
         )
 
 

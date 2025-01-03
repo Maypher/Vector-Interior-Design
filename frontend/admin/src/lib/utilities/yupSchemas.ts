@@ -35,4 +35,5 @@ export const ambienteCreateSchema = object({
 
 export const imageUpdateSchema = object({
     altText: string().required("Texto alternativo requerido."),
+    description: string()
 });

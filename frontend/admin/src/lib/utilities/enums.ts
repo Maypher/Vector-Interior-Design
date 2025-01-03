@@ -5,3 +5,11 @@ export const Directions = {
     O: "O",
     Esconder: null
 }
+
+export const Alignment = {
+    Izquierda: "IZQUIERDA",
+    Derecha: "DERECHA",
+    Centro: "CENTRO",
+    Sangrar: "SANGRAR",
+}
+

@@ -4,3 +4,10 @@ export enum Direction {
     E = "E",
     O = "O"
 }
+
+export const Alignment = {
+    Izquierda: "IZQUIERDA",
+    Derecha: "DERECHA",
+    Centro: "CENTRO",
+    Sangrar: "SANGRAR",
+}

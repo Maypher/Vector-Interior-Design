@@ -8,3 +8,11 @@ class Direction(Enum):
     S = "S"
     E = "E"
     O = "O"
+
+
+@strawberry.enum(description="The posible alignments for an image.")
+class Alignment(Enum):
+    IZQUIERDA = "IZQUIERDA"
+    DERECHA = "DERECHA"
+    CENTRO = "CENTRO"
+    SANGRAR = "SANGRAR"

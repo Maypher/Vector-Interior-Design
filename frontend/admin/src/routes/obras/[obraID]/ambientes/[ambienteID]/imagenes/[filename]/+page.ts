@@ -14,6 +14,7 @@ export const load = async ({ fetch, params }) => {
             image(filename: $filename) {
                 filename
                 altText
+                description
                 mainPage
                 ambiente {
                     obra {
@@ -21,6 +22,16 @@ export const load = async ({ fetch, params }) => {
                             filename
                         }
                     }
+                }
+                phoneConfig {
+                    borders {
+                        n
+                        s
+                        e
+                        o
+                    }
+                    alignment
+                    descriptionPos
                 }
             }
         }
@@ -31,7 +42,7 @@ export const load = async ({ fetch, params }) => {
 
     if (!imageData) error(404, `Imagen ${filename} no existe.`);
     else {
-        const updateForm = await superValidate({ altText: imageData.altText }, yup(imageUpdateSchema));
+        const updateForm = await superValidate({ altText: imageData.altText, description: imageData.description || "" }, yup(imageUpdateSchema));
 
         return { imageData, updateForm, ambienteId, obraId }
     };

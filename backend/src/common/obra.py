@@ -1,6 +1,6 @@
 from common.database import generic_database
 from math import ceil
-from common.common_graphql import schemas
+from common.common_graphql import schemas, enums
 import typing
 
 
@@ -165,7 +165,7 @@ def get_image_by_filename(
 ) -> typing.Optional[schemas.Image]:
     data = generic_database.query(
         f"""
-        SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice, imagen.pagina_principal FROM imagen 
+        SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice, imagen.pagina_principal, imagen.descripcion FROM imagen 
         {"JOIN ambiente ON imagen.ambiente_id = ambiente.id JOIN obra ON ambiente.obra_id = obra.id" if not allow_private else ""}
         WHERE archivo = %s {"AND obra.publico" if not allow_private else ""};
         """,
@@ -180,4 +180,5 @@ def get_image_by_filename(
             alt_text=data[2],
             index=data[3],
             main_page=data[4],
+            description=data[5],
         )

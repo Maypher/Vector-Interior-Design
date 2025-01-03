@@ -5,9 +5,9 @@ from strawberry.flask.views import GraphQLView
 from auth.authentication import login_required
 from common.common_graphql import schemas
 from common import obra
-from common.common_graphql.enums import Direction
+from common.common_graphql import enums
 from admin.resources import obra as adminObra
-from admin.resources.admin_graphql import errors
+from admin.resources.admin_graphql import errors, inputs
 from psycopg.sql import SQL, Identifier
 
 
@@ -15,22 +15,6 @@ class AuthGraphQLView(GraphQLView):
     @login_required
     def dispatch_request(self):
         return super().dispatch_request()
-
-
-@strawberry.input(description="Determines what borders a resource should have.")
-class BordersInput:
-    n: typing.Optional[bool] = strawberry.field(
-        description="Determines if the resource should have a border on the top."
-    )
-    s: typing.Optional[bool] = strawberry.field(
-        description="Determines if the resource should have a border on the bottom."
-    )
-    e: typing.Optional[bool] = strawberry.field(
-        description="Determines if the resource should have a border on left."
-    )
-    o: typing.Optional[bool] = strawberry.field(
-        description="Determines if the resource should have a border on right."
-    )
 
 
 @strawberry.type()
@@ -279,6 +263,10 @@ class Mutation:
             typing.Optional[str],
             strawberry.argument(description="The new alt text of the image."),
         ] = None,
+        description: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(description="The new description of the image."),
+        ] = None,
         index: typing.Annotated[
             typing.Optional[int],
             strawberry.argument(
@@ -291,8 +279,16 @@ class Mutation:
                 description="Set this image to be shown in the main page."
             ),
         ] = None,
+        phone_config: typing.Annotated[
+            typing.Optional[inputs.phoneConfigInput],
+            strawberry.argument(
+                description="The configuration for the image display in phones."
+            ),
+        ] = None,
     ) -> typing.Optional[schemas.Image]:
-        return adminObra.update_image(filename, alt_text, index, main_page)
+        return adminObra.update_image(
+            filename, alt_text, index, main_page, description, phone_config
+        )
 
     @strawberry.mutation(
         description="Updates an mainImageConfig to be displayed in the sites main page."
@@ -303,7 +299,7 @@ class Mutation:
             int, strawberry.argument(description="The ID of the imageConfig to update.")
         ],
         image_borders: typing.Annotated[
-            typing.Optional[BordersInput],
+            typing.Optional[inputs.BordersInput],
             strawberry.argument("What borders should the image have"),
         ] = None,
         description: typing.Annotated[
@@ -327,17 +323,17 @@ class Mutation:
             strawberry.argument("The size used for the description in rem units"),
         ] = None,
         logo_pos: typing.Annotated[
-            typing.Optional[Direction],
+            typing.Optional[enums.Direction],
             strawberry.argument(
                 description="The position of where to put the logo relative to the image."
             ),
         ] = strawberry.UNSET,
         logo_borders: typing.Annotated[
-            typing.Optional[BordersInput],
+            typing.Optional[inputs.BordersInput],
             strawberry.argument("What borders should the logo have"),
         ] = None,
         description_pos: typing.Annotated[
-            typing.Optional[Direction],
+            typing.Optional[enums.Direction],
             strawberry.argument(
                 description="The position of where to put the description relative to the image."
             ),
