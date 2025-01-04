@@ -4,6 +4,7 @@ from io import TextIOWrapper
 import re
 from psycopg import errors
 from typing import Tuple
+import time
 
 """
 Used to create and apply migrations.
@@ -134,6 +135,43 @@ class MigrationManager:
                 f"Unable to find the down migration for {missing_down_files}."
             )
 
+    def create_migration(self, migration_name: str):
+        """Creates a new migration file with the given name. Doesn't use any regex so the format
+        will always be [unix time]_[name]_[migration#]_[up|down].sql"""
+
+        # Get the latest migration version
+        latest_migration_version = self.get_latest_migration_version()
+
+        filename = f"{int(time.time())}_{migration_name}_{latest_migration_version + 1}"
+
+        # Create the new migration file
+        with open(
+            path.join(
+                self.migration_folder,
+                f"{filename}_up.sql",
+            ),
+            "w",
+        ) as new_migration:
+            new_migration.write(
+                f"""
+            -- Migration {latest_migration_version + 1}
+            -- Up migration
+            -- Add your SQL here.
+            """
+            )
+
+        with open(
+            f"{filename}_down.sql",
+            "w",
+        ) as new_migration_down:
+            new_migration_down.write(
+                f"""
+            -- Migration {latest_migration_version + 1}
+            -- Down migration
+            -- Add your SQL here.
+            """
+            )
+
     def get_migration_file_version(self, filename: str) -> int | None:
         """Gets the number of the migration from the filename or None if not found."""
         for match in re.search(self.migration_version_regex, filename).groups():
@@ -233,9 +271,10 @@ class MigrationManager:
 
                 # If there's a migration missing roll back
                 if migration_version > version_to_apply + 1:
-                    print(f"Migration #{version_to_apply + 1} missing. Rolling back...")
                     self.database_manager.rollback()
-                    return
+                    raise errors.ProgrammingError(
+                        f"Migration #{version_to_apply + 1} missing. Rolling back..."
+                    )
 
                 # Uses try except even though apply_migration doesn't raise an error since the sql file itself could be malformed
                 try:
@@ -243,11 +282,10 @@ class MigrationManager:
                     applied_migrations = migration_version
                 except errors.ProgrammingError as e:
                     print(
-                        f"Unable to apply migration {index + 1} due to a syntax error: \n{e}"
+                        f"Unable to apply migration {index + 1} due to a syntax error. Rolling back all migrations..."
                     )
-                    print(f"Rolling back all migrations...")
                     self.database_manager.rollback()
-                    return
+                    raise e
                 except errors.InsufficientPrivilege as e:
                     print(
                         f"""
@@ -255,7 +293,7 @@ class MigrationManager:
                     """
                     )
                     self.database_manager.rollback()
-                    return
+                    raise e
 
         if applied_migrations:
             self.database_manager.commit()
