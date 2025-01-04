@@ -2,7 +2,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import type { PageData } from './$types';
 	import { yup } from 'sveltekit-superforms/adapters';
-	import { imageUpdateSchema } from '$lib/utilities/yupSchemas';
+	import { createObraSchema } from '$lib/utilities/yupSchemas';
 	import TextInput from '$lib/components/input/TextInput.svelte';
 	import { PUBLIC_graphql } from '$env/static/public';
 	import { error } from '$lib/utilities/toasts';
@@ -16,7 +16,7 @@
 
 	const { form, errors, enhance, constraints } = superForm(data.createForm, {
 		SPA: true,
-		validators: yup(imageUpdateSchema),
+		validators: yup(createObraSchema),
 		async onUpdate({ form: createForm }) {
 			fileErrors = [];
 			submitting = true;

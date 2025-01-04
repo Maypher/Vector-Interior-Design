@@ -20,6 +20,8 @@ export const load = async ({ params, fetch }) => {
                         filename
                         altText
                         description
+                        descriptionFont
+                        hideInProject
                         phoneConfig {
                             borders {
                                 n
@@ -29,6 +31,7 @@ export const load = async ({ params, fetch }) => {
                             }
                             alignment
                             descriptionPos
+                            descriptionAlignment
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-import { object, string, ref, number } from "yup";
+import { object, string, number, bool } from "yup";
 
 export const loginSchema = object({
     email: string()
@@ -33,7 +33,13 @@ export const ambienteCreateSchema = object({
     description: string().default('')
 });
 
+export const createObraSchema = object({
+    altText: string().required("Texto alternativo requerido."),
+});
+
 export const imageUpdateSchema = object({
     altText: string().required("Texto alternativo requerido."),
-    description: string()
+    description: string(),
+    descriptionFont: string().required("Fuente de descripción requerida."),
+    hideInProject: bool()
 });

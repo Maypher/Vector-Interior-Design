@@ -26,10 +26,12 @@
 			submitting = true;
 			if (updateForm.valid) {
 				const query = `
-					mutation updateImage($filename: String!, $altText: String!, $description: String) {
-						updateImage(filename: $filename, altText: $altText, description: $description) {
+					mutation updateImage($filename: String!, $altText: String!, $description: String, $descriptionFont: String, $hideInProject: Boolean) {
+						updateImage(filename: $filename, altText: $altText, description: $description, descriptionFont: $descriptionFont, hideInProject: $hideInProject) {
 							altText
 							description
+							descriptionFont
+							hideInProject
 						}
 					}
 				`;
@@ -39,6 +41,9 @@
 				const updatedImageData = (await graphql(query, variables)).updateImage;
 				success(`Imagen actualizada con éxito.`);
 				$form.altText = updatedImageData.altText;
+				$form.description = updatedImageData.description;
+				$form.descriptionFont = updatedImageData.descriptionFont;
+				$form.hideInProject = updatedImageData.hideInProject;
 			}
 			submitting = false;
 		}
@@ -128,6 +133,7 @@
 						}
 						alignment
 						descriptionPos
+						descriptionAlignment
 					}
 				}
 			}
@@ -183,6 +189,19 @@
 				bind:value={$form.description}
 				errors={$errors.description}
 			/>
+
+			<div class="my-2">
+				<label for="descriptionFont">Tipografía de Descripción</label>
+				<select id="descriptionFont" bind:value={$form.descriptionFont}>
+					<option value="Arial" class="font-Arial">Arial</option>
+					<option value="Agency-FB" class="font-Agency-FB">Agency-FB</option>
+					<option value="Bahnschrift" class="font-Bahnschrift">Bahnschrift</option>
+				</select>
+			</div>
+			<div>
+				<label for="hideInProject">Esconder en proyecto</label>
+				<input id="hideInProject" type="checkbox" bind:checked={$form.hideInProject} />
+			</div>
 			<button class="bg-green-500 p-2 rounded-md hover:bg-orange-800 my-5">Actualizar</button>
 		</fieldset>
 	</form>
@@ -208,12 +227,23 @@
 				</select>
 			</div>
 			<div>
-				<label for="descriptionPosition">Posición de Descripción</label>
-				<select id="descriptionPosition" bind:value={phoneConfig.descriptionPos}>
-					{#each Object.entries(Directions) as [alignment, value] (alignment)}
-						<option {value}>{alignment}</option>
-					{/each}
-				</select>
+				<div>
+					<label for="descriptionPosition">Posición de Descripción</label>
+					<select id="descriptionPosition" bind:value={phoneConfig.descriptionPos}>
+						{#each Object.entries(Directions) as [alignment, value] (alignment)}
+							<option {value}>{alignment}</option>
+						{/each}
+					</select>
+				</div>
+				<div>
+					<label for="descriptionAlignment">Alineación de la Descripción</label>
+					<select id="descriptionAlignment" bind:value={phoneConfig.descriptionAlignment}>
+						<option value="text-justify">Justificar</option>
+						<option value="text-center">Centrar</option>
+						<option value="text-left">Izquierda</option>
+						<option value="text-right">Derecha</option>
+					</select>
+				</div>
 			</div>
 		</div>
 		<div class="mx-auto size-fit">

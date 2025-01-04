@@ -276,7 +276,7 @@ def create_image(
         data = admin_database.query(
             """
         INSERT INTO imagen (archivo, texto_alt, ambiente_id) VALUES (%s, %s, %s)
-        RETURNING id, archivo, texto_alt, indice, pagina_principal descripcion;
+        RETURNING id, archivo, texto_alt, indice, pagina_principal, descripcion, descripcionTipografia, esconderEnObra;
         """,
             (image.filename, alt_text, ambiente.id),
             count=1,
@@ -292,6 +292,8 @@ def create_image(
         index=data[3],
         main_page=data[4],
         description=data[5],
+        description_font=data[6],
+        hide_in_project=data[7],
     )
 
 
@@ -300,7 +302,9 @@ def update_image(
     alt_text: str | None = None,
     new_index: int | None = None,
     main_page: bool | None = None,
+    hide_in_project: bool | None = None,
     description: str | None = None,
+    descriptionFont: str | None = None,
     phone_config: inputs.phoneConfigInput | None = None,
 ) -> typing.Optional[schemas.Image]:
     """
@@ -349,12 +353,28 @@ def update_image(
             """,
                 (image_id, image_id),
             )
+    if hide_in_project is not None:
+        admin_database.query(
+            """
+            UPDATE imagen SET esconderEnObra = %s WHERE id = %s;
+            """,
+            (hide_in_project, image_id),
+            commit=False,
+        )
     if description is not None:
         admin_database.query(
             """
             UPDATE imagen SET descripcion = %s WHERE id = %s;
             """,
             (description, image_id),
+            commit=False,
+        )
+    if descriptionFont is not None:
+        admin_database.query(
+            """
+            UPDATE imagen SET descripcionTipografia = %s WHERE id = %s;
+            """,
+            (descriptionFont, image_id),
             commit=False,
         )
     if phone_config:
@@ -369,12 +389,13 @@ def update_image(
 
         admin_database.query(
             """
-            UPDATE imagen SET tlfnConfig = ROW(%s, %s, %s)::imagenTlfnConfig WHERE archivo = %s;
+            UPDATE imagen SET tlfnConfig = ROW(%s, %s, %s, %s)::imagenTlfnConfig WHERE archivo = %s;
         """,
             (
                 borders,
                 phone_config.alignment,
                 phone_config.descriptionPos,
+                phone_config.descriptionAlignment,
                 filename,
             ),
             commit=False,

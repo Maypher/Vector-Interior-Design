@@ -15,6 +15,8 @@ export const load = async ({ fetch, params }) => {
                 filename
                 altText
                 description
+                descriptionFont
+                hideInProject
                 mainPage
                 ambiente {
                     obra {
@@ -32,17 +34,23 @@ export const load = async ({ fetch, params }) => {
                     }
                     alignment
                     descriptionPos
+                    descriptionAlignment
                 }
             }
         }
     `;
     const variables = { filename: filename };
 
+
     const imageData = (await graphql(query, variables, fetch)).image;
 
     if (!imageData) error(404, `Imagen ${filename} no existe.`);
     else {
-        const updateForm = await superValidate({ altText: imageData.altText, description: imageData.description || "" }, yup(imageUpdateSchema));
+        const updateForm = await superValidate({
+            altText: imageData.altText, description: imageData.description || "",
+            descriptionFont: imageData.descriptionFont,
+            hideInProject: imageData.hideInProject,
+        }, yup(imageUpdateSchema));
 
         return { imageData, updateForm, ambienteId, obraId }
     };

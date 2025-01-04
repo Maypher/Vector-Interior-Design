@@ -255,7 +255,7 @@
 
 	@media (max-width: 500px) {
 		.pencil-animate::after {
-			top: -1rem;
+			top: -0.5rem;
 		}
 	}
 

@@ -1,0 +1,2 @@
+ALTER TYPE imagenTlfnConfig DROP ATTRIBUTE IF EXISTS descripcionAlineacion;
+ALTER TABLE imagen ALTER COLUMN tlfnConfig SET DEFAULT ROW(B'0000', 'CENTRO', NULL);

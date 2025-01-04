@@ -2,49 +2,48 @@
   color: white;
 }
 
-.markdownDescription > p {
-  text-indent: 1rem;
-  text-align: justify;
+.markdownDescription p {
+  line-height: 1.6;
 }
 
-.markdownDescription > h1 {
+.markdownDescription>h1 {
   font-size: 2em;
 }
 
-.markdownDescription > h2 {
+.markdownDescription>h2 {
   font-size: 1.5em;
 }
 
-.markdownDescription > h3 {
+.markdownDescription>h3 {
   font-size: 1.17em;
 }
 
-.markdownDescription > h4 {
+.markdownDescription>h4 {
   font-size: 1em;
 }
 
-.markdownDescription > h6 {
+.markdownDescription>h6 {
   font-size: 0.67em;
 }
 
-.markdownDescription > :is(h1, h2, h3, h4, h5, h6) {
+.markdownDescription> :is(h1, h2, h3, h4, h5, h6) {
   white-space: nowrap;
 }
 
-.markdownDescription > blockquote {
+.markdownDescription>blockquote {
   border-left: 3px solid gray;
   padding-left: 1.5rem;
 }
 
-.markdownDescription > blockquote > p {
+.markdownDescription>blockquote>p {
   white-space: pre-line;
 }
 
-.markdownDescription > ol {
+.markdownDescription>ol {
   list-style-type: decimal;
   list-style-position: inside;
 }
 
-.markdownDescription > p:not(:first-child) {
+.markdownDescription>p:not(:first-child) {
   margin-top: 1rem;
 }

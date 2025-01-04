@@ -25,7 +25,8 @@ class Obra:
     def thumbnail(self) -> typing.Optional["Image"]:
         image_data = generic_database.query(
             """
-            SELECT imagen.id, archivo, texto_alt, imagen.indice, pagina_principal, imagen.descripcion FROM imagen 
+            SELECT imagen.id, archivo, texto_alt, imagen.indice, pagina_principal, imagen.descripcion, 
+            imagen.descripcionTipografia, esconderEnObra FROM imagen 
             JOIN obra ON obra.imagen_principal = imagen.id
             WHERE obra.id = %s;
         """,
@@ -40,6 +41,8 @@ class Obra:
             image_index = image_data[3]
             main_page = image_data[4]
             description = image_data[5]
+            description_font = image_data[6]
+            hide_in_project = image_data[7]
 
             return Image(
                 id=image_id,
@@ -48,6 +51,8 @@ class Obra:
                 index=image_index,
                 main_page=main_page,
                 description=description,
+                description_font=description_font,
+                hide_in_project=hide_in_project,
             )
 
     @strawberry.field(description="All the ambientes belonging to this obra.")
@@ -108,7 +113,8 @@ class Ambiente:
     def images(self) -> typing.List["Image"]:
         images_data = generic_database.query(
             """
-        SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice, pagina_principal, imagen.descripcion FROM imagen
+        SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice, pagina_principal, imagen.descripcion, 
+        imagen.descripcionTipografia, esconderEnObra FROM imagen
         JOIN ambiente ON imagen.ambiente_id = ambiente.id
         WHERE ambiente.id = %s ORDER BY indice;
         """,
@@ -123,6 +129,8 @@ class Ambiente:
                 index=image[3],
                 main_page=image[4],
                 description=image[5],
+                description_font=image[6],
+                hide_in_project=image[7],
             )
             for image in images_data
         ]
@@ -140,11 +148,17 @@ class Image:
     description: typing.Optional[str] = strawberry.field(
         description="The description of the image."
     )
+    description_font: str = strawberry.field(
+        description="The font of the description text."
+    )
     index: float = strawberry.field(
         description="The index of the image for UI ordering purposes. It's a float due to how the database handles reordering."
     )
     main_page: bool = strawberry.field(
         description="Indicates if an image should be shown in the main page of the website."
+    )
+    hide_in_project: bool = strawberry.field(
+        description="Indicates if the image should be hidden in the project page."
     )
 
     @strawberry.field(
@@ -178,6 +192,7 @@ class Image:
             descriptionPos=(
                 enums.Direction[phone_config_data[2]] if phone_config_data[2] else None
             ),
+            descriptionAlignment=phone_config_data[3],
         )
 
     @strawberry.field(description="The ambiente this image belongs to.")
@@ -208,7 +223,7 @@ class Image:
             SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar,
             imagen_borde_n, imagen_borde_s, imagen_borde_e, imagen_borde_o,
             logo_borde_n, logo_borde_s, logo_borde_e, logo_borde_o,
-            descripcionTamano, descripcionDistribucion, descripcionTipografia
+            descripcionTamano, imagenConfig.descripcionDistribucion, imagenConfig.descripcionTipografia
             FROM imagenConfig JOIN imagen on imagenConfig.imagen_id = imagen.id 
             WHERE imagen.id = %s AND imagen.pagina_principal;
             """,
@@ -244,6 +259,9 @@ class PhoneImageConfig:
     )
     descriptionPos: typing.Optional[enums.Direction] = strawberry.field(
         description="The position of the description relative to the image."
+    )
+    descriptionAlignment: str = strawberry.field(
+        description="The alignment of the description."
     )
 
 
@@ -285,7 +303,7 @@ class MainImageConfig:
     def image(self) -> Image:
         data = generic_database.query(
             """
-            SELECT id, archivo, textoAlt, indice, imagen_principal, descripcion FROM imagen 
+            SELECT id, archivo, textoAlt, indice, imagen_principal, descripcion, descripcionTipografia, esconderEnObra FROM imagen 
             JOIN imagenConfig ON imagenConfig.imagen_id = imagen.id
             WHERE imagenConfig.id = %s;
         """,
@@ -300,6 +318,8 @@ class MainImageConfig:
             index=data[3],
             main_page=data[4],
             description=data[5],
+            description_font=data[6],
+            hide_in_project=data[7],
         )
 
 

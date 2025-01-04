@@ -31,3 +31,6 @@ class phoneConfigInput:
         description="The position of the description relative to the image.",
         default=None,
     )
+    descriptionAlignment: typing.Optional[str] = strawberry.field(
+        description="The alignment of the description."
+    )

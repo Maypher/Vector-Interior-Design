@@ -267,6 +267,10 @@ class Mutation:
             typing.Optional[str],
             strawberry.argument(description="The new description of the image."),
         ] = None,
+        descriptionFont: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(description="The font used for the description."),
+        ] = None,
         index: typing.Annotated[
             typing.Optional[int],
             strawberry.argument(
@@ -279,6 +283,10 @@ class Mutation:
                 description="Set this image to be shown in the main page."
             ),
         ] = None,
+        hide_in_project: typing.Annotated[
+            typing.Optional[bool],
+            strawberry.argument(description="Hide this image in the project."),
+        ] = None,
         phone_config: typing.Annotated[
             typing.Optional[inputs.phoneConfigInput],
             strawberry.argument(
@@ -287,7 +295,14 @@ class Mutation:
         ] = None,
     ) -> typing.Optional[schemas.Image]:
         return adminObra.update_image(
-            filename, alt_text, index, main_page, description, phone_config
+            filename,
+            alt_text,
+            index,
+            main_page,
+            hide_in_project,
+            description,
+            descriptionFont,
+            phone_config,
         )
 
     @strawberry.mutation(
@@ -479,7 +494,7 @@ class Mutation:
                 SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar,
                 imagen_borde_n, imagen_borde_s, imagen_borde_e, imagen_borde_o,
                 logo_borde_n, logo_borde_s, logo_borde_e, logo_borde_o,
-                descripcionDistribucion, descripcionTamano, descripcionTipografia
+                descripcionDistribucion, descripcionTamano, imagenConfig.descripcionTipografia
                 FROM imagenConfig WHERE id = %s;
                 """,
                 (id,),
