@@ -56,8 +56,6 @@
 	async function onsubmit(evt: SubmitEvent) {
 		evt.preventDefault();
 
-		console.log($state.snapshot(updatedConfig));
-
 		const query = `
 			mutation updateImageConfig($id: Int!, $description: String, $descriptionEn: String, 
 			$logoPos: Direction, $descriptionPos: Direction, $descriptionAlignment: String, 
@@ -98,7 +96,6 @@
 
 		const updatedData = (await graphql(query, updates)).updateImageConfig;
 
-		console.log(updatedData);
 		originalConfig = updatedData;
 		updatedConfig = updatedData;
 
