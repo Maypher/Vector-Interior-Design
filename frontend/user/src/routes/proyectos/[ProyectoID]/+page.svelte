@@ -35,7 +35,7 @@
 					{obraData.name}
 				</h1>
 				<p class="font-Arial text-right text-sm">Área: {obraData.area} metros cuadrados</p>
-				<div class="white markdownDescription my-6 text-justify indent-4">
+				<div class="white markdownDescription my-6 text-justify">
 					{@html mdToHtml(obraData.description)}
 				</div>
 			</div>
@@ -57,7 +57,7 @@
 					>
 						{#if image.description && image.phoneConfig.descriptionPos}
 							<div
-								class={`markdownDescription ${image.descriptionFont === 'Agency-FB' ? 'text-[1.8rem]' : 'text-lg'} font-${image.descriptionFont} ${image.phoneConfig.descriptionAlignment} ${image.phoneConfig.descriptionAlignment !== 'text-center' ? '[&_p]:indent-4' : ''}`}
+								class={`markdownDescription font-${image.descriptionFont} ${image.phoneConfig.descriptionAlignment}`}
 							>
 								{@html mdToHtml(image.description)}
 							</div>

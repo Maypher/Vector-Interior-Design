@@ -2,8 +2,8 @@
   color: white;
 }
 
-.markdownDescription p {
-  line-height: 1.6;
+.markdownDescription>p {
+  text-indent: 1rem;
 }
 
 .markdownDescription>h1 {
@@ -28,6 +28,7 @@
 
 .markdownDescription> :is(h1, h2, h3, h4, h5, h6) {
   white-space: nowrap;
+
 }
 
 .markdownDescription>blockquote {
