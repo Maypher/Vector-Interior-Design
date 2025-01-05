@@ -12,34 +12,17 @@ Created migrations are given the name [unix time]_[name]_[migration#]_[up|down].
 """
 
 
-class MigrationManager:
-    """
-    Handles all migrations for a database.
-
-    :param database_manager: The database manager that should execute the migrations.
-    Should have CREATE SCHEMA, CREATE TABLE, INSERT, UPDATE and any other privileges required by the migration files.
-
-    :param migration_folder: Where to find the migration SQL files.
-    :param migration_filename_regex: The regex that should be used to read the SQL files from the migration folder. Don't include '.sql' in the query.
-    :param migration_version_regex: The regex to get the version of a migration from its filename. Should only include one digit regex since it will take the first digit it finds.
-    :param up_regex: Regex to determine if a migration is up.
-    :param down_regex: Regex to determine if a migration is down.
-    """
-
-    database_manager: DatabaseManager
+class MigrationFileManager:
     migration_folder: str
     migration_filename_regex: re.Pattern
     migration_version_regex: re.Pattern
     up_regex: re.Pattern
     down_regex: re.Pattern
     migration_version_regex: re.Pattern
-    migration_schema: str = "migrations"
-    migration_table: str = "migration"
 
     def __init__(
         self,
-        database_manager: DatabaseManager,
-        migration_folder: str,
+        migration_folder: str = "./migrations/",
         migration_filename_regex: str = r"^(\d+)_(\w+)_(\d+)_(up|down).sql",
         migration_version_regex: str = r".*?_(\d+)_(up|down).sql",
         up_regex: str = r"_up.sql",
@@ -48,7 +31,6 @@ class MigrationManager:
         migration_regex_ends_in_sql = migration_filename_regex.endswith(".sql")
 
         self.migration_folder = migration_folder
-        self.database_manager = database_manager
         self.migration_filename_regex = re.compile(
             f"{migration_filename_regex}{".sql" if not migration_regex_ends_in_sql else ""}"
         )
@@ -58,45 +40,21 @@ class MigrationManager:
 
         try:
             self.check_migrations_existence()
-            self.create_migration_table()
         except FileNotFoundError as e:
             print(e)
             raise e
-        except errors.InsufficientPrivilege as e:
-            print(
-                """Unable to initialize migration manager due to insufficient permissions. 
-            Required permissions are CREATE SCHEMA, CREATE TABLE, INSERT and UPDATE."""
-            )
-            raise e
 
-    def create_migration_table(self):
-        # Creates a migration table if it doesn't exist
-        self.database_manager.query(
-            f"""
-            DO $$
-            BEGIN
-                CREATE SCHEMA IF NOT EXISTS {self.migration_schema};
-
-                -- Create the table if it doesn't exist and insert entry.
-                -- Not using CREATE IF NOT EXISTS because it should insert a migration entry on creation as to not have duplicate migration versions.
-                IF NOT EXISTS (
-                    SELECT 1 
-                    FROM information_schema.tables 
-                    WHERE table_schema = '{self.migration_schema}' AND table_name = '{self.migration_table}'
-                ) THEN
-                    -- Create the table
-                    CREATE TABLE {self.migration_schema}.{self.migration_table} (
-                        id SERIAL PRIMARY KEY,
-                        version INTEGER NOT NULL DEFAULT 0
-                    );
-
-                    -- Insert the default row
-                    INSERT INTO {self.migration_schema}.{self.migration_table} (version) VALUES (0);
-                END IF;
-            END;
-            $$;
-        """
+    def new_migration(self, migration_name: str):
+        filename = (
+            f"{time.time()}_{migration_name}_{self.get_latest_migration_version() + 1}"
         )
+
+        with open(path.join(self.migration_folder, f"{filename}_up.sql"), "w") as file:
+            file.write("-- Write migrations here.")
+        with open(
+            path.join(self.migration_folder, f"{filename}_down.sql"), "w"
+        ) as file:
+            file.write("-- Write rollback here.")
 
     def check_migrations_existence(self):
         """
@@ -135,76 +93,6 @@ class MigrationManager:
                 f"Unable to find the down migration for {missing_down_files}."
             )
 
-    def create_migration(self, migration_name: str):
-        """Creates a new migration file with the given name. Doesn't use any regex so the format
-        will always be [unix time]_[name]_[migration#]_[up|down].sql"""
-
-        # Get the latest migration version
-        latest_migration_version = self.get_latest_migration_version()
-
-        filename = f"{int(time.time())}_{migration_name}_{latest_migration_version + 1}"
-
-        # Create the new migration file
-        with open(
-            path.join(
-                self.migration_folder,
-                f"{filename}_up.sql",
-            ),
-            "w",
-        ) as new_migration:
-            new_migration.write(
-                f"""
-            -- Migration {latest_migration_version + 1}
-            -- Up migration
-            -- Add your SQL here.
-            """
-            )
-
-        with open(
-            f"{filename}_down.sql",
-            "w",
-        ) as new_migration_down:
-            new_migration_down.write(
-                f"""
-            -- Migration {latest_migration_version + 1}
-            -- Down migration
-            -- Add your SQL here.
-            """
-            )
-
-    def get_migration_file_version(self, filename: str) -> int | None:
-        """Gets the number of the migration from the filename or None if not found."""
-        for match in re.search(self.migration_version_regex, filename).groups():
-            if match.isdigit():
-                return int(match)
-
-    def get_latest_migration_version(self) -> int:
-        """
-        Gets the latest migration value from the migrations directory using the version regex.
-        """
-        maxVersion = 0
-
-        for file in self.yield_sql_files(self.migration_folder):
-            with file:
-                filename: str = path.basename(file)
-                version = self.get_migration_file_version(filename)
-
-                if version:
-                    maxVersion = max(version, maxVersion)
-
-        return maxVersion
-
-    def get_migration_version(self):
-        """Gets the migration version from the database."""
-        result = self.database_manager.query(
-            f"""
-        SELECT version FROM {self.migration_schema}.{self.migration_table};
-        """,
-            count=1,
-        )[0]
-
-        return int(result)
-
     def yield_sql_files(self, down: bool = False):
         """Yields all migration files that follow the string format. Returns all down files if down, otherwise all up files."""
 
@@ -231,6 +119,101 @@ class MigrationManager:
             for _, file in down_files:
                 yield file
                 file.close()
+
+    def get_migration_file_version(self, filename: str) -> int | None:
+        """Gets the number of the migration from the filename or None if not found."""
+        for match in re.search(self.migration_version_regex, filename).groups():
+            if match.isdigit():
+                return int(match)
+
+    def get_latest_migration_version(self) -> int:
+        """
+        Gets the latest migration value from the migrations directory using the version regex.
+        """
+        maxVersion = 0
+
+        for file in self.yield_sql_files():
+            with file:
+                version = self.get_migration_file_version(file.name)
+
+                if version:
+                    maxVersion = max(version, maxVersion)
+
+        return maxVersion
+
+
+class MigrationManager(MigrationFileManager):
+    """
+    Handles all migrations for a database.
+
+    :param database_manager: The database manager that should execute the migrations.
+    Should have CREATE SCHEMA, CREATE TABLE, INSERT, UPDATE and any other privileges required by the migration files.
+
+    :param migration_folder: Where to find the migration SQL files.
+    :param migration_filename_regex: The regex that should be used to read the SQL files from the migration folder. Don't include '.sql' in the query.
+    :param migration_version_regex: The regex to get the version of a migration from its filename. Should only include one digit regex since it will take the first digit it finds.
+    :param up_regex: Regex to determine if a migration is up.
+    :param down_regex: Regex to determine if a migration is down.
+    """
+
+    database_manager: DatabaseManager
+    migration_schema: str = "migrations"
+    migration_table: str = "migration"
+
+    def __init__(self, database_manager: DatabaseManager, **kwargs):
+
+        super().__init__(**kwargs)
+
+        self.database_manager = database_manager
+
+        try:
+            self.create_migration_table()
+        except errors.InsufficientPrivilege as e:
+            print(
+                """Unable to initialize migration manager due to insufficient permissions. 
+            Required permissions are CREATE SCHEMA, CREATE TABLE, INSERT and UPDATE."""
+            )
+            raise e
+
+    def create_migration_table(self):
+        # Creates a migration table if it doesn't exist
+        self.database_manager.query(
+            f"""
+            DO $$
+            BEGIN
+                CREATE SCHEMA IF NOT EXISTS {self.migration_schema};
+
+                -- Create the table if it doesn't exist and insert entry.
+                -- Not using CREATE IF NOT EXISTS because it should insert a migration entry on creation as to not have duplicate migration versions.
+                IF NOT EXISTS (
+                    SELECT 1 
+                    FROM information_schema.tables 
+                    WHERE table_schema = '{self.migration_schema}' AND table_name = '{self.migration_table}'
+                ) THEN
+                    -- Create the table
+                    CREATE TABLE {self.migration_schema}.{self.migration_table} (
+                        id SERIAL PRIMARY KEY,
+                        version INTEGER NOT NULL DEFAULT 0
+                    );
+
+                    -- Insert the default row
+                    INSERT INTO {self.migration_schema}.{self.migration_table} (version) VALUES (0);
+                END IF;
+            END;
+            $$;
+        """
+        )
+
+    def get_migration_version(self):
+        """Gets the migration version from the database."""
+        result = self.database_manager.query(
+            f"""
+        SELECT version FROM {self.migration_schema}.{self.migration_table};
+        """,
+            count=1,
+        )[0]
+
+        return int(result)
 
     def apply_migration(self, migration: str, rollback=False):
         """
@@ -271,10 +254,9 @@ class MigrationManager:
 
                 # If there's a migration missing roll back
                 if migration_version > version_to_apply + 1:
+                    print(f"Migration #{version_to_apply + 1} missing. Rolling back...")
                     self.database_manager.rollback()
-                    raise errors.ProgrammingError(
-                        f"Migration #{version_to_apply + 1} missing. Rolling back..."
-                    )
+                    return
 
                 # Uses try except even though apply_migration doesn't raise an error since the sql file itself could be malformed
                 try:
@@ -282,10 +264,11 @@ class MigrationManager:
                     applied_migrations = migration_version
                 except errors.ProgrammingError as e:
                     print(
-                        f"Unable to apply migration {index + 1} due to a syntax error. Rolling back all migrations..."
+                        f"Unable to apply migration {index + 1} due to a syntax error: \n{e}"
                     )
+                    print(f"Rolling back all migrations...")
                     self.database_manager.rollback()
-                    raise e
+                    return
                 except errors.InsufficientPrivilege as e:
                     print(
                         f"""
@@ -293,7 +276,7 @@ class MigrationManager:
                     """
                     )
                     self.database_manager.rollback()
-                    raise e
+                    return
 
         if applied_migrations:
             self.database_manager.commit()

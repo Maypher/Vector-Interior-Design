@@ -1,50 +1,8 @@
-from admin.db.migrations import MigrationManager
+from admin.db.migrations import MigrationManager, MigrationFileManager
 from psycopg import errors
 from common.database import DatabaseManager
 from os import environ
 import argparse
-
-
-def apply_migrations(command: str | None = None, migrate_to: int | None = None):
-    try:
-        admin_database = DatabaseManager(
-            environ.get("USERNAME"),
-            environ.get("PASSWORD"),
-            environ.get("HOST"),
-            environ.get("DB_PORT"),
-            environ.get("DB_NAME"),
-        )
-
-        migration_manager = MigrationManager(admin_database, "./migrations/")
-    except errors.InsufficientPrivilege:
-        print("Unable to initialize migration system due to insufficient privileges.")
-        exit(1)
-
-    if command not in ("migrate", "rollback"):
-        print("Invalid command. Must be one of 'migrate' or 'rollback'.")
-        exit(1)
-
-    try:
-        if command == "migrate":
-            print("applying migrations")
-            if migrate_to is not None:
-                migration_manager.apply_migrations(migrate_to)
-                print(f"Applied migrations up to version {migrate_to}")
-            else:
-                migration_manager.apply_migrations()
-                print("Applied all migrations")
-        elif command == "rollback":
-            print("Rolling back...")
-            if migrate_to:
-                migration_manager.rollback_migrations(final=migrate_to)
-                print(f"Rolled back migrations up to version {migrate_to}")
-            else:
-                migration_manager.rollback_migrations()
-                print(f"Rolled back all migrations")
-    except (errors.InsufficientPrivilege, errors.ProgrammingError) as e:
-        print(e)
-        exit(-1)
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -67,33 +25,54 @@ if __name__ == "__main__":
         help="Migrates or rollbacks to the specified version. On migrate it applies all migrations up to the specified version, including it. On rollback it rolls back migrations up to the specified version but doesn't apply it.",
     )
 
+    parser.add_argument(
+        "-d",
+        "--directory",
+        type=str,
+        nargs=1,
+        help="The directory where the migrations are stored.",
+        default="./migrations/",
+    )
+
     args = parser.parse_args()
+    command: str = args.command
 
-    try:
-        migration_database_handler = DatabaseManager(
-            environ.get("USERNAME"),
-            environ.get("PASSWORD"),
-            environ.get("HOST"),
-            environ.get("DB_PORT"),
-            environ.get("DB_NAME"),
-        )
+    if command == "new":
+        name = args.name
 
-        migration_manager = MigrationManager(
-            migration_database_handler, "./migrations/"
-        )
-    except errors.InsufficientPrivilege:
-        print("Unable to initialize migration system due to insufficient privileges.")
-        exit(1)
-
-    if args.command in ("migrate", "rollback"):
-        if args.version is not None:
-            apply_migrations(args.command, args.version)
-        else:
-            apply_migrations(args.command)
-    else:
-        if args.name is not None:
-            migration_manager.create_migration(args.name)
-            print("Migration and rollback created successfully.")
-        else:
-            print("When creating a new migration, you must provide a name.")
+        if not name:
+            print("A new needs to be provided for the new migration.")
             exit(1)
+
+        file_manager = MigrationFileManager()
+
+        file_manager.new_migration(name[0])
+    else:
+        try:
+            migration_database_handler = DatabaseManager(
+                environ.get("USERNAME"),
+                environ.get("PASSWORD"),
+                environ.get("HOST"),
+                environ.get("DB_PORT"),
+                environ.get("DB_NAME"),
+            )
+
+            migration_manager = MigrationManager(migration_database_handler)
+        except errors.InsufficientPrivilege:
+            print(
+                "Unable to initialize migration system due to insufficient privileges."
+            )
+            exit(1)
+
+        if command == "rollback":
+            if args.version is not None:
+                migration_manager.rollback_migrations(args.version[0])
+
+            else:
+                print("Rollback requires a version to be specified.")
+        else:
+            if args.version is not None:
+                migration_manager.apply_migration(args.version[0])
+
+            else:
+                migration_manager.apply_migration()
