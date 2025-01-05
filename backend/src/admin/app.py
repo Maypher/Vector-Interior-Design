@@ -1,12 +1,16 @@
-from flask import Flask, jsonify
+from flask import Flask
 from os import environ
-from admin.db.migrations import MigrationManager
 from admin.auth.routes import auth_blueprint
 from admin.resources import obra_admin_routes, image_admin_routes, ambiente_admin_routes
-from psycopg import errors
-from sys import argv
-from admin.db.database import admin_database
 from flask_cors import CORS
+
+from sanic import Sanic
+
+
+def create_app() -> Sanic:
+    app = Sanic("TQ-admin-backend")
+    return app
+
 
 app = Flask(__name__)
 app.secret_key = environ.get("SECRET_KEY")
@@ -26,4 +30,14 @@ app.register_blueprint(ambiente_admin_routes)
 app.register_blueprint(image_admin_routes)
 
 if __name__ == "__main__":
-    app.run(port=environ.get("PORT"), host="0.0.0.0", debug=True)
+    app = create_app()
+
+    port = environ.get("PORT", 8080)
+
+    try:
+        port = int(port)
+    except ValueError:
+        print("Port must be an integer number.")
+        exit(1)
+
+    app.run(host="0.0.0.0", port=port)

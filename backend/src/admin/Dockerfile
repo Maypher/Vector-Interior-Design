@@ -27,4 +27,4 @@ COPY ./src/common/ ./src/common/
 
 WORKDIR /app/src/admin/
 
-ENTRYPOINT ["python", "-u", "app.py"]
+ENTRYPOINT ["./entrypoint.sh"]
