@@ -1,45 +1,50 @@
-from flask import Blueprint, request, session, make_response
+from flask import request, make_response
 from auth import user as user_auth
 from auth import create_session, remove_session, login_required, get_session
-from datetime import datetime, timedelta
+from sanic.blueprints import Blueprint
+from sanic import response
+from sanic.request import Request
+import json
 
-auth_blueprint = Blueprint("auth", __name__, url_prefix="/auth")
+auth_blueprint = Blueprint("auth", "/auth")
 
 
 @auth_blueprint.get("/usuario-creado")
-def main_user_created():
+def main_user_created(request: Request):
     user_count = user_auth.get_user_count()
-    return str(user_count)
+    return response.text(user_count)
 
 
 @auth_blueprint.post("/crear-cuenta")
-def create_account():
+def create_account(request: Request):
     user_count = user_auth.get_user_count()
     if user_count > 0:
-        return "Cuenta principal ya creada.", 401
+        return response.text("Cuenta principal ya creada.", 401)
 
     email = request.form.get("email")
     name = request.form.get("name")
     password = request.form.get("password")
 
     if not email or not name or not password:
-        return "Información incompleta. Correo y contraseña requeridas.", 400
+        return response.text(
+            "Información incompleta. Correo y contraseña requeridas.", 400
+        )
 
     if not user_auth.validate_email(email) or not user_auth.validate_password(password):
-        return (
+        return response.text(
             "Datos incompletos. Verifique su correo electrónico y contraseña para ver si el formato es correcto.",
             400,
         )
 
     if user_auth.get_user_by_email(email):
-        return "Usuario con este correo ya existe.", 401
+        return response.text("Usuario con este correo ya existe.", 401)
 
     user_id = user_auth.create_user(email, name, password)
 
     user_session = create_session(user_id)
 
-    res = make_response("", 200)
-    res.set_cookie(
+    res = response.empty(200)
+    res.add_cookie(
         "session_id",
         user_session.session_id,
         expires=user_session.expires_at,
@@ -52,22 +57,24 @@ def create_account():
 
 
 @auth_blueprint.post("/iniciar-sesion")
-def login():
+def login(request: Request):
     email = request.form.get("email")
     password = request.form.get("password")
 
     if not email or not password:
-        return "Información incompleta. Proveer correo y contraseña.", 401
+        return response.text(
+            "Información incompleta. Proveer correo y contraseña.", 401
+        )
 
     user = user_auth.login(email, password)
 
     if not user:
-        return "Credenciales invalidas.", 401
+        return response.text("Credenciales invalidas.", 401)
 
     user_session = create_session(user.id)
 
-    res = make_response("", 200)
-    res.set_cookie(
+    res = response.empty(200)
+    res.add_cookie(
         "session_id",
         user_session.session_id,
         expires=user_session.expires_at,
@@ -80,26 +87,30 @@ def login():
 
 
 @auth_blueprint.post("/cerrar-sesion")
-def logout():
+def logout(request: Request):
     session_id: bytes = request.cookies.get("session_id")
-    res = make_response("Cierre de sesión exitoso.", 200)
+    res = response.text("Cierre de sesión exitoso.", 200)
 
     if session_id:
         remove_session(session_id)
-        res.delete_cookie("session_id", httponly=True, samesite="None", secure=True)
+        res.delete_cookie("session_id")
+        return res
 
+    res.body = "Sesión no encontrada."
     return res
 
 
 @auth_blueprint.get("/info-usuario")
 @login_required
-def get_user_info():
+def get_user_info(request: Request):
     session_id = request.cookies.get("session_id")
 
     if session_id:
         sess = get_session(session_id)
 
         if sess:
-            return user_auth.get_user_by_id(sess.user_id).__dict__
+            return response.json(
+                json.dumps(user_auth.get_user_by_id(sess.user_id).__dict__)
+            )
 
-        return "", 404
+        return response.empty(404)
