@@ -72,7 +72,7 @@ if __name__ == "__main__":
                 print("Rollback requires a version to be specified.")
         else:
             if args.version is not None:
-                migration_manager.apply_migration(args.version[0])
+                migration_manager.apply_migrations(args.version[0])
 
             else:
-                migration_manager.apply_migration()
+                migration_manager.apply_migrations()
