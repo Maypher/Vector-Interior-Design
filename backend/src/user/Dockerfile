@@ -26,4 +26,6 @@ COPY --from=dependencies /app/.venv ./.venv/
 COPY ./src/user/ ./src/user/
 COPY ./src/common/ ./src/common/
 
-CMD ["python", "-u", "/app/src/user/app.py"]
+WORKDIR /app/src/user/
+
+ENTRYPOINT [ "./entrypoint.sh" ]

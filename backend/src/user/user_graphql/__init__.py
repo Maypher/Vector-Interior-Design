@@ -1,8 +1,20 @@
 import strawberry
+import strawberry.sanic
+import strawberry.sanic.views
 from common import obra
 from common.common_graphql import schemas
 from common.database import generic_database
 import typing
+from user.utilities import types
+
+
+class UserGraphQLView(strawberry.sanic.views.GraphQLView):
+    def get_context(self, request: types.UserRequest, response) -> types.GraphQLContext:
+        return {
+            "request": request,
+            "response": response,
+            "resource_manager": request.app.ctx.resource_manager,
+        }
 
 
 @strawberry.type()
@@ -12,6 +24,7 @@ class Query:
     )
     def obras(
         self,
+        info: strawberry.Info[types.GraphQLContext],
         page: typing.Annotated[
             int, strawberry.argument(description="The page to get.")
         ] = 1,
@@ -23,10 +36,11 @@ class Query:
             strawberry.argument(description="Filter obras by name."),
         ] = None,
     ) -> schemas.ObraResult:
+        resource_manager = info.context["resource_manager"]
         if name:
-            return obra.get_obras_by_name(name, page, page_size)
+            return resource_manager.get_obras_by_name(name, page, page_size)
 
-        return obra.get_obras(page, page_size)
+        return resource_manager.get_obras(page, page_size)
 
     @strawberry.field(description="Returns the obra matching the given ID or null.")
     def obra(

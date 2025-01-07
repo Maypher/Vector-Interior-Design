@@ -1,28 +1,30 @@
-from flask import Flask
 from os import environ
-from strawberry.flask.views import GraphQLView
 from strawberry import Schema
 from user.user_graphql import Query
-from flask_cors import CORS
-from flask import request
-
-app = Flask(__name__)
-app.secret_key = environ.get("SECRET_KEY")
-CORS(app, origins="*")
-
-
-app.add_url_rule(
-    "/graphql",
-    view_func=GraphQLView.as_view("graphql_user", schema=Schema(query=Query)),
-)
+from sanic import Sanic, Config
+from user.utilities.types import Context, UserApp
+from user.user_graphql import UserGraphQLView
+from common.obra import ResourceManager
+from common.database import DatabaseManager
 
 
-@app.get("/")
-def test():
-    print(request.headers)
+def create_app(ctx=Context()) -> Sanic:
+    app = Sanic("TQ-admin-backend", ctx=ctx)
 
-    return ""
+    app.add_route(
+        UserGraphQLView.as_view("graphql_user", schema=Schema(query=Query)),
+        "/graphql",
+    )
 
+    @app.before_server_start
+    def init_context(app: UserApp):
+        database_manager = DatabaseManager(
+            environ.get("USERNAME"),
+            environ.get("PASSWORD"),
+            environ.get("HOST"),
+            environ.get("DB_PORT"),
+            environ.get("DB_NAME"),
+        )
+        app.ctx.resource_manager = ResourceManager(database_manager)
 
-if __name__ == "__main__":
-    app.run(port=environ.get("PORT"), host="0.0.0.0", debug=True)
+    return app

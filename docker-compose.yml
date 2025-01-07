@@ -6,6 +6,7 @@ services:
             context: ./backend/
             dockerfile: ./src/admin/Dockerfile
         environment:
+            - BUILD_TARGET=${BUILD_TARGET:-dev}
             - PORT=${ADMIN_PORT}
             - HOST=database
             - USERNAME=${ADMIN_USERNAME}

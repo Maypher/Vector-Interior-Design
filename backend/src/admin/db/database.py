@@ -1,10 +1,7 @@
 from os import environ
 from common.database import DatabaseManager
 
-admin_database = DatabaseManager(
-    environ.get("USERNAME"),
-    environ.get("PASSWORD"),
-    environ.get("HOST"),
-    environ.get("DB_PORT"),
-    environ.get("DB_NAME"),
-)
+
+class AdminDatabaseManager(DatabaseManager):
+    def __init__(self, username, password, host, db_port, db_name):
+        super().__init__(username, password, host, db_port, db_name)

@@ -1,20 +1,16 @@
+from __future__ import annotations
 import typing
 import strawberry
 import strawberry.file_uploads
-from strawberry.flask.views import GraphQLView
-from auth.authentication import login_required
+from auth.decorators import login_required
 from common.common_graphql import schemas
-from common import obra
 from common.common_graphql import enums
-from admin.resources import obra as adminObra
 from admin.resources.admin_graphql import errors, inputs
 from psycopg.sql import SQL, Identifier
 
 
-class AuthGraphQLView(GraphQLView):
-    @login_required
-    def dispatch_request(self):
-        return super().dispatch_request()
+if typing.TYPE_CHECKING:
+    from admin.utilities.types import AdminResourceManager, GraphQLContext
 
 
 @strawberry.type()
@@ -24,6 +20,7 @@ class Query:
     )
     def obras(
         self,
+        info: strawberry.Info[GraphQLContext],
         page: typing.Annotated[
             int, strawberry.argument(description="The page to get.")
         ] = 1,
@@ -35,43 +32,51 @@ class Query:
             strawberry.argument(description="Filter obras by name."),
         ] = None,
     ) -> schemas.ObraResult:
+        resource_manager = info.context["resource_manager"]
         if name:
-            return obra.get_obras_by_name(name, page, page_size, True)
+            return resource_manager.get_obras_by_name(name, page, page_size)
 
-        return obra.get_obras(page, page_size, True)
+        return resource_manager.get_obras(page, page_size)
 
     @strawberry.field(description="Returns the obra matching the given ID or null.")
     def obra(
         self,
+        info: strawberry.Info[GraphQLContext],
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of the obra to get.")
         ],
     ) -> typing.Optional[schemas.Obra]:
-        return obra.get_obra_by_id(id, allow_private=True)
+        resource_manager: AdminResourceManager = info.context["resource_manager"]
+        return resource_manager.get_obra_by_id(id)
 
     @strawberry.field(description="Returns the ambiente matching the given ID or null.")
     def ambiente(
         self,
+        info: strawberry.Info[GraphQLContext],
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of ambiente to get.")
         ],
     ) -> typing.Optional[schemas.Ambiente]:
-        return obra.get_ambiente_by_id(id, True)
+        return info.context.get("resource_manager").get_ambiente_by_id(id)
 
     @strawberry.field(
         description="Returns the image matching the given filename or null."
     )
     def image(
         self,
+        info: strawberry.Info[GraphQLContext],
         filename: typing.Annotated[
             str, strawberry.argument(description="The filename of the image to get.")
         ],
     ) -> typing.Optional[schemas.Image]:
-        return obra.get_image_by_filename(filename, True)
+        return info.context.get("resource_manager").get_image_by_filename(filename)
 
     @strawberry.field(description="All the images shown in the main page")
-    def mainPageImages(self) -> typing.List[schemas.Image]:
-        image_filenames = adminObra.admin_database.query(
+    def mainPageImages(
+        self, info: strawberry.Info[GraphQLContext]
+    ) -> typing.List[schemas.Image]:
+        resource_manager = info.context.get("resource_manager")
+        image_filenames = resource_manager.database_manager.query(
             """
             SELECT archivo from imagen JOIN imagenConfig on imagenConfig.imagen_id = imagen.id 
             WHERE imagen.pagina_principal ORDER BY imagenConfig.indice;
@@ -79,7 +84,7 @@ class Query:
         )
 
         return [
-            adminObra.get_image_by_filename(filename[0], True)
+            resource_manager.get_image_by_filename(filename[0])
             for filename in image_filenames
         ]
 
@@ -89,6 +94,7 @@ class Mutation:
     @strawberry.mutation(description="Creates a new obra.")
     def createObra(
         self,
+        info: strawberry.Info[GraphQLContext],
         name: typing.Annotated[
             str, strawberry.argument(description="The name of the new obra.")
         ],
@@ -105,24 +111,26 @@ class Mutation:
             ),
         ],
     ) -> schemas.Obra:
-        return adminObra.create_obra(name, description, area)
+        return info.context["resource_manager"].create_obra(name, description, area)
 
     @strawberry.mutation(
         description="Deletes a given obra alongside all its ambientes and images returning the deleted data. **If null it means the obra wasn't found.**"
     )
     def deleteObra(
         self,
+        info: strawberry.Info[GraphQLContext],
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of the obra to delete.")
         ],
     ) -> bool:
-        return adminObra.delete_obra(id)
+        return info.context["resource_manager"].delete_obra(id)
 
     @strawberry.mutation(
         description="Updates the obra identified by ID with the given parameters. All are optional, leave blank to not update. **If null it means the obra wasn't found.**"
     )
     def updateObra(
         self,
+        info: strawberry.Info[GraphQLContext],
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of the obra to update.")
         ],
@@ -161,13 +169,14 @@ class Mutation:
             ),
         ] = None,
     ) -> typing.Optional[schemas.Obra]:
-        return adminObra.update_obra(
+        return info.context["resource_manager"].update_obra(
             id, name, description, area, thumbnail, index, public
         )
 
     @strawberry.mutation(description="Creates a new ambiente.")
     def createAmbiente(
         self,
+        info: strawberry.Info[GraphQLContext],
         obra_id: typing.Annotated[
             int,
             strawberry.argument(
@@ -185,12 +194,16 @@ class Mutation:
             ),
         ] = None,
     ) -> typing.Union[schemas.Ambiente, errors.ObraNotFoundAmbiente]:
-        return adminObra.create_ambiente(obra_id, name, description)
+        return info.context["resource_manager"].create_ambiente(
+            obra_id, name, description
+        )
 
     @strawberry.mutation(
         description="Updates the ambiente identified by id with the given parameters. All are optional. **Returns the updated data or null if no ambiente was found.**"
     )
     def updateAmbiente(
+        self,
+        info: strawberry.Info[GraphQLContext],
         id: typing.Annotated[
             int,
             strawberry.argument(description="The ID of the ambiente to update."),
@@ -212,24 +225,27 @@ class Mutation:
             ),
         ] = None,
     ) -> typing.Optional[schemas.Ambiente]:
-        return adminObra.update_ambiente(id, name, description, index)
+        resource_manager: AdminResourceManager = info.context["resource_manager"]
+        return resource_manager.update_ambiente(id, name, description, index)
 
     @strawberry.mutation(
         description="Deletes a given ambiente alongside all its images returning the deleted data. **If null it means the ambiente wasn't found.**"
     )
     def deleteAmbiente(
         self,
+        info: strawberry.Info[GraphQLContext],
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of the ambiente to delete.")
         ],
     ) -> bool:
-        return adminObra.delete_ambiente(id)
+        return info.context["resource_manager"].delete_ambiente(id)
 
     @strawberry.mutation(
         description="Creates a a new image for the given ambiente. Returns an error if the ambiente wasn't found or the filetype isn't supported."
     )
     def createImage(
         self,
+        info: strawberry.Info[GraphQLContext],
         ambiente_id: typing.Annotated[
             int,
             strawberry.argument(
@@ -249,13 +265,16 @@ class Mutation:
     ) -> typing.Union[
         schemas.Image, errors.AmbienteNotFoundImage, errors.UnsupportedFileType
     ]:
-        return adminObra.create_image(image, alt_text, ambiente_id)
+        return info.context["resource_manager"].create_image(
+            image, alt_text, ambiente_id
+        )
 
     @strawberry.mutation(
         description="Updates the image identified by filename. All parameters are optional. **Returns the updated image or null if no image was found.**"
     )
     def updateImage(
         self,
+        info: strawberry.Info[GraphQLContext],
         filename: typing.Annotated[
             str, strawberry.argument(description="The filename of the image to update.")
         ],
@@ -294,7 +313,7 @@ class Mutation:
             ),
         ] = None,
     ) -> typing.Optional[schemas.Image]:
-        return adminObra.update_image(
+        return info.context["resource_manager"].update_image(
             filename,
             alt_text,
             index,
@@ -310,6 +329,7 @@ class Mutation:
     )
     def updateImageConfig(
         self,
+        info: strawberry.Info[GraphQLContext],
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of the imageConfig to update.")
         ],
@@ -366,7 +386,8 @@ class Mutation:
             ),
         ] = None,
     ) -> typing.Optional[schemas.MainImageConfig]:
-        image = adminObra.admin_database.query(
+        resource_manager = info.context["resource_manager"]
+        image = resource_manager.database_manager.query(
             """
             SELECT 1 FROM imagenConfig WHERE id = %s;
         """,
@@ -376,7 +397,7 @@ class Mutation:
 
         if image:
             if description is not None:
-                adminObra.admin_database.query(
+                resource_manager.database_manager.query(
                     """
                 UPDATE imagenConfig SET descripcion = %s WHERE id = %s;
                 """,
@@ -384,7 +405,7 @@ class Mutation:
                     commit=False,
                 )
             if description_en is not None:
-                adminObra.admin_database.query(
+                resource_manager.database_manager.query(
                     """
                 UPDATE imagenConfig SET descripcion_en = %s WHERE id = %s;
                 """,
@@ -397,7 +418,7 @@ class Mutation:
                 if description_pos:
                     value = description_pos.value
 
-                adminObra.admin_database.query(
+                resource_manager.database_manager.query(
                     """
                 UPDATE imagenConfig SET texto_ubicacion = %s WHERE id = %s;
                 """,
@@ -405,7 +426,7 @@ class Mutation:
                     commit=False,
                 )
             if description_font:
-                adminObra.admin_database.query(
+                resource_manager.database_manager.query(
                     """
                     UPDATE imagenConfig SET descripcionTipografia = %s WHERE id = %s;
                 """,
@@ -413,7 +434,7 @@ class Mutation:
                     commit=False,
                 )
             if description_alignment:
-                adminObra.admin_database.query(
+                resource_manager.database_manager.query(
                     """
                     UPDATE imagenConfig SET descripcionDistribucion = %s WHERE id = %s;
                 """,
@@ -421,7 +442,7 @@ class Mutation:
                     commit=False,
                 )
             if description_font_size is not None:
-                adminObra.admin_database.query(
+                resource_manager.database_manager.query(
                     """
                     UPDATE imagenConfig SET descripcionTamano = %s WHERE id = %s;
                 """,
@@ -434,7 +455,7 @@ class Mutation:
                 if logo_pos:
                     value = logo_pos.value
 
-                adminObra.admin_database.query(
+                resource_manager.database_manager.query(
                     """
                 UPDATE imagenConfig SET logo_ubicacion = %s WHERE id = %s;
                 """,
@@ -443,7 +464,7 @@ class Mutation:
                 )
 
                 if overflow is not strawberry.UNSET:
-                    adminObra.admin_database.query(
+                    resource_manager.database_manager.query(
                         """
                     UPDATE imagenConfig SET sangrar = %s WHERE id = %s;
                     """,
@@ -458,7 +479,7 @@ class Mutation:
                     (logo_borders.o, "o"),
                 ):
                     if border is not None:
-                        adminObra.admin_database.query(
+                        resource_manager.database_manager.query(
                             SQL(
                                 """
                         UPDATE imagenConfig SET {} = {} WHERE id = {};
@@ -473,7 +494,7 @@ class Mutation:
                     (image_borders.o, "o"),
                 ):
                     if border is not None:
-                        adminObra.admin_database.query(
+                        resource_manager.database_manager.query(
                             SQL(
                                 """
                         UPDATE imagenConfig SET {} = {} WHERE id = {};
@@ -485,11 +506,11 @@ class Mutation:
             if index is not None:
                 # Tablename in lowercase because postgres saves imagenConfig in lowercase and
                 # by doing "imagenConfig" it fails because it searches case sensitive.
-                adminObra.update_index(id, "imagenconfig", index)
+                resource_manager.update_index(id, "imagenconfig", index)
 
-            adminObra.admin_database.commit()
+            resource_manager.database_manager.commit()
 
-            data = adminObra.admin_database.query(
+            data = resource_manager.database_manager.query(
                 """
                 SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar,
                 imagen_borde_n, imagen_borde_s, imagen_borde_e, imagen_borde_o,
@@ -525,9 +546,11 @@ class Mutation:
     )
     def deleteImage(
         self,
+        info: strawberry.Info[GraphQLContext],
         filename: typing.Annotated[
             str,
             strawberry.argument(description="The filename of the image to delete."),
         ],
     ) -> bool:
-        return adminObra.delete_image(filename)
+        resource_manager: AdminResourceManager = info.context["resource_manager"]
+        return resource_manager.delete_image(filename)
