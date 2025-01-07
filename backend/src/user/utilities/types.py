@@ -1,13 +1,6 @@
-from common.database import DatabaseManager
-from typing import TypedDict
-from sanic.response import HTTPResponse
 from sanic import Sanic, Config, Request
 from types import SimpleNamespace
-from common.obra import ResourceManager
-
-
-class Context:
-    resource_manager: ResourceManager
+from common.types import Context
 
 
 class UserRequest(Request[Sanic[Config, Context], SimpleNamespace]):
@@ -16,9 +9,3 @@ class UserRequest(Request[Sanic[Config, Context], SimpleNamespace]):
 
 
 type UserApp = Sanic[Config, Context]
-
-
-class GraphQLContext(TypedDict):
-    request: UserRequest
-    response: HTTPResponse
-    resource_manager: ResourceManager

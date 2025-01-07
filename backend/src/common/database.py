@@ -56,12 +56,3 @@ class DatabaseManager:
     def rollback(self):
         """Forcefully rollback any pending commits."""
         self.database_connection.rollback()
-
-
-generic_database = DatabaseManager(
-    environ.get("COMMON_USERNAME"),
-    environ.get("COMMON_PASSWORD"),
-    environ.get("COMMON_HOST"),
-    environ.get("COMMON_DB_PORT"),
-    environ.get("COMMON_DB_NAME"),
-)

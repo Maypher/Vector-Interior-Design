@@ -1,7 +1,7 @@
 import typing
 import strawberry
-from common.database import generic_database
 from common.common_graphql import enums
+from common.types import ResourceInfo
 
 
 @strawberry.type(description="The main structure of the database.")
@@ -22,8 +22,8 @@ class Obra:
     @strawberry.field(
         description="An obra can have a thumbnail that will be the first thing shown in the UI."
     )
-    def thumbnail(self) -> typing.Optional["Image"]:
-        image_data = generic_database.query(
+    def thumbnail(self, info: ResourceInfo) -> typing.Optional["Image"]:
+        image_data = info.context["resource_manager"].database_manager.query(
             """
             SELECT imagen.id, archivo, texto_alt, imagen.indice, pagina_principal, imagen.descripcion, 
             imagen.descripcionTipografia, esconderEnObra FROM imagen 
@@ -56,8 +56,8 @@ class Obra:
             )
 
     @strawberry.field(description="All the ambientes belonging to this obra.")
-    def ambientes(self) -> typing.List["Ambiente"]:
-        ambientes_data = generic_database.query(
+    def ambientes(self, info: ResourceInfo) -> typing.List["Ambiente"]:
+        ambientes_data = info.context["resource_manager"].database_manager.query(
             """
         SELECT ambiente.id, ambiente.nombre, ambiente.descripcion, ambiente.indice FROM ambiente
         JOIN obra ON ambiente.obra_id = obra.id
@@ -89,8 +89,8 @@ class Ambiente:
     )
 
     @strawberry.field(description="The obra this ambiente belongs to.")
-    def obra(self) -> Obra:
-        obra_data = generic_database.query(
+    def obra(self, info: ResourceInfo) -> Obra:
+        obra_data = info.context["resource_manager"].database_manager.query(
             """
         SELECT obra.id, obra.nombre, obra.descripcion, obra.area, obra.indice, publico FROM obra
         JOIN ambiente ON ambiente.obra_id = obra.id
@@ -110,8 +110,8 @@ class Ambiente:
         )
 
     @strawberry.field(description="The images of this ambiente.")
-    def images(self) -> typing.List["Image"]:
-        images_data = generic_database.query(
+    def images(self, info: ResourceInfo) -> typing.List["Image"]:
+        images_data = info.context["resource_manager"].database_manager.query(
             """
         SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice, pagina_principal, imagen.descripcion, 
         imagen.descripcionTipografia, esconderEnObra FROM imagen
@@ -164,13 +164,13 @@ class Image:
     @strawberry.field(
         description="The configuration for this image when shown in a obra page in mobile."
     )
-    def phone_config(self) -> "PhoneImageConfig":
+    def phone_config(self, info: ResourceInfo) -> "PhoneImageConfig":
         # Done with a function since images are returned from multiple different places
         # wit slightly different queries then a generic resolver doesn't work and
         # having to repeat this code everywhere isn't good.
         # This may cause some performance issues since it's a new query for every image
         # but this ain't a critical app ¯\_(ツ)_/¯.
-        phone_config_data = generic_database.query(
+        phone_config_data = info.context["resource_manager"].database_manager.query(
             """
             SELECT (tlfnConfig).* FROM imagen WHERE imagen.id = %s;
         """,
@@ -196,8 +196,8 @@ class Image:
         )
 
     @strawberry.field(description="The ambiente this image belongs to.")
-    def ambiente(self) -> Ambiente:
-        ambiente_data = generic_database.query(
+    def ambiente(self, info: ResourceInfo) -> Ambiente:
+        ambiente_data = info.context["resource_manager"].database_manager.query(
             """
         SELECT ambiente.id, ambiente.nombre, ambiente.descripcion, ambiente.indice FROM ambiente
         JOIN imagen ON imagen.ambiente_id = ambiente.id
@@ -217,8 +217,8 @@ class Image:
     @strawberry.field(
         description="The configuration for the image if it's shown in the main page. Only exists if image.mainPage is true."
     )
-    def mainImageConfig(self) -> typing.Optional["MainImageConfig"]:
-        data = generic_database.query(
+    def mainImageConfig(self, info: ResourceInfo) -> typing.Optional["MainImageConfig"]:
+        data = info.context["resource_manager"].database_manager.query(
             """
             SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar,
             imagen_borde_n, imagen_borde_s, imagen_borde_e, imagen_borde_o,
@@ -300,8 +300,8 @@ class MainImageConfig:
     )
 
     @strawberry.field(description="The image that owns this configuration.")
-    def image(self) -> Image:
-        data = generic_database.query(
+    def image(self, info: ResourceInfo) -> Image:
+        data = info.context["resource_manager"].database_manager.query(
             """
             SELECT id, archivo, textoAlt, indice, imagen_principal, descripcion, descripcionTipografia, esconderEnObra FROM imagen 
             JOIN imagenConfig ON imagenConfig.imagen_id = imagen.id

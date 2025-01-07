@@ -3,13 +3,14 @@ import strawberry.sanic
 import strawberry.sanic.views
 from common import obra
 from common.common_graphql import schemas
-from common.database import generic_database
+from common.types import GraphQLContext, ResourceInfo
+
 import typing
 from user.utilities import types
 
 
 class UserGraphQLView(strawberry.sanic.views.GraphQLView):
-    def get_context(self, request: types.UserRequest, response) -> types.GraphQLContext:
+    async def get_context(self, request: types.UserRequest, response) -> GraphQLContext:
         return {
             "request": request,
             "response": response,
@@ -24,7 +25,7 @@ class Query:
     )
     def obras(
         self,
-        info: strawberry.Info[types.GraphQLContext],
+        info: ResourceInfo,
         page: typing.Annotated[
             int, strawberry.argument(description="The page to get.")
         ] = 1,
@@ -45,39 +46,46 @@ class Query:
     @strawberry.field(description="Returns the obra matching the given ID or null.")
     def obra(
         self,
+        info: ResourceInfo,
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of the obra to get.")
         ],
     ) -> typing.Optional[schemas.Obra]:
-        return obra.get_obra_by_id(id)
+        return info.context["resource_manager"].get_obra_by_id(id)
 
     @strawberry.field(description="Returns the ambiente matching the given ID or null.")
     def ambiente(
         self,
+        info: ResourceInfo,
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of ambiente to get.")
         ],
     ) -> typing.Optional[schemas.Ambiente]:
-        return obra.get_ambiente_by_id(id)
+        return info.context["resource_manager"].get_ambiente_by_id(id)
 
     @strawberry.field(
         description="Returns the image matching the given filename or null."
     )
     def image(
         self,
+        info: ResourceInfo,
         filename: typing.Annotated[
             str, strawberry.argument(description="The filename of the image to get.")
         ],
     ) -> typing.Optional[schemas.Image]:
-        return obra.get_image_by_filename(filename)
+        return info.context["resource_manager"].get_image_by_filename(filename)
 
     @strawberry.field(description="All the images shown in the main page")
-    def mainPageImages(self) -> typing.List[schemas.Image]:
-        image_filenames = generic_database.query(
+    def mainPageImages(self, info: ResourceInfo) -> typing.List[schemas.Image]:
+        resource_manager = info.context["resource_manager"]
+        image_filenames = resource_manager.database_manager.query(
             """
             SELECT archivo from imagen JOIN imagenConfig on imagenConfig.imagen_id = imagen.id 
             WHERE imagen.pagina_principal ORDER BY imagenConfig.indice;
             """
         )
 
-        return [obra.get_image_by_filename(filename[0]) for filename in image_filenames]
+        return [
+            resource_manager.get_image_by_filename(filename[0])
+            for filename in image_filenames
+        ]
