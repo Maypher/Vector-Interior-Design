@@ -1,18 +1,17 @@
 import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';
-import { ambienteCreateSchema } from '$lib/utilities/yupSchemas';
+import { spaceCreateSchema } from '$lib/utilities/yupSchemas';
 import graphql from '$lib/utilities/api.js';
 
 export const load = async ({ params, fetch }) => {
-    const ambienteID: number = +params.ambienteID;
-    const obraID: number = +params.obraID;
+    const spaceID: number = +params.ambienteID;
 
-    if (Number.isNaN(ambienteID)) error(404, `Ambiente con ID ${ambienteID} no existe.`);
+    if (Number.isNaN(spaceID)) error(404, `Ambiente con ID ${spaceID} no existe.`);
 
     const query = `
-        query getAmbiente($id: Int!) {
-            ambiente(id: $id) {
+        query getSpaces($id: Int!) {
+            space(id: $id) {
                 id
                 name
                 description
@@ -21,7 +20,7 @@ export const load = async ({ params, fetch }) => {
                     altText
                     mainPage
                 }
-                obra {
+                project {
                     id
                     name
                     thumbnail {
@@ -32,10 +31,10 @@ export const load = async ({ params, fetch }) => {
         }
     `;
 
-    const variables = { id: ambienteID };
+    const variables = { id: spaceID };
 
-    const ambienteData = (await graphql(query, variables, fetch)).ambiente;
-    const formData = { name: ambienteData.name, description: ambienteData.description };
-    const updateForm = await superValidate(formData, yup(ambienteCreateSchema));
-    return { ambienteData, updateForm };
+    const spaceData = (await graphql(query, variables, fetch)).space;
+    const formData = { name: spaceData.name, description: spaceData.description };
+    const updateForm = await superValidate(formData, yup(spaceCreateSchema));
+    return { spaceData, updateForm };
 };

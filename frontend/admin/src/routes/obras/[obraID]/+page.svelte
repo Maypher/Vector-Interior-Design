@@ -4,7 +4,7 @@
 	import { yup } from 'sveltekit-superforms/adapters';
 	import type { PageData } from './$types';
 	import { superForm } from 'sveltekit-superforms';
-	import { obraCreateSchema } from '$lib/utilities/yupSchemas';
+	import { projectCreateSchema } from '$lib/utilities/yupSchemas';
 	import { success } from '$lib/utilities/toasts';
 	import graphql from '$lib/utilities/api';
 	import confirmationDialog from '$lib/utilities/dialog';
@@ -17,11 +17,11 @@
 	import getArrayDifference from '$lib/utilities/arrayOrder';
 
 	const { data }: { data: PageData } = $props();
-	let obraData = $state(data.obraData!);
+	let projectData = $state(data.projectData!);
 	let submitting: boolean = $state(false);
 
 	let sortable: Sortable | undefined = $state();
-	let originalOrder: string[] = $state(obraData.ambientes.map((x: { id: string }) => x.id));
+	let originalOrder: string[] = $state(projectData.spaces.map((x: { id: string }) => x.id));
 	// svelte-ignore state_referenced_locally
 	let updatedElements: string[] = $state(originalOrder);
 	let saveDisabled = $derived(updatedElements.toString() === originalOrder.toString());
@@ -38,7 +38,7 @@
 
 	const { form, errors, enhance, constraints } = superForm(data.updateForm!, {
 		SPA: true,
-		validators: yup(obraCreateSchema), // Uses obraCreateScheme since this will only update name, description and area. All others will be dedicated pages.
+		validators: yup(projectCreateSchema), // Uses obraCreateScheme since this will only update name, description and area. All others will be dedicated pages.
 		resetForm: false,
 		async onUpdate({ form: updateForm }) {
 			if (updateForm.valid) {
@@ -53,7 +53,7 @@
 					}
 				`;
 				const variables = {
-					id: data.obraData.id,
+					id: projectData.id,
 					name: updateForm.data.name,
 					description: updateForm.data.description,
 					area: updateForm.data.area
@@ -72,45 +72,45 @@
 	async function changeObraStatus() {
 		const query = `
 			mutation changePublicStatus($id: Int!, $public: Boolean!) {
-				updateObra(id: $id, public: $public) {
+				updateProject(id: $id, public: $public) {
 					public
 				}
 			}
 		`;
 
-		const variables = { id: obraData.id, public: !obraData.public };
+		const variables = { id: projectData.id, public: !projectData.public };
 
-		const updatedPublic = (await graphql(query, variables)).updateObra.public;
+		const updatedPublic = (await graphql(query, variables)).updateProject.public;
 		success(updatedPublic ? 'Obra publicada con éxito.' : 'Obra privatizada con éxito.');
-		obraData.public = updatedPublic;
+		projectData.public = updatedPublic;
 	}
 
-	async function deleteObra() {
+	async function deleteProject() {
 		if (
-			await confirmationDialog(`Seguro que quieres borrar la obra <b>${obraData.name}</b> 
+			await confirmationDialog(`Seguro que quieres borrar el proyecto <b>${projectData.name}</b> 
 		junto a todos sus ambientes e imágenes?
 		Esta acción no puede ser revertida.
 		`)
 		) {
 			const query = `
-				mutation deleteObra($id: Int!) {
-					deleteObra(id: $id)
+				mutation deleteProject($id: Int!) {
+					deleteProject(id: $id)
 				}
 			`;
 
-			const variables = { id: obraData.id };
+			const variables = { id: projectData.id };
 
-			const deletedObra = (await graphql(query, variables)).deleteObra;
+			const deletedProject = (await graphql(query, variables)).deleteProject;
 
-			if (deletedObra) goto('/obras/');
-			else error(404, `Obra con ID ${obraData.id} no existe.`);
+			if (deletedProject) goto('/obras/');
+			else error(404, `Proyecto con ID ${projectData.id} no existe.`);
 		}
 	}
 
 	async function updateOrder() {
 		const query = `
 				mutation UpdateIndex($id: Int!, $index: Int!) {
-					updateAmbiente(id: $id, index: $index) {
+					updateSpace(id: $id, index: $index) {
 						id
 					}
 				}			
@@ -133,13 +133,13 @@
 	<form class="bg-purple-900 m-auto p-4 max-w-xl rounded-lg" use:enhance>
 		<button
 			type="button"
-			class={`${obraData.public ? 'bg-red-500' : 'bg-blue-500'} block w-fit ml-auto p-3 m-3 rounded-md`}
-			onclick={changeObraStatus}>{obraData.public ? 'Privatizar' : 'Publicar'}</button
+			class={`${projectData.public ? 'bg-red-500' : 'bg-blue-500'} block w-fit ml-auto p-3 m-3 rounded-md`}
+			onclick={changeObraStatus}>{projectData.public ? 'Privatizar' : 'Publicar'}</button
 		>
 		<button
 			type="button"
 			class="block w-fit ml-auto p-3 m-1 bg-red-500 hover:bg-green-600"
-			onclick={deleteObra}>Borrar obra</button
+			onclick={deleteProject}>Borrar obra</button
 		>
 		<fieldset disabled={submitting}>
 			<EditableInput
@@ -176,8 +176,8 @@
 	<div class="max-w-md m-auto">
 		<SortableList bind:sortable sortableId="sortable" {sortableOptions}>
 			<div id="sortable">
-				{#each obraData.ambientes as ambiente (ambiente.id)}
-					<div class="item flex items-center" data-ambienteId={ambiente.id}>
+				{#each projectData.spaces as space (space.id)}
+					<div class="item flex items-center" data-ambienteId={space.id}>
 						<span
 							class="material-symbols-outlined handle border-r-2 p-2 h-full content-center border-gray-800 hover:cursor-pointer"
 						>
@@ -185,16 +185,16 @@
 						</span>
 						<div class="size-full">
 							<a
-								href={`/obras/${obraData.id}/ambientes/${ambiente.id}`}
+								href={`/obras/${projectData.id}/ambientes/${space.id}`}
 								class="size-full pl-2 flex justify-between items-center hover:bg-amber-600"
 							>
 								<p>
-									{ambiente.name}
+									{space.name}
 								</p>
-								{#if ambiente.images.at(0)}
+								{#if space.images.at(0)}
 									<img
-										src={`${PUBLIC_imageURL}${ambiente.images[0].filename}`}
-										alt={ambiente.images[0].altText}
+										src={`${PUBLIC_imageURL}${space.images[0].filename}`}
+										alt={space.images[0].altText}
 										class="h-full"
 									/>
 								{/if}
@@ -224,7 +224,7 @@
 			>
 		</div>
 		<a
-			href={`/obras/${obraData.id}/ambientes/crear/`}
+			href={`/obras/${projectData.id}/ambientes/crear/`}
 			class="block bg-amber-400 hover:bg-amber-600 w-full text-center p-2 border-2 border-black sticky bottom-0"
 			>Nuevo Ambiente</a
 		>

@@ -15,7 +15,7 @@
 		n: boolean;
 		s: boolean;
 		e: boolean;
-		o: Boolean;
+		w: Boolean;
 	}
 
 	interface mainImageData {
@@ -23,14 +23,16 @@
 		altText: string;
 		mainImageConfig: {
 			description?: string;
-			descriptionPos?: 'N' | 'S' | 'E' | 'O';
-			logoPos?: 'N' | 'S' | 'E' | 'O';
 			descriptionFontSize: string;
 			descriptionFont: string;
 			descriptionAlignment: string;
-			overflow?: boolean;
-			imageBorders: Borders;
-			logoBorders: Borders;
+			phoneConfig: {
+				overflow?: boolean;
+				imageBorders: Borders;
+				logoBorders: Borders;
+				descriptionPosition?: 'N' | 'S' | 'E' | 'W';
+				logoPosition?: 'N' | 'S' | 'E' | 'W';
+			};
 		};
 	}
 
@@ -64,26 +66,29 @@
 {#snippet mainImage(imageData: mainImageData)}
 	<div
 		class="mt-20 flex flex-col gap-20"
-		class:flex={imageData.mainImageConfig.logoPos}
-		class:flex-col={imageData.mainImageConfig.logoPos === Direction.N}
-		class:flex-col-reverse={imageData.mainImageConfig.logoPos === Direction.S}
-		class:flex-row-reverse={imageData.mainImageConfig.logoPos === Direction.E}
+		class:flex={imageData.mainImageConfig.phoneConfig.logoPosition}
+		class:flex-col={imageData.mainImageConfig.phoneConfig.logoPosition === Direction.N}
+		class:flex-col-reverse={imageData.mainImageConfig.phoneConfig.logoPosition === Direction.S}
+		class:flex-row-reverse={imageData.mainImageConfig.phoneConfig.logoPosition === Direction.E}
 	>
-		{#if imageData.mainImageConfig.logoPos}
+		{#if imageData.mainImageConfig.phoneConfig.logoPosition}
 			<div
-				class={`border-vector-orange m-auto w-10/12 ${imageData.mainImageConfig.logoBorders.n ? 'border-t-2 pt-10' : ''} ${imageData.mainImageConfig.logoBorders.s ? 'border-b-2 pb-10' : ''} ${imageData.mainImageConfig.logoBorders.e ? 'border-r-2 pr-10' : ''} ${imageData.mainImageConfig.logoBorders.o ? 'border-l-2 pl-10' : ''}`}
+				class={`border-vector-orange m-auto w-10/12 ${imageData.mainImageConfig.phoneConfig.logoBorders.n ? 'border-t-2 pt-10' : ''} ${imageData.mainImageConfig.phoneConfig.logoBorders.s ? 'border-b-2 pb-10' : ''} ${imageData.mainImageConfig.phoneConfig.logoBorders.e ? 'border-r-2 pr-10' : ''} ${imageData.mainImageConfig.phoneConfig.logoBorders.w ? 'border-l-2 pl-10' : ''}`}
 			>
 				<img src={symbol} alt="symbol" class="mx-auto w-20" />
 			</div>
 		{/if}
 		<div
 			class="gap-16"
-			class:flex={imageData.mainImageConfig.descriptionPos && imageData.mainImageConfig.description}
-			class:flex-col={imageData.mainImageConfig.descriptionPos === Direction.N}
-			class:flex-col-reverse={imageData.mainImageConfig.descriptionPos === Direction.S}
-			class:flex-row-reverse={imageData.mainImageConfig.descriptionPos === Direction.E}
+			class:flex={imageData.mainImageConfig.phoneConfig.descriptionPosition &&
+				imageData.mainImageConfig.description}
+			class:flex-col={imageData.mainImageConfig.phoneConfig.descriptionPosition === Direction.N}
+			class:flex-col-reverse={imageData.mainImageConfig.phoneConfig.descriptionPosition ===
+				Direction.S}
+			class:flex-row-reverse={imageData.mainImageConfig.phoneConfig.descriptionPosition ===
+				Direction.E}
 		>
-			{#if imageData.mainImageConfig.descriptionPos && imageData.mainImageConfig.description}
+			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.description}
 				<div
 					class={`class m-auto w-10/12 text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription`}
 					style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
@@ -95,29 +100,29 @@
 				class={(() => {
 					let classStr = 'border-vector-orange m-auto';
 
-					if (!imageData.mainImageConfig.overflow) {
+					if (!imageData.mainImageConfig.phoneConfig.overflow) {
 						classStr = classStr.concat(' ', 'w-10/12');
 
-						if (imageData.mainImageConfig.imageBorders.n)
+						if (imageData.mainImageConfig.phoneConfig.imageBorders.n)
 							classStr = classStr.concat(' ', 'border-t-2 pt-20');
-						if (imageData.mainImageConfig.imageBorders.s)
+						if (imageData.mainImageConfig.phoneConfig.imageBorders.s)
 							classStr = classStr.concat(' ', 'border-b-2 pb-20');
-						if (imageData.mainImageConfig.imageBorders.e)
+						if (imageData.mainImageConfig.phoneConfig.imageBorders.e)
 							classStr = classStr.concat(' ', 'border-r-2 pr-20');
-						if (imageData.mainImageConfig.imageBorders.o)
+						if (imageData.mainImageConfig.phoneConfig.imageBorders.w)
 							classStr = classStr.concat(' ', 'border-l-2 pl-20');
 					}
 
 					return classStr;
 				})()}
 			>
-				{#if imageData.mainImageConfig.overflow && imageData.mainImageConfig.imageBorders.n}
+				{#if imageData.mainImageConfig.phoneConfig.overflow && imageData.mainImageConfig.phoneConfig.imageBorders.n}
 					<div class="bg-vector-orange m-auto mb-20 h-[2px] w-10/12"></div>
 				{/if}
 
 				<img src={`${PUBLIC_imagesUrl}${imageData.filename}`} alt={imageData.altText} />
 
-				{#if imageData.mainImageConfig.overflow && imageData.mainImageConfig.imageBorders.s}
+				{#if imageData.mainImageConfig.phoneConfig.overflow && imageData.mainImageConfig.phoneConfig.imageBorders.s}
 					<div class="bg-vector-orange m-auto mt-20 h-[2px] w-10/12"></div>
 				{/if}
 			</div>

@@ -5,7 +5,7 @@
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
-	const obras = data.obras;
+	const projects = data.projects;
 
 	onMount(() => {
 		const arrow = document.getElementById('arrow')!;
@@ -45,16 +45,16 @@
 </header>
 
 <div class="h-dvh w-screen snap-y snap-mandatory overflow-y-scroll">
-	{#each obras as obra, i (obra.id)}
-		{#if obra.thumbnail}
+	{#each projects as project, i (project.id)}
+		{#if project.thumbnail}
 			<div class="flex h-dvh snap-center items-center justify-center bg-black text-white">
 				<div class="relative top-16">
-					<a href={`/proyectos/${obra.id}`} class="flex flex-col gap-6 px-8">
+					<a href={`/proyectos/${project.id}`} class="flex flex-col gap-6 px-8">
 						<img
-							src={`${PUBLIC_imagesUrl}${obra.thumbnail.filename}`}
-							alt={obra.thumbnail.altText}
+							src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
+							alt={project.thumbnail.altText}
 						/>
-						<p class="font-Agency-FB text-[1.7rem]">{obra.name}</p>
+						<p class="font-Agency-FB text-[1.7rem]">{project.name}</p>
 					</a>
 				</div>
 				{#if i === 1}

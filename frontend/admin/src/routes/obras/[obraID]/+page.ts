@@ -1,23 +1,23 @@
-import { obraCreateSchema } from '$lib/utilities/yupSchemas.js';
+import { projectCreateSchema } from '$lib/utilities/yupSchemas.js';
 import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';
 import graphql from '$lib/utilities/api.js';
 
 export async function load({ params, fetch }) {
-    const obraID: number = +params.obraID;
+    const projectID: number = +params.obraID;
 
-    if (Number.isNaN(obraID)) error(404, `Obra con ID ${obraID} no existe.`);
+    if (Number.isNaN(projectID)) error(404, `Proyecto con ID ${projectID} no existe.`);
 
     const query = `
-                query GetObra($id: Int!) {
-                    obra(id: $id) {
+                query getProject($id: Int!) {
+                    project(id: $id) {
                         id
                         name
                         description
                         area
                         public
-                        ambientes {
+                        spaces {
                             id
                             name
                             images {
@@ -28,13 +28,13 @@ export async function load({ params, fetch }) {
                     }
                 }
            `;
-    const variables = { id: obraID };
+    const variables = { id: projectID };
 
-    const obraData = (await graphql(query, variables, fetch)).obra;
+    const projectData = (await graphql(query, variables, fetch)).project;
 
-    const formData = { name: obraData.name, description: obraData.description, area: obraData.area };
-    const updateForm = await superValidate(formData, yup(obraCreateSchema));
+    const formData = { name: projectData.name, description: projectData.description, area: projectData.area };
+    const updateForm = await superValidate(formData, yup(projectCreateSchema));
 
-    if (obraData) return { updateForm, obraData };
-    else error(404, `Obra con ID ${obraID} no existe.`);
+    if (projectData) return { updateForm, projectData };
+    else error(404, `Obra con ID ${projectID} no existe.`);
 }

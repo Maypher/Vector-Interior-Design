@@ -1,4 +1,4 @@
-import { createObraSchema } from '$lib/utilities/yupSchemas.js';
+import { createProjectSchema } from '$lib/utilities/yupSchemas.js';
 import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';
@@ -9,7 +9,7 @@ export const load = async ({ params }) => {
 
     if (isNaN(ambienteID)) error(404, `Ambiente con ID ${ambienteID} no existe.`);
 
-    const createForm = await superValidate(yup(createObraSchema));
+    const createForm = await superValidate(yup(createProjectSchema));
 
     return { ambienteID, createForm, obraID };
 };

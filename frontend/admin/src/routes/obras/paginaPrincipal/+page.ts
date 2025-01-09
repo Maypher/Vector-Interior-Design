@@ -9,30 +9,32 @@ export const load = async ({ fetch }) => {
                 mainPage
                 mainImageConfig  {
                     id
-                    description
+                    descriptionEs
                     descriptionEn
-                    descriptionPos
                     descriptionAlignment
                     descriptionFont
                     descriptionFontSize
-                    logoPos
-                    overflow
-                    imageBorders {
-                        n
-                        s
-                        e
-                        o
-                    }
-                    logoBorders {
-                        n
-                        s
-                        e
-                        o
+                    phoneConfig {
+                        descriptionPosition
+                        logoPosition
+                        overflow
+                        imageBorders {
+                            n
+                            s
+                            e
+                            w
+                        }
+                        logoBorders {
+                            n
+                            s
+                            e
+                            w
+                        }
                     }
                 }
-                ambiente {
+                space {
                     id
-                    obra {
+                    project {
                         id
                         public
                     }

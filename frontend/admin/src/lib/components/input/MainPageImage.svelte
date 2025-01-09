@@ -7,25 +7,27 @@
 
 	interface ImageConfig {
 		id: number;
-		description: string | undefined;
+		descriptionEs: string | undefined;
 		descriptionEn: string | undefined;
-		descriptionPos: string | null;
 		descriptionFontSize: number;
 		descriptionFont: string;
 		descriptionAlignment: string;
-		logoPos: string | null;
-		overflow: boolean;
-		logoBorders: {
-			n: boolean;
-			s: boolean;
-			e: boolean;
-			o: boolean;
-		};
-		imageBorders: {
-			n: boolean;
-			s: boolean;
-			e: boolean;
-			o: boolean;
+		phoneConfig: {
+			descriptionPosition: string | null;
+			logoPosition: string | null;
+			overflow: boolean;
+			logoBorders: {
+				n: boolean;
+				s: boolean;
+				e: boolean;
+				w: boolean;
+			};
+			imageBorders: {
+				n: boolean;
+				s: boolean;
+				e: boolean;
+				w: boolean;
+			};
 		};
 	}
 
@@ -33,8 +35,8 @@
 		image: {
 			filename: string;
 			altText: string;
-			ambienteId: number;
-			obraId: number;
+			spaceId: number;
+			projectId: number;
 		};
 		imageConfig: ImageConfig;
 	}
@@ -43,9 +45,9 @@
 
 	// Done this way because prop passed by reference and when updating it updates the value in the parent.
 	// This forces a deep copy so it is treated as a different value.
-	let configClone = $state.snapshot(imageConfig);
-	let originalConfig: ImageConfig = $state(configClone);
-	let updatedConfig: ImageConfig = $state(configClone);
+	const configClone = $state($state.snapshot(imageConfig));
+	let originalConfig: ImageConfig = $state($state.snapshot(imageConfig));
+	let updatedConfig: ImageConfig = $state($state.snapshot(imageConfig));
 	let shouldUpdate: boolean = $derived(
 		JSON.stringify(originalConfig) !== JSON.stringify(updatedConfig)
 	);
@@ -57,36 +59,34 @@
 		evt.preventDefault();
 
 		const query = `
-			mutation updateImageConfig($id: Int!, $description: String, $descriptionEn: String, 
-			$logoPos: Direction, $descriptionPos: Direction, $descriptionAlignment: String, 
-			$descriptionFont: String, $descriptionFontSize: Float,
-			$overflow: Boolean, $imageBorders: BordersInput, 
-			$logoBorders: BordersInput) {
-				updateImageConfig(id: $id, description: $description, descriptionEn: $descriptionEn,
-				logoPos: $logoPos, descriptionPos: $descriptionPos,
+			mutation updateMainPageConfig($id: Int!, $descriptionEs: String, $descriptionEn: String, 
+			$descriptionAlignment: String, $descriptionFont: String, $descriptionFontSize: Float,
+			$phoneConfig: MainPageImagePhoneConfigInput) {
+				updateMainPageConfig(id: $id, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn,
 				descriptionAlignment: $descriptionAlignment, descriptionFont: $descriptionFont, 
-				descriptionFontSize: $descriptionFontSize, overflow: $overflow, 
-				imageBorders: $imageBorders, logoBorders: $logoBorders) {
+				descriptionFontSize: $descriptionFontSize, phoneConfig: $phoneConfig) {
 					id
-					description
+					descriptionEs
 					descriptionEn
-					logoPos
-					descriptionPos
 					descriptionAlignment
 					descriptionFont
 					descriptionFontSize
-					overflow
-					imageBorders {
-						n
-						s
-						e
-						o
-					}
-					logoBorders {
-						n
-						s
-						e
-						o
+					phoneConfig {
+						overflow
+						logoPosition
+						descriptionPosition
+						imageBorders {
+							n
+							s
+							e
+							w
+						}
+						logoBorders {
+							n
+							s
+							e
+							w
+						}
 					}
 				}
 			}
@@ -94,7 +94,7 @@
 
 		const updates = $state.snapshot(updatedConfig);
 
-		const updatedData = (await graphql(query, updates)).updateImageConfig;
+		const updatedData = (await graphql(query, updates)).updateMainPageConfig;
 
 		originalConfig = updatedData;
 		updatedConfig = updatedData;
@@ -110,15 +110,15 @@
 		class="flex justify-between pl-2 w-full"
 	>
 		<div class=" flex flex-col gap-2 accent-vector-orange m-2">
-			<input type="checkbox" bind:checked={updatedConfig.imageBorders.n} />
+			<input type="checkbox" bind:checked={updatedConfig.phoneConfig.imageBorders.n} />
 			<div class="flex gap-2">
-				<input type="checkbox" bind:checked={updatedConfig.imageBorders.o} />
-				<a href={`/obras/${image.obraId}/ambientes/${image.ambienteId}/imagenes/${image.filename}`}>
+				<input type="checkbox" bind:checked={updatedConfig.phoneConfig.imageBorders.w} />
+				<a href={`/obras/${image.projectId}/ambientes/${image.spaceId}/imagenes/${image.filename}`}>
 					<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altText} class="h-36" />
 				</a>
-				<input type="checkbox" bind:checked={updatedConfig.imageBorders.e} />
+				<input type="checkbox" bind:checked={updatedConfig.phoneConfig.imageBorders.e} />
 			</div>
-			<input type="checkbox" bind:checked={updatedConfig.imageBorders.s} />
+			<input type="checkbox" bind:checked={updatedConfig.phoneConfig.imageBorders.s} />
 		</div>
 		<div>
 			<div class="flex gap-5 p-5 items-center">
@@ -128,47 +128,49 @@
 						type="checkbox"
 						name="overflow"
 						id={`overflow-${imageConfig.id}`}
-						bind:checked={updatedConfig.overflow}
+						bind:checked={updatedConfig.phoneConfig.overflow}
 					/>
 				</div>
 				<div class="flex flex-col gap-2">
 					<input
 						type="checkbox"
-						bind:checked={updatedConfig.logoBorders.n}
+						bind:checked={updatedConfig.phoneConfig.logoBorders.n}
 						class="accent-vector-orange"
 					/>
 					<div class="flex gap-2">
 						<input
 							type="checkbox"
-							bind:checked={updatedConfig.logoBorders.o}
+							bind:checked={updatedConfig.phoneConfig.logoBorders.w}
 							class="accent-vector-orange"
 						/>
 						<div class="flex flex-col">
 							<label for="logoPos" class="m-auto">Logo</label>
-							<select name="logoPos" bind:value={updatedConfig.logoPos}>
+							<select name="logoPos" bind:value={updatedConfig.phoneConfig.logoPosition}>
 								{#each Object.entries(Directions) as [direction, value] (direction)}
-									<option {value} selected={value === imageConfig.logoPos}>{direction}</option>
+									<option {value} selected={value === imageConfig.phoneConfig.logoPosition}
+										>{direction}</option
+									>
 								{/each}
 							</select>
 						</div>
 						<input
 							type="checkbox"
-							bind:checked={updatedConfig.logoBorders.e}
+							bind:checked={updatedConfig.phoneConfig.logoBorders.w}
 							class="accent-vector-orange"
 						/>
 					</div>
 					<input
 						type="checkbox"
-						bind:checked={updatedConfig.logoBorders.s}
+						bind:checked={updatedConfig.phoneConfig.logoBorders.s}
 						class="accent-vector-orange"
 					/>
 				</div>
 				<div class="flex flex-col items-center gap-2">
 					<div>
 						<label for="textPos">Posición de Descripción</label>
-						<select name="textPos" bind:value={updatedConfig.descriptionPos}>
+						<select name="textPos" bind:value={updatedConfig.phoneConfig.descriptionPosition}>
 							{#each Object.entries(Directions) as [direction, value] (direction)}
-								<option {value} selected={value === imageConfig.descriptionPos}
+								<option {value} selected={value === imageConfig.phoneConfig.descriptionPosition}
 									>{direction}
 								</option>
 							{/each}
@@ -275,7 +277,7 @@
 							fontFamily={updatedConfig.descriptionFont}
 							fontSize={updatedConfig.descriptionFontSize}
 							fontAlignment={updatedConfig.descriptionAlignment}
-							bind:value={updatedConfig.description}
+							bind:value={updatedConfig.descriptionEs}
 							errors={[]}
 						/>
 					</div>

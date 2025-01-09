@@ -1,10 +1,10 @@
 import { superValidate } from 'sveltekit-superforms';
 import { yup } from 'sveltekit-superforms/adapters';
-import { ambienteCreateSchema } from '$lib/utilities/yupSchemas';
+import { spaceCreateSchema } from '$lib/utilities/yupSchemas';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params }) => {
-    const createForm = await superValidate(yup(ambienteCreateSchema));
+    const createForm = await superValidate(yup(spaceCreateSchema));
 
-    return { createForm, obraId: params.obraID }
+    return { createForm, projectId: params.obraID }
 }

@@ -2,21 +2,21 @@ import { error } from '@sveltejs/kit';
 import graphql from '$lib/utilities/api';
 
 export const load = async ({ params, fetch }) => {
-    const ambienteID: number = +params.ambienteID;
+    const spaceID: number = +params.ambienteID;
 
-    if (Number.isNaN(ambienteID)) error(404, `Ambiente con ID ${ambienteID} no existe.`);
+    if (Number.isNaN(spaceID)) error(404, `Ambiente con ID ${spaceID} no existe.`);
 
     const query = `
-            query getAmbiente($id: Int!) {
-                ambiente(id: $id) {
+            query getSpace($id: Int!) {
+                space(id: $id) {
                     id
                 }
             }
         `;
 
-    const variables = { id: ambienteID };
+    const variables = { id: spaceID };
 
-    const ambienteData = (await graphql(query, variables, fetch)).ambiente;
+    const ambienteData = (await graphql(query, variables, fetch)).space;
 
-    if (!ambienteData) error(404, `Ambiente con ID ${ambienteID} no existe.`);
+    if (!ambienteData) error(404, `Ambiente con ID ${spaceID} no existe.`);
 }

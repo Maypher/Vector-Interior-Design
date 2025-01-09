@@ -14,7 +14,7 @@
 
 	const { data }: { data: PageData } = $props();
 	let imageData = $state(data.imageData!);
-	let isThumbnail = $derived(imageData.ambiente.obra.thumbnail?.filename === imageData.filename);
+	let isThumbnail = $derived(imageData.space.project.thumbnail?.filename === imageData.filename);
 	let isInMainPage = $derived(imageData.mainPage);
 	let submitting: boolean = $state(false);
 
@@ -67,14 +67,14 @@
 
 			const deleted = (await graphql(query, variables)).deleteImage;
 
-			await goto(`/obras/${data.obraId}/ambientes/${data.ambienteId}`);
+			if (deleted) await goto(`/obras/${data.obraId}/ambientes/${data.ambienteId}`);
 		}
 	}
 
 	async function setThumbnail() {
 		const query = `
 			mutation setThumbnail($obraId: Int!, $thumbnail: String) {
-				updateObra(id: $obraId, thumbnail: $thumbnail) {
+				updateProject(id: $obraId, thumbnail: $thumbnail) {
 					name
 					thumbnail {
 						filename
@@ -129,7 +129,7 @@
 							n
 							e
 							s
-							o
+							w
 						}
 						alignment
 						descriptionPos

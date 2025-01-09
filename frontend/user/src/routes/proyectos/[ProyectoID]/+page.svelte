@@ -7,7 +7,7 @@
 	import * as enums from '$lib/utilities/enums';
 
 	const { data }: { data: PageData } = $props();
-	const obraData = data.obraData;
+	const projectData = data.projectData;
 </script>
 
 <div class="min-h-screen bg-black">
@@ -22,33 +22,33 @@
 		</div>
 	</header>
 
-	{#each obraData.ambientes.slice(0, 1) as ambiente (ambiente.id)}
-		{#if !ambiente.images.at(0)?.hideInProject}
+	{#each projectData.spaces.slice(0, 1) as space (space.id)}
+		{#if !space.images.at(0)?.hideInProject}
 			<img
-				src={`${PUBLIC_imagesUrl}${ambiente.images.at(0)?.filename}`}
-				alt={ambiente.images.at(0)?.altText}
-				class:px-8={ambiente.images.shift()?.phoneConfig.alignment !== enums.Alignment.Sangrar}
+				src={`${PUBLIC_imagesUrl}${space.images.at(0)?.filename}`}
+				alt={space.images.at(0)?.altText}
+				class:px-8={space.images.shift()?.phoneConfig.alignment !== enums.Alignment.Overflow}
 			/>
 
 			<div class="mx-8 my-12 text-white">
 				<h1 class="font-Agency-FB border-b-vector-orange my-2 border-b-2 pb-2 indent-1 text-3xl">
-					{obraData.name}
+					{projectData.name}
 				</h1>
-				<p class="font-Arial text-right text-sm">Área: {obraData.area} metros cuadrados</p>
+				<p class="font-Arial text-right text-sm">Área: {projectData.area} metros cuadrados</p>
 				<div class="white markdownDescription my-6 text-justify">
-					{@html mdToHtml(obraData.description)}
+					{@html mdToHtml(projectData.description)}
 				</div>
 			</div>
 		{/if}
 	{/each}
 
 	<div>
-		{#each obraData.ambientes.slice(0) as ambiente (ambiente.id)}
-			{#each ambiente.images as image (image.filename)}
+		{#each projectData.spaces.slice(0) as space (space.id)}
+			{#each space.images as image (image.filename)}
 				{#if !image.hideInProject}
 					<div
-						class={`border-vector-orange my-12 gap-12 ${image.phoneConfig.borders.n && 'border-t-2 pt-12'} ${image.phoneConfig.borders.s && 'border-b-2 pb-12'} ${image.phoneConfig.borders.e && 'border-r-2 pr-12'} ${image.phoneConfig.borders.o && 'border-l-2 pl-12'}`}
-						class:mx-8={image.phoneConfig.alignment !== enums.Alignment.Sangrar}
+						class={`border-vector-orange my-12 gap-12 ${image.phoneConfig.borders.n && 'border-t-2 pt-12'} ${image.phoneConfig.borders.s && 'border-b-2 pb-12'} ${image.phoneConfig.borders.e && 'border-r-2 pr-12'} ${image.phoneConfig.borders.w && 'border-l-2 pl-12'}`}
+						class:mx-8={image.phoneConfig.alignment !== enums.Alignment.Overflow}
 						class:flex={image.phoneConfig.descriptionPos}
 						class:flex-row={image.phoneConfig.descriptionPos === enums.Direction.O}
 						class:flex-row-reverse={image.phoneConfig.descriptionPos === enums.Direction.E}
@@ -65,9 +65,9 @@
 						<img
 							src={`${PUBLIC_imagesUrl}${image.filename}`}
 							alt={image.altText}
-							class={`${[enums.Alignment.Derecha, enums.Alignment.Izquierda].includes(image.phoneConfig.alignment) ? 'w-2/3' : ''}`}
-							class:ml-auto={image.phoneConfig.alignment === enums.Alignment.Derecha}
-							class:mr-auto={image.phoneConfig.alignment === enums.Alignment.Izquierda}
+							class={`${[enums.Alignment.Right, enums.Alignment.Left].includes(image.phoneConfig.alignment) ? 'w-2/3' : ''}`}
+							class:ml-auto={image.phoneConfig.alignment === enums.Alignment.Right}
+							class:mr-auto={image.phoneConfig.alignment === enums.Alignment.Left}
 						/>
 					</div>
 				{/if}

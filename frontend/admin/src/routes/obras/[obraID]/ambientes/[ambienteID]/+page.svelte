@@ -2,7 +2,7 @@
 	import { yup } from 'sveltekit-superforms/adapters';
 	import type { PageData } from './$types';
 	import { superForm } from 'sveltekit-superforms';
-	import { ambienteCreateSchema } from '$lib/utilities/yupSchemas';
+	import { spaceCreateSchema } from '$lib/utilities/yupSchemas';
 	import EditableInput from '$lib/components/input/EditableInput.svelte';
 	import Markdown from '$lib/components/markdown/Markdown.svelte';
 	import { success } from '$lib/utilities/toasts';
@@ -16,13 +16,13 @@
 	import getArrayDifference from '$lib/utilities/arrayOrder';
 
 	const { data }: { data: PageData } = $props();
-	let ambiente = $state(data.ambienteData);
+	let space = $state(data.spaceData);
 	let submitting: boolean = $state(false);
 	let originalOrder: string[] = $state(
-		ambiente.images.map((image: { filename: string }) => image.filename)
+		space.images.map((image: { filename: string }) => image.filename)
 	);
 	// svelte-ignore state_referenced_locally
-	let updatedElements: string[] = $state(originalOrder);
+	let updatedElements: string[] = $state($state.snapshot(originalOrder));
 	let saveDisabled = $derived(updatedElements.toString() === originalOrder.toString());
 
 	let sortable: Sortable | undefined = $state();
@@ -38,54 +38,54 @@
 
 	const { form, errors, enhance, constraints } = superForm(data.updateForm, {
 		SPA: true,
-		validators: yup(ambienteCreateSchema),
+		validators: yup(spaceCreateSchema),
 		resetForm: false,
 		invalidateAll: false,
 		async onUpdate({ form: updateForm }) {
 			submitting = true;
 			if (updateForm.valid) {
 				const query = `
-                    mutation UpdateAmbiente($id: Int!, $name: String, $description: String) {
-                        updateAmbiente(id: $id, name: $name, description: $description) {
+                    mutation updateSpace($id: Int!, $name: String, $description: String) {
+                        updateSpace(id: $id, name: $name, description: $description) {
                             name
                             description
                         }
                     }
                 `;
 
-				const variables = { id: ambiente.id, ...updateForm.data };
+				const variables = { id: space.id, ...updateForm.data };
 
-				const updatedAmbiente = (await graphql(query, variables)).updateAmbiente;
-				$form.name = updatedAmbiente.name;
-				$form.description = updatedAmbiente.description;
+				const updatedSpace = (await graphql(query, variables)).updateSpace;
+				$form.name = updatedSpace.name;
+				$form.description = updatedSpace.description;
 
-				success(`Ambiente "${updatedAmbiente.name}" actualizado con éxito.`);
+				success(`Ambiente "${updatedSpace.name}" actualizado con éxito.`);
 			}
 			submitting = false;
 		}
 	});
 
-	async function deleteAmbiente() {
+	async function deleteSpace() {
 		if (
 			await confirmationDialog(
-				`Seguro que quieres borrar el ambiente <b>${ambiente.name}</b> 
-				de la obra <b>${data.ambienteData.obra.name}</b>? 
+				`Seguro que quieres borrar el ambiente <b>${space.name}</b> 
+				de la obra <b>${space.project.name}</b>? 
 				Esta acción no puede ser revertida.`
 			)
 		) {
 			const query = `
-				mutation deleteAmbiente($id: Int!) {
-					deleteAmbiente(id: $id)
+				mutation deleteSpace($id: Int!) {
+					deleteSpace(id: $id)
 				}
 			`;
 
-			const variables = { id: ambiente.id };
+			const variables = { id: space.id };
 
-			const deletedAmbiente = (await graphql(query, variables)).deleteAmbiente;
+			const deletedAmbiente = (await graphql(query, variables)).deleteSpace;
 
 			if (deletedAmbiente) {
-				await goto(`/obras/${data.ambienteData.obra.id}/`);
-			} else error(404, `Ambiente con ID ${ambiente.id} no existe.`);
+				await goto(`/obras/${space.project.id}/`);
+			} else error(404, `Ambiente con ID ${space.id} no existe.`);
 		}
 	}
 
@@ -116,7 +116,7 @@
 			<button
 				type="button"
 				class="block w-fit ml-auto p-2 rounded-sm bg-blue-600 hover:bg-amber-600"
-				onclick={deleteAmbiente}>Eliminar</button
+				onclick={deleteSpace}>Eliminar</button
 			>
 			<EditableInput
 				name="nombre"
@@ -142,14 +142,12 @@
 		<h1 class="text-xl text-center mb-4">Imágenes</h1>
 		<SortableList bind:sortable sortableId="imageSort" {sortableOptions}>
 			<div id="imageSort" class="bg-gray-600 rounded-t-md p-5 flex gap-3">
-				{#each ambiente.images as image, i (image.filename)}
+				{#each space.images as image, i (image.filename)}
 					<div class="image h-32 relative" data-imageFilename={image.filename}>
-						<a
-							href={`/obras/${ambiente.obra.id}/ambientes/${ambiente.id}/imagenes/${image.filename}`}
-						>
+						<a href={`/obras/${space.project.id}/ambientes/${space.id}/imagenes/${image.filename}`}>
 							<p class="absolute top-0 left-0 bg-white opacity-70 p-2 rounded-br-md">{i + 1}</p>
 							<div class="absolute top-0 right-0 flex flex-col bg-white opacity-70 rounded-bl-md">
-								{#if ambiente.obra.thumbnail?.filename === image.filename}
+								{#if space.project.thumbnail?.filename === image.filename}
 									<span class="material-symbols-outlined" title="Imagen Principal"> favorite </span>
 								{/if}
 								{#if image.mainPage}
@@ -187,7 +185,7 @@
 			>
 		</div>
 		<a
-			href={`/obras/${data.ambienteData.obra.id}/ambientes/${ambiente.id}/imagenes/crear/`}
+			href={`/obras/${space.project.id}/ambientes/${space.id}/imagenes/crear/`}
 			class="block w-full text-center m-auto bg-amber-400 hover:bg-white p-2 border-2 border-black"
 			>Nueva imagen</a
 		>

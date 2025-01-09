@@ -2,21 +2,21 @@ import graphql from "$lib/utilities/api";
 import { error } from "@sveltejs/kit";
 
 export async function load({ params, fetch }) {
-    const obraID: number = +params.obraID;
+    const projectID: number = +params.obraID;
 
-    if (isNaN(obraID)) error(404, `Obra con ID ${obraID} no existe.`);
+    if (isNaN(projectID)) error(404, `Proyecto con ID ${projectID} no existe.`);
 
 
     const query = `
-                    query GetObra($id: Int!) {
-                        obra(id: $id) {
+                    query getProject($id: Int!) {
+                        project(id: $id) {
                             id
                         }
                     }
                `;
-    const variables = { id: obraID };
+    const variables = { id: projectID };
 
-    const obraData = (await graphql(query, variables, fetch)).obra;
+    const projectData = (await graphql(query, variables, fetch)).project;
 
-    if (!obraData) error(404, `Obra con ID ${obraID} no existe.`);
+    if (!projectData) error(404, `Proyecto con ID ${projectID} no existe.`);
 }

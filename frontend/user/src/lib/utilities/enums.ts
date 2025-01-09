@@ -6,8 +6,8 @@ export enum Direction {
 }
 
 export const Alignment = {
-    Izquierda: "IZQUIERDA",
-    Derecha: "DERECHA",
-    Centro: "CENTRO",
-    Sangrar: "SANGRAR",
+    Left: "LEFT",
+    Right: "RIGHT",
+    Center: "CENTER",
+    Overflow: "OVERFLOW",
 }

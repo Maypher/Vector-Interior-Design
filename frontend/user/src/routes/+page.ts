@@ -7,24 +7,27 @@ export const load = async ({ fetch }) => {
                 filename
                 altText
                 mainImageConfig {
-                    description
-                    descriptionPos
+                    descriptionEn
+                    descriptionEs
                     descriptionFont
                     descriptionAlignment
                     descriptionFontSize
-                    logoPos
-                    overflow
-                    logoBorders {
-                        n
-                        s
-                        e
-                        o
-                    }
-                    imageBorders {
-                        n
-                        s
-                        e
-                        o
+                    phoneConfig {
+                        descriptionPosition
+                        logoPosition
+                        overflow
+                        logoBorders {
+                            n
+                            s
+                            e
+                            w
+                        }
+                        imageBorders {
+                            n
+                            s
+                            e
+                            w
+                        }
                     }
                 }
             }

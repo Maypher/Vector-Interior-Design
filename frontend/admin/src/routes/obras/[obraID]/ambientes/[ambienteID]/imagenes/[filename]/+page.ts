@@ -18,8 +18,8 @@ export const load = async ({ fetch, params }) => {
                 descriptionFont
                 hideInProject
                 mainPage
-                ambiente {
-                    obra {
+                space {
+                    project {
                         thumbnail {
                             filename
                         }
@@ -30,7 +30,7 @@ export const load = async ({ fetch, params }) => {
                         n
                         s
                         e
-                        o
+                        w
                     }
                     alignment
                     descriptionPos

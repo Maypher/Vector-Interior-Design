@@ -8,18 +8,15 @@
 	import getArrayDifference from '$lib/utilities/arrayOrder';
 	import { success } from '$lib/utilities/toasts';
 
-	let searchParams = $state({
-		name: '',
-		page: 1
-	});
+	let searchQuery = $state('');
 
 	// Used to highlight the search string in the results. Not derived because it should only update on search.
-	let nameRegex: RegExp = $derived(new RegExp(`(${searchParams.name})`, 'gi'));
+	let nameRegex: RegExp = $derived(new RegExp(`(${searchQuery})`, 'gi'));
 
-	let obraPromise: Promise<any> | undefined = $derived.by(() => fetchObras());
+	let projectPromise: Promise<any> | undefined = $derived.by(() => fetchProjects());
 
 	let sortable: Sortable | undefined = $state();
-	let sortableEnabled: boolean = $derived(searchParams.name === '');
+	let sortableEnabled: boolean = $derived(searchQuery === '');
 	let originalOrder: string[] | undefined = $state();
 	let updatedElements: string[] = $state([]);
 	let saveDisabled = $derived(
@@ -29,9 +26,9 @@
 	);
 
 	$effect(() => {
-		const searchQuery = searchParams;
+		const search = searchQuery;
 		untrack(() => {
-			sortable?.option('disabled', searchQuery.name !== '');
+			sortable?.option('disabled', search !== '');
 		});
 	});
 
@@ -45,39 +42,35 @@
 		onEnd: () => (updatedElements = sortable!.toArray())
 	};
 
-	async function fetchObras() {
+	async function fetchProjects() {
 		const query = `
-			query GetObras($page: Int, $name: String) {
-				obras(page: $page, name: $name) {
-					page
-					pageCount
-					obras {
-						id
-						name
-						public
-						thumbnail {
-							filename
-							altText
-						}
+			query getProjects($name: String) {
+				projects(name: $name) {
+					id
+					name
+					public
+					thumbnail {
+						filename
+						altText
 					}
 				}
 			}	
 		`;
-		const obras = (await graphql(query, searchParams)).obras;
+		const projects = (await graphql(query, { name: searchQuery })).projects;
 
 		// Due to how the structure is setup this makes sure the original order is only set on first load.
 		// To later compare it and only update those values that were moved.
 		if (!originalOrder) {
-			originalOrder = obras.obras.map(({ id }: { id: number }) => id.toString());
+			originalOrder = projects.map(({ id }: { id: number }) => id.toString());
 		}
 
-		return (await graphql(query, searchParams)).obras;
+		return (await graphql(query, { name: searchQuery })).projects;
 	}
 
 	async function updateOrder() {
 		const query = `
 				mutation UpdateIndex($id: Int!, $index: Int!) {
-					updateObra(id: $id, index: $index) {
+					updateProject(id: $id, index: $index) {
 						id
 					}
 				}			
@@ -97,24 +90,24 @@
 
 <div class="bg-red-400 min-h-screen p-4">
 	<div class="bg-gray-500 p-2 flex justify-between items-center rounded-lg max-w-md m-auto">
-		<input type="text" class="bg-transparent outline-none w-full" bind:value={searchParams.name} />
+		<input type="text" class="bg-transparent outline-none w-full" bind:value={searchQuery} />
 		<span class="material-symbols-outlined border-l-2 border-gray-700 pl-3"> search </span>
 	</div>
 	<div class="my-4 max-w-md m-auto">
-		{#if obraPromise}
-			{#await obraPromise}
+		{#if projectPromise}
+			{#await projectPromise}
 				<p>Cargando...</p>
-			{:then data}
-				{#if data.obras.length == 0}
-					{`Ninguna obra encontrada.`}
+			{:then projects}
+				{#if projects.length == 0}
+					{`Ningún proyecto encontrada.`}
 				{:else}
 					<SortableList bind:sortable {sortableOptions} sortableId="sortable">
 						<div id="sortable">
-							{#each data.obras as obra (obra.id)}
+							{#each projects as project (project.id)}
 								<div
 									class="item flex items-center"
-									class:!bg-red-300={!obra.public}
-									data-obraId={obra.id}
+									class:!bg-red-300={!project.public}
+									data-obraId={project.id}
 								>
 									{#if sortableEnabled}
 										<span
@@ -124,11 +117,11 @@
 										</span>
 									{/if}
 									<a
-										href={`/obras/${obra.id}`}
-										class={`size-full flex justify-between items-center pl-2 ${!obra.public ? 'hover:bg-red-400' : 'hover:bg-amber-600'}`}
+										href={`/obras/${project.id}`}
+										class={`size-full flex justify-between items-center pl-2 ${!project.public ? 'hover:bg-red-400' : 'hover:bg-amber-600'}`}
 									>
 										<div class="flex gap-2 items-center">
-											{#if !obra.public}
+											{#if !project.public}
 												<span
 													class="material-symbols-outlined text-red-500"
 													title="Esta obra es privada. No será visible al público"
@@ -137,13 +130,13 @@
 												</span>
 											{/if}
 											<p>
-												{@html obra.name.replace(nameRegex, '<b>$1</b>')}
+												{@html project.name.replace(nameRegex, '<b>$1</b>')}
 											</p>
 										</div>
-										{#if obra.thumbnail}
+										{#if project.thumbnail}
 											<img
-												src={`${PUBLIC_imageURL}${obra.thumbnail?.filename}`}
-												alt={obra.thumbnail?.altText}
+												src={`${PUBLIC_imageURL}${project.thumbnail?.filename}`}
+												alt={project.thumbnail?.altText}
 												class="max-h-full"
 											/>
 										{/if}
@@ -174,24 +167,6 @@
 						>Nueva Obra</a
 					>
 				{/if}
-				<div class="flex gap-3 w-fit m-auto my-2 text-lg items-center">
-					{#if searchParams.page > 1}
-						<button
-							class="rounded-lg p-1 hover:font-bold hover:bg-gray-300"
-							onclick={() => {
-								searchParams.page--;
-							}}>&lt</button
-						>
-					{/if}
-					<p>{data.page}/{data.pageCount}</p>
-					{#if searchParams.page < data.pageCount}
-						<button
-							class="rounded-lg p-1 hover:font-bold hover:bg-gray-300"
-							onclick={() => searchParams.page++}
-							>&gt
-						</button>
-					{/if}
-				</div>
 			{/await}
 		{/if}
 	</div>

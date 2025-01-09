@@ -3,8 +3,8 @@ import { error } from '@sveltejs/kit';
 
 export const load = async ({ params, fetch }) => {
     const query = `
-        query getObra($id: Int!) {
-            obra(id: $id) {
+        query getProject($id: Int!) {
+            project(id: $id) {
                 name
                 description
                 area
@@ -12,7 +12,7 @@ export const load = async ({ params, fetch }) => {
                     filename
                     altText
                 }
-                ambientes {
+                spaces {
                     id
                     name
                     description
@@ -27,7 +27,7 @@ export const load = async ({ params, fetch }) => {
                                 n
                                 s
                                 e
-                                o
+                                w
                             }
                             alignment
                             descriptionPos
@@ -41,11 +41,10 @@ export const load = async ({ params, fetch }) => {
 
     const obraID = Number(params.ProyectoID);
 
-    if (!Number.isInteger(obraID)) error(404, "Obra no existe");
+    if (!Number.isInteger(obraID)) error(404, "Proyecto no existe");
 
-    const obraData = (await graphql(query, { id: obraID }, fetch)).obra;
+    const projectData = (await graphql(query, { id: obraID }, fetch)).project;
+    if (!projectData) error(404, "Proyecto no existe");
 
-    if (!obraData) error(404, "Obra no existe");
-
-    return { obraData };
+    return { projectData };
 }

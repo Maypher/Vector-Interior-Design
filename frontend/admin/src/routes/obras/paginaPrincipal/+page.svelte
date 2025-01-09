@@ -61,9 +61,9 @@
 					<div
 						class="image flex items-stretch border-2 border-black"
 						data-imageId={image.mainImageConfig.id}
-						class:bg-red-600={!image.ambiente.obra.public}
-						title={!image.ambiente.obra.public
-							? 'Obra es privada. No se mostrará en la página principal'
+						class:bg-red-600={!image.space.project.public}
+						title={!image.space.project.public
+							? 'Proyecto es privada. No se mostrará en la página principal'
 							: null}
 					>
 						<span class="material-symbols-outlined p-2 border-r-2 handle content-center my-2">
@@ -73,8 +73,8 @@
 							image={{
 								filename: image.filename,
 								altText: image.altText,
-								ambienteId: image.ambiente.id,
-								obraId: image.ambiente.obra.id
+								spaceId: image.space.id,
+								projectId: image.space.project.id
 							}}
 							imageConfig={image.mainImageConfig}
 						/>

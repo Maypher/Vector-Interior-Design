@@ -1,37 +1,35 @@
 <script lang="ts">
 	import TextInput from '$lib/components/input/TextInput.svelte';
 	import Markdown from '$lib/components/markdown/Markdown.svelte';
-	import { obraCreateSchema } from '$lib/utilities/yupSchemas';
+	import { projectCreateSchema } from '$lib/utilities/yupSchemas';
 	import { goto } from '$app/navigation';
 	import { superForm, superValidate } from 'sveltekit-superforms';
 	import { yup } from 'sveltekit-superforms/adapters';
 	import type { PageData } from './$types';
-	import { PUBLIC_graphql } from '$env/static/public';
 	import graphql from '$lib/utilities/api';
 
 	const { data }: { data: PageData } = $props();
-	let dialog: HTMLDialogElement | null | undefined = $state();
 
 	const { form, errors, enhance, constraints } = superForm(data.createForm, {
 		SPA: true,
-		validators: yup(obraCreateSchema),
+		validators: yup(projectCreateSchema),
 		resetForm: false,
 		async onUpdate({ form }) {
 			submitting = true;
 
 			if (form.valid) {
 				const query = `
-					mutation createObra($name: String!, $description: String!, $area: Int!) {
-						createObra(name: $name, description: $description, area: $area) {
+					mutation createProject($name: String!, $description: String!, $area: Int!) {
+						createProject(name: $name, description: $description, area: $area) {
 							id
 						}
 					}
 				`;
 				const variables = { ...form.data };
 
-				const newObraId = (await graphql(query, variables)).createObra.id;
+				const newProjectId = (await graphql(query, variables)).createProject.id;
 
-				await goto(`/obras/${newObraId}`);
+				await goto(`/obras/${newProjectId}`);
 			}
 
 			submitting = false;

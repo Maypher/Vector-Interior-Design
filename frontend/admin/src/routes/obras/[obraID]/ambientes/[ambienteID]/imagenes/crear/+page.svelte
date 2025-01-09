@@ -2,7 +2,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import type { PageData } from './$types';
 	import { yup } from 'sveltekit-superforms/adapters';
-	import { createObraSchema } from '$lib/utilities/yupSchemas';
+	import { createProjectSchema } from '$lib/utilities/yupSchemas';
 	import TextInput from '$lib/components/input/TextInput.svelte';
 	import { PUBLIC_graphql } from '$env/static/public';
 	import { error } from '$lib/utilities/toasts';
@@ -16,7 +16,7 @@
 
 	const { form, errors, enhance, constraints } = superForm(data.createForm, {
 		SPA: true,
-		validators: yup(createObraSchema),
+		validators: yup(createProjectSchema),
 		async onUpdate({ form: createForm }) {
 			fileErrors = [];
 			submitting = true;
@@ -36,12 +36,12 @@
 
 				const query = `
                     mutation createImage(
-                        $ambienteId: Int!,
+                        $spaceId: Int!,
                         $file: Upload!,
                         $altText: String!
                         ) {
                         createImage(
-                            ambienteId: $ambienteId,
+                            spaceId: $spaceId,
                             image: $file,
                             altText: $altText
                         ) {
@@ -49,8 +49,8 @@
                             ... on Image {
                                 filename
                             }
-                            ... on AmbienteNotFoundImage {
-                                ambienteId
+                            ... on SpaceNotFoundImage {
+                                spaceId
                             }
                             ... on UnsupportedFileType {
                                 filetype 
@@ -62,7 +62,7 @@
 				const variables = {
 					file: null,
 					altText: createForm.data.altText,
-					ambienteId: data.ambienteID
+					spaceId: data.ambienteID
 				};
 
 				const operations = JSON.stringify({ query, variables });

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
 	import { yup } from 'sveltekit-superforms/adapters';
-	import { ambienteCreateSchema } from '$lib/utilities/yupSchemas';
+	import { spaceCreateSchema } from '$lib/utilities/yupSchemas';
 	import TextInput from '$lib/components/input/TextInput.svelte';
 	import Markdown from '$lib/components/markdown/Markdown.svelte';
 	import type { PageData } from './$types';
@@ -15,17 +15,17 @@
 	const { form, errors, enhance } = superForm(data.createForm, {
 		SPA: true,
 		resetForm: false,
-		validators: yup(ambienteCreateSchema),
+		validators: yup(spaceCreateSchema),
 		async onUpdate({ form }) {
 			if (form.valid) {
 				const query = `
-					mutation newAmbiente($obraId: Int!, $name: String!, $description: String) {
-						createAmbiente(obraId: $obraId, name: $name, description: $description) {
+					mutation newSpace($projectId: Int!, $name: String!, $description: String) {
+						createSpace(projectId: $projectId, name: $name, description: $description) {
 							__typename
-							... on ObraNotFoundAmbiente {
-								obraId
+							... on ProjectNotFoundSpace {
+								projectId
 							}
-							... on Ambiente {
+							... on Space {
 								name
 								description
 							}
@@ -33,7 +33,7 @@
 					}
 				`;
 
-				const variables = { obraId: Number.parseInt(data.obraId), ...form.data };
+				const variables = { projectId: Number.parseInt(data.projectId), ...form.data };
 
 				const res = await fetch(PUBLIC_graphql, {
 					method: 'POST',
@@ -45,13 +45,13 @@
 				});
 
 				if (res.ok) {
-					const ambienteData = (await res.json()).data.createAmbiente;
+					const projectData = (await res.json()).data.createSpace;
 
-					switch (ambienteData.__typename) {
-						case 'ObraNotFoundAmbiente':
-							error(`Obra con ID ${ambienteData.obraId} no existe.`);
-						case 'Ambiente':
-							await goto(`/obras/${data.obraId}`);
+					switch (projectData.__typename) {
+						case 'ProjectNotFoundSpace':
+							error(`Proyecto con ID ${projectData.obraId} no existe.`);
+						case 'Space':
+							await goto(`/obras/${data.projectId}`);
 							break;
 					}
 				} else throw res.status;
