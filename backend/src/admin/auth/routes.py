@@ -8,13 +8,13 @@ auth_blueprint = Blueprint("auth", "/auth")
 
 
 @auth_blueprint.get("/usuario-creado")
-def main_user_created(request: AdminRequest):
+async def main_user_created(request: AdminRequest):
     user_count = request.app.ctx.user_manager.get_user_count()
     return response.text(user_count)
 
 
 @auth_blueprint.post("/crear-cuenta")
-def create_account(request: AdminRequest):
+async def create_account(request: AdminRequest):
     user_count = user_auth.get_user_count()
     if user_count > 0:
         return response.text("Cuenta principal ya creada.", 401)
@@ -59,7 +59,7 @@ def create_account(request: AdminRequest):
 
 
 @auth_blueprint.post("/iniciar-sesion")
-def login(request: AdminRequest):
+async def login(request: AdminRequest):
     email = request.form.get("email")
     password = request.form.get("password")
 
@@ -89,7 +89,7 @@ def login(request: AdminRequest):
 
 
 @auth_blueprint.post("/cerrar-sesion")
-def logout(request: AdminRequest):
+async def logout(request: AdminRequest):
     session_id: bytes = request.cookies.get("session_id")
     res = response.text("Cierre de sesión exitoso.", 200)
 
@@ -104,7 +104,7 @@ def logout(request: AdminRequest):
 
 @auth_blueprint.get("/info-usuario")
 @login_required
-def get_user_info(request: AdminRequest):
+async def get_user_info(request: AdminRequest):
     session_id = request.cookies.get("session_id")
 
     if session_id:
