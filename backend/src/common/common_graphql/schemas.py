@@ -2,138 +2,87 @@ import typing
 import strawberry
 from common.common_graphql import enums
 from common.types import ResourceInfo
+from psycopg import rows
+
+from sanic.log import logger
 
 
 @strawberry.type(description="The main structure of the database.")
-class Obra:
-    id: int = strawberry.field(description="The ID of the obra in the database.")
-    name: str = strawberry.field(description="The name of the obra.")
+class Project:
+    id: int = strawberry.field(description="The ID of the project in the database.")
+    name: str = strawberry.field(description="The name of the project.")
     description: str = strawberry.field(
-        description="The description of the obra written in markdown format."
+        description="The description of the project written in markdown format."
     )
-    area: int = strawberry.field(description="The area of the obra in meters squared.")
+    area: int = strawberry.field(
+        description="The area of the project in meters squared."
+    )
     index: float = strawberry.field(
-        description="The index of the obra for UI ordering purposes. It's a float due to how the database handles reordering."
+        description="The index of the project for UI ordering purposes. It's a float due to how the database handles reordering."
     )
     public: bool = strawberry.field(
-        description="Indicates if the obra is available in the public end of the website."
+        description="Indicates if the project is available in the public end of the website."
     )
+    main_image: strawberry.Private[
+        int
+    ]  # The id of the thumbnail private because in it of itself it's not exposed. Only used to retrieve the thumbnail
 
     @strawberry.field(
-        description="An obra can have a thumbnail that will be the first thing shown in the UI."
+        description="A project can have a thumbnail that will be the first thing shown in the UI."
     )
     def thumbnail(self, info: ResourceInfo) -> typing.Optional["Image"]:
-        image_data = info.context["resource_manager"].database_manager.query(
+        return info.context["resource_manager"].database_manager.query(
             """
-            SELECT imagen.id, archivo, texto_alt, imagen.indice, pagina_principal, imagen.descripcion, 
-            imagen.descripcionTipografia, esconderEnObra FROM imagen 
-            JOIN obra ON obra.imagen_principal = imagen.id
-            WHERE obra.id = %s;
+            SELECT * FROM image 
+            WHERE id = %s;
         """,
-            (self.id,),
-            1,
+            (self.main_image,),
+            count=1,
+            row_factory=rows.class_row(Image),
         )
 
-        if image_data:
-            image_id = image_data[0]
-            filename = image_data[1]
-            alt_text = image_data[2]
-            image_index = image_data[3]
-            main_page = image_data[4]
-            description = image_data[5]
-            description_font = image_data[6]
-            hide_in_project = image_data[7]
-
-            return Image(
-                id=image_id,
-                filename=filename,
-                alt_text=alt_text,
-                index=image_index,
-                main_page=main_page,
-                description=description,
-                description_font=description_font,
-                hide_in_project=hide_in_project,
-            )
-
-    @strawberry.field(description="All the ambientes belonging to this obra.")
-    def ambientes(self, info: ResourceInfo) -> typing.List["Ambiente"]:
-        ambientes_data = info.context["resource_manager"].database_manager.query(
-            """
-        SELECT ambiente.id, ambiente.nombre, ambiente.descripcion, ambiente.indice FROM ambiente
-        JOIN obra ON ambiente.obra_id = obra.id
-        WHERE obra.id = %s ORDER BY indice;
-        """,
-            (self.id,),
-        )
-
-        return [
-            Ambiente(
-                id=ambiente[0],
-                name=ambiente[1],
-                description=ambiente[2],
-                index=ambiente[3],
-            )
-            for ambiente in ambientes_data
-        ]
+    @strawberry.field(description="All the spaces belonging to this project.")
+    def spaces(self, info: ResourceInfo) -> typing.List["Space"]:
+        return info.context["resource_manager"].get_spaces_by_project(self.id)
 
 
-@strawberry.type(description="An ambiente is a section of an obra. It contains images.")
-class Ambiente:
-    id: int = strawberry.field(description="The ID of the ambiente in the database.")
-    name: str = strawberry.field(description="The  name of the ambiente.")
+@strawberry.type(description="A space is a section of a project. It contains images.")
+class Space:
+    id: int = strawberry.field(description="The ID of the space in the database.")
+    name: str = strawberry.field(description="The  name of the space.")
     description: typing.Optional[str] = strawberry.field(
-        description="The description of the ambiente in markdown format. Can be null."
+        description="The description of the space in markdown format. Can be null."
     )
     index: float = strawberry.field(
-        description="The index of the ambiente for UI ordering purposes. It's a float due to how the database handles reordering."
+        description="The index of the space for UI ordering purposes. It's a float due to how the database handles reordering."
     )
+    project_id: strawberry.Private[int]  # The id of the project this space belongs to
 
-    @strawberry.field(description="The obra this ambiente belongs to.")
-    def obra(self, info: ResourceInfo) -> Obra:
-        obra_data = info.context["resource_manager"].database_manager.query(
+    @strawberry.field(description="The project this space belongs to.")
+    def project(self, info: ResourceInfo) -> Project:
+        project_data = info.context["resource_manager"].database_manager.query(
             """
-        SELECT obra.id, obra.nombre, obra.descripcion, obra.area, obra.indice, publico FROM obra
-        JOIN ambiente ON ambiente.obra_id = obra.id
-        WHERE ambiente.id = %s;
+        SELECT * FROM project
+        WHERE id=%s;
         """,
-            (self.id,),
+            (self.project_id,),
             count=1,
         )
 
-        return Obra(
-            id=obra_data[0],
-            name=obra_data[1],
-            description=obra_data[2],
-            area=obra_data[3],
-            index=obra_data[4],
-            public=obra_data[5],
-        )
+        return Project(**project_data)
 
     @strawberry.field(description="The images of this ambiente.")
     def images(self, info: ResourceInfo) -> typing.List["Image"]:
-        images_data = info.context["resource_manager"].database_manager.query(
+        image_data = info.context["resource_manager"].database_manager.query(
             """
-        SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice, pagina_principal, imagen.descripcion, 
-        imagen.descripcionTipografia, esconderEnObra FROM imagen
-        JOIN ambiente ON imagen.ambiente_id = ambiente.id
-        WHERE ambiente.id = %s ORDER BY indice;
+        SELECT image.* FROM image
+        JOIN space ON image.space_id = space.id
+        WHERE space.id = %s ORDER BY index;
         """,
             (self.id,),
         )
 
-        return [
-            Image(
-                id=image[0],
-                filename=image[1],
-                alt_text=image[2],
-                index=image[3],
-                main_page=image[4],
-                description=image[5],
-                description_font=image[6],
-                hide_in_project=image[7],
-            )
-            for image in images_data
-        ]
+        return [Image(**image) for image in image_data]
 
 
 @strawberry.type(description="An image along a description of it.")
@@ -160,91 +109,45 @@ class Image:
     hide_in_project: bool = strawberry.field(
         description="Indicates if the image should be hidden in the project page."
     )
+    space_id: strawberry.Private[int]  # The id of the space this image belongs to.
+    # Since the db returns this as a tuple string '(borders, alignment, description_pos, description_alignment)'
+    # This needs to be preprocessed before being sent. That's why there are two phone_config fields
+    phone_config: strawberry.Private[str]
 
     @strawberry.field(
-        description="The configuration for this image when shown in a obra page in mobile."
+        description="The configuration for this image when shown in a project page in mobile."
     )
-    def phone_config(self, info: ResourceInfo) -> "PhoneImageConfig":
-        # Done with a function since images are returned from multiple different places
-        # wit slightly different queries then a generic resolver doesn't work and
-        # having to repeat this code everywhere isn't good.
-        # This may cause some performance issues since it's a new query for every image
-        # but this ain't a critical app ¯\_(ツ)_/¯.
-        phone_config_data = info.context["resource_manager"].database_manager.query(
+    def phoneConfig(self) -> "PhoneImageConfig":
+        return PhoneImageConfig.from_db(self.phone_config)
+
+    @strawberry.field(description="The space this image belongs to.")
+    def space(self, info: ResourceInfo) -> Space:
+        return info.context["resource_manager"].database_manager.query(
             """
-            SELECT (tlfnConfig).* FROM imagen WHERE imagen.id = %s;
+        SELECT * FROM space
+        WHERE id = %s;
         """,
-            (self.id,),
+            (self.space_id,),
             count=1,
-        )
-
-        borders_data = int(phone_config_data[0], 2)
-
-        borders = Borders(
-            n=borders_data & 0b1000,
-            s=borders_data & 0b0100,
-            e=borders_data & 0b0010,
-            o=borders_data & 0b0001,
-        )
-        return PhoneImageConfig(
-            borders=borders,
-            alignment=enums.Alignment[phone_config_data[1]],
-            descriptionPos=(
-                enums.Direction[phone_config_data[2]] if phone_config_data[2] else None
-            ),
-            descriptionAlignment=phone_config_data[3],
-        )
-
-    @strawberry.field(description="The ambiente this image belongs to.")
-    def ambiente(self, info: ResourceInfo) -> Ambiente:
-        ambiente_data = info.context["resource_manager"].database_manager.query(
-            """
-        SELECT ambiente.id, ambiente.nombre, ambiente.descripcion, ambiente.indice FROM ambiente
-        JOIN imagen ON imagen.ambiente_id = ambiente.id
-        WHERE imagen.id = %s;
-        """,
-            (self.id,),
-            count=1,
-        )
-
-        return Ambiente(
-            id=ambiente_data[0],
-            name=ambiente_data[1],
-            description=ambiente_data[2],
-            index=ambiente_data[3],
+            row_factory=rows.class_row(Space),
         )
 
     @strawberry.field(
         description="The configuration for the image if it's shown in the main page. Only exists if image.mainPage is true."
     )
-    def mainImageConfig(self, info: ResourceInfo) -> typing.Optional["MainImageConfig"]:
-        data = info.context["resource_manager"].database_manager.query(
+    def mainImageConfig(
+        self, info: ResourceInfo
+    ) -> typing.Optional["MainPageImageConfig"]:
+        main_page_config = info.context["resource_manager"].database_manager.query(
             """
-            SELECT imagenConfig.id, imagenConfig.descripcion, descripcion_en, logo_ubicacion, texto_ubicacion, sangrar,
-            imagen_borde_n, imagen_borde_s, imagen_borde_e, imagen_borde_o,
-            logo_borde_n, logo_borde_s, logo_borde_e, logo_borde_o,
-            descripcionTamano, imagenConfig.descripcionDistribucion, imagenConfig.descripcionTipografia
-            FROM imagenConfig JOIN imagen on imagenConfig.imagen_id = imagen.id 
-            WHERE imagen.id = %s AND imagen.pagina_principal;
+            SELECT main_page_config.* FROM main_page_config JOIN image on main_page_config.image_id = image.id 
+            WHERE image.id = %s AND image.main_page;
             """,
             (self.id,),
             1,
         )
 
-        if data:
-            return MainImageConfig(
-                id=data[0],
-                description=data[1],
-                description_en=data[2],
-                logo_pos=data[3],
-                description_pos=data[4],
-                overflow=data[5],
-                image_borders=Borders(n=data[6], s=data[7], e=data[8], o=data[9]),
-                logo_borders=Borders(n=data[10], s=data[11], e=data[12], o=data[13]),
-                description_font_size=data[14],
-                description_alignment=data[15],
-                description_font=data[16],
-            )
+        return MainPageImageConfig(**main_page_config)
 
 
 @strawberry.type(
@@ -257,32 +160,42 @@ class PhoneImageConfig:
     alignment: enums.Alignment = strawberry.field(
         description="The alignment of the image."
     )
-    descriptionPos: typing.Optional[enums.Direction] = strawberry.field(
+    descriptionPos: typing.Optional[enums.Location] = strawberry.field(
         description="The position of the description relative to the image."
     )
     descriptionAlignment: str = strawberry.field(
         description="The alignment of the description."
     )
 
+    @staticmethod
+    def from_db(data: str) -> "PhoneImageConfig":
+        # Since the data is returned from the db as a string in the form (borders, alignment, description_pos, description_alignment)
+        #  it needs to be transformed into a tuple.
+        # Doing data[1:-1] since the string is surrounded by parentheses.
+        data = tuple(data[1:-1].split(","))
+
+        borders_data = int(data[0], 2)
+
+        return PhoneImageConfig(
+            borders=Borders.from_bits(borders_data),
+            alignment=enums.Alignment[data[1]],
+            descriptionPos=(enums.Location[data[2]] if data[2] else None),
+            descriptionAlignment=data[3],
+        )
+
 
 @strawberry.type(
     description="The configuration for an image that it's shown in the main page."
 )
-class MainImageConfig:
+class MainPageImageConfig:
     id: int = strawberry.field(
         description="The id of this image config in the database."
     )
-    description: typing.Optional[str] = strawberry.field(
+    description_es: typing.Optional[str] = strawberry.field(
         description="The description of this image in Spanish."
     )
     description_en: typing.Optional[str] = strawberry.field(
         description="The description of this image in English."
-    )
-    description_pos: typing.Optional[enums.Direction] = strawberry.field(
-        description="The position of the description relative to the image. Null means it shouldn't be shown."
-    )
-    description_alignment: str = strawberry.field(
-        description="The alignment of the description text."
     )
     description_font: str = strawberry.field(
         description="The font of the description text."
@@ -290,14 +203,20 @@ class MainImageConfig:
     description_font_size: float = strawberry.field(
         description="The font size of the description text in rem units."
     )
-    logo_pos: typing.Optional[enums.Direction] = strawberry.field(
-        description="The position of the logo relative to the image. Null means it shouldn't be shown."
+    description_alignment: str = strawberry.field(
+        description="The alignment of the description. Will be one of tailwind's text-align values."
     )
-    logo_borders: "Borders"
-    image_borders: "Borders"
-    overflow: bool = strawberry.field(
-        description="Indicates if the image should reach the border of the screen."
+    index: float = strawberry.field(
+        description="The index of this image in the main page in the form of a float."
     )
+    phone_config: strawberry.Private[
+        str
+    ]  # Since it's returned from the db as a tuple string it needs preprocessing before being returned
+    image_id: strawberry.Private[int]  # The id of the image this config belongs to.
+
+    @strawberry.field(description="The configuration used to display on mobile devices")
+    def phoneConfig(self) -> "MainPageImagePhoneConfig":
+        return MainPageImagePhoneConfig.from_db(self.phone_config)
 
     @strawberry.field(description="The image that owns this configuration.")
     def image(self, info: ResourceInfo) -> Image:
@@ -324,42 +243,33 @@ class MainImageConfig:
 
 
 @strawberry.type(
-    description="The result of an obra query. It contains the page and page count of the result."
+    description="The configuration of how an image will look on the main page of mobile."
 )
-class ObraResult:
-    page: int = strawberry.field(description="The current page of the result.")
-    page_count: int = strawberry.field(
-        description="The amount of pages that can be queried for results."
-    )
-    obras: typing.List[Obra] = strawberry.field(
-        description="All the obras returned by the current page."
-    )
+class MainPageImagePhoneConfig:
+    image_borders: "Borders"
+    description_position: typing.Optional[enums.Location]
+    logo_position: typing.Optional[enums.Location]
+    logo_borders: "Borders"
+    overflow: bool
 
+    @staticmethod
+    def from_db(data: str) -> "MainPageImagePhoneConfig":
+        # Since the data is returned from the db as a string in the form
+        # (image_borders, description_pos, logo_pos, logo_borders, overflow)
+        # it needs to be transformed into a tuple.
+        # Doing data[1:-1] since the string is surrounded by parentheses.
+        data = tuple(data[1:-1].split(","))
 
-@strawberry.type(
-    description="The result of an ambiente query. It contains the page and page count of the result."
-)
-class AmbienteResult:
-    page: int = strawberry.field(description="The current page of the result.")
-    page_count: int = strawberry.field(
-        description="The amount of pages that can be queried for results."
-    )
-    ambientes: typing.List[Ambiente] = strawberry.field(
-        description="All the ambientes returned by the current page."
-    )
+        image_borders = int(data[0], 2)
+        logo_borders = int(data[3], 2)
 
-
-@strawberry.type(
-    description="The result of an images query. It contains the page and page count of the result."
-)
-class ImageResult:
-    page: int = strawberry.field(description="The current page of the result.")
-    page_count: int = strawberry.field(
-        description="The amount of pages that can be queried for results."
-    )
-    images: typing.List[Image] = strawberry.field(
-        description="All the images returned by the current page."
-    )
+        return MainPageImagePhoneConfig(
+            image_borders=Borders.from_bits(image_borders),
+            description_position=data[1] or None,
+            logo_position=data[2] or None,
+            logo_borders=Borders.from_bits(logo_borders),
+            overflow=data[4] == "t",
+        )
 
 
 @strawberry.type(description="Determines what borders a resource should have.")
@@ -373,6 +283,20 @@ class Borders:
     e: bool = strawberry.field(
         description="Determines if the resource should have a border on left."
     )
-    o: bool = strawberry.field(
+    w: bool = strawberry.field(
         description="Determines if the resource should have a border on right."
     )
+
+    @staticmethod
+    def from_bits(bits: int) -> "Borders":
+        """
+        In the database borders are stored as a 4 bit value indicating (n, s, e, w) respectively.
+        This method transforms it into its correct representation.
+        """
+
+        return Borders(
+            n=bits & 0b1000,
+            s=bits & 0b0100,
+            e=bits & 0b0010,
+            w=bits & 0b0001,
+        )

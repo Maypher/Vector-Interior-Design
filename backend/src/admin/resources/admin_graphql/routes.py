@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from sanic import Blueprint
 from strawberry.sanic.views import GraphQLView
+from sanic.request import File
+from strawberry.file_uploads import Upload
 from admin.resources.admin_graphql import Query, Mutation
 from strawberry import Schema
 from admin.auth.decorators import login_required

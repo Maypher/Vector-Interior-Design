@@ -125,7 +125,7 @@ class UserManager:
     def login(self, email: str, password: str) -> User | None:
         user_data = self.database_manager.query(
             """
-        SELECT id, name, email, password_hash FROM administration.usuario WHERE email = %s;
+        SELECT id, name, email, password_hash FROM administration.admin_user WHERE email = %s;
     """,
             (email,),
             1,

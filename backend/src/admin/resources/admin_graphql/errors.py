@@ -1,13 +1,11 @@
 import strawberry
-from common.common_graphql.errors import FieldError
-import typing
 
 
 @strawberry.type(
-    description="An error indicating that the given obra doesn't exist when creating an ambiente."
+    description="An error indicating that the given project doesn't exist when creating an space."
 )
-class ObraNotFoundAmbiente:
-    obra_id: int = strawberry.field(description="The obra ID given by the user.")
+class ProjectNotFoundSpace:
+    project_id: int = strawberry.field(description="The project ID given by the user.")
 
 
 @strawberry.type(
@@ -18,9 +16,7 @@ class UnsupportedFileType:
 
 
 @strawberry.type(
-    description="An error indicating that the given ambiente wasn't found when creating an image."
+    description="An error indicating that the given space wasn't found when creating an image."
 )
-class AmbienteNotFoundImage:
-    ambiente_id: int = strawberry.field(
-        description="The given non-existent ambiente ID."
-    )
+class SpaceNotFoundImage:
+    space_id: int = strawberry.field(description="The given non-existent space ID.")

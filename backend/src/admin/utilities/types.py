@@ -1,12 +1,16 @@
 from __future__ import annotations
-from admin.db.database import AdminDatabaseManager
-from admin.auth.session import SessionManager
-from admin.auth.user import UserManager
-from admin.resources.obra import AdminResourceManager
+from typing import TYPE_CHECKING
 from sanic import Request, Sanic, Config
-from sanic.response import HTTPResponse
-from typing import TypedDict
 from types import SimpleNamespace
+from typing import TypedDict
+
+
+if TYPE_CHECKING:
+    from admin.db.database import AdminDatabaseManager
+    from admin.auth.session import SessionManager
+    from admin.auth.user import UserManager
+    from admin.resources.obra import AdminResourceManager
+    from sanic.response import HTTPResponse
 
 
 class Context:

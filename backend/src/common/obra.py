@@ -1,7 +1,8 @@
 from common.database import DatabaseManager
-from math import ceil
 from common.common_graphql import schemas
 import typing
+from sanic.log import logger
+from psycopg.rows import class_row
 
 
 class ResourceManager:
@@ -12,171 +13,80 @@ class ResourceManager:
         self.database_manager = database_manager
         self.allow_private = False
 
-    def get_obra_by_id(self, id: int) -> typing.Optional[schemas.Obra]:
-        """Returns the obra matching the given id or None."""
-        data = self.database_manager.query(
+    def get_project_by_id(self, id: int) -> typing.Optional[schemas.Project]:
+        """Returns the project matching the given id or None."""
+        return self.database_manager.query(
             f"""
-        SELECT obra.id, nombre, descripcion, publico, area, indice FROM obra
-        WHERE obra.id = %s {"AND publico" if not self.allow_private else ""};
+        SELECT * FROM project
+        WHERE id = %s {"AND public" if not self.allow_private else ""};
         """,
             (id,),
-            1,
-        )
-
-        if not data:
-            return None
-
-        obra_id = int(data[0])
-        name = data[1]
-        description = data[2]
-        publico = data[3]
-        area = data[4]
-        index = data[5]
-
-        obra = schemas.Obra(
-            id=obra_id,
-            name=name,
-            description=description,
-            area=area,
-            index=index,
-            public=publico,
-        )
-
-        return obra
-
-    def get_obras(self, page: int = 1, page_size: int = 10) -> schemas.ObraResult:
-        """Retrieves a list of obras. Paginated by the given size"""
-        offset = (page - 1) * page_size
-
-        obra_ids = self.database_manager.query(
-            f"""
-            SELECT id FROM obra {"WHERE publico" if not self.allow_private else ""} 
-            ORDER BY indice
-            LIMIT %s OFFSET %s;
-        """,
-            (page_size, offset),
-        )
-
-        # I know this isn't the most efficient way but there will be at most 30 obras so ＜（＾－＾）＞.
-        obras_count = self.database_manager.query(
-            f"""
-        SELECT COUNT(*) FROM obra {"WHERE publico" if not self.allow_private else ""};
-        """,
             count=1,
-        )[0]
-
-        page_count = ceil(obras_count / page_size)
-
-        return schemas.ObraResult(
-            page=min(
-                page, page_count
-            ),  # Getting the min because if there are no obras then it would show up as 1/0
-            page_count=page_count,
-            obras=[
-                obra
-                for id in obra_ids
-                if (obra := self.get_obra_by_id(id[0])) is not None
-            ],
+            row_factory=class_row(schemas.Project),
         )
 
-    def get_obras_by_name(
-        self, name: str, page: int = 1, page_size: int = 10
-    ) -> schemas.AmbienteResult:
-        """Returns all the obras like a given name. Paginated."""
-        # Code repetition bad and single source of truth stfu.
-        offset = (page - 1) * page_size
-        obra_ids = self.database_manager.query(
+    def get_projects(self) -> list[schemas.Project]:
+        """Retrieves a list of all projects."""
+        data = self.database_manager.query(
             f"""
-            SELECT id FROM obra
-            WHERE obra.nombre ILIKE %s {"AND publico" if not self.allow_private else ""}
-            ORDER BY indice
-            LIMIT %s OFFSET %s;
+            SELECT * FROM project {"WHERE public" if not self.allow_private else ""} 
+            ORDER BY index;
         """,
-            (f"%{name}%", page_size, offset),
         )
 
-        obras_count = self.database_manager.query(
+        return [schemas.Project(**project) for project in data]
+
+    def get_projects_by_name(self, name: str) -> list[schemas.Project]:
+        """Returns all the projects like a given name."""
+
+        data = self.database_manager.query(
             f"""
-        SELECT COUNT(*) FROM obra WHERE obra.nombre ILIKE %s {"AND publico" if not self.allow_private else ""};
+            SELECT * FROM project
+            WHERE name ILIKE %s {"AND public" if not self.allow_private else ""}
+            ORDER BY index;
         """,
             (f"%{name}%",),
-            1,
-        )[0]
-
-        page_count = ceil(obras_count / page_size)
-
-        return schemas.ObraResult(
-            page=min(
-                page, page_count
-            ),  # Getting the min because if there are no obras then it would show up as 1/0
-            page_count=page_count,
-            obras=[
-                obra
-                for id in obra_ids
-                if (obra := self.get_obra_by_id(id[0])) is not None
-            ],
         )
+        return [schemas.Project(**project) for project in data]
 
-    def get_ambiente_by_id(self, id: int) -> typing.Optional[schemas.Ambiente]:
-        """Returns the ambiente matching the given id or None."""
+    def get_space_by_id(self, id: int) -> typing.Optional[schemas.Space]:
+        """Returns the space matching the given id or None."""
 
-        data = self.database_manager.query(
+        return self.database_manager.query(
             f"""
-        SELECT ambiente.id, ambiente.nombre, ambiente.descripcion, ambiente.indice
-        FROM ambiente 
-        {"JOIN obra ON ambiente.obra_id = obra.id" if not self.allow_private else ""}
-        WHERE ambiente.id = %s {"AND obra.publico" if not self.allow_private else ""};
+        SELECT space.*
+        FROM space 
+        {"JOIN project ON space.project_id = project.id" if not self.allow_private else ""}
+        WHERE space.id = %s {"AND project.public" if not self.allow_private else ""};
         """,
             (id,),
             1,
+            row_factory=class_row(schemas.Space),
         )
 
-        if not data:
-            return None
+    def get_spaces_by_project(self, project_id: int) -> list[schemas.Space]:
+        """Returns all ambientes for the given project_id."""
 
-        ambiente_id = data[0]
-        nombre = data[1]
-        description = data[2]
-        index = data[3]
-
-        return schemas.Ambiente(
-            id=ambiente_id, name=nombre, description=description, index=index
-        )
-
-    def get_ambientes_by_obra(self, obra_id: int) -> list[schemas.Ambiente]:
-        """Returns all ambientes for the given obra_id."""
-
-        found_ambientes = self.database_manager.query(
+        # TODO: Check if this bypasses private constrains
+        return self.database_manager.query(
             """
-        SELECT ambiente.id 
-        FROM obra INNER JOIN ambiente ON ambiente.obra_id = obra.id 
-        WHERE obra.id = %s ORDER BY ambiente.indice;
+        SELECT * FROM space 
+        WHERE project_id = %s ORDER BY index;
         """,
-            (obra_id,),
+            (project_id,),
+            row_factory=class_row(schemas.Space),
         )
-
-        return [self.get_ambiente_by_id(int(id[0])) for id in found_ambientes]
 
     def get_image_by_filename(self, filename: str) -> typing.Optional[schemas.Image]:
-        data = self.database_manager.query(
+        image = self.database_manager.query(
             f"""
-            SELECT imagen.id, imagen.archivo, imagen.texto_alt, imagen.indice, imagen.pagina_principal, imagen.descripcion,
-            imagen.descripcionTipografia, esconderEnObra FROM imagen 
-            {"JOIN ambiente ON imagen.ambiente_id = ambiente.id JOIN obra ON ambiente.obra_id = obra.id" if not self.allow_private else ""}
-            WHERE archivo = %s {"AND obra.publico" if not self.allow_private else ""};
+            SELECT image.* FROM image 
+            {"JOIN space ON image.space_id = space.id JOIN project ON space.project_id = project.id" if not self.allow_private else ""}
+            WHERE filename = %s {"AND project.public" if not self.allow_private else ""};
             """,
             (filename,),
             count=1,
+            row_factory=class_row(schemas.Image),
         )
 
-        if data:
-            return schemas.Image(
-                id=data[0],
-                filename=data[1],
-                alt_text=data[2],
-                index=data[3],
-                main_page=data[4],
-                description=data[5],
-                description_font=data[6],
-                hide_in_project=data[7],
-            )
+        return image

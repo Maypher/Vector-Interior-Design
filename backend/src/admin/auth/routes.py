@@ -10,7 +10,6 @@ auth_blueprint = Blueprint("auth", "/auth")
 @auth_blueprint.get("/usuario-creado")
 async def main_user_created(request: AdminRequest):
     user_count = request.app.ctx.user_manager.get_user_count()
-    logger.debug(user_count)
     return response.text(str(user_count))
 
 

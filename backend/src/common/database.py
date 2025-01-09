@@ -1,6 +1,6 @@
 import psycopg
-from os import environ
-from typing import Tuple
+from typing import Tuple, Callable
+from psycopg.rows import RowFactory, dict_row
 
 
 class DatabaseManager:
@@ -21,13 +21,14 @@ class DatabaseManager:
         params: Tuple | None = None,
         count: int = -1,
         commit: bool = True,
+        row_factory: RowFactory = dict_row,
     ):
         """
         Executes a query on the database with the given params and returns the results. Commits changes if any.
         Raises and error if the query fails to be executed. If count = -1 return all, otherwise return the given count.
         Commit determines if queries should be automatically committed after execution.
         """
-        with self.database_connection.cursor() as cur:
+        with self.database_connection.cursor(row_factory=row_factory) as cur:
             try:
                 query_result = cur.execute(query, params)
             except Exception as e:

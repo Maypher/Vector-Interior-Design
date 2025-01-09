@@ -40,7 +40,7 @@ class SessionManager:
 
         user_exists = self.database_manager.query(
             """
-            SELECT id FROM administration.usuario WHERE id = %s;
+            SELECT id FROM administration.admin_user WHERE id = %s;
         """,
             (user_id,),
         )
@@ -73,11 +73,7 @@ class SessionManager:
         )
 
         if session_data:
-            return Session(
-                session_id,
-                session_data[0],
-                session_data[1],
-            )
+            return Session(session_id, **session_data)
 
         return None
 

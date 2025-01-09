@@ -3,16 +3,16 @@ import strawberry
 
 
 @strawberry.enum(description="The place to put content relative to the image.")
-class Direction(Enum):
+class Location(Enum):
     N = "N"
     S = "S"
     E = "E"
-    O = "O"
+    W = "W"
 
 
 @strawberry.enum(description="The posible alignments for an image.")
 class Alignment(Enum):
-    IZQUIERDA = "IZQUIERDA"
-    DERECHA = "DERECHA"
-    CENTRO = "CENTRO"
-    SANGRAR = "SANGRAR"
+    LEFT = "LEFT"
+    RIGHT = "RIGHT"
+    CENTER = "CENTER"
+    OVERFLOW = "OVERFLOW"

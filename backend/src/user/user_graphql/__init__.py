@@ -21,47 +21,41 @@ class UserGraphQLView(strawberry.sanic.views.GraphQLView):
 @strawberry.type()
 class Query:
     @strawberry.field(
-        description="Returns all the obras ordered by index limited by page_size. Can be filtered by name."
+        description="Returns all the project ordered by index. Can be filtered by name."
     )
-    def obras(
+    def projects(
         self,
         info: ResourceInfo,
-        page: typing.Annotated[
-            int, strawberry.argument(description="The page to get.")
-        ] = 1,
-        page_size: typing.Annotated[
-            int, strawberry.argument(description="The size of each page.")
-        ] = 10,
         name: typing.Annotated[
             typing.Optional[str],
             strawberry.argument(description="Filter obras by name."),
         ] = None,
-    ) -> schemas.ObraResult:
+    ) -> list[schemas.Project]:
         resource_manager = info.context["resource_manager"]
         if name:
-            return resource_manager.get_obras_by_name(name, page, page_size)
+            return resource_manager.get_projects_by_name(name)
 
-        return resource_manager.get_obras(page, page_size)
+        return resource_manager.get_projects()
 
-    @strawberry.field(description="Returns the obra matching the given ID or null.")
-    def obra(
+    @strawberry.field(description="Returns the project matching the given ID or null.")
+    def project(
         self,
         info: ResourceInfo,
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of the obra to get.")
         ],
-    ) -> typing.Optional[schemas.Obra]:
-        return info.context["resource_manager"].get_obra_by_id(id)
+    ) -> typing.Optional[schemas.Project]:
+        return info.context["resource_manager"].get_project_by_id(id)
 
-    @strawberry.field(description="Returns the ambiente matching the given ID or null.")
-    def ambiente(
+    @strawberry.field(description="Returns the space matching the given ID or null.")
+    def space(
         self,
         info: ResourceInfo,
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of ambiente to get.")
         ],
-    ) -> typing.Optional[schemas.Ambiente]:
-        return info.context["resource_manager"].get_ambiente_by_id(id)
+    ) -> typing.Optional[schemas.Space]:
+        return info.context["resource_manager"].get_space_by_id(id)
 
     @strawberry.field(
         description="Returns the image matching the given filename or null."
@@ -78,14 +72,12 @@ class Query:
     @strawberry.field(description="All the images shown in the main page")
     def mainPageImages(self, info: ResourceInfo) -> typing.List[schemas.Image]:
         resource_manager = info.context["resource_manager"]
-        image_filenames = resource_manager.database_manager.query(
+        images_data = resource_manager.database_manager.query(
             """
-            SELECT archivo from imagen JOIN imagenConfig on imagenConfig.imagen_id = imagen.id 
-            WHERE imagen.pagina_principal ORDER BY imagenConfig.indice;
+            SELECT image.* FROM image JOIN main_page_config on main_page_config.image_id = image.id
+            JOIN space on image.space_id = space.id JOIN project ON space.project_id = project.id
+            WHERE image.main_page AND project.public ORDER BY main_page_config.index;
             """
         )
 
-        return [
-            resource_manager.get_image_by_filename(filename[0])
-            for filename in image_filenames
-        ]
+        return [schemas.Image(**image) for image in images_data]

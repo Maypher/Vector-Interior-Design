@@ -2,7 +2,7 @@ from db.database import DatabaseManager
 from os import listdir, path
 from io import TextIOWrapper
 import re
-from psycopg import errors
+from psycopg import errors, rows
 from typing import Tuple
 import time
 
@@ -211,6 +211,7 @@ class MigrationManager(MigrationFileManager):
         SELECT version FROM {self.migration_schema}.{self.migration_table};
         """,
             count=1,
+            row_factory=rows.tuple_row,
         )[0]
 
         return int(result)

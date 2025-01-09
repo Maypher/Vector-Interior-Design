@@ -1,11 +1,12 @@
 from os import environ
 from strawberry import Schema
 from user.user_graphql import Query
-from sanic import Sanic, Config
+from sanic import Sanic
 from user.utilities.types import Context, UserApp
 from user.user_graphql import UserGraphQLView
 from common.obra import ResourceManager
 from common.database import DatabaseManager
+from sanic_ext import Extend, Config
 
 
 def create_app(ctx=Context()) -> Sanic:
@@ -15,6 +16,12 @@ def create_app(ctx=Context()) -> Sanic:
         UserGraphQLView.as_view(schema=Schema(query=Query)),
         "/graphql",
     )
+
+    app.update_config(Config)
+
+    app.config.CORS_ALLOW_HEADERS = ["Content-Type"]
+    app.config.CORS_ORIGINS = ["http://192.168.0.8:5174"]
+    Extend(app)
 
     @app.before_server_start
     def init_context(app: UserApp):
