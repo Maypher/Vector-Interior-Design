@@ -40,6 +40,9 @@ ALTER TABLE IF EXISTS main_page_config RENAME COLUMN imagen_borde_o TO image_bor
 ALTER TABLE IF EXISTS main_page_config RENAME COLUMN descripcion TO description_es;
 ALTER TABLE IF EXISTS main_page_config RENAME COLUMN descripcion_en TO description_en;
 ALTER TABLE IF EXISTS main_page_config RENAME COLUMN texto_ubicacion TO description_position;
+ALTER TABLE IF EXISTS main_page_config RENAME COLUMN descripciontipografia TO description_font;
+ALTER TABLE IF EXISTS main_page_config RENAME COLUMN descripciontamano TO description_font_size;
+ALTER TABLE IF EXISTS main_page_config RENAME COLUMN descripciondistribucion TO description_alignment;
 ALTER TABLE IF EXISTS main_page_config RENAME COLUMN logo_ubicacion TO logo_position;
 ALTER TABLE IF EXISTS main_page_config RENAME COLUMN logo_borde_n TO logo_border_n;
 ALTER TABLE IF EXISTS main_page_config RENAME COLUMN logo_borde_s TO logo_border_s;
@@ -76,7 +79,7 @@ BEGIN
             FROM public.image img
             JOIN public.space spc ON img.space_id = spc.id
             WHERE img.id = NEW.main_image
-              AND spc.obra_id = NEW.id
+              AND spc.project_id = NEW.id
         ) THEN
             RAISE EXCEPTION 'Main image must belong to an space of the same project' USING ERRCODE = 'P0001';
         END IF;

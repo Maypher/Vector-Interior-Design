@@ -40,6 +40,9 @@ ALTER TABLE IF EXISTS imagenconfig RENAME COLUMN image_border_w TO imagen_borde_
 ALTER TABLE IF EXISTS imagenconfig RENAME COLUMN description_es TO descripcion;
 ALTER TABLE IF EXISTS imagenconfig RENAME COLUMN description_en TO descripcion_en;
 ALTER TABLE IF EXISTS imagenconfig RENAME COLUMN description_position TO texto_ubicacion;
+ALTER TABLE IF EXISTS imagenconfig RENAME COLUMN description_font TO descripciontipografia;
+ALTER TABLE IF EXISTS imagenconfig RENAME COLUMN description_font_size TO descripciontamano;
+ALTER TABLE IF EXISTS imagenconfig RENAME COLUMN description_alignment TO descripciondistribucion;
 ALTER TABLE IF EXISTS imagenconfig RENAME COLUMN logo_position TO logo_ubicacion;
 ALTER TABLE IF EXISTS imagenconfig RENAME COLUMN logo_border_n TO logo_borde_n;
 ALTER TABLE IF EXISTS imagenconfig RENAME COLUMN logo_border_s TO logo_borde_s;
