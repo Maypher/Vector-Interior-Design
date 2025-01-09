@@ -3,6 +3,7 @@ from db.database import AdminDatabaseManager
 import bcrypt
 import re
 from admin.auth import errors
+from psycopg import rows
 
 
 @dataclass
@@ -54,10 +55,11 @@ class UserManager:
 
         user_exists = self.database_manager.query(
             """
-            SELECT id FROM administration.usuario WHERE email=%s
+            SELECT 1 FROM administration.admin_user WHERE email=%s;
         """,
             (email,),
             count=1,
+            row_factory=rows.tuple_row,
         )[0]
 
         if user_exists:
@@ -73,10 +75,11 @@ class UserManager:
 
         user_id = self.database_manager.query(
             """
-        INSERT INTO administration.usuario (name, email, password_hash) VALUES (%s, %s, %s) RETURNING id;
+        INSERT INTO administration.admin_user (name, email, password_hash) VALUES (%s, %s, %s) RETURNING id;
     """,
             (name, email, hashed_pwd.decode()),
             1,
+            row_factory=rows.tuple_row,
         )[0]
 
         return user_id
@@ -85,50 +88,44 @@ class UserManager:
         """
         Returns the user identified by id or None if no user is found.
         """
-        user_data = self.database_manager.query(
+        return self.database_manager.query(
             """
-            SELECT id, name, email FROM administration.usuario WHERE id = %s
+            SELECT id, name, email FROM administration.admin_user WHERE id = %s;
         """,
             (user_id,),
             1,
+            row_factory=rows.class_row(User),
         )
-
-        if user_data:
-            return User(user_data[0], user_data[1], user_data[2])
-        return None
 
     def get_user_by_email(self, email: str) -> User | None:
         """Returns the user identified by email or None if no user is found"""
-        user_data = self.database_manager.query(
+        return self.database_manager.query(
             """
-            SELECT id, name, email FROM administration.usuario WHERE email = %s
+            SELECT id, name, email FROM administration.admin_user WHERE email = %s;
         """,
             (email,),
             1,
+            row_factory=rows.class_row(User),
         )
-
-        if user_data:
-            return User(user_data[0], user_data[1], user_data[2])
-        return None
 
     def get_user_count(self) -> int:
         """
-        Returns the amount of users created. Used for allowing only one user creation from the frontend when first starting the server.
+        Returns the amount of users created.
+        Used for allowing only one user creation from the frontend when first starting the server.
         """
 
-        res = self.database_manager.query(
+        return self.database_manager.query(
             """
-        SELECT count(*) FROM administration.usuario
+        SELECT count(*) FROM administration.admin_user
     """,
             count=1,
+            row_factory=rows.tuple_row,
         )[0]
-
-        return res
 
     def login(self, email: str, password: str) -> User | None:
         user_data = self.database_manager.query(
             """
-        SELECT id, name, email, password_hash FROM administration.usuario WHERE email = %s
+        SELECT id, name, email, password_hash FROM administration.usuario WHERE email = %s;
     """,
             (email,),
             1,
@@ -137,10 +134,10 @@ class UserManager:
         if not user_data:
             return None
 
-        password_hash: str = user_data[3]
+        password_hash: str = user_data.pop("password_hash")
 
         # If password is invalid
         if not bcrypt.checkpw(password.encode(), password_hash.encode()):
             return None
 
-        return User(user_data[0], user_data[1], user_data[2])
+        return User(**user_data)

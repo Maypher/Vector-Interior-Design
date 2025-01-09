@@ -1,8 +1,8 @@
-from auth import user as user_auth
 from sanic.blueprints import Blueprint
 from sanic import response
 from admin.utilities.types import AdminRequest
 from admin.auth.decorators import login_required
+from sanic.log import logger
 
 auth_blueprint = Blueprint("auth", "/auth")
 
@@ -10,12 +10,13 @@ auth_blueprint = Blueprint("auth", "/auth")
 @auth_blueprint.get("/usuario-creado")
 async def main_user_created(request: AdminRequest):
     user_count = request.app.ctx.user_manager.get_user_count()
-    return response.text(user_count)
+    logger.debug(user_count)
+    return response.text(str(user_count))
 
 
 @auth_blueprint.post("/crear-cuenta")
 async def create_account(request: AdminRequest):
-    user_count = user_auth.get_user_count()
+    user_count = request.app.ctx.user_manager.get_user_count()
     if user_count > 0:
         return response.text("Cuenta principal ya creada.", 401)
 
