@@ -225,12 +225,14 @@ class AdminResourceManager(ResourceManager):
             return GraphqlErrors.SpaceNotFoundImage(space_id=space_id)
 
         file_extension = utilities.file_extension(image.name)
+        logger.debug(file_extension)
 
         image_name = uuid.uuid4().hex
-        image_location = f"{STORAGE_LOCATION}{image_name}.{file_extension}"
+        image_filename = f"{image_name}{file_extension}"
+        image_location = f"{STORAGE_LOCATION}{image_filename}"
 
-        async with aiofiles.open(image_location, "w") as file:
-            file.write(image.body)
+        async with aiofiles.open(image_location, "wb") as file:
+            await file.write(image.body)
 
         # If for any reason the image doesn't save to the database remove it from storage and propagate the error.
         try:
@@ -239,7 +241,7 @@ class AdminResourceManager(ResourceManager):
             INSERT INTO image (filename, alt_text, space_id) VALUES (%s, %s, %s)
             RETURNING *;
             """,
-                (image.name, alt_text, space.id),
+                (image_filename, alt_text, space.id),
                 count=1,
             )
         except Exception as e:
@@ -332,7 +334,7 @@ class AdminResourceManager(ResourceManager):
         if os.path.exists(location):
             self.database_manager.query(
                 """
-            DELETE FROM image WHERE archivo = %s;
+            DELETE FROM image WHERE filename = %s;
             """,
                 (filename,),
             )

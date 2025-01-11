@@ -230,7 +230,7 @@ class Mutation:
     @strawberry.mutation(
         description="Creates a a new image for the given space. Returns an error if the ambiente wasn't found or the filetype isn't supported."
     )
-    def createImage(
+    async def createImage(
         self,
         info: strawberry.Info[GraphQLContext],
         space_id: typing.Annotated[
@@ -252,8 +252,9 @@ class Mutation:
     ) -> typing.Union[
         schemas.Image, errors.SpaceNotFoundImage, errors.UnsupportedFileType
     ]:
-        # TODO: Try and fix the bug where the image is being treated as io.BytesIO instead of sanic File
-        return info.context["resource_manager"].create_image(image, alt_text, space_id)
+        return await info.context["resource_manager"].create_image(
+            image, alt_text, space_id
+        )
 
     @strawberry.mutation(
         description="Updates the image identified by filename. All parameters are optional. **Returns the updated image or null if no image was found.**"

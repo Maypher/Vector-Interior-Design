@@ -82,6 +82,7 @@
 
 				if (res.ok) {
 					const imageData = (await res.json()).data.createImage;
+					console.log(imageData);
 
 					switch (imageData.__typename) {
 						case 'AmbienteNotFoundImage':
