@@ -8,17 +8,17 @@ export interface UserData {
     id: number
 }
 
-export interface Obra {
+export interface Project {
     id: number,
     name: string,
     area: number,
     description: string,
     thumbnail?: Image,
-    ambientes: Array<Ambiente>,
+    ambientes: Array<Space>,
     public: boolean
 }
 
-export interface Ambiente {
+export interface Space {
     id: number,
     name: string,
     description?: string,
