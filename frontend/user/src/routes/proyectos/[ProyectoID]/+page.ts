@@ -39,11 +39,11 @@ export const load = async ({ params, fetch }) => {
         }
     `;
 
-    const obraID = Number(params.ProyectoID);
+    const proyectoID = Number(params.ProyectoID);
 
-    if (!Number.isInteger(obraID)) error(404, "Proyecto no existe");
+    if (!Number.isInteger(proyectoID)) error(404, "Proyecto no existe");
 
-    const projectData = (await graphql(query, { id: obraID }, fetch)).project;
+    const projectData = (await graphql(query, { id: proyectoID }, fetch)).project;
     if (!projectData) error(404, "Proyecto no existe");
 
     return { projectData };

@@ -67,14 +67,14 @@
 
 			const deleted = (await graphql(query, variables)).deleteImage;
 
-			if (deleted) await goto(`/obras/${data.obraId}/ambientes/${data.ambienteId}`);
+			if (deleted) await goto(`/obras/${data.projectId}/ambientes/${data.ambienteId}`);
 		}
 	}
 
 	async function setThumbnail() {
 		const query = `
-			mutation setThumbnail($obraId: Int!, $thumbnail: String) {
-				updateProject(id: $obraId, thumbnail: $thumbnail) {
+			mutation setThumbnail($projectId: Int!, $thumbnail: String) {
+				updateProject(id: $projectId, thumbnail: $thumbnail) {
 					name
 					thumbnail {
 						filename
@@ -83,16 +83,19 @@
 			}
 		`;
 
-		const variables = { obraId: data.obraId, thumbnail: isThumbnail ? null : imageData.filename };
+		const variables = {
+			projectId: data.projectId,
+			thumbnail: isThumbnail ? null : imageData.filename
+		};
 
-		const obraData = (await graphql(query, variables)).updateObra;
+		const projectData = (await graphql(query, variables)).updateProject;
 
-		imageData.ambiente.obra.thumbnail = obraData.thumbnail;
+		imageData.space.project.thumbnail = projectData.thumbnail;
 
 		success(
 			isThumbnail
-				? `Imagen colocada como imagen principal de "${obraData.name}"`
-				: `Imagen removida como imagen principal de ${obraData.name}`
+				? `Imagen colocada como imagen principal de "${projectData.name}"`
+				: `Imagen removida como imagen principal de ${projectData.name}`
 		);
 	}
 
@@ -107,9 +110,9 @@
 
 		const variables = { filename: imageData.filename, mainPage: !imageData.mainPage };
 
-		const obraData = (await graphql(query, variables)).updateImage;
+		const imageDataUpdated = (await graphql(query, variables)).updateImage;
 
-		imageData.mainPage = obraData.mainPage;
+		imageData.mainPage = imageDataUpdated.mainPage;
 
 		success(
 			isInMainPage

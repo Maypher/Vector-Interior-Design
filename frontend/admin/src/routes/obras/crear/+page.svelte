@@ -65,7 +65,7 @@
 				errors={$errors.description}
 				{...$constraints.description}
 			/>
-			<button type="submit" class="bg-blue-400 rounded-md m-2 p-2">Crear Obra</button>
+			<button type="submit" class="bg-blue-400 rounded-md m-2 p-2">Crear Proyecto</button>
 		</fieldset>
 	</form>
 </div>

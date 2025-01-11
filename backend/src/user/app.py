@@ -4,7 +4,7 @@ from user.user_graphql import Query
 from sanic import Sanic
 from user.utilities.types import Context, UserApp
 from user.user_graphql import UserGraphQLView
-from common.obra import ResourceManager
+from common.resource_manager import ResourceManager
 from common.database import DatabaseManager
 from sanic_ext import Extend, Config
 

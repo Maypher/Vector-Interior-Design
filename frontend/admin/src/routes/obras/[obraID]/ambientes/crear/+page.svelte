@@ -49,7 +49,7 @@
 
 					switch (projectData.__typename) {
 						case 'ProjectNotFoundSpace':
-							error(`Proyecto con ID ${projectData.obraId} no existe.`);
+							error(`Proyecto con ID ${projectData.projectId} no existe.`);
 						case 'Space':
 							await goto(`/obras/${data.projectId}`);
 							break;

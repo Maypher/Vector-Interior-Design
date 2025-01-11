@@ -7,7 +7,7 @@ import graphql from '$lib/utilities/api.js';
 export const load = async ({ fetch, params }) => {
     const filename = params.filename;
     const ambienteId: number = +params.ambienteID;
-    const obraId: number = +params.obraID;
+    const projectId: number = +params.obraID;
 
     const query = `
         query GetImage($filename: String!) {
@@ -52,6 +52,6 @@ export const load = async ({ fetch, params }) => {
             hideInProject: imageData.hideInProject,
         }, yup(imageUpdateSchema));
 
-        return { imageData, updateForm, ambienteId, obraId }
+        return { imageData, updateForm, ambienteId, projectId }
     };
 };

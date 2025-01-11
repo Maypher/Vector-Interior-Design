@@ -1,7 +1,7 @@
 import strawberry
 import strawberry.sanic
 import strawberry.sanic.views
-from common import obra
+from common import resource_manager
 from common.common_graphql import schemas
 from common.types import GraphQLContext, ResourceInfo
 
@@ -28,7 +28,7 @@ class Query:
         info: ResourceInfo,
         name: typing.Annotated[
             typing.Optional[str],
-            strawberry.argument(description="Filter obras by name."),
+            strawberry.argument(description="Filter projects by name."),
         ] = None,
     ) -> list[schemas.Project]:
         resource_manager = info.context["resource_manager"]
@@ -42,7 +42,7 @@ class Query:
         self,
         info: ResourceInfo,
         id: typing.Annotated[
-            int, strawberry.argument(description="The ID of the obra to get.")
+            int, strawberry.argument(description="The ID of the project to get.")
         ],
     ) -> typing.Optional[schemas.Project]:
         return info.context["resource_manager"].get_project_by_id(id)

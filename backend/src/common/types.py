@@ -6,7 +6,7 @@ from types import SimpleNamespace
 from strawberry import Info
 
 if TYPE_CHECKING:
-    from common.obra import ResourceManager
+    from common.resource_manager import ResourceManager
 
 type ResourceInfo = Info[GraphQLContext]
 

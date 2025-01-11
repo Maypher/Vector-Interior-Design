@@ -151,7 +151,7 @@ class Image:
 
 
 @strawberry.type(
-    description="The configuration for an image when shown in a specific obra page in mobile."
+    description="The configuration for an image when shown in a specific project's page in mobile."
 )
 class PhoneImageConfig:
     borders: "Borders" = strawberry.field(
@@ -220,25 +220,15 @@ class MainPageImageConfig:
 
     @strawberry.field(description="The image that owns this configuration.")
     def image(self, info: ResourceInfo) -> Image:
-        data = info.context["resource_manager"].database_manager.query(
+        return info.context["resource_manager"].database_manager.query(
             """
-            SELECT id, archivo, textoAlt, indice, imagen_principal, descripcion, descripcionTipografia, esconderEnObra FROM imagen 
-            JOIN imagenConfig ON imagenConfig.imagen_id = imagen.id
-            WHERE imagenConfig.id = %s;
+            SELECT image.* FROM image
+            JOIN main_page_image_config ON main_page_image_config.image_id = image.id
+            WHERE main_page_image_config.id = %s;
         """,
             (self.id,),
             1,
-        )
-
-        return Image(
-            id=data[0],
-            filename=data[1],
-            alt_text=data[2],
-            index=data[3],
-            main_page=data[4],
-            description=data[5],
-            description_font=data[6],
-            hide_in_project=data[7],
+            row_factory=rows.class_row(Image),
         )
 
 

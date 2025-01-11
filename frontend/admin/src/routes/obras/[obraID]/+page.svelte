@@ -38,14 +38,13 @@
 
 	const { form, errors, enhance, constraints } = superForm(data.updateForm!, {
 		SPA: true,
-		validators: yup(projectCreateSchema), // Uses obraCreateScheme since this will only update name, description and area. All others will be dedicated pages.
+		validators: yup(projectCreateSchema), // Uses projectCreateScheme since this will only update name, description and area. All others will be dedicated pages.
 		resetForm: false,
 		async onUpdate({ form: updateForm }) {
 			if (updateForm.valid) {
-				// TODO: Query obra data for update
 				const query = `
-					mutation updateObra($id: Int!, $name: String, $description: String, $area: Int) {
-						updateObra(id: $id, name: $name, description: $description, area: $area) {
+					mutation updateProject($id: Int!, $name: String, $description: String, $area: Int) {
+						updateProject(id: $id, name: $name, description: $description, area: $area) {
 							name
 							description
 							area
@@ -59,17 +58,17 @@
 					area: updateForm.data.area
 				};
 
-				const updatedObra = (await graphql(query, variables)).updateObra;
-				$form.name = updatedObra.name;
-				$form.description = updatedObra.description;
-				$form.area = updatedObra.area;
+				const updateProject = (await graphql(query, variables)).updateProject;
+				$form.name = updateProject.name;
+				$form.description = updateProject.description;
+				$form.area = updateProject.area;
 
-				success(`Obra "${updatedObra.name}" actualizada con éxito.`);
+				success(`Proyecto "${updateProject.name}" actualizado con éxito.`);
 			}
 		}
 	});
 
-	async function changeObraStatus() {
+	async function changeProjectStatus() {
 		const query = `
 			mutation changePublicStatus($id: Int!, $public: Boolean!) {
 				updateProject(id: $id, public: $public) {
@@ -81,7 +80,7 @@
 		const variables = { id: projectData.id, public: !projectData.public };
 
 		const updatedPublic = (await graphql(query, variables)).updateProject.public;
-		success(updatedPublic ? 'Obra publicada con éxito.' : 'Obra privatizada con éxito.');
+		success(updatedPublic ? 'Proyecto publicado con éxito.' : 'Proyecto privatizado con éxito.');
 		projectData.public = updatedPublic;
 	}
 
@@ -134,12 +133,12 @@
 		<button
 			type="button"
 			class={`${projectData.public ? 'bg-red-500' : 'bg-blue-500'} block w-fit ml-auto p-3 m-3 rounded-md`}
-			onclick={changeObraStatus}>{projectData.public ? 'Privatizar' : 'Publicar'}</button
+			onclick={changeProjectStatus}>{projectData.public ? 'Privatizar' : 'Publicar'}</button
 		>
 		<button
 			type="button"
 			class="block w-fit ml-auto p-3 m-1 bg-red-500 hover:bg-green-600"
-			onclick={deleteProject}>Borrar obra</button
+			onclick={deleteProject}>Borrar Proyecto</button
 		>
 		<fieldset disabled={submitting}>
 			<EditableInput

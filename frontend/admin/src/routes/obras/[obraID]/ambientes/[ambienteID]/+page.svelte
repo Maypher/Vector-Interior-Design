@@ -69,7 +69,7 @@
 		if (
 			await confirmationDialog(
 				`Seguro que quieres borrar el ambiente <b>${space.name}</b> 
-				de la obra <b>${space.project.name}</b>? 
+				de del proyecto <b>${space.project.name}</b>? 
 				Esta acción no puede ser revertida.`
 			)
 		) {

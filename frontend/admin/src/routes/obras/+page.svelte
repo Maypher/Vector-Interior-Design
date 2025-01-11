@@ -38,7 +38,7 @@
 		chosenClass: 'item-chosen',
 		ghostClass: 'item-ghost',
 		animation: 150,
-		dataIdAttr: 'data-obraId',
+		dataIdAttr: 'data-projectId',
 		onEnd: () => (updatedElements = sortable!.toArray())
 	};
 
@@ -107,7 +107,7 @@
 								<div
 									class="item flex items-center"
 									class:!bg-red-300={!project.public}
-									data-obraId={project.id}
+									data-projectId={project.id}
 								>
 									{#if sortableEnabled}
 										<span
@@ -124,7 +124,7 @@
 											{#if !project.public}
 												<span
 													class="material-symbols-outlined text-red-500"
-													title="Esta obra es privada. No será visible al público"
+													title="Este proyecto es privado. No será visible al público"
 												>
 													visibility_off
 												</span>
@@ -164,7 +164,7 @@
 					<a
 						href="/obras/crear"
 						class="block bg-amber-400 hover:bg-amber-600 w-full text-center p-2 border-2 border-black sticky bottom-0"
-						>Nueva Obra</a
+						>Nuevo Proyecto</a
 					>
 				{/if}
 			{/await}

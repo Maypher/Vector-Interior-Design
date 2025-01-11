@@ -36,5 +36,5 @@ export async function load({ params, fetch }) {
     const updateForm = await superValidate(formData, yup(projectCreateSchema));
 
     if (projectData) return { updateForm, projectData };
-    else error(404, `Obra con ID ${projectID} no existe.`);
+    else error(404, `Proyecto con ID ${projectID} no existe.`);
 }

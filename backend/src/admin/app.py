@@ -7,7 +7,7 @@ from admin.utilities.types import Context
 from admin.db.database import AdminDatabaseManager
 from admin.auth.session import SessionManager
 from admin.auth.user import UserManager
-from admin.resources.obra import AdminResourceManager
+from admin.resources.resource_manager import AdminResourceManager
 from admin.utilities.types import AdminApp
 from sanic_ext import Extend, Config
 

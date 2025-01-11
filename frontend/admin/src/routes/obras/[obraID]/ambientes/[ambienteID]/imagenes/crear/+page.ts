@@ -5,11 +5,11 @@ import { yup } from 'sveltekit-superforms/adapters';
 
 export const load = async ({ params }) => {
     const ambienteID: number = +params.ambienteID;
-    const obraID: number = +params.obraID;
+    const projectId: number = +params.obraID;
 
     if (isNaN(ambienteID)) error(404, `Ambiente con ID ${ambienteID} no existe.`);
 
     const createForm = await superValidate(yup(createProjectSchema));
 
-    return { ambienteID, createForm, obraID };
+    return { ambienteID, createForm, projectId };
 };

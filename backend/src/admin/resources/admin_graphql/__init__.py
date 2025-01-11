@@ -78,81 +78,81 @@ class Query:
 
 @strawberry.type
 class Mutation:
-    @strawberry.mutation(description="Creates a new obra.")
+    @strawberry.mutation(description="Creates a new project.")
     def createProject(
         self,
         info: strawberry.Info[GraphQLContext],
         name: typing.Annotated[
-            str, strawberry.argument(description="The name of the new obra.")
+            str, strawberry.argument(description="The name of the new project.")
         ],
         description: typing.Annotated[
             str,
             strawberry.argument(
-                description="The description of the new obra in markdown syntax."
+                description="The description of the new project in markdown syntax."
             ),
         ],
         area: typing.Annotated[
             int,
             strawberry.argument(
-                description="The area of the new obra in square meters."
+                description="The area of the new project in square meters."
             ),
         ],
     ) -> schemas.Project:
         return info.context["resource_manager"].create_project(name, description, area)
 
     @strawberry.mutation(
-        description="Deletes a given obra alongside all its ambientes and images returning the deleted data. **If null it means the obra wasn't found.**"
+        description="Deletes a given project alongside all its spaces and images. Returns a boolean indicating if the project was successfully deleted."
     )
     def deleteProject(
         self,
         info: strawberry.Info[GraphQLContext],
         id: typing.Annotated[
-            int, strawberry.argument(description="The ID of the obra to delete.")
+            int, strawberry.argument(description="The ID of the project to delete.")
         ],
     ) -> bool:
         return info.context["resource_manager"].delete_project(id, info)
 
     @strawberry.mutation(
-        description="Updates the obra identified by ID with the given parameters. All are optional, leave blank to not update. **If null it means the obra wasn't found.**"
+        description="Updates the project identified by ID with the given parameters. All are optional, leave blank to not update. **If null it means the project wasn't found.**"
     )
     def updateProject(
         self,
         info: strawberry.Info[GraphQLContext],
         id: typing.Annotated[
-            int, strawberry.argument(description="The ID of the obra to update.")
+            int, strawberry.argument(description="The ID of the project to update.")
         ],
         name: typing.Annotated[
             typing.Optional[str],
-            strawberry.argument(description="The new name of the obra."),
+            strawberry.argument(description="The new name of the project."),
         ] = None,
         description: typing.Annotated[
             typing.Optional[str],
             strawberry.argument(
-                description="The new description of the obra in markdown format."
+                description="The new description of the project in markdown format."
             ),
         ] = None,
         area: typing.Annotated[
             typing.Optional[int],
             strawberry.argument(
-                description="The new area of the obra in square meters."
+                description="The new area of the project in square meters."
             ),
         ] = None,
         thumbnail: typing.Annotated[
             typing.Optional[str],
             strawberry.argument(
-                description="The filename of the thumbnail to set for this obra. **Set to null to remove the thumbnail**."
+                description="The filename of the thumbnail to set for this project. **Set to null to remove the thumbnail**."
             ),
         ] = strawberry.UNSET,
         index: typing.Annotated[
             typing.Optional[int],
             strawberry.argument(
-                description="The zero based index of where to position the obra relative to all others."
+                description="The zero based index of where to position the project relative to all others."
             ),
         ] = None,
         public: typing.Annotated[
             typing.Optional[bool],
             strawberry.argument(
-                description="Sets an obra to be publicly available in the public website."
+                description="Sets an project to be publicly available in the public website."
             ),
         ] = None,
     ) -> typing.Optional[schemas.Project]:
@@ -160,24 +160,24 @@ class Mutation:
             id, name, description, area, thumbnail, index, public
         )
 
-    @strawberry.mutation(description="Creates a new ambiente.")
+    @strawberry.mutation(description="Creates a new space.")
     def createSpace(
         self,
         info: strawberry.Info[GraphQLContext],
         project_id: typing.Annotated[
             int,
             strawberry.argument(
-                description="The ID of the obra this ambiente will belong to."
+                description="The ID of the project this space will belong to."
             ),
         ],
         name: typing.Annotated[
             str,
-            strawberry.argument(description="The name of the new ambiente."),
+            strawberry.argument(description="The name of the new space."),
         ],
         description: typing.Annotated[
             typing.Optional[str],
             strawberry.argument(
-                description="The description of the new ambiente in markdown format. **Can be left blank.**"
+                description="The description of the new space in markdown format. **Can be left blank.**"
             ),
         ] = None,
     ) -> typing.Union[schemas.Space, errors.ProjectNotFoundSpace]:
@@ -186,29 +186,29 @@ class Mutation:
         )
 
     @strawberry.mutation(
-        description="Updates the ambiente identified by id with the given parameters. All are optional. **Returns the updated data or null if no ambiente was found.**"
+        description="Updates the space identified by id with the given parameters. All are optional. **Returns the updated data or null if no space was found.**"
     )
     def updateSpace(
         self,
         info: strawberry.Info[GraphQLContext],
         id: typing.Annotated[
             int,
-            strawberry.argument(description="The ID of the ambiente to update."),
+            strawberry.argument(description="The ID of the space to update."),
         ],
         name: typing.Annotated[
             typing.Optional[str],
-            strawberry.argument(description="The new name of the ambiente."),
+            strawberry.argument(description="The new name of the space."),
         ] = None,
         description: typing.Annotated[
             typing.Optional[str],
             strawberry.argument(
-                description="The new description of the ambiente in markdown format. ***Leave blank to remove description.**"
+                description="The new description of the space in markdown format. ***Leave blank to remove description.**"
             ),
         ] = None,
         index: typing.Annotated[
             typing.Optional[int],
             strawberry.argument(
-                description="The zero based index of where to position the ambiente relative to all others within the same obra."
+                description="The zero based index of where to position the space relative to all others within the same project."
             ),
         ] = None,
     ) -> typing.Optional[schemas.Space]:
@@ -216,19 +216,19 @@ class Mutation:
         return resource_manager.update_space(id, name, description, index)
 
     @strawberry.mutation(
-        description="Deletes a given ambiente alongside all its images returning the deleted data. **If null it means the ambiente wasn't found.**"
+        description="Deletes a given space alongside all its images returning the deleted data. **If null it means the space wasn't found.**"
     )
     def deleteSpace(
         self,
         info: strawberry.Info[GraphQLContext],
         id: typing.Annotated[
-            int, strawberry.argument(description="The ID of the ambiente to delete.")
+            int, strawberry.argument(description="The ID of the space to delete.")
         ],
     ) -> bool:
         return info.context["resource_manager"].delete_space(id, info)
 
     @strawberry.mutation(
-        description="Creates a a new image for the given space. Returns an error if the ambiente wasn't found or the filetype isn't supported."
+        description="Creates a a new image for the given space. Returns an error if the space wasn't found or the filetype isn't supported."
     )
     async def createImage(
         self,

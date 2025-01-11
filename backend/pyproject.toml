@@ -17,7 +17,6 @@ optional = true
 
 [tool.poetry.group.admin.dependencies]
 bcrypt = "^4.2.1"
-marshmallow = "^3.23.1"
 aiofiles = "^24.1.0"
 
 [tool.poetry.group.dev]

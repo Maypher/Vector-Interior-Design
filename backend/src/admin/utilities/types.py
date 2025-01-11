@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from admin.db.database import AdminDatabaseManager
     from admin.auth.session import SessionManager
     from admin.auth.user import UserManager
-    from admin.resources.obra import AdminResourceManager
+    from admin.resources.resource_manager import AdminResourceManager
     from sanic.response import HTTPResponse
 
 

@@ -1,7 +1,7 @@
 from admin import utilities
 import uuid
 import os
-from common.obra import *
+from common.resource_manager import *
 from psycopg import errors
 from psycopg.sql import SQL, Identifier
 from psycopg import rows
@@ -10,7 +10,7 @@ from common.common_graphql import schemas
 from admin.resources.admin_graphql import errors as GraphqlErrors
 from admin.resources.admin_graphql import inputs
 from admin.db.database import AdminDatabaseManager
-from common.obra import ResourceManager
+from common.resource_manager import ResourceManager
 from strawberry import UNSET
 from sanic.request import File
 import aiofiles
