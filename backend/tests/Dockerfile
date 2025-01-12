@@ -2,17 +2,17 @@ FROM python:3
 
 WORKDIR /app/
 
-COPY ./pyproject.toml ./poetry.lock ./
-
 RUN pip install poetry
 
-RUN poetry install --with dev
+COPY ./pyproject.toml ./poetry.lock ./
+
+RUN poetry install --with dev,admin --no-root
 
 ENV PYTHONPATH="/app/src/"
 
-COPY ./src/ ./src/
-COPY ./tests/ ./tests/
+COPY ./src ./src
+COPY ./tests ./tests
 
 WORKDIR /app/tests/
 
-CMD ["poetry", "run", "pytest"]
+CMD ["poetry", "run", "pytest", "-rP"]

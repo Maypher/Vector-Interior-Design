@@ -15,7 +15,9 @@ if TYPE_CHECKING:
 
 
 class AuthGraphQLView(GraphQLView):
-    decorators = [login_required] if environ.get("BUILD_TARGET") != "dev" else None
+    decorators = (
+        [login_required] if environ.get("BUILD_TARGET", "dev") != "dev" else None
+    )
 
     async def get_context(
         self, request: AdminRequest, response: TemporalResponse

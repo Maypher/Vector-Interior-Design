@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from db.database import AdminDatabaseManager
+from admin.db.database import AdminDatabaseManager
 import bcrypt
 import re
 from admin.auth import errors

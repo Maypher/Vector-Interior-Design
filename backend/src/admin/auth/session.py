@@ -1,5 +1,5 @@
 from __future__ import annotations
-from db.database import DatabaseManager
+from admin.db.database import DatabaseManager
 from secrets import token_urlsafe
 from datetime import datetime, timedelta
 from dataclasses import dataclass

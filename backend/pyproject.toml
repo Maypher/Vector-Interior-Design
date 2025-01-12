@@ -24,6 +24,12 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
+mimesis = "^18.0.0"
+pytest-asyncio = "^0.25.2"
+sanic-testing = "^24.6.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [build-system]
 requires = ["poetry-core"]

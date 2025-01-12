@@ -1,4 +1,4 @@
-from db.database import DatabaseManager
+from admin.db.database import DatabaseManager
 from os import listdir, path
 from io import TextIOWrapper
 import re
@@ -278,6 +278,8 @@ class MigrationManager(MigrationFileManager):
                     )
                     self.database_manager.rollback()
                     return
+
+                version_to_apply += 1
 
         if applied_migrations:
             self.database_manager.commit()

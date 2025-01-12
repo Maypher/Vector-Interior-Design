@@ -1,4 +1,2 @@
 venv
-*/**/newMigration.sh
-tests/
 */**/__pycache__
