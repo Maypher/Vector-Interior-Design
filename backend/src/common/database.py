@@ -5,15 +5,26 @@ from psycopg.rows import RowFactory, dict_row
 
 class DatabaseManager:
     database_connection: psycopg.Connection
+    testing: bool  # Used for testing to rollback everything in a single session
 
     def __init__(
-        self, username: str, password: str, host: str, db_port: str, db_name: str
+        self,
+        username: str,
+        password: str,
+        host: str,
+        db_port: str,
+        db_name: str,
+        testing: bool = False,
     ):
         connection_string = (
             f"postgres://{username}:{password}@{host}:{db_port}/{db_name}"
         )
 
-        self.database_connection = psycopg.connect(connection_string)
+        self.testing = testing
+
+        self.database_connection = psycopg.connect(
+            connection_string, autocommit=not testing
+        )
 
     def query(
         self,
@@ -46,7 +57,7 @@ class DatabaseManager:
                 else:
                     res = query_result.fetchmany(count)
 
-        if commit:
+        if commit and not self.testing:
             self.commit()
         return res
 
