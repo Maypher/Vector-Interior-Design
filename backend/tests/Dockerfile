@@ -13,6 +13,10 @@ ENV PYTHONPATH="/app/src/"
 COPY ./src ./src
 COPY ./tests ./tests
 
+WORKDIR /
+
+RUN mkdir -p storage/images/
+
 WORKDIR /app/tests/
 
 CMD ["poetry", "run", "pytest", "-rP"]
