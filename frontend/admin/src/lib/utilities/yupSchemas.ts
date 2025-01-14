@@ -41,5 +41,6 @@ export const imageUpdateSchema = object({
     altText: string().required("Texto alternativo requerido."),
     description: string(),
     descriptionFont: string().required("Fuente de descripción requerida."),
-    hideInProject: bool()
+    hideInProject: bool(),
+    sculpture: bool()
 });

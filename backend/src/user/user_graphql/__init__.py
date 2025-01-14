@@ -4,6 +4,7 @@ import strawberry.sanic.views
 from common import resource_manager
 from common.common_graphql import schemas
 from common.types import GraphQLContext, ResourceInfo
+from psycopg import rows
 
 import typing
 from user.utilities import types
@@ -69,7 +70,7 @@ class Query:
     ) -> typing.Optional[schemas.Image]:
         return info.context["resource_manager"].get_image_by_filename(filename)
 
-    @strawberry.field(description="All the images shown in the main page")
+    @strawberry.field(description="All the images shown in the main page.")
     def mainPageImages(self, info: ResourceInfo) -> typing.List[schemas.Image]:
         resource_manager = info.context["resource_manager"]
         images_data = resource_manager.database_manager.query(
@@ -81,3 +82,15 @@ class Query:
         )
 
         return [schemas.Image(**image) for image in images_data]
+
+    @strawberry.field(description="All the sculptures of the public images.")
+    def sculptures(self, info: strawberry.Info[GraphQLContext]) -> list[schemas.Image]:
+        return info.context.get("resource_manager").database_manager.query(
+            """
+            SELECT image.* FROM image 
+            JOIN space ON image.space_id = space.id
+            JOIN project ON space.project_id = project.id
+            WHERE sculpture AND project.public;
+            """,
+            row_factory=rows.class_row(schemas.Image),
+        )

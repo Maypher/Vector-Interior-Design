@@ -16,6 +16,7 @@ export const load = async ({ fetch, params }) => {
                 altText
                 description
                 descriptionFont
+                sculpture
                 hideInProject
                 mainPage
                 space {
@@ -50,6 +51,7 @@ export const load = async ({ fetch, params }) => {
             altText: imageData.altText, description: imageData.description || "",
             descriptionFont: imageData.descriptionFont,
             hideInProject: imageData.hideInProject,
+            sculpture: imageData.sculpture,
         }, yup(imageUpdateSchema));
 
         return { imageData, updateForm, ambienteId, projectId }

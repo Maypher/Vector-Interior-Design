@@ -19,6 +19,7 @@ export const load = async ({ params, fetch }) => {
                     filename
                     altText
                     mainPage
+                    sculpture
                 }
                 project {
                     id

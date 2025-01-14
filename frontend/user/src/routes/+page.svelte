@@ -246,14 +246,14 @@
 
 	.pencil-animate {
 		position: absolute;
-		animation: pencil-draw 2s ease-in-out;
+		animation: pencil-draw 2s ease-in-out forwards;
 	}
 
 	.pencil-animate::after {
 		position: relative;
 		content: '';
 		width: 2px;
-		height: 80vh;
+		height: 75vh;
 		background-color: #ff4800;
 		border-radius: 50px;
 		margin: auto;
@@ -271,7 +271,7 @@
 		}
 
 		to {
-			top: 0;
+			top: 5%;
 		}
 	}
 </style>

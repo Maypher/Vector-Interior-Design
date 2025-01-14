@@ -7,9 +7,9 @@ export const Directions = {
 }
 
 export const Alignment = {
-    Izquierda: "IZQUIERDA",
-    Derecha: "DERECHA",
-    Centro: "CENTRO",
-    Sangrar: "SANGRAR",
+    Izquierda: "LEFT",
+    Derecha: "RIGHT",
+    Centro: "CENTER",
+    Sangrar: "OVERFLOW",
 }
 

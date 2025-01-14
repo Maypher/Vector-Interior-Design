@@ -34,7 +34,7 @@
 
 		const query = `
 			mutation updateMainPageIndices($id: Int!, $index: Int!) {
-				updateImageConfig(id: $id, index: $index) {
+				updateMainPageConfig(id: $id, index: $index) {
 					id
 				}
 			}

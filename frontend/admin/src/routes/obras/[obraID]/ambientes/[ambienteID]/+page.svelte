@@ -158,6 +158,11 @@
 										home
 									</span>
 								{/if}
+								{#if image.sculpture}
+									<span class="material-symbols-outlined" title="Esta imagen es una escultura">
+										wall_art
+									</span>
+								{/if}
 							</div>
 							<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altText} class="h-full" />
 						</a>

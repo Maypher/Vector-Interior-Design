@@ -82,7 +82,6 @@
 
 				if (res.ok) {
 					const imageData = (await res.json()).data.createImage;
-					console.log(imageData);
 
 					switch (imageData.__typename) {
 						case 'AmbienteNotFoundImage':
@@ -94,7 +93,7 @@
 							fileErrors.push(`Archivo tipo ${imageData.fileType} no es válido.`);
 							break;
 						case 'Image':
-							await goto(`/obras/${data.obraID}/ambientes/${data.ambienteID}/`);
+							await goto(`/obras/${data.projectId}/ambientes/${data.ambienteID}/`);
 							break;
 					}
 				} else if (res.status === 413) {

@@ -5,6 +5,7 @@ import strawberry.file_uploads
 from common.common_graphql import schemas
 from admin.resources.admin_graphql import errors, inputs
 from sanic.log import logger
+from psycopg import rows
 
 if typing.TYPE_CHECKING:
     from admin.utilities.types import AdminResourceManager, GraphQLContext
@@ -61,7 +62,7 @@ class Query:
     ) -> typing.Optional[schemas.Image]:
         return info.context.get("resource_manager").get_image_by_filename(filename)
 
-    @strawberry.field(description="All the images shown in the main page")
+    @strawberry.field(description="All the images shown in the main page.")
     def mainPageImages(
         self, info: strawberry.Info[GraphQLContext]
     ) -> typing.List[schemas.Image]:
@@ -73,9 +74,14 @@ class Query:
             """
         )
 
-        print(images_data)
-
         return [schemas.Image(**image) for image in images_data]
+
+    @strawberry.field(description="All the sculptures.")
+    def sculptures(self, info: strawberry.Info[GraphQLContext]) -> list[schemas.Image]:
+        return info.context.get("resource_manager").database_manager.query(
+            "SELECT * FROM image WHERE sculpture;",
+            row_factory=rows.class_row(schemas.Image),
+        )
 
 
 @strawberry.type
@@ -295,6 +301,10 @@ class Mutation:
             typing.Optional[bool],
             strawberry.argument(description="Hide this image in the project."),
         ] = None,
+        sculpture: typing.Annotated[
+            typing.Optional[bool],
+            strawberry.argument(description="Indicates that this image is a sculpture"),
+        ] = None,
         phone_config: typing.Annotated[
             typing.Optional[inputs.phoneConfigInput],
             strawberry.argument(
@@ -310,6 +320,7 @@ class Mutation:
             hide_in_project,
             description,
             description_font,
+            sculpture,
             phone_config,
         )
 

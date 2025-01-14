@@ -26,12 +26,15 @@
 			submitting = true;
 			if (updateForm.valid) {
 				const query = `
-					mutation updateImage($filename: String!, $altText: String!, $description: String, $descriptionFont: String, $hideInProject: Boolean) {
-						updateImage(filename: $filename, altText: $altText, description: $description, descriptionFont: $descriptionFont, hideInProject: $hideInProject) {
+					mutation updateImage($filename: String!, $altText: String!, $description: String, 
+					$descriptionFont: String, $hideInProject: Boolean, $sculpture: Boolean) {
+						updateImage(filename: $filename, altText: $altText, description: $description, 
+						descriptionFont: $descriptionFont, hideInProject: $hideInProject, sculpture: $sculpture) {
 							altText
 							description
 							descriptionFont
 							hideInProject
+							sculpture
 						}
 					}
 				`;
@@ -44,6 +47,7 @@
 				$form.description = updatedImageData.description;
 				$form.descriptionFont = updatedImageData.descriptionFont;
 				$form.hideInProject = updatedImageData.hideInProject;
+				$form.sculpture = updatedImageData.sculpture;
 			}
 			submitting = false;
 		}
@@ -205,6 +209,10 @@
 				<label for="hideInProject">Esconder en proyecto</label>
 				<input id="hideInProject" type="checkbox" bind:checked={$form.hideInProject} />
 			</div>
+			<div>
+				<label for="sculpture">Escultura</label>
+				<input id="sculpture" type="checkbox" bind:checked={$form.sculpture} />
+			</div>
 			<button class="bg-green-500 p-2 rounded-md hover:bg-orange-800 my-5">Actualizar</button>
 		</fieldset>
 	</form>
@@ -213,7 +221,7 @@
 	<form onsubmit={updatePhoneConfig} class="bg-blue-500 p-2 max-w-lg m-auto my-10">
 		<div class="flex gap-4 items-center">
 			<div class="accent-vector-orange flex items-center gap-2">
-				<input type="checkbox" bind:checked={phoneConfig.borders.o} />
+				<input type="checkbox" bind:checked={phoneConfig.borders.w} />
 				<div class="flex flex-col justify-center items-center gap-2">
 					<input type="checkbox" bind:checked={phoneConfig.borders.n} />
 					<p>Bordes</p>

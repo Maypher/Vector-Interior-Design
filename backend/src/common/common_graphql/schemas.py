@@ -100,6 +100,9 @@ class Image:
     description_font: str = strawberry.field(
         description="The font of the description text."
     )
+    sculpture: bool = (
+        strawberry.field(description="Indicates that this image is an sculpture"),
+    )
     index: float = strawberry.field(
         description="The index of the image for UI ordering purposes. It's a float due to how the database handles reordering."
     )

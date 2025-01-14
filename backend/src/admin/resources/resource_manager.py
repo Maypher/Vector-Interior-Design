@@ -259,6 +259,7 @@ class AdminResourceManager(ResourceManager):
         hide_in_project: bool | None = None,
         description: str | None = None,
         description_font: str | None = None,
+        sculpture: bool | None = None,
         phone_config: inputs.phoneConfigInput | None = None,
     ) -> typing.Optional[schemas.Image]:
         """
@@ -291,6 +292,7 @@ class AdminResourceManager(ResourceManager):
                 hide_in_project = COALESCE(%s, hide_in_project),
                 description = COALESCE(%s, description),
                 description_font = COALESCE(%s, description_font),
+                sculpture =  COALESCE(%s, sculpture),
                 phone_config = ROW(
                 COALESCE(%s, (phone_config).borders), 
                 COALESCE(%s, (phone_config).alignment), 
@@ -305,6 +307,7 @@ class AdminResourceManager(ResourceManager):
                 hide_in_project,
                 description,
                 description_font,
+                sculpture,
                 phone_config.borders.to_bits() if phone_config else None,
                 phone_config.alignment if phone_config else None,
                 phone_config.description_pos if phone_config else None,
@@ -561,8 +564,8 @@ class AdminResourceManager(ResourceManager):
             description_alignment = COALESCE(%s, description_alignment),
             phone_config = ROW(
                 COALESCE(%s, (phone_config).image_borders),
-                COALESCE(%s, (phone_config).description_position),
-                COALESCE(%s, (phone_config).logo_position),
+                %s, -- Not using COALESCE here because setting the description and logo positions to NULL
+                %s, -- means they are hidden.
                 COALESCE(%s, (phone_config).logo_borders),
                 COALESCE(%s, (phone_config).overflow)
             )::main_page_phone_config
@@ -576,25 +579,25 @@ class AdminResourceManager(ResourceManager):
                 description_alignment,
                 (
                     phone_config.image_borders.to_bits()
-                    if phone_config.image_borders
+                    if phone_config and phone_config.image_borders
                     else None
                 ),
                 (
                     phone_config.description_position
-                    if phone_config.description_position != UNSET
+                    if phone_config and phone_config.description_position != UNSET
                     else None
                 ),
                 (
                     phone_config.logo_position
-                    if phone_config.logo_position != UNSET
+                    if phone_config and phone_config.logo_position != UNSET
                     else None
                 ),
                 (
                     phone_config.logo_borders.to_bits()
-                    if phone_config.logo_borders
+                    if phone_config and phone_config.logo_borders
                     else None
                 ),
-                phone_config.overflow,
+                phone_config.overflow if phone_config else None,
                 id,
             ),
         )
