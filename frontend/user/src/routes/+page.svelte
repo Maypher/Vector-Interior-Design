@@ -22,7 +22,8 @@
 		filename: string;
 		altText: string;
 		mainImageConfig: {
-			description?: string;
+			descriptionEs?: string;
+			descriptionEn?: string;
 			descriptionFontSize: string;
 			descriptionFont: string;
 			descriptionAlignment: string;
@@ -81,19 +82,19 @@
 		<div
 			class="gap-16"
 			class:flex={imageData.mainImageConfig.phoneConfig.descriptionPosition &&
-				imageData.mainImageConfig.description}
+				imageData.mainImageConfig.descriptionEs}
 			class:flex-col={imageData.mainImageConfig.phoneConfig.descriptionPosition === Direction.N}
 			class:flex-col-reverse={imageData.mainImageConfig.phoneConfig.descriptionPosition ===
 				Direction.S}
 			class:flex-row-reverse={imageData.mainImageConfig.phoneConfig.descriptionPosition ===
 				Direction.E}
 		>
-			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.description}
+			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.descriptionEs}
 				<div
 					class={`class m-auto w-10/12 text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription`}
 					style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
 				>
-					{@html mdToHtml(imageData.mainImageConfig.description)}
+					{@html mdToHtml(imageData.mainImageConfig.descriptionEs)}
 				</div>
 			{/if}
 			<div

@@ -44,5 +44,7 @@ export const load = async ({ fetch }) => {
     `;
 
     const mainPageData = (await graphql(query, {}, fetch)).mainPageImages;
+    console.log(mainPageData);
+
     return { mainPageData };
 }
