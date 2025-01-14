@@ -57,8 +57,5 @@ class TestImage:
             files={"image": image.body},
         )
 
-        print(res)
-        print(res.body)
-
         assert res.json.get("errors") is None
         assert res.json["data"]["createImage"] == {"altText": alt_text}
