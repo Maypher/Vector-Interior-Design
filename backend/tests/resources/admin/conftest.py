@@ -30,6 +30,6 @@ def image(mimesis: Field) -> File:
 
     return File(
         name=image_filename,
-        type=f"image/{image_extension.value if image_extension == ImageFile.PNG else "jpeg"}",
+        type=f"image/{image_extension.value}",
         body=image_body,
     )

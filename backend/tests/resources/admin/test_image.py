@@ -5,6 +5,7 @@ from sanic.request import File
 from admin.resources.resource_manager import AdminResourceManager
 from sanic_testing.testing import TestingResponse as Response
 import json
+from pathlib import Path
 
 project_count = 50
 space_count = 20
@@ -38,7 +39,17 @@ class TestImage:
         query = """
             mutation createImage($spaceId: Int!, $image: Upload!, $altText: String!) {
                 createImage(spaceId: $spaceId, image: $image, altText: $altText) {
-                    altText
+                    __typename
+                    ... on Image {
+                        filename
+                        altText 
+                    }
+                    ... on SpaceNotFoundImage {
+                        spaceId
+                    }
+                    ... on UnsupportedFileType {
+                        filetype
+                    }
                 }
             }
         """
@@ -50,12 +61,29 @@ class TestImage:
 
         res: Response
 
-        # TODO: Figure out why it returns 400 unsupported content type
         _, res = await test_client.post(
             "/graphql",
-            data={"operations": operations, "map": form_map},
-            files={"image": image.body},
+            data={"operations": json.dumps(operations), "map": json.dumps(form_map)},
+            files={"image": (image.name, image.body, image.type)},
         )
 
         assert res.json.get("errors") is None
-        assert res.json["data"]["createImage"] == {"altText": alt_text}
+        data = res.json["data"]["createImage"]
+
+        assert data["__typename"] == "Image"
+        assert data["altText"] == alt_text
+        assert Path(f"/storage/images/{data["filename"]}").is_file()
+
+    @pytest.mark.asyncio
+    async def test_delete_image(
+        self, admin_resource_manager: AdminResourceManager, mimesis: Field, image: File
+    ):
+        image = await admin_resource_manager.create_image(
+            image,
+            mimesis("sentence"),
+            mimesis("integer_number", start=1, end=space_count),
+        )
+
+        admin_resource_manager.delete_image(image.filename)
+
+        assert admin_resource_manager.get_image_by_filename(image.filename) is None
