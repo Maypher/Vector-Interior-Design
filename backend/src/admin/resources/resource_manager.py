@@ -287,16 +287,16 @@ class AdminResourceManager(ResourceManager):
             """
                 UPDATE image 
                 SET alt_text = COALESCE(%s, alt_text),
-                SET main_page = COALESCE(%s, main_page),
-                SET hide_in_project = COALESCE(%s, hide_in_project),
-                SET description = COALESCE(%s, description),
-                SET description_font = COALESCE(%s, description_font),
-                SET phone_config = ROW(
-                COALESCE(%s, phone_config.borders), 
-                COALESCE(%s, phone_config.alignment), 
-                COALESCE(%s, phone_config.description_position), 
-                COALESCE(%s, phone_config.description_alignment)
-                )::phone_config WHERE filename = %s
+                main_page = COALESCE(%s, main_page),
+                hide_in_project = COALESCE(%s, hide_in_project),
+                description = COALESCE(%s, description),
+                description_font = COALESCE(%s, description_font),
+                phone_config = ROW(
+                COALESCE(%s, (phone_config).borders), 
+                COALESCE(%s, (phone_config).alignment), 
+                COALESCE(%s, (phone_config).description_position), 
+                COALESCE(%s, (phone_config).description_alignment)
+                )::image_phone_config
                 WHERE id = %s
                 """,
             (
@@ -305,14 +305,24 @@ class AdminResourceManager(ResourceManager):
                 hide_in_project,
                 description,
                 description_font,
-                phone_config.borders.to_bits(),
-                phone_config.alignment,
-                phone_config.description_pos,
-                phone_config.description_alignment,
+                phone_config.borders.to_bits() if phone_config else None,
+                phone_config.alignment if phone_config else None,
+                phone_config.description_pos if phone_config else None,
+                phone_config.description_alignment if phone_config else None,
                 image_id,
             ),
             commit=False,
         )
+
+        if main_page:
+            # Try to create a new main_page_config for the image.
+            # If it already exists (UNIQUE constraint on image_id) then don't create it.
+            self.database_manager.query(
+                """
+            INSERT INTO main_page_config (image_id) VALUES (%s) ON CONFLICT DO NOTHING;
+            """,
+                (image_id,),
+            )
 
         if new_index is not None:
             self.update_index(

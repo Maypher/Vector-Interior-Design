@@ -73,6 +73,8 @@ class Query:
             """
         )
 
+        print(images_data)
+
         return [schemas.Image(**image) for image in images_data]
 
 
