@@ -18,6 +18,7 @@
 	<div class="flex items-center h-full">
 		<a href="/obras/" class="hover:bg-red-500 p-3 rounded-md">Proyectos</a>
 		<a href="/obras/paginaPrincipal" class="hover:bg-red-500 p-3 rounded-md">Página Principal</a>
+		<a href="/obras/esculturas" class="hover:bg-red-500 p-3 rounded-md">Esculturas</a>
 	</div>
 	<button type="button" {onclick} class="m-4 hover:bg-blue-400 p-3 rounded-lg">
 		Cerrar Sesión

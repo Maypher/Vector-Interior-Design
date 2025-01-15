@@ -88,9 +88,10 @@ class Query:
         return info.context.get("resource_manager").database_manager.query(
             """
             SELECT image.* FROM image 
+            JOIN sculpture_data ON sculpture_data.image_id = image.id
             JOIN space ON image.space_id = space.id
             JOIN project ON space.project_id = project.id
-            WHERE sculpture AND project.public;
+            WHERE sculpture AND project.public ORDER BY sculpture_data.index;
             """,
             row_factory=rows.class_row(schemas.Image),
         )

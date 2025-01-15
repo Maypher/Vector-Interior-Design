@@ -190,7 +190,7 @@
 	</div>
 	<div class="my-12 flex flex-col justify-around gap-20">
 		<a
-			href="*"
+			href="/esculturas/"
 			class="ml-auto mr-14 w-fit bg-white bg-gradient-to-tr bg-clip-text text-4xl text-transparent"
 			style="font-family: Agency-FB;"
 		>

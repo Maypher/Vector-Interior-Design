@@ -1,0 +1,27 @@
+import graphql from '$lib/utilities/api.js'
+
+export const load = async ({ fetch }) => {
+    const query = `
+        query sculptures {
+            sculptures {
+                filename
+                altText
+                sculptureData {
+                    id
+                    descriptionEs
+                    descriptionEn
+                }
+                space {
+                    id
+                    project {
+                        id
+                    }
+                }
+            }
+        }
+    `;
+
+    const sculptures = (await graphql(query, {}, fetch)).sculptures;
+
+    return { sculptures };
+}

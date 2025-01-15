@@ -152,6 +152,18 @@ class Image:
 
         return MainPageImageConfig(**main_page_config)
 
+    @strawberry.field(description="The data for this image if it's a sculpture.")
+    def sculpture_data(self, info: ResourceInfo) -> typing.Optional["SculptureData"]:
+        return info.context["resource_manager"].database_manager.query(
+            """
+            SELECT sculpture_data.* FROM sculpture_data JOIN image on sculpture_data.image_id = image.id 
+            WHERE image.id = %s AND image.sculpture;
+            """,
+            (self.id,),
+            1,
+            row_factory=rows.class_row(SculptureData),
+        )
+
 
 @strawberry.type(
     description="The configuration for an image when shown in a specific project's page in mobile."
@@ -292,4 +304,36 @@ class Borders:
             s=bits & 0b0100,
             e=bits & 0b0010,
             w=bits & 0b0001,
+        )
+
+
+@strawberry.type(description="The data for an image that represents a sculpture.")
+class SculptureData:
+    id: int = strawberry.field(description="The id of the data in the database.")
+    image_id: strawberry.Private[int]  # The id of the image this data belongs to
+    description_es: typing.Optional[str] = strawberry.field(
+        description="The description of the sculpture in Spanish."
+    )
+    description_en: typing.Optional[str] = strawberry.field(
+        description="The description of the sculpture in English."
+    )
+    index: float = strawberry.field(
+        description="The float index of the sculpture relative to all others."
+    )
+
+    @strawberry.field(description="The image this data belongs to.")
+    def image(self):
+        return
+
+    @strawberry.field(description="The image that owns this configuration.")
+    def image(self, info: ResourceInfo) -> Image:
+        return info.context["resource_manager"].database_manager.query(
+            """
+            SELECT image.* FROM image
+            JOIN sculpture_data ON sculpture_data.image_id = image.id
+            WHERE sculpture_data.id = %s;
+        """,
+            (self.id,),
+            1,
+            row_factory=rows.class_row(Image),
         )

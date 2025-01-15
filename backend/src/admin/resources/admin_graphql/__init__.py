@@ -79,7 +79,7 @@ class Query:
     @strawberry.field(description="All the sculptures.")
     def sculptures(self, info: strawberry.Info[GraphQLContext]) -> list[schemas.Image]:
         return info.context.get("resource_manager").database_manager.query(
-            "SELECT * FROM image WHERE sculpture;",
+            "SELECT image.* FROM image JOIN sculpture_data ON sculpture_data.image_id = image.id WHERE image.sculpture ORDER BY sculpture_data.index;",
             row_factory=rows.class_row(schemas.Image),
         )
 
@@ -146,9 +146,9 @@ class Mutation:
             ),
         ] = None,
         thumbnail: typing.Annotated[
-            typing.Optional[str],
+            typing.Optional[int],
             strawberry.argument(
-                description="The filename of the thumbnail to set for this project. **Set to null to remove the thumbnail**."
+                description="The id of the thumbnail to set for this project. **Set to null to remove the thumbnail**."
             ),
         ] = strawberry.UNSET,
         index: typing.Annotated[
@@ -392,4 +392,37 @@ class Mutation:
             description_alignment,
             phone_config,
             index,
+        )
+
+    @strawberry.mutation(description="Update a sculpture's data.")
+    def updateSculptureData(
+        self,
+        info: strawberry.Info[GraphQLContext],
+        id: typing.Annotated[
+            int,
+            strawberry.argument(
+                description="The id of the `sculpture_data` to update."
+            ),
+        ],
+        description_es: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(
+                description="The description of the sculpture in Spanish."
+            ),
+        ] = None,
+        description_en: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(
+                description="The description of the sculpture in English."
+            ),
+        ] = None,
+        index: typing.Annotated[
+            typing.Optional[int],
+            strawberry.argument(
+                description="The zero-based index of the new position of the sculpture relative to all others."
+            ),
+        ] = None,
+    ) -> schemas.SculptureData:
+        return info.context["resource_manager"].update_sculpture_data(
+            id, description_es, description_en, index
         )
