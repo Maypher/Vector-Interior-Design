@@ -86,32 +86,36 @@ class AdminResourceManager(ResourceManager):
         if not project:
             return
 
-        self.database_manager.query(
+        # Done in a different step from all the rest since NULL is a possible value
+        if thumbnail is not UNSET:
+            try:
+                self.database_manager.query(
+                    """
+                    UPDATE project SET main_image = %s WHERE id = %s;
+                """,
+                    (thumbnail, id),
+                    commit=False,
+                )
+            except errors.DatabaseError as e:
+                if e.sqlstate == "P0001":
+                    return
+                raise e
+        if index is not None:
+            self.update_index(id, "project", index)
+
+        return self.database_manager.query(
             """
                 UPDATE project SET 
                 name = COALESCE(%s, name),
                 description = COALESCE(%s, description),
                 area = COALESCE(%s, area),
                 public = COALESCE(%s, public)
-                WHERE id = %s;
+                WHERE id = %s RETURNING *;
             """,
             (name, description, area, public, id),
-            commit=False,
+            count=1,
+            row_factory=rows.class_row(schemas.Project),
         )
-
-        if thumbnail is not UNSET:
-            self.database_manager.query(
-                """
-                UPDATE project SET main_image = %s;
-            """,
-                (thumbnail,),
-                commit=False,
-            )
-        if index is not None:
-            self.update_index(id, "project", index)
-
-        self.database_manager.commit()
-        return self.get_project_by_id(id)
 
     def create_space(
         self, project_id: int, name: str, description: typing.Optional[str]
@@ -323,6 +327,16 @@ class AdminResourceManager(ResourceManager):
             self.database_manager.query(
                 """
             INSERT INTO main_page_config (image_id) VALUES (%s) ON CONFLICT DO NOTHING;
+            """,
+                (image_id,),
+            )
+
+        if sculpture:
+            # Try to create a new sculpture_data for the image.
+            # If it already exists (UNIQUE constraint on image_id) then don't create it.
+            self.database_manager.query(
+                """
+            INSERT INTO sculpture_data (image_id) VALUES (%s) ON CONFLICT DO NOTHING;
             """,
                 (image_id,),
             )
@@ -614,4 +628,47 @@ class AdminResourceManager(ResourceManager):
             (id,),
             1,
             row_factory=rows.class_row(schemas.MainPageImageConfig),
+        )
+
+    def update_sculpture_data(
+        self,
+        id: int,
+        description_es: typing.Optional[str],
+        description_en: typing.Optional[str],
+        index: typing.Optional[int],
+    ) -> schemas.SculptureData:
+        """
+        Updates the configuration of an image that is shown as a sculpture returning
+        the updated data or null if no data was found.
+
+        :param id: The `id` of the `sculpture_data` to update.
+        :param description_es: The description of the sculpture in Spanish.
+        :param description_en: The description of the sculpture in English.
+        :param index: The index for ordering the sculptures relative to each other.
+        """
+        sculpture_data = self.database_manager.query(
+            """
+            SELECT 1 FROM sculpture_data WHERE id = %s;
+        """,
+            (id,),
+            1,
+            row_factory=rows.tuple_row,
+        )[0]
+
+        if not sculpture_data:
+            return
+
+        if index is not None:
+            self.update_index(id, "sculpture_data", index)
+
+        return self.database_manager.query(
+            """
+            UPDATE sculpture_data SET 
+            description_es = COALESCE(%s, description_es),
+            description_en = COALESCE(%s, description_en)
+            WHERE id = %s RETURNING *;
+            """,
+            (description_es, description_en, id),
+            count=1,
+            row_factory=rows.class_row(schemas.SculptureData),
         )

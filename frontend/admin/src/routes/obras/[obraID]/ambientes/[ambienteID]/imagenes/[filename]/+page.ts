@@ -12,6 +12,7 @@ export const load = async ({ fetch, params }) => {
     const query = `
         query GetImage($filename: String!) {
             image(filename: $filename) {
+                id
                 filename
                 altText
                 description

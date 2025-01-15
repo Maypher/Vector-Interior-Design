@@ -77,10 +77,11 @@
 
 	async function setThumbnail() {
 		const query = `
-			mutation setThumbnail($projectId: Int!, $thumbnail: String) {
+			mutation setThumbnail($projectId: Int!, $thumbnail: Int) {
 				updateProject(id: $projectId, thumbnail: $thumbnail) {
 					name
 					thumbnail {
+						id
 						filename
 					}
 				}
@@ -89,7 +90,7 @@
 
 		const variables = {
 			projectId: data.projectId,
-			thumbnail: isThumbnail ? null : imageData.filename
+			thumbnail: isThumbnail ? null : imageData.id
 		};
 
 		const projectData = (await graphql(query, variables)).updateProject;
