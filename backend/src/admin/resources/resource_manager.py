@@ -542,6 +542,7 @@ class AdminResourceManager(ResourceManager):
         description_font_size: typing.Optional[float] = None,
         description_alignment: typing.Optional[str] = None,
         phone_config: typing.Optional[inputs.MainPageImagePhoneConfigInput] = None,
+        desktop_config: typing.Optional[inputs.MainPageImageDesktopConfigInput] = None,
         index: typing.Optional[int] = None,
     ) -> schemas.MainPageImageConfig:
         """
@@ -568,22 +569,133 @@ class AdminResourceManager(ResourceManager):
         if not main_page_config:
             return
 
-        self.database_manager.query(
+        if phone_config:
+            # Done this way rather than updating with everything else since
+            # description_position and logo_position being null means they should be hidden
+            # And doing logo_position if logo_position else None will always set it even
+            # if it isn't passed.
+            self.database_manager.query(
+                """
+                UPDATE main_page_config SET
+                phone_config.image_borders = COALESCE(%s, (phone_config).image_borders),
+                phone_config.logo_borders = COALESCE(%s, (phone_config).logo_borders),
+                phone_config.overflow = COALESCE(%s, (phone_config).overflow)
+                WHERE id = %s;
+            """,
+                (
+                    (
+                        phone_config.image_borders.to_bits()
+                        if phone_config.image_borders
+                        else None
+                    ),
+                    (
+                        phone_config.logo_borders.to_bits()
+                        if phone_config.logo_borders
+                        else None
+                    ),
+                    phone_config.overflow,
+                    id,
+                ),
+                commit=False,
+            )
+
+            if phone_config.description_position is not UNSET:
+                self.database_manager.query(
+                    """
+                    UPDATE main_page_config SET
+                    phone_config.description_position = %s
+                    WHERE id = %s;
+                """,
+                    (phone_config.description_position, id),
+                    commit=False,
+                )
+            if phone_config.logo_position is not UNSET:
+                self.database_manager.query(
+                    """
+                    UPDATE main_page_config SET
+                    phone_config.logo_position = %s
+                    WHERE id = %s;
+                """,
+                    (phone_config.logo_position, id),
+                    commit=False,
+                )
+
+        if desktop_config:
+            self.database_manager.query(
+                """
+                UPDATE main_page_config SET
+                desktop_config.image_position = COALESCE(%s, (desktop_config).image_position),
+                desktop_config.description_borders = COALESCE(%s, (desktop_config).description_borders),
+                desktop_config.logo_borders = COALESCE(%s, (desktop_config).logo_borders),
+                desktop_config.description_logo_borders = COALESCE(%s, (desktop_config).description_logo_borders),
+                desktop_config.overflow = COALESCE(%s, (desktop_config).overflow)
+                WHERE id = %s;
+            """,
+                (
+                    desktop_config.image_position,
+                    (
+                        desktop_config.description_borders.to_bits()
+                        if desktop_config.description_borders
+                        else None
+                    ),
+                    (
+                        desktop_config.logo_borders.to_bits()
+                        if desktop_config.logo_borders
+                        else None
+                    ),
+                    (
+                        desktop_config.description_logo_borders.to_bits()
+                        if desktop_config.description_logo_borders
+                        else None
+                    ),
+                    desktop_config.overflow,
+                    id,
+                ),
+                commit=False,
+            )
+
+            if desktop_config.description_position is not UNSET:
+                self.database_manager.query(
+                    """
+                    UPDATE main_page_config SET
+                    desktop_config.description_position = %s
+                    WHERE id = %s;
+                    """,
+                    (desktop_config.description_position, id),
+                    commit=False,
+                )
+            if desktop_config.logo_position is not UNSET:
+                self.database_manager.query(
+                    """
+                    UPDATE main_page_config SET
+                    desktop_config.logo_position = %s
+                    WHERE id = %s;
+                    """,
+                    (desktop_config.logo_position, id),
+                    commit=False,
+                )
+            if desktop_config.description_logo_position is not UNSET:
+                self.database_manager.query(
+                    """
+                    UPDATE main_page_config SET
+                    desktop_config.description_logo_position = %s
+                    WHERE id = %s;
+                """,
+                    (desktop_config.description_logo_position, id),
+                )
+
+        if index is not None:
+            self.update_index(id, "main_page_config", index)
+
+        return self.database_manager.query(
             """
             UPDATE main_page_config SET 
             description_es = COALESCE(%s, description_es),
             description_en = COALESCE(%s, description_en),
             description_font = COALESCE(%s, description_font),
             description_font_size = COALESCE(%s, description_font_size),
-            description_alignment = COALESCE(%s, description_alignment),
-            phone_config = ROW(
-                COALESCE(%s, (phone_config).image_borders),
-                %s, -- Not using COALESCE here because setting the description and logo positions to NULL
-                %s, -- means they are hidden.
-                COALESCE(%s, (phone_config).logo_borders),
-                COALESCE(%s, (phone_config).overflow)
-            )::main_page_phone_config
-            WHERE id = %s;
+            description_alignment = COALESCE(%s, description_alignment)
+            WHERE id = %s RETURNING *;
             """,
             (
                 description_es,
@@ -591,42 +703,9 @@ class AdminResourceManager(ResourceManager):
                 description_font,
                 description_font_size,
                 description_alignment,
-                (
-                    phone_config.image_borders.to_bits()
-                    if phone_config and phone_config.image_borders
-                    else None
-                ),
-                (
-                    phone_config.description_position
-                    if phone_config and phone_config.description_position != UNSET
-                    else None
-                ),
-                (
-                    phone_config.logo_position
-                    if phone_config and phone_config.logo_position != UNSET
-                    else None
-                ),
-                (
-                    phone_config.logo_borders.to_bits()
-                    if phone_config and phone_config.logo_borders
-                    else None
-                ),
-                phone_config.overflow if phone_config else None,
                 id,
             ),
-        )
-
-        if index is not None:
-            self.update_index(id, "main_page_config", index)
-
-        self.database_manager.commit()
-
-        return self.database_manager.query(
-            """
-            SELECT * FROM main_page_config WHERE id = %s;
-            """,
-            (id,),
-            1,
+            count=1,
             row_factory=rows.class_row(schemas.MainPageImageConfig),
         )
 

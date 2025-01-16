@@ -33,14 +33,14 @@ class BordersInput:
 @strawberry.input(description="The display configuration for an image in phones.")
 class phoneConfigInput:
     borders: typing.Optional[BordersInput] = strawberry.field(
-        description="Indicates what borders the image should have.", default=None
+        description="Indicates what borders the image should have."
     )
     alignment: typing.Optional[enums.Alignment] = strawberry.field(
-        description="The alignment of the image.", default=None
+        description="The alignment of the image."
     )
     description_pos: typing.Optional[enums.Location] = strawberry.field(
         description="The position of the description relative to the image.",
-        default=None,
+        default=strawberry.UNSET,
     )
     description_alignment: typing.Optional[str] = strawberry.field(
         description="The alignment of the description."
@@ -51,29 +51,57 @@ class phoneConfigInput:
     description="The configuration of how an image will be shown in the main page of mobile devices."
 )
 class MainPageImagePhoneConfigInput:
-    image_borders: typing.Annotated[
-        typing.Optional[BordersInput],
-        strawberry.argument("What borders should the image have"),
-    ] = None
-    description_position: typing.Annotated[
-        typing.Optional[enums.Location],
-        strawberry.argument(
-            description="The position of where to put the description relative to the image."
+    image_borders: typing.Optional[BordersInput] = (
+        strawberry.field(
+            description="What borders should the image have", default=None
         ),
-    ] = strawberry.UNSET
-    logo_position: typing.Annotated[
-        typing.Optional[enums.Location],
-        strawberry.argument(
-            description="The position of where to put the logo relative to the image."
-        ),
-    ] = strawberry.UNSET
-    logo_borders: typing.Annotated[
-        typing.Optional[BordersInput],
-        strawberry.argument("What borders should the logo have"),
-    ] = None
-    overflow: typing.Annotated[
-        typing.Optional[bool],
-        strawberry.argument(
-            description="Determines if the image should overflow to the edge of the screen or not."
-        ),
-    ] = (strawberry.UNSET,)
+    )
+    description_position: typing.Optional[enums.Location] = strawberry.field(
+        description="The position of where to put the description relative to the image.",
+        default=strawberry.UNSET,
+    )
+    logo_position: typing.Optional[enums.Location] = strawberry.field(
+        description="The position of where to put the logo relative to the image.",
+        default=strawberry.UNSET,
+    )
+    logo_borders: typing.Optional[BordersInput] = strawberry.field(
+        description="The borders of the logo.", default=None
+    )
+    overflow: typing.Optional[bool] = strawberry.field(
+        description="Determines if the image should overflow to the edge of the screen or not.",
+        default=None,
+    )
+
+
+@strawberry.input(
+    description="The configuration for an image that's shown in the main page of desktop devices."
+)
+class MainPageImageDesktopConfigInput:
+    image_position: typing.Optional[enums.DesktopImagePosition] = strawberry.field(
+        description="The position of the image in the screen.", default=None
+    )
+    description_position: typing.Optional[enums.Location] = strawberry.field(
+        description="The position of the description relative to the image.",
+        default=strawberry.UNSET,
+    )
+    description_borders: typing.Optional[BordersInput] = strawberry.field(
+        description="The borders of the description.", default=None
+    )
+    logo_position: typing.Optional[enums.Location] = strawberry.field(
+        description="The position of the logo relative to the image.",
+        default=strawberry.UNSET,
+    )
+    logo_borders: typing.Optional[BordersInput] = strawberry.field(
+        description="The borders of the logo.", default=None
+    )
+    description_logo_position: typing.Optional[enums.Location] = strawberry.field(
+        description="The position of the logo relative to the description.",
+        default=strawberry.UNSET,
+    )
+    description_logo_borders: typing.Optional[BordersInput] = strawberry.field(
+        description="The borders of the description logo.", default=None
+    )
+    overflow: typing.Optional[bool] = strawberry.field(
+        description="Determines if the image should overflow to the borders of the screen.",
+        default=None,
+    )

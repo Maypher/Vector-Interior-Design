@@ -227,11 +227,20 @@ class MainPageImageConfig:
     phone_config: strawberry.Private[
         str
     ]  # Since it's returned from the db as a tuple string it needs preprocessing before being returned
+    desktop_config: strawberry.Private[str]
     image_id: strawberry.Private[int]  # The id of the image this config belongs to.
 
-    @strawberry.field(description="The configuration used to display on mobile devices")
+    @strawberry.field(
+        description="The configuration used to display on mobile devices."
+    )
     def phoneConfig(self) -> "MainPageImagePhoneConfig":
         return MainPageImagePhoneConfig.from_db(self.phone_config)
+
+    @strawberry.field(
+        description="The configuration used to display on desktop devices."
+    )
+    def desktopConfig(self) -> "MainPageImageDesktopConfig":
+        return MainPageImageDesktopConfig.from_db(self.desktop_config)
 
     @strawberry.field(description="The image that owns this configuration.")
     def image(self, info: ResourceInfo) -> Image:
@@ -264,7 +273,6 @@ class MainPageImagePhoneConfig:
         # it needs to be transformed into a tuple.
         # Doing data[1:-1] since the string is surrounded by parentheses.
         data = tuple(data[1:-1].split(","))
-
         image_borders = int(data[0], 2)
         logo_borders = int(data[3], 2)
 
@@ -274,6 +282,57 @@ class MainPageImagePhoneConfig:
             logo_position=data[2] or None,
             logo_borders=Borders.from_bits(logo_borders),
             overflow=data[4] == "t",
+        )
+
+
+@strawberry.type(
+    description="The configuration of how an image will look on the main page of desktop."
+)
+class MainPageImageDesktopConfig:
+    image_position: enums.DesktopImagePosition = strawberry.field(
+        description="The position of the image in the screen."
+    )
+    description_position: typing.Optional[enums.Location] = strawberry.field(
+        description="The position of the description relative to the image."
+    )
+    description_borders: "Borders" = strawberry.field(
+        description="The borders of the description."
+    )
+    logo_position: typing.Optional[enums.Location] = strawberry.field(
+        description="The position of the logo relative to the image."
+    )
+    logo_borders: "Borders" = strawberry.field(description="The borders of the logo")
+    description_logo_position: typing.Optional[enums.Location] = strawberry.field(
+        description="The position of the logo relative to the description."
+    )
+    description_logo_borders: "Borders" = strawberry.field(
+        description="The borders of the description logo."
+    )
+    overflow: bool = strawberry.field(
+        description="Determines if the image should overflow to the borders of the screen."
+    )
+
+    @staticmethod
+    def from_db(data: str) -> "MainPageImageDesktopConfig":
+        # Since the data is returned from the db as a string in the form
+        # (image_position, description_pos, description_borders, logo_pos, logo_borders, description_logo_pos, description_logo_borders, overflow)
+        # it needs to be transformed into a tuple.
+        # Doing data[1:-1] since the string is surrounded by parentheses.
+        data = tuple(data[1:-1].split(","))
+
+        description_borders = int(data[2], 2)
+        logo_borders = int(data[4], 2)
+        description_logo_borders = int(data[6], 2)
+
+        return MainPageImageDesktopConfig(
+            image_position=data[0] or None,
+            description_position=data[1] or None,
+            description_borders=Borders.from_bits(description_borders),
+            logo_position=data[3] or None,
+            logo_borders=Borders.from_bits(logo_borders),
+            description_logo_position=data[5] or None,
+            description_logo_borders=Borders.from_bits(description_logo_borders),
+            overflow=data[7] == "t",
         )
 
 

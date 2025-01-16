@@ -67,14 +67,13 @@ class Query:
         self, info: strawberry.Info[GraphQLContext]
     ) -> typing.List[schemas.Image]:
         resource_manager = info.context.get("resource_manager")
-        images_data = resource_manager.database_manager.query(
+        return resource_manager.database_manager.query(
             """
             SELECT image.* FROM image JOIN main_page_config on main_page_config.image_id = image.id 
             WHERE image.main_page ORDER BY main_page_config.index;
-            """
+            """,
+            row_factory=rows.class_row(schemas.Image),
         )
-
-        return [schemas.Image(**image) for image in images_data]
 
     @strawberry.field(description="All the sculptures.")
     def sculptures(self, info: strawberry.Info[GraphQLContext]) -> list[schemas.Image]:
@@ -382,6 +381,12 @@ class Mutation:
                 description="The configuration for how the image will look in mobile devices."
             ),
         ] = None,
+        desktop_config: typing.Annotated[
+            typing.Optional[inputs.MainPageImageDesktopConfigInput],
+            strawberry.argument(
+                description="The configuration for how the image will look on desktop devices."
+            ),
+        ] = None,
     ) -> typing.Optional[schemas.MainPageImageConfig]:
         return info.context["resource_manager"].update_main_page_image_config(
             id,
@@ -391,6 +396,7 @@ class Mutation:
             description_font_size,
             description_alignment,
             phone_config,
+            desktop_config,
             index,
         )
 
