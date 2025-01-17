@@ -49,3 +49,11 @@
 .markdownDescription>p:not(:first-child) {
   margin-top: 1rem;
 }
+
+.markdownDescription>ul {
+  list-style: disc inside;
+}
+
+.markdownDescription>ol {
+  list-style: decimal inside;
+}

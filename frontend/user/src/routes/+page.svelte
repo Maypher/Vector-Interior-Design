@@ -137,7 +137,7 @@
 	</header>
 
 	<h1
-		class="mx-3 text-center text-4xl text-white"
+		class="mx-3 whitespace-pre-line text-center text-4xl text-white"
 		style="font-family: Agency-FB; line-height: 3rem"
 	>
 		{`Trazando líneas con
