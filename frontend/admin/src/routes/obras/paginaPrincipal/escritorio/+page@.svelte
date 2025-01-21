@@ -3,22 +3,110 @@
 	import logo from '$lib/images/logo.svg';
 	import symbol from '$lib/images/symbol.svg';
 	import { MdtoHTML } from '$lib/utilities/markdown';
+	import getArrayDifference from '$lib/utilities/arrayOrder';
 	import { PUBLIC_imageURL } from '$env/static/public';
 	import * as enums from '$lib/utilities/enums';
 	import Movable from '$lib/components/input/Movable.svelte';
 	import Borders from '$lib/components/input/Borders.svelte';
 	import '$lib/styles/markdown.css';
-	import MainPageImage from '$lib/components/input/MainPageImage.svelte';
+	import graphql from '$lib/utilities/api';
+	import { success } from '$lib/utilities/toasts';
 
 	const { data }: { data: PageData } = $props();
-	let originalMainPages = $state($state.snapshot(data.mainPageImages));
-	let updatedMainPageImages = $state($state.snapshot(data.mainPageImages));
+	let originalMainPages: any[] = $state($state.snapshot(data.mainPageImages));
+	let updatedMainPageImages: any[] = $state($state.snapshot(data.mainPageImages));
+
+	let englishDescription: boolean = $state(false);
 	let preview: boolean = $state(false);
+
+	async function updatedMainPageDesktop() {
+		const query = `
+			mutation updateMainPageImage($id: Int!, $descriptionEs: String, $descriptionEn: String, 
+				$descriptionAlignment: String, $descriptionFont: String, $index: Int, 
+				$desktopConfig: MainPageImageDesktopConfigInput) {
+				updateMainPageConfig(id: $id, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, 
+				descriptionAlignment: $descriptionAlignment, descriptionFont: $descriptionFont, index: $index, 
+				desktopConfig: $desktopConfig) {
+					id
+					descriptionEs
+					descriptionEn
+					descriptionFont
+					descriptionAlignment
+					desktopConfig {
+						imagePosition
+						descriptionPosition
+						descriptionBorders {
+							n
+							s
+							e
+							w
+						}
+						logoPosition
+						logoBorders {
+							n
+							s
+							e
+							w
+						}
+						descriptionLogoPosition
+						descriptionLogoBorders {
+							n
+							s
+							e
+							w
+						}
+						overflow
+					}
+					image {
+						id
+						filename
+						altText
+					}
+				}
+			}
+		`;
+
+		const originalOrder = originalMainPages.map((x) => x.mainImageConfig.id);
+		const updatedOrder = updatedMainPageImages.map((x) => x.mainImageConfig.id);
+		const ordersToUpdate = getArrayDifference(originalOrder, updatedOrder);
+		let updatedValues: any[] = [];
+
+		for (const [i, image] of updatedMainPageImages.entries()) {
+			// If there aren't any changes between the original and updated config then don't updated it in the backend.
+			if (JSON.stringify(image) !== JSON.stringify(originalMainPages.at(i))) {
+				const mainPageConfig = image.mainImageConfig;
+				const variables = {
+					id: mainPageConfig.id,
+					descriptionEs: mainPageConfig.descriptionEs,
+					descriptionEn: mainPageConfig.descriptionEn,
+					descriptionAlignment: mainPageConfig.descriptionAlignment,
+					index: ordersToUpdate.find((val) => val.id === mainPageConfig.id)?.newPos,
+					desktopConfig: mainPageConfig.desktopConfig
+				};
+
+				const { image: updatedImage, ...updatedData } = (await graphql(query, variables))
+					.updateMainPageConfig;
+
+				const resObject = {
+					...updatedImage,
+					mainImageConfig: {
+						...updatedData
+					}
+				};
+
+				updatedValues.push(resObject);
+			} else updatedValues.push(image); // Just add it to the new list to keep the order
+		}
+
+		originalMainPages = updatedValues;
+		updatedMainPageImages = updatedValues;
+		success('Página principal actualizada con éxito.');
+	}
 </script>
 
 {#snippet MainImage(image: any)}
 	<div
-		class="flex size-full"
+		class="flex size-full overflow-scroll"
 		style={`justify-content: ${
 			image.mainImageConfig.desktopConfig.imagePosition === enums.DesktopPosition.LEFT
 				? 'start'
@@ -164,7 +252,7 @@
 									}
 								: undefined}
 							bind:preview
-							class="h-1/2 w-fit"
+							class="h-1/4 xl:h-1/2 w-fit"
 						>
 							<Borders
 								class="h-full w-fit relative"
@@ -200,9 +288,9 @@
 								bind:s={image.mainImageConfig.desktopConfig.descriptionBorders.s}
 								bind:e={image.mainImageConfig.desktopConfig.descriptionBorders.e}
 								bind:w={image.mainImageConfig.desktopConfig.descriptionBorders.w}
-								class="w-full mx-20"
+								class="w-4/5 mx-auto"
 							>
-								<div class="flex justify-between my-5">
+								<div class="flex flex-col justify-between xl:flex-row gap-1">
 									<div class="flex flex-col">
 										<label for={`main-image-desc-alignment-${image.id}`} class="text-white"
 											>Alineación</label
@@ -215,6 +303,19 @@
 												<option value={val}>{key}</option>
 											{/each}
 										</select>
+									</div>
+									<div class="flex items-center justify-center">
+										<label
+											for={`main-image-desc-lang-${image.id}`}
+											class="hover:cursor-pointer bg-vector-grey p-1 rounded-sm hover:brightness-75 transition-colors select-none"
+											>{englishDescription ? 'Inglés' : 'Español'}</label
+										>
+										<input
+											type="checkbox"
+											id={`main-image-desc-lang-${image.id}`}
+											bind:checked={englishDescription}
+											hidden
+										/>
 									</div>
 									<div class="flex flex-col">
 										<label for={`main-image-desc-font-${image.id}`} class="text-white"
@@ -230,10 +331,17 @@
 										</select>
 									</div>
 								</div>
-								<textarea
-									class={`text-white bg-transparent border-2 border-dashed w-full border-white h-20 ${image.mainImageConfig.descriptionAlignment} font-${image.mainImageConfig.descriptionFont}`}
-									bind:value={image.mainImageConfig.descriptionEs}
-								></textarea>
+								{#if englishDescription}
+									<textarea
+										class={`text-white bg-transparent border-2 border-dashed w-full border-white h-20 ${image.mainImageConfig.descriptionAlignment} font-${image.mainImageConfig.descriptionFont}`}
+										bind:value={image.mainImageConfig.descriptionEn}
+									></textarea>
+								{:else}
+									<textarea
+										class={`text-white bg-transparent border-2 border-dashed w-full border-white h-20 ${image.mainImageConfig.descriptionAlignment} font-${image.mainImageConfig.descriptionFont}`}
+										bind:value={image.mainImageConfig.descriptionEs}
+									></textarea>
+								{/if}
 							</Borders>
 						</div>
 					{:else}
@@ -244,7 +352,11 @@
 							class:border-r-4={image.mainImageConfig.desktopConfig.descriptionBorders.e}
 							class:border-l-4={image.mainImageConfig.desktopConfig.descriptionBorders.w}
 						>
-							{@html MdtoHTML(image.mainImageConfig.descriptionEs)}
+							{@html MdtoHTML(
+								englishDescription
+									? image.mainImageConfig.descriptionEn
+									: image.mainImageConfig.descriptionEs
+							)}
 						</div>
 					{/if}
 				{/if}
@@ -260,35 +372,47 @@
 	class:snap-y={preview}
 	class:snap-mandatory={preview}
 >
-	<input id="previewToggle" type="checkbox" bind:checked={preview} hidden />
-	<label
-		for="previewToggle"
-		title="Vista Previa"
-		class="fixed top-5 right-5 hover:cursor-pointer z-10 bg-gray-200/30 hover:bg-gray-200 rounded-sm"
-	>
-		<span class="material-symbols-outlined text-4xl">
-			{preview ? 'preview_off' : 'preview'}
-		</span>
-	</label>
-	<div class="h-screen snap-center min-h-96">
-		<header class="bg-vector-grey p-5 h-24">
-			<img src={logo} alt="Vector Interior Design" class="m-auto h-full" id="logo" />
-		</header>
-		{#each updatedMainPageImages.slice(0, 1) as image, i (image.filename)}
-			<Movable
-				down={() => {
-					const fromIndex = i;
-					const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-					updatedMainPageImages.splice(fromIndex + 1, 0, element);
-				}}
-				style="height: calc(100vh - 6rem);"
-				class="min-h-[18rem]"
-				bind:preview
-			>
-				{@render MainImage(image)}
-			</Movable>
-		{/each}
+	<div class="fixed top-5 right-5 flex flex-col items-end gap-2 z-10 opacity-70 hover:opacity-100">
+		<input id="previewToggle" type="checkbox" bind:checked={preview} hidden />
+		<label
+			for="previewToggle"
+			title="Vista Previa"
+			class="hover:cursor-pointer z-10 bg-gray-200/30 hover:bg-gray-200 rounded-sm"
+		>
+			<span class="material-symbols-outlined text-4xl">
+				{preview ? 'preview_off' : 'preview'}
+			</span>
+		</label>
+		<button
+			class="bg-green-500 disabled:brightness-50 hover:brightness-90 p-2 disabled:cursor-not-allowed rounded-sm transition-colors"
+			disabled={JSON.stringify(originalMainPages) === JSON.stringify(updatedMainPageImages)}
+			onclick={updatedMainPageDesktop}>Guardar</button
+		>
+		<button
+			class="bg-red-500 disabled:brightness-50 hover:brightness-90 disabled:cursor-not-allowed p-2 rounded-sm transition-colors"
+			disabled={JSON.stringify(originalMainPages) === JSON.stringify(updatedMainPageImages)}
+			onclick={() => {
+				updatedMainPageImages = $state.snapshot(originalMainPages);
+			}}>Cancelar cambios</button
+		>
 	</div>
+	<header class="bg-vector-grey p-5 h-24">
+		<img src={logo} alt="Vector Interior Design" class="m-auto h-full" id="logo" />
+	</header>
+	{#each updatedMainPageImages.slice(0, 1) as image, i (image.filename)}
+		<Movable
+			down={() => {
+				const fromIndex = i;
+				const element = updatedMainPageImages.splice(fromIndex, 1)[0];
+				updatedMainPageImages.splice(fromIndex + 1, 0, element);
+			}}
+			style="height: calc(max(100vh, 24rem) - 6rem);"
+			class={`snap-end ${preview ? '' : 'mb-16'}`}
+			bind:preview
+		>
+			{@render MainImage(image)}
+		</Movable>
+	{/each}
 	{#each updatedMainPageImages.slice(1) as image, i (image.filename)}
 		<Movable
 			up={() => {
@@ -304,9 +428,10 @@
 					}
 				: undefined}
 			bind:preview
+			class={`${preview ? '' : 'mt-16'}`}
 		>
 			<div
-				class="h-screen min-h-96 snap-center bg-black"
+				class="h-screen min-h-96 snap-center bg-black overflow-scroll"
 				class:border-dashed={!preview}
 				class:border-t-2={!preview}
 			>
