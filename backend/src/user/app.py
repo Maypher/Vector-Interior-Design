@@ -20,7 +20,7 @@ def create_app(ctx=Context()) -> Sanic:
     app.update_config(Config)
 
     app.config.CORS_ALLOW_HEADERS = ["Content-Type"]
-    app.config.CORS_ORIGINS = ["http://192.168.0.8:5174"]
+    app.config.CORS_ORIGINS = ["http://192.168.1.57:5174"]
     Extend(app)
 
     @app.before_server_start

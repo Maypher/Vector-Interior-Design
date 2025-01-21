@@ -1,0 +1,55 @@
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+
+	interface Props {
+		id: number;
+		n?: boolean;
+		s?: boolean;
+		e?: boolean;
+		w?: boolean;
+		children: Snippet;
+		[key: string]: any;
+	}
+
+	let {
+		id,
+		n = $bindable(undefined),
+		s = $bindable(undefined),
+		e = $bindable(undefined),
+		w = $bindable(undefined),
+		children,
+		...props
+	} = $props();
+</script>
+
+<div class={`relative ${props.class}`}>
+	{#if n !== undefined}
+		<input type="checkbox" id={`logo-border-n-${id}`} hidden bind:checked={n} />
+		<label
+			for={`logo-border-n-${id}`}
+			class={`w-full h-2 absolute -top-5 hover:cursor-pointer hover:bg-vector-orange/40 ${n ? 'bg-vector-orange' : 'bg-gray-600/40'}`}
+		></label>
+	{/if}
+	{#if w !== undefined}
+		<input type="checkbox" id={`logo-border-w-${id}`} hidden bind:checked={w} />
+		<label
+			for={`logo-border-w-${id}`}
+			class={`w-2 h-full absolute -left-5 hover:cursor-pointer hover:bg-vector-orange/40 ${w ? 'bg-vector-orange' : 'bg-gray-600/40'}`}
+		></label>
+	{/if}
+	{@render children()}
+	{#if s !== undefined}
+		<input type="checkbox" id={`logo-border-s-${id}`} hidden bind:checked={s} />
+		<label
+			for={`logo-border-s-${id}`}
+			class={`w-full h-2 absolute -bottom-5 hover:cursor-pointer hover:bg-vector-orange/40 ${s ? 'bg-vector-orange' : 'bg-gray-600/40'}`}
+		></label>
+	{/if}
+	{#if e !== undefined}
+		<input type="checkbox" id={`logo-border-e-${id}`} hidden bind:checked={e} />
+		<label
+			for={`logo-border-e-${id}`}
+			class={`w-2 h-full absolute -right-5 top-0 hover:cursor-pointer hover:bg-vector-orange/40 ${e ? 'bg-vector-orange' : 'bg-gray-600/40'}`}
+		></label>
+	{/if}
+</div>
