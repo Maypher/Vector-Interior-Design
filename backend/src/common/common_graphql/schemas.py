@@ -247,8 +247,8 @@ class MainPageImageConfig:
         return info.context["resource_manager"].database_manager.query(
             """
             SELECT image.* FROM image
-            JOIN main_page_image_config ON main_page_image_config.image_id = image.id
-            WHERE main_page_image_config.id = %s;
+            JOIN main_page_config ON main_page_config.image_id = image.id
+            WHERE main_page_config.id = %s;
         """,
             (self.id,),
             1,
