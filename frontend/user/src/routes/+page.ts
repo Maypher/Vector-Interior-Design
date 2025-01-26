@@ -29,6 +29,25 @@ export const load = async ({ fetch }) => {
                             w
                         }
                     }
+                    desktopConfig {
+                        overflow
+                        imagePosition
+                        descriptionPosition
+                        descriptionLogoPosition
+                        descriptionBorders {
+                            n
+                            s
+                            e
+                            w
+                        }
+                        logoPosition
+                        logoBorders {
+                            n
+                            s
+                            e
+                            w
+                        }
+                    }
                 }
             }
         }

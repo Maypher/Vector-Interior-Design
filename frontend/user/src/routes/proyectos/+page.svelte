@@ -40,11 +40,11 @@
 	});
 </script>
 
-<header class="bg-vector-grey absolute top-0 z-10 flex justify-center p-5">
-	<img src={logo} alt="logo" class="w-[55%]" />
+<header class="bg-vector-grey absolute top-0 z-10 flex h-24 w-full justify-center p-5 lg:static">
+	<img src={logo} alt="logo" class="h-full" />
 </header>
 
-<div class="h-dvh w-screen snap-y snap-mandatory overflow-y-scroll">
+<div class="h-dvh snap-y snap-mandatory overflow-y-scroll lg:hidden">
 	{#each projects as project, i (project.id)}
 		{#if project.thumbnail}
 			<div class="flex h-dvh snap-center items-center justify-center bg-black text-white">
@@ -65,6 +65,26 @@
 		{#if i === 0}
 			<div id="arrow" inert></div>
 		{/if}
+	{/each}
+</div>
+
+<div class="gap-15 hidden flex-wrap items-center justify-center lg:flex">
+	{#each projects as project, i (project.id)}
+		<div
+			class={`flex ${i <= 2 ? 'h-[calc(100vh-6rem)]' : 'h-screen'} w-fit flex-col justify-center self-center justify-self-center`}
+		>
+			<a
+				href={`/proyectos/${project.id}`}
+				class="m-auto flex h-2/3 flex-col items-start gap-y-2 transition-transform hover:scale-110"
+			>
+				<img
+					src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
+					alt={project.thumbnail.altText}
+					class="h-full"
+				/>
+				<p class="font-Agency-FB text-xl text-white">{project.name}</p>
+			</a>
+		</div>
 	{/each}
 </div>
 

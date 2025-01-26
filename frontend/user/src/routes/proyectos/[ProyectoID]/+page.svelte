@@ -27,7 +27,7 @@
 			<img
 				src={`${PUBLIC_imagesUrl}${space.images.at(0)?.filename}`}
 				alt={space.images.at(0)?.altText}
-				class:px-8={space.images.shift()?.phoneConfig.alignment !== enums.Alignment.Overflow}
+				class:px-8={space.images.shift()?.phoneConfig.alignment !== enums.Alignment.OVERFLOW}
 			/>
 
 			<div class="mx-8 my-12 text-white">
@@ -48,12 +48,12 @@
 				{#if !image.hideInProject}
 					<div
 						class={`border-vector-orange my-12 gap-12 ${image.phoneConfig.borders.n && 'border-t-2 pt-12'} ${image.phoneConfig.borders.s && 'border-b-2 pb-12'} ${image.phoneConfig.borders.e && 'border-r-2 pr-12'} ${image.phoneConfig.borders.w && 'border-l-2 pl-12'}`}
-						class:mx-8={image.phoneConfig.alignment !== enums.Alignment.Overflow}
+						class:mx-8={image.phoneConfig.alignment !== enums.Alignment.OVERFLOW}
 						class:flex={image.phoneConfig.descriptionPos}
-						class:flex-row={image.phoneConfig.descriptionPos === enums.Direction.O}
-						class:flex-row-reverse={image.phoneConfig.descriptionPos === enums.Direction.E}
-						class:flex-col={image.phoneConfig.descriptionPos === enums.Direction.N}
-						class:flex-col-reverse={image.phoneConfig.descriptionPos === enums.Direction.S}
+						class:flex-row={image.phoneConfig.descriptionPos === enums.Directions.W}
+						class:flex-row-reverse={image.phoneConfig.descriptionPos === enums.Directions.E}
+						class:flex-col={image.phoneConfig.descriptionPos === enums.Directions.N}
+						class:flex-col-reverse={image.phoneConfig.descriptionPos === enums.Directions.S}
 					>
 						{#if image.description && image.phoneConfig.descriptionPos}
 							<div
@@ -65,9 +65,9 @@
 						<img
 							src={`${PUBLIC_imagesUrl}${image.filename}`}
 							alt={image.altText}
-							class={`${[enums.Alignment.Right, enums.Alignment.Left].includes(image.phoneConfig.alignment) ? 'w-2/3' : ''}`}
-							class:ml-auto={image.phoneConfig.alignment === enums.Alignment.Right}
-							class:mr-auto={image.phoneConfig.alignment === enums.Alignment.Left}
+							class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig.alignment) ? 'w-2/3' : ''}`}
+							class:ml-auto={image.phoneConfig.alignment === enums.Alignment.RIGHT}
+							class:mr-auto={image.phoneConfig.alignment === enums.Alignment.LEFT}
 						/>
 					</div>
 				{/if}
