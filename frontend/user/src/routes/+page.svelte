@@ -156,11 +156,13 @@
 	</div>
 	<div
 		class={`m-auto hidden size-full items-center lg:flex ${
-			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.LEFT
+			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.LEFT &&
+			!imageData.mainImageConfig.desktopConfig.overflow
 				? 'xl:pl-20'
 				: ''
 		} ${
-			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.RIGHT
+			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.RIGHT &&
+			!imageData.mainImageConfig.desktopConfig.overflow
 				? 'xl:pr-20'
 				: ''
 		} ${
@@ -190,7 +192,7 @@
 
 		{#if imageData.mainImageConfig.desktopConfig.descriptionPosition || imageData.mainImageConfig.desktopConfig.logoPosition}
 			<div
-				class={`max-w-1/2 m-auto flex flex-col items-center justify-around ${
+				class={`max-w-1/2 m-auto flex h-full flex-col items-center justify-around ${
 					imageData.mainImageConfig.desktopConfig.descriptionLogoPosition === Directions.S
 						? 'flex-col-reverse'
 						: ''
@@ -225,7 +227,7 @@
 	</div>
 {/snippet}
 
-<header class="bg-vector-grey flex h-28 items-center justify-center gap-20 p-5 md:mb-14">
+<header class="bg-vector-grey flex h-28 items-center justify-center gap-20 p-5">
 	<a href="/" class="h-full">
 		<img src={logo} alt="logo" class="h-full" />
 	</a>
@@ -238,13 +240,17 @@
 </header>
 
 {#each mainImages.slice(0, 1) as image (image.filename)}
-	<div class="lg:h-[calc(80vh-7rem)]">
+	<div
+		class={`mb-50 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[calc(100vh-7rem)]' : 'mt-20 lg:h-[calc(80vh-7rem)]'}`}
+	>
 		{@render mainImage(image)}
 	</div>
 {/each}
 
 {#each mainImages.slice(1, 5) as image (image.filename)}
-	<div class="lg:my-50 my-20 lg:h-[80vh]">
+	<div
+		class={`lg:my-50 my-20 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
+	>
 		{@render mainImage(image)}
 	</div>
 {/each}
@@ -264,7 +270,9 @@
 </div>
 
 {#each mainImages.slice(5, 8) as image (image.filename)}
-	<div class="lg:my-50 my-20 lg:h-[80vh]">
+	<div
+		class={`lg:my-50 my-20 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
+	>
 		{@render mainImage(image)}
 	</div>
 {/each}
@@ -277,7 +285,9 @@
 </div>
 
 {#each mainImages.slice(8, -1) as image (image.filename)}
-	<div class="lg:my-50 my-20 lg:h-[80vh]">
+	<div
+		class={`lg:my-50 my-20 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
+	>
 		{@render mainImage(image)}
 	</div>
 {/each}
