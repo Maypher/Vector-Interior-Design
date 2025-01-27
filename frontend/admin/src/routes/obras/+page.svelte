@@ -90,7 +90,7 @@
 
 <div class="bg-red-400 min-h-screen p-4">
 	<div class="bg-gray-500 p-2 flex justify-between items-center rounded-lg max-w-md m-auto">
-		<input type="text" class="bg-transparent outline-none w-full" bind:value={searchQuery} />
+		<input type="text" class="bg-transparent outline-hidden w-full" bind:value={searchQuery} />
 		<span class="material-symbols-outlined border-l-2 border-gray-700 pl-3"> search </span>
 	</div>
 	<div class="my-4 max-w-md m-auto">
@@ -145,7 +145,7 @@
 							{/each}
 						</div>
 					</SortableList>
-					<div class="flex w-full border-2 border-black rounded-sm">
+					<div class="flex w-full border-2 border-black rounded-xs">
 						<button
 							type="button"
 							onclick={updateOrder}

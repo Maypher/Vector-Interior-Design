@@ -20,7 +20,7 @@
 			type={visible ? 'text' : 'password'}
 			{name}
 			bind:value
-			class="focus:outline-none"
+			class="focus:outline-hidden"
 			{...constrains}
 		/>
 		<button

@@ -75,6 +75,6 @@
 			errors={$errors.description}
 			bind:value={$form.description}
 		/>
-		<button class="bg-purple-700 rounded-sm p-3 m-2">Crear</button>
+		<button class="bg-purple-700 rounded-xs p-3 m-2">Crear</button>
 	</fieldset>
 </form>

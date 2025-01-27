@@ -24,7 +24,7 @@
 	<input
 		{type}
 		{name}
-		class="p-1 rounded-md w-full focus:outline-none"
+		class="p-1 rounded-md w-full focus:outline-hidden"
 		bind:value
 		{...constrains}
 	/>

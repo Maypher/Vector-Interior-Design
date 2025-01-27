@@ -115,7 +115,7 @@
 		<fieldset disabled={submitting}>
 			<button
 				type="button"
-				class="block w-fit ml-auto p-2 rounded-sm bg-blue-600 hover:bg-amber-600"
+				class="block w-fit ml-auto p-2 rounded-xs bg-blue-600 hover:bg-amber-600"
 				onclick={deleteSpace}>Eliminar</button
 			>
 			<EditableInput
@@ -132,7 +132,7 @@
 				bind:value={$form.description}
 				errors={$errors.description}
 			/>
-			<button type="submit" class="bg-violet-300 hover:bg-stone-50 m-2 rounded-sm p-3"
+			<button type="submit" class="bg-violet-300 hover:bg-stone-50 m-2 rounded-xs p-3"
 				>Actualizar</button
 			>
 		</fieldset>
@@ -170,7 +170,7 @@
 				{/each}
 			</div>
 		</SortableList>
-		<div class="flex w-full border-2 border-black rounded-sm">
+		<div class="flex w-full border-2 border-black rounded-xs">
 			<button
 				type="button"
 				onclick={updateImagesOrder}

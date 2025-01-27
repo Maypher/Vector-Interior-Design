@@ -35,7 +35,7 @@
 			{name}
 			bind:value
 			bind:this={input}
-			class="focus:outline-none text-gray-400"
+			class="focus:outline-hidden text-gray-400"
 			{onfocusout}
 			disabled
 			{...constrains}

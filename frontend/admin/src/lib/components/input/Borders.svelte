@@ -22,7 +22,7 @@
 	} = $props();
 </script>
 
-<div class={`relative ${props.class}`}>
+<div class={`relative size-full ${props.class}`}>
 	{#if n !== undefined}
 		<input type="checkbox" id={`logo-border-n-${id}`} hidden bind:checked={n} />
 		<label
@@ -42,7 +42,7 @@
 		<input type="checkbox" id={`logo-border-s-${id}`} hidden bind:checked={s} />
 		<label
 			for={`logo-border-s-${id}`}
-			class={`w-full h-2 absolute -bottom-5 hover:cursor-pointer hover:bg-vector-orange/40 ${s ? 'bg-vector-orange' : 'bg-gray-600/40'}`}
+			class={`w-full h-2 absolute left-0 -bottom-5 hover:cursor-pointer hover:bg-vector-orange/40 ${s ? 'bg-vector-orange' : 'bg-gray-600/40'}`}
 		></label>
 	{/if}
 	{#if e !== undefined}

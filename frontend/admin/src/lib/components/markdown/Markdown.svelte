@@ -129,7 +129,7 @@
 	</div>
 	{#if preview}
 		<div
-			class={`w-full bg-black h-60 outline-none text-white p-4 markdownDescription overflow-y-scroll ${fontAlignment}`}
+			class={`w-full bg-black h-60 outline-hidden text-white p-4 markdownDescription overflow-y-scroll ${fontAlignment}`}
 			style={`font-family: ${fontFamily};`}
 		>
 			{@html markdown.MdtoHTML(value)}
@@ -137,7 +137,7 @@
 	{:else}
 		<div>
 			<textarea
-				class="w-full resize-none min-h-60 outline-none p-4 text-white bg-black font-mono"
+				class="w-full resize-none min-h-60 outline-hidden p-4 text-white bg-black font-mono"
 				{name}
 				bind:value
 				bind:this={textArea}

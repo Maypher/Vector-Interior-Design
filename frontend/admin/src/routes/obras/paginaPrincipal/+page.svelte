@@ -82,7 +82,7 @@
 				{/each}
 			</div>
 		</SortableList>
-		<div class="flex w-full border-2 border-black rounded-sm">
+		<div class="flex w-full border-2 border-black rounded-xs">
 			<button
 				type="button"
 				onclick={updateOrder}
@@ -102,4 +102,5 @@
 			>
 		</div>
 	</div>
+	<a href="/obras/paginaPrincipal/escritorio">Escritorio</a>
 </div>
