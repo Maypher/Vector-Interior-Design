@@ -7,21 +7,13 @@ services:
             dockerfile: ./src/admin/Dockerfile
         environment:
             - BUILD_TARGET=${BUILD_TARGET:-dev}
-            - PORT=${ADMIN_PORT}
+            - PORT=${ADMIN_PORT:-3000}
             - HOST=database
-            - USERNAME=${ADMIN_USERNAME}
-            - PASSWORD=${ADMIN_PASSWORD}
-            - DB_PORT=${DATABASE_PORT}
-            - DB_NAME=${DATABASE_NAME}
-            - SECRET_KEY=${ADMIN_SERVER_SECRET_KEY}
-            - FRONTEND_URL=${ADMIN_FRONTEND_URL}
-            - COMMON_PORT=${USER_PORT}
-            - COMMON_SECRET_KEY=${USER_SERVER_SECRET_KEY}
-            - COMMON_USERNAME=${USER_USERNAME}
-            - COMMON_PASSWORD=${USER_PASSWORD}
-            - COMMON_HOST=database
-            - COMMON_DB_PORT=${DATABASE_PORT}
-            - COMMON_DB_NAME=${DATABASE_NAME}
+            - USERNAME=${ADMIN_USERNAME:-admin}
+            - PASSWORD=${ADMIN_PASSWORD:?Password required for database setup.}
+            - DB_PORT=${DATABASE_PORT:-5432}
+            - DB_NAME=${DATABASE_NAME:-postgres}
+            - FRONTEND_URL=${ADMIN_FRONTEND_URL:?Frontend URL required for CORS.}
         volumes:
             - data:/storage/images/
         networks:
@@ -64,20 +56,13 @@ services:
                   path: ./backend/src/common/
                   target: /app/src/common/
         environment:
-            - PORT=${USER_PORT}
-            - SECRET_KEY=${USER_SERVER_SECRET_KEY}
-            - USERNAME=${USER_USERNAME}
-            - PASSWORD=${USER_PASSWORD}
+            - PORT=${USER_PORT:-2800}
+            - USERNAME=${USER_USERNAME:-frontend}
+            - PASSWORD=${USER_PASSWORD:?Password required for user database access.}
             - HOST=database
-            - DB_PORT=${DATABASE_PORT}
-            - DB_NAME=${DATABASE_NAME}
-            - COMMON_PORT=${USER_PORT}
-            - COMMON_SECRET_KEY=${USER_SERVER_SECRET_KEY}
-            - COMMON_USERNAME=${USER_USERNAME}
-            - COMMON_PASSWORD=${USER_PASSWORD}
-            - COMMON_HOST=database
-            - COMMON_DB_PORT=${DATABASE_PORT}
-            - COMMON_DB_NAME=${DATABASE_NAME}
+            - DB_PORT=${DATABASE_PORT:-5432}
+            - DB_NAME=${DATABASE_NAME:-postgres}
+            - FRONTEND_URL=${USER_FRONTEND_URL:?Frontend URL required for CORS.}
         profiles:
             - prod
     tests:
@@ -93,14 +78,9 @@ services:
         networks:
             - backend
         environment:
-            - COMMON_PORT=${USER_PORT}
-            - COMMON_SECRET_KEY=${USER_SERVER_SECRET_KEY}
-            - COMMON_USERNAME=${USER_USERNAME}
-            - COMMON_PASSWORD=${USER_PASSWORD}
-            - COMMON_HOST=database
-            - COMMON_DB_PORT=${DATABASE_PORT}
-            - COMMON_DB_NAME=${DATABASE_NAME}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - DB_NAME=${DATABASE_NAME:-postgres}
+            - DB_PORT=${DATABASE_PORT:-5432}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Database password required.}
     database:
         build: ./database/
         restart: always
@@ -141,8 +121,8 @@ services:
         networks:
             - backend
         environment:
-            - ADMIN_PORT=${ADMIN_PORT}
-            - USER_PORT=${USER_PORT}
+            - ADMIN_PORT=${ADMIN_PORT:-3000}
+            - USER_PORT=${USER_PORT:-2800}
 volumes:
     data:
 networks:
