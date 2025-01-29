@@ -12,13 +12,14 @@ from typing import AsyncGenerator
 
 @pytest.fixture(scope="session")
 def postgres_manager() -> database.DatabaseManager:
+    print(os.environ)
     """Connects to the default 'postgres' database."""
     return database.DatabaseManager(
-        "postgres",
+        os.environ.get("DB_NAME"),
         os.environ.get("POSTGRES_PASSWORD"),
         "database",
-        "5432",
-        "postgres",
+        os.environ.get("DB_PORT"),
+        os.environ.get("DB_NAME"),
         True,
     )
 
