@@ -322,7 +322,7 @@ export function updateListOnEnter(textArea: HTMLTextAreaElement) {
     });
 }
 
-export function MdtoHTML(text: string): string {
+export function mdToHTML(text: string): string {
     const renderer = new showdown.Converter({ openLinksInNewWindow: true, simpleLineBreaks: true });
 
     const html: string = renderer.makeHtml(text);

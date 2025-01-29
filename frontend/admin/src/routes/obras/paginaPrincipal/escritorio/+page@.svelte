@@ -5,7 +5,7 @@
 	import tony from '$lib/images/tony.jpg';
 	import tonyContact from '$lib/images/contact.jpg';
 	import logoWhite from '$lib/images/logo white.svg';
-	import { MdtoHTML } from '$lib/utilities/markdown';
+	import { mdToHTML } from '$lib/utilities/markdown';
 	import getArrayDifference from '$lib/utilities/arrayOrder';
 	import { PUBLIC_imageURL } from '$env/static/public';
 	import * as enums from '$lib/utilities/enums';
@@ -79,7 +79,7 @@
 
 		for (const [i, image] of updatedMainPageImages.entries()) {
 			// If there aren't any changes between the original and updated config then don't updated it in the backend.
-			if (JSON.stringify(image) !== JSON.stringify(originalMainPages.at(i))) {
+			if (!isEqual(image, originalMainPages.at(i))) {
 				const mainPageConfig = image.mainImageConfig;
 				const variables = {
 					id: mainPageConfig.id,
@@ -408,7 +408,7 @@
 							class:border-r-4={image.mainImageConfig.desktopConfig.descriptionBorders.e}
 							class:border-l-4={image.mainImageConfig.desktopConfig.descriptionBorders.w}
 						>
-							{@html MdtoHTML(
+							{@html mdToHTML(
 								englishDescription
 									? image.mainImageConfig.descriptionEn
 									: image.mainImageConfig.descriptionEs

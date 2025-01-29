@@ -132,7 +132,7 @@
 			class={`w-full bg-black h-60 outline-hidden text-white p-4 markdownDescription overflow-y-scroll ${fontAlignment}`}
 			style={`font-family: ${fontFamily};`}
 		>
-			{@html markdown.MdtoHTML(value)}
+			{@html markdown.mdToHTML(value)}
 		</div>
 	{:else}
 		<div>
