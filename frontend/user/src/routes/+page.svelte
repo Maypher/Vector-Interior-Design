@@ -241,7 +241,7 @@
 
 {#each mainImages.slice(0, 1) as image (image.filename)}
 	<div
-		class={`mb-50 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[calc(100vh-7rem)]' : 'mt-20 lg:h-[calc(80vh-7rem)]'}`}
+		class={`mb-50 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[calc(100vh-7rem)]' : 'lg:mt-20 lg:h-[calc(80vh-7rem)]'}`}
 	>
 		{@render mainImage(image)}
 	</div>
@@ -299,7 +299,7 @@
 	<img
 		src={`${PUBLIC_imagesUrl}${mainImages.at(-1)!.filename}`}
 		alt={mainImages.at(-1)!.altText}
-		class="max-w-2/3 md:max-lg:max-w-full lg:my-auto lg:max-h-full"
+		class="lg:max-w-2/3 max-w-full lg:my-auto lg:max-h-full"
 	/>
 	<div class="relative flex size-full items-center justify-center gap-5 p-5">
 		<a
