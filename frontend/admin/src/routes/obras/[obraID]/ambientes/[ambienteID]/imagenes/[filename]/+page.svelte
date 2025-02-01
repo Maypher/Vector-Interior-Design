@@ -130,7 +130,7 @@
 		event.preventDefault();
 
 		const query = `
-			mutation updatePhoneConfig($filename: String!, $phoneConfig: phoneConfigInput) {
+			mutation updatePhoneConfig($filename: String!, $phoneConfig: PhoneConfigInput) {
 				updateImage(filename: $filename, phoneConfig: $phoneConfig) {
 					phoneConfig {
 						borders {
@@ -155,7 +155,6 @@
 		).updateImage.phoneConfig;
 
 		phoneConfig = updatedConfig;
-
 		success('Configuración de teléfono actualizada.');
 	}
 </script>

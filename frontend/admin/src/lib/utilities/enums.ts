@@ -7,10 +7,10 @@ export const Directions = {
 }
 
 export const Alignment = {
-    LEFT: "LEFT",
-    RIGHT: "RIGHT",
-    CENTER: "CENTER",
-    OVERFLOW: "OVERFLOW",
+    Izquierda: "LEFT",
+    Derecha: "RIGHT",
+    Centro: "CENTER",
+    Sangrar: "OVERFLOW",
 }
 
 export const TextAlignment = {

@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		id: number;
+		id: string;
 		n?: boolean;
 		s?: boolean;
 		e?: boolean;
@@ -19,7 +19,7 @@
 		w = $bindable(undefined),
 		children,
 		...props
-	} = $props();
+	}: Props = $props();
 </script>
 
 <div class={`relative size-full ${props.class}`}>

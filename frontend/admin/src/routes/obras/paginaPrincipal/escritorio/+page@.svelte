@@ -9,8 +9,8 @@
 	import getArrayDifference from '$lib/utilities/arrayOrder';
 	import { PUBLIC_imageURL } from '$env/static/public';
 	import * as enums from '$lib/utilities/enums';
-	import Movable from '$lib/components/input/Movable.svelte';
-	import Borders from '$lib/components/input/Borders.svelte';
+	import Movable from '$lib/components/editor/Movable.svelte';
+	import Borders from '$lib/components/editor/Borders.svelte';
 	import '$lib/styles/markdown.css';
 	import graphql from '$lib/utilities/api';
 	import { success } from '$lib/utilities/toasts';

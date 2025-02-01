@@ -16,7 +16,7 @@
 
 <div
 	{...props}
-	class={`relative ${!preview ? 'border-dashed border-2 border-gray-500' : ''} ${props.class}`}
+	class={`relative size-full ${!preview ? 'border-dashed border-2 border-gray-500' : ''} ${props.class}`}
 >
 	{#if !preview && up}
 		<button

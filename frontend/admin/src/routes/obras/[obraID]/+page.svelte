@@ -15,6 +15,7 @@
 	import '$lib/styles/ordenableList.css';
 	import { PUBLIC_imageURL } from '$env/static/public';
 	import getArrayDifference from '$lib/utilities/arrayOrder';
+	import EditorLinks from '$lib/components/layout/editorLinks.svelte';
 
 	const { data }: { data: PageData } = $props();
 	let projectData = $state(data.projectData!);
@@ -227,5 +228,14 @@
 			class="block bg-amber-400 hover:bg-amber-600 w-full text-center p-2 border-2 border-black sticky bottom-0"
 			>Nuevo Ambiente</a
 		>
+	</div>
+	<hr class="m-3" />
+	<!-- Editores -->
+	<h1 class="text-xl m-3 font-bold text-center">Editor</h1>
+	<div class="flex items-center justify-center">
+		<EditorLinks
+			mobileUrl={`/obras/${projectData.id}/movil`}
+			desktopUrl={`/obras/${projectData.id}/escritorio`}
+		/>
 	</div>
 </div>

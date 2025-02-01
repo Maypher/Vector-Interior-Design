@@ -9,13 +9,15 @@
 	import { mdToHTML } from '$lib/utilities/markdown';
 	import { PUBLIC_imageURL } from '$env/static/public';
 	import '$lib/styles/markdown.css';
-	import Movable from '$lib/components/input/Movable.svelte';
-	import Borders from '$lib/components/input/Borders.svelte';
+	import Movable from '$lib/components/editor/Movable.svelte';
+	import Borders from '$lib/components/editor/Borders.svelte';
 	import { isEqual, cloneDeep } from 'lodash-es';
 	import { onMount } from 'svelte';
 	import getArrayDifference from '$lib/utilities/arrayOrder';
 	import { success } from '$lib/utilities/toasts';
 	import graphql from '$lib/utilities/api';
+	import Phone from '$lib/components/layout/phone.svelte';
+	import EditorDescription from '$lib/components/editor/EditorDescription.svelte';
 
 	const { data }: { data: PageData } = $props();
 	let originalMainPages: any[] = $state($state.snapshot(data.mainPageImages));
@@ -187,60 +189,13 @@
 					bind:preview
 				>
 					{#if !preview}
-						<div class="flex flex-col justify-between xl:flex-row gap-1">
-							<div class="flex flex-col">
-								<label for={`main-image-desc-alignment-${imageData.id}`} class="text-white"
-									>Alineación</label
-								>
-								<select
-									id={`main-image-desc-alignment-${imageData.id}`}
-									bind:value={imageData.mainImageConfig.descriptionAlignment}
-									class="bg-white text-black w-fit m-auto"
-								>
-									{#each Object.entries(TextAlignment) as [key, val] (key)}
-										<option value={val}>{key}</option>
-									{/each}
-								</select>
-							</div>
-							<div class="flex items-center justify-center">
-								<label
-									for={`main-image-desc-lang-${imageData.id}`}
-									class="hover:cursor-pointer bg-vector-grey p-1 rounded-xs hover:brightness-75 transition-colors select-none text-black"
-									>{englishDescription ? 'Inglés' : 'Español'}</label
-								>
-								<input
-									type="checkbox"
-									id={`main-image-desc-lang-${imageData.id}`}
-									bind:checked={englishDescription}
-									hidden
-								/>
-							</div>
-							<div class="flex flex-col">
-								<label for={`main-image-desc-font-${imageData.id}`} class="text-white"
-									>Tipografía</label
-								>
-								<select
-									id={`main-image-desc-font-${imageData.id}`}
-									bind:value={imageData.mainImageConfig.descriptionFont}
-									class="bg-white text-black w-fit m-auto"
-								>
-									{#each Object.entries(TextFont) as [key, val] (key)}
-										<option value={val}>{key}</option>
-									{/each}
-								</select>
-							</div>
-						</div>
-						{#if englishDescription}
-							<textarea
-								class={`text-white bg-transparent border-2 border-dashed w-full border-white h-full p-5 ${imageData.mainImageConfig.descriptionAlignment} font-${imageData.mainImageConfig.descriptionFont}`}
-								bind:value={imageData.mainImageConfig.descriptionEn}
-							></textarea>
-						{:else}
-							<textarea
-								class={`text-white bg-transparent border-2 border-dashed w-full border-white h-full p-5 ${imageData.mainImageConfig.descriptionAlignment} font-${imageData.mainImageConfig.descriptionFont}`}
-								bind:value={imageData.mainImageConfig.descriptionEs}
-							></textarea>
-						{/if}
+						<EditorDescription
+							id={imageData.id}
+							bind:descriptionEs={imageData.mainImageConfig.descriptionEs}
+							bind:descriptionEn={imageData.mainImageConfig.descriptionEn}
+							bind:descriptionAlignment={imageData.mainImageConfig.descriptionAlignment}
+							bind:descriptionFont={imageData.mainImageConfig.descriptionFont}
+						/>
 					{:else}
 						<div
 							class={`markdownDescription text-white ${imageData.mainImageConfig.descriptionAlignment} font-${imageData.mainImageConfig.descriptionFont}`}
@@ -369,15 +324,8 @@
 				Obras únicas y exclusivas
 			</p>
 		</header>
-		<div
-			class="bg-black md:border-2 md:border-white md:aspect-[9/16] w-full md:w-sm flex flex-col overflow-y-scroll overflow-x-clip relative"
-		>
-			<div
-				class="bg-black z-10 h-10 shrink-0 md:border-white md:border-2 w-full hidden md:flex sticky top-0 justify-center items-center"
-			>
-				<div class="size-4 rounded-xl border-2 border-white hidden md:block"></div>
-			</div>
-			<div class="size-full @container flex flex-col">
+		<Phone>
+			<div class="flex flex-col size-full">
 				<header class="bg-vector-grey flex h-28 items-center justify-center gap-20 p-5">
 					<a href="/" class="h-full">
 						<img src={logo} alt="logo" class="h-full" />
@@ -557,7 +505,7 @@
 					</footer>
 				</div>
 			</div>
-		</div>
+		</Phone>
 	</div>
 </div>
 
