@@ -69,9 +69,12 @@
               <li><a href="#definition-Boolean">Boolean</a></li>
               <li><a href="#definition-Borders">Borders</a></li>
               <li><a href="#definition-BordersInput">BordersInput</a></li>
+              <li><a href="#definition-DesktopConfigInput">DesktopConfigInput</a></li>
+              <li><a href="#definition-DesktopImageConfig">DesktopImageConfig</a></li>
               <li><a href="#definition-DesktopImagePosition">DesktopImagePosition</a></li>
               <li><a href="#definition-Float">Float</a></li>
               <li><a href="#definition-Image">Image</a></li>
+              <li><a href="#definition-ImageGroupAlignment">ImageGroupAlignment</a></li>
               <li><a href="#definition-ImageSpaceNotFoundImageUnsupportedFileType">ImageSpaceNotFoundImageUnsupportedFileType</a></li>
               <li><a href="#definition-Int">Int</a></li>
               <li><a href="#definition-Location">Location</a></li>
@@ -80,6 +83,7 @@
               <li><a href="#definition-MainPageImageDesktopConfigInput">MainPageImageDesktopConfigInput</a></li>
               <li><a href="#definition-MainPageImagePhoneConfig">MainPageImagePhoneConfig</a></li>
               <li><a href="#definition-MainPageImagePhoneConfigInput">MainPageImagePhoneConfigInput</a></li>
+              <li><a href="#definition-PhoneConfigInput">PhoneConfigInput</a></li>
               <li><a href="#definition-PhoneImageConfig">PhoneImageConfig</a></li>
               <li><a href="#definition-Project">Project</a></li>
               <li><a href="#definition-ProjectNotFoundSpace">ProjectNotFoundSpace</a></li>
@@ -90,7 +94,6 @@
               <li><a href="#definition-String">String</a></li>
               <li><a href="#definition-UnsupportedFileType">UnsupportedFileType</a></li>
               <li><a href="#definition-Upload">Upload</a></li>
-              <li><a href="#definition-phoneConfigInput">phoneConfigInput</a></li>
             </ul>
           </div>
         </nav>
@@ -177,6 +180,9 @@
     <span class="hljs-symbol">phoneConfig <span class="hljs-tag">{
       <span class="hljs-type">...PhoneImageConfigFragment</span>
     }</span></span>
+    <span class="hljs-symbol">desktopConfig <span class="hljs-tag">{
+      <span class="hljs-type">...DesktopImageConfigFragment</span>
+    }</span></span>
     <span class="hljs-symbol">space <span class="hljs-tag">{
       <span class="hljs-type">...SpaceFragment</span>
     }</span></span>
@@ -196,7 +202,7 @@
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -208,16 +214,17 @@
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"image"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"descriptionFont"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"sculpture"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"sculpture"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"mainPage"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"hideInProject"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"mainPage"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"hideInProject"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"phoneConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">PhoneImageConfig</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"desktopConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">DesktopImageConfig</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"space"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Space</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"mainImageConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">MainPageImageConfig</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"sculptureData"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">SculptureData</span>
@@ -274,6 +281,9 @@
     <span class="hljs-symbol">phoneConfig <span class="hljs-tag">{
       <span class="hljs-type">...PhoneImageConfigFragment</span>
     }</span></span>
+    <span class="hljs-symbol">desktopConfig <span class="hljs-tag">{
+      <span class="hljs-type">...DesktopImageConfigFragment</span>
+    }</span></span>
     <span class="hljs-symbol">space <span class="hljs-tag">{
       <span class="hljs-type">...SpaceFragment</span>
     }</span></span>
@@ -298,15 +308,16 @@
     <span class="hljs-attr">"mainPageImages"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
         <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"descriptionFont"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"sculpture"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"descriptionFont"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"sculpture"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"mainPage"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"hideInProject"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"phoneConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">PhoneImageConfig</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"desktopConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">DesktopImageConfig</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"space"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Space</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"mainImageConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">MainPageImageConfig</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"sculptureData"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">SculptureData</span>
@@ -405,12 +416,12 @@
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"project"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"thumbnail"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"spaces"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Space</span><span class="hljs-punctuation">]</span>
     <span class="hljs-punctuation">}</span>
@@ -508,10 +519,10 @@
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"projects"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
-        <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"thumbnail"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span><span class="hljs-punctuation">,</span>
@@ -570,6 +581,9 @@
     <span class="hljs-symbol">phoneConfig <span class="hljs-tag">{
       <span class="hljs-type">...PhoneImageConfigFragment</span>
     }</span></span>
+    <span class="hljs-symbol">desktopConfig <span class="hljs-tag">{
+      <span class="hljs-type">...DesktopImageConfigFragment</span>
+    }</span></span>
     <span class="hljs-symbol">space <span class="hljs-tag">{
       <span class="hljs-type">...SpaceFragment</span>
     }</span></span>
@@ -593,16 +607,17 @@
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"sculptures"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
       <span class="hljs-punctuation">{</span>
-        <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"descriptionFont"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"descriptionFont"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"sculpture"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"mainPage"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
-        <span class="hljs-attr">"hideInProject"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"mainPage"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"hideInProject"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"phoneConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">PhoneImageConfig</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"desktopConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">DesktopImageConfig</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"space"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Space</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"mainImageConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">MainPageImageConfig</span><span class="hljs-punctuation">,</span>
         <span class="hljs-attr">"sculptureData"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">SculptureData</span>
@@ -699,10 +714,10 @@
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"space"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"project"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Project</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"images"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Image</span><span class="hljs-punctuation">]</span>
     <span class="hljs-punctuation">}</span>
@@ -918,7 +933,7 @@
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span>
+  <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
@@ -932,11 +947,11 @@
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"createProject"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
       <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"thumbnail"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"spaces"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Space</span><span class="hljs-punctuation">]</span>
     <span class="hljs-punctuation">}</span>
@@ -1037,7 +1052,7 @@
                     <head></head>
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"projectId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -1124,7 +1139,7 @@
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">"deleteImage"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">"deleteImage"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -1191,7 +1206,7 @@
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -1267,7 +1282,7 @@
                   <h5>Variables</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -1276,7 +1291,7 @@
                   <h5>Response</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">"deleteSpace"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">"deleteSpace"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -1366,9 +1381,15 @@
                       </tr>
                       <tr>
                         <td>
-                          <span class="property-name"><code>phoneConfig</code></span> - <span class="property-type"><a href="#definition-phoneConfigInput"><code>phoneConfigInput</code></a></span>
+                          <span class="property-name"><code>phoneConfig</code></span> - <span class="property-type"><a href="#definition-PhoneConfigInput"><code>PhoneConfigInput</code></a></span>
                         </td>
                         <td> The configuration for the image display in phones. Default = <code>null</code> </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>desktopConfig</code></span> - <span class="property-type"><a href="#definition-DesktopConfigInput"><code>DesktopConfigInput</code></a></span>
+                        </td>
+                        <td> The configuration for the image display in desktop. Default = <code>null</code> </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1389,8 +1410,9 @@
   <span class="hljs-code">$mainPage</span>:<span class="hljs-type"> Boolean,</span>
   <span class="hljs-code">$hideInProject</span>:<span class="hljs-type"> Boolean,</span>
   <span class="hljs-code">$sculpture</span>:<span class="hljs-type"> Boolean,</span>
-  <span class="hljs-code">$phoneConfig</span>: phoneConfigInput
-)</span> <span class="hljs-tag">{
+  <span class="hljs-code">$phoneConfig</span>:<span class="hljs-type"> PhoneConfigInput,</span>
+  <span class="hljs-code">$desktopConfig</span>:<span class="hljs-type"> DesktopConfigInput
+</span>)</span> <span class="hljs-tag">{
   <span class="hljs-symbol">updateImage<span class="hljs-tag">(
     filename: <span class="hljs-code">$filename</span>,
     altText: <span class="hljs-code">$altText</span>,
@@ -1400,7 +1422,8 @@
     mainPage: <span class="hljs-code">$mainPage</span>,
     hideInProject: <span class="hljs-code">$hideInProject</span>,
     sculpture: <span class="hljs-code">$sculpture</span>,
-    phoneConfig: <span class="hljs-code">$phoneConfig</span>
+    phoneConfig: <span class="hljs-code">$phoneConfig</span>,
+    desktopConfig: <span class="hljs-code">$desktopConfig</span>
   )</span> <span class="hljs-tag">{
     <span class="hljs-symbol">id</span>
     <span class="hljs-symbol">filename</span>
@@ -1413,6 +1436,9 @@
     <span class="hljs-symbol">hideInProject</span>
     <span class="hljs-symbol">phoneConfig <span class="hljs-tag">{
       <span class="hljs-type">...PhoneImageConfigFragment</span>
+    }</span></span>
+    <span class="hljs-symbol">desktopConfig <span class="hljs-tag">{
+      <span class="hljs-type">...DesktopImageConfigFragment</span>
     }</span></span>
     <span class="hljs-symbol">space <span class="hljs-tag">{
       <span class="hljs-type">...SpaceFragment</span>
@@ -1442,7 +1468,8 @@
   <span class="hljs-attr">"mainPage"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"hideInProject"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"sculpture"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"phoneConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span>
+  <span class="hljs-attr">"phoneConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"desktopConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
@@ -1456,15 +1483,16 @@
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"updateImage"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
       <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"filename"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"descriptionFont"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"sculpture"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"mainPage"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"hideInProject"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"hideInProject"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"phoneConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">PhoneImageConfig</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"desktopConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">DesktopImageConfig</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"space"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Space</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"mainImageConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">MainPageImageConfig</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"sculptureData"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">SculptureData</span>
@@ -1644,13 +1672,13 @@
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"updateMainPageConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"descriptionEs"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"descriptionEs"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"descriptionEn"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"descriptionFont"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"descriptionFontSize"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"descriptionAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"descriptionFont"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"descriptionFontSize"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"descriptionAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"phoneConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">MainPageImagePhoneConfig</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"desktopConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">MainPageImageDesktopConfig</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"image"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span>
@@ -1789,7 +1817,7 @@
                   <html>
                     <head></head>
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
@@ -1808,12 +1836,12 @@
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"updateProject"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"thumbnail"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"spaces"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Space</span><span class="hljs-punctuation">]</span>
     <span class="hljs-punctuation">}</span>
@@ -1933,10 +1961,10 @@
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"updateSculptureData"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"descriptionEs"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"descriptionEs"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"descriptionEn"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"image"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span>
     <span class="hljs-punctuation">}</span>
   <span class="hljs-punctuation">}</span>
@@ -2058,10 +2086,10 @@
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"data"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">"updateSpace"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"project"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Project</span><span class="hljs-punctuation">,</span>
       <span class="hljs-attr">"images"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Image</span><span class="hljs-punctuation">]</span>
     <span class="hljs-punctuation">}</span>
@@ -2213,7 +2241,7 @@
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"n"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"s"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"e"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"w"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"n"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"s"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"e"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"w"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -2276,6 +2304,196 @@
                   <html>
                     <head></head>
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"n"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"s"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"e"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span> <span class="hljs-attr">"w"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-DesktopConfigInput" class="definition definition-input-object" data-traverse-target="definition-DesktopConfigInput">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">DesktopConfigInput</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>The display configuration for an image in phones.</p>
+                </div>
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Input Field</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>groupAlignment</code></span> - <span class="property-type"><a href="#definition-ImageGroupAlignment"><code>ImageGroupAlignment</code></a></span>
+                        </td>
+                        <td> Indicates the vertical alignment of an image inside a group. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>imageSize</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int</code></a></span>
+                        </td>
+                        <td> The size of the image in a range 0-100. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>imageBorders</code></span> - <span class="property-type"><a href="#definition-BordersInput"><code>BordersInput</code></a></span>
+                        </td>
+                        <td> What borders should the image have. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>descriptionPosition</code></span> - <span class="property-type"><a href="#definition-Location"><code>Location</code></a></span>
+                        </td>
+                        <td> The position of the description relative to the image. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>descriptionBorders</code></span> - <span class="property-type"><a href="#definition-BordersInput"><code>BordersInput</code></a></span>
+                        </td>
+                        <td> What borders should the description have. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>descriptionLogoPosition</code></span> - <span class="property-type"><a href="#definition-Location"><code>Location</code></a></span>
+                        </td>
+                        <td> The position of the logo relative to the description. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>logoPosition</code></span> - <span class="property-type"><a href="#definition-Location"><code>Location</code></a></span>
+                        </td>
+                        <td> The position of the logo relative to the image. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>logoBorders</code></span> - <span class="property-type"><a href="#definition-BordersInput"><code>BordersInput</code></a></span>
+                        </td>
+                        <td> What borders should the logo have. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"groupAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"TOP"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"imageSize"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"imageBorders"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">BordersInput</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionPosition"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"N"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionBorders"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">BordersInput</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionLogoPosition"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"N"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"logoPosition"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"N"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"logoBorders"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">BordersInput</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-DesktopImageConfig" class="definition definition-object" data-traverse-target="definition-DesktopImageConfig">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">DesktopImageConfig</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>The configuration for an image when shown in a specific project&#39;s page in desktop.</p>
+                </div>
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Field Name</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>groupAlignment</code></span> - <span class="property-type"><a href="#definition-ImageGroupAlignment"><code>ImageGroupAlignment!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>imageSize</code></span> - <span class="property-type"><a href="#definition-Int"><code>Int!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>imageBorders</code></span> - <span class="property-type"><a href="#definition-Borders"><code>Borders!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>descriptionPosition</code></span> - <span class="property-type"><a href="#definition-Location"><code>Location!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>descriptionBorders</code></span> - <span class="property-type"><a href="#definition-Borders"><code>Borders!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>descriptionLogoPosition</code></span> - <span class="property-type"><a href="#definition-Location"><code>Location!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>logoPosition</code></span> - <span class="property-type"><a href="#definition-Location"><code>Location!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td data-property-name=""><span class="property-name"><code>logoBorders</code></span> - <span class="property-type"><a href="#definition-Borders"><code>Borders!</code></a></span>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"groupAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"TOP"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"imageSize"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"imageBorders"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Borders</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionPosition"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"N"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionBorders"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Borders</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionLogoPosition"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"N"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"logoPosition"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"N"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"logoBorders"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Borders</span>
+<span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -2359,7 +2577,7 @@
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-number">123.45</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-number">987.65</span>
 </code></pre>
                     </body>
                   </html>
@@ -2440,6 +2658,11 @@
                         <td> The configuration for this image when shown in a project page in mobile. </td>
                       </tr>
                       <tr>
+                        <td data-property-name=""><span class="property-name"><code>desktopConfig</code></span> - <span class="property-type"><a href="#definition-DesktopImageConfig"><code>DesktopImageConfig!</code></a></span>
+                        </td>
+                        <td> The configuration for this image when shown in a project page in desktop. </td>
+                      </tr>
+                      <tr>
                         <td data-property-name=""><span class="property-name"><code>space</code></span> - <span class="property-type"><a href="#definition-Space"><code>Space!</code></a></span>
                         </td>
                         <td> The space this image belongs to. </td>
@@ -2469,15 +2692,75 @@
   <span class="hljs-attr">"altText"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"descriptionFont"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"sculpture"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"sculpture"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"mainPage"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"hideInProject"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"phoneConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">PhoneImageConfig</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"desktopConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">DesktopImageConfig</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"space"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Space</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"mainImageConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">MainPageImageConfig</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"sculptureData"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">SculptureData</span>
 <span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-ImageGroupAlignment" class="definition definition-enum" data-traverse-target="definition-ImageGroupAlignment">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">ImageGroupAlignment</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>The position of the image when in a group in a project&#39;s page in desktop.</p>
+                </div>
+                <div class="definition-properties doc-copy-section">
+                  <h5>Values</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Enum Value</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <p><code>TOP</code></p>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p><code>MIDDLE</code></p>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p><code>BOTTOM</code></p>
+                        </td>
+                        <td>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol">"TOP"</span>
 </code></pre>
                     </body>
                   </html>
@@ -2706,12 +2989,12 @@
                     <head></head>
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
   <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"descriptionEs"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"descriptionEn"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionEs"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionEn"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"descriptionFont"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"descriptionFontSize"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionFontSize"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"descriptionAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"phoneConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">MainPageImagePhoneConfig</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"desktopConfig"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">MainPageImageDesktopConfig</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"image"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span>
@@ -3045,7 +3328,74 @@
   <span class="hljs-attr">"descriptionPosition"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"N"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"logoPosition"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"N"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"logoBorders"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">BordersInput</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"overflow"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span>
+  <span class="hljs-attr">"overflow"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+                    </body>
+                  </html>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="definition-PhoneConfigInput" class="definition definition-input-object" data-traverse-target="definition-PhoneConfigInput">
+            <div class="definition-group-name">
+              <a href="#group-Types">Types</a>
+            </div>
+            <h2 class="definition-heading">PhoneConfigInput</h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <div class="definition-description doc-copy-section">
+                  <h5>Description</h5>
+                  <p>The display configuration for an image in phones.</p>
+                </div>
+                <div class="definition-properties doc-copy-section">
+                  <h5>Fields</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Input Field</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>borders</code></span> - <span class="property-type"><a href="#definition-BordersInput"><code>BordersInput</code></a></span>
+                        </td>
+                        <td> Indicates what borders the image should have. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>alignment</code></span> - <span class="property-type"><a href="#definition-Alignment"><code>Alignment</code></a></span>
+                        </td>
+                        <td> The alignment of the image. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>descriptionPos</code></span> - <span class="property-type"><a href="#definition-Location"><code>Location</code></a></span>
+                        </td>
+                        <td> The position of the description relative to the image. </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="property-name"><code>descriptionAlignment</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
+                        </td>
+                        <td> The alignment of the description. </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="doc-examples">
+                <div class="example-section example-section-is-code">
+                  <h5>Example</h5>
+                  <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"borders"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">BordersInput</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"alignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"LEFT"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionPos"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"N"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
@@ -3108,7 +3458,7 @@
   <span class="hljs-attr">"borders"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Borders</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"alignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"LEFT"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"descriptionPos"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"N"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"descriptionAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span>
+  <span class="hljs-attr">"descriptionAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
@@ -3188,10 +3538,10 @@
                   <html>
                     <head></head>
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"area"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"public"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"thumbnail"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span><span class="hljs-punctuation">,</span>
@@ -3303,10 +3653,10 @@
                   <html>
                     <head></head>
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"descriptionEs"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"descriptionEs"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"descriptionEn"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"image"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Image</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -3377,10 +3727,10 @@
                   <html>
                     <head></head>
                     <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123.45</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"description"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"index"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987.65</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"project"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">Project</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">"images"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">Image</span><span class="hljs-punctuation">]</span>
 <span class="hljs-punctuation">}</span>
@@ -3426,7 +3776,7 @@
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"spaceId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">987</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"spaceId"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">123</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -3537,7 +3887,7 @@
                   <h5>Example</h5>
                   <html>
                     <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"filetype"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"xyz789"</span><span class="hljs-punctuation">}</span>
+                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span><span class="hljs-attr">"filetype"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span><span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>
@@ -3559,73 +3909,6 @@
                   <html>
                     <head></head>
                     <body><pre><code class="hljs language-gql"><span class="hljs-symbol">Upload</span>
-</code></pre>
-                    </body>
-                  </html>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section id="definition-phoneConfigInput" class="definition definition-input-object" data-traverse-target="definition-phoneConfigInput">
-            <div class="definition-group-name">
-              <a href="#group-Types">Types</a>
-            </div>
-            <h2 class="definition-heading">phoneConfigInput</h2>
-            <div class="doc-row">
-              <div class="doc-copy">
-                <div class="definition-description doc-copy-section">
-                  <h5>Description</h5>
-                  <p>The display configuration for an image in phones.</p>
-                </div>
-                <div class="definition-properties doc-copy-section">
-                  <h5>Fields</h5>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Input Field</th>
-                        <th>Description</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <span class="property-name"><code>borders</code></span> - <span class="property-type"><a href="#definition-BordersInput"><code>BordersInput</code></a></span>
-                        </td>
-                        <td> Indicates what borders the image should have. </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span class="property-name"><code>alignment</code></span> - <span class="property-type"><a href="#definition-Alignment"><code>Alignment</code></a></span>
-                        </td>
-                        <td> The alignment of the image. </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span class="property-name"><code>descriptionPos</code></span> - <span class="property-type"><a href="#definition-Location"><code>Location</code></a></span>
-                        </td>
-                        <td> The position of the description relative to the image. </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <span class="property-name"><code>descriptionAlignment</code></span> - <span class="property-type"><a href="#definition-String"><code>String</code></a></span>
-                        </td>
-                        <td> The alignment of the description. </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="doc-examples">
-                <div class="example-section example-section-is-code">
-                  <h5>Example</h5>
-                  <html>
-                    <head></head>
-                    <body><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">"borders"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">BordersInput</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"alignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"LEFT"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"descriptionPos"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"N"</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">"descriptionAlignment"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"abc123"</span>
-<span class="hljs-punctuation">}</span>
 </code></pre>
                     </body>
                   </html>

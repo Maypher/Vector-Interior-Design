@@ -305,10 +305,14 @@ class Mutation:
             strawberry.argument(description="Indicates that this image is a sculpture"),
         ] = None,
         phone_config: typing.Annotated[
-            typing.Optional[inputs.phoneConfigInput],
+            typing.Optional[inputs.PhoneConfigInput],
             strawberry.argument(
                 description="The configuration for the image display in phones."
             ),
+        ] = None,
+        desktop_config: typing.Annotated[
+            typing.Optional[inputs.DesktopConfigInput],
+            strawberry.argument("The configuration for the image display in desktop."),
         ] = None,
     ) -> typing.Optional[schemas.Image]:
         return info.context["resource_manager"].update_image(
@@ -321,6 +325,7 @@ class Mutation:
             description_font,
             sculpture,
             phone_config,
+            desktop_config,
         )
 
     @strawberry.mutation(

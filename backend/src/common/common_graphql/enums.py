@@ -23,3 +23,12 @@ class DesktopImagePosition(Enum):
     LEFT = "LEFT"
     RIGHT = "RIGHT"
     CENTER = "CENTER"
+
+
+@strawberry.enum(
+    description="The position of the image when in a group in a project's page in desktop."
+)
+class ImageGroupAlignment(Enum):
+    TOP = "TOP"
+    MIDDLE = "MIDDLE"
+    BOTTOM = "BOTTOM"

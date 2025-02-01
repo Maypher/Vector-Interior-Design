@@ -31,7 +31,7 @@ class BordersInput:
 
 
 @strawberry.input(description="The display configuration for an image in phones.")
-class phoneConfigInput:
+class PhoneConfigInput:
     borders: typing.Optional[BordersInput] = strawberry.field(
         description="Indicates what borders the image should have."
     )
@@ -44,6 +44,38 @@ class phoneConfigInput:
     )
     description_alignment: typing.Optional[str] = strawberry.field(
         description="The alignment of the description."
+    )
+
+
+@strawberry.input(description="The display configuration for an image in phones.")
+class DesktopConfigInput:
+    group_alignment: typing.Optional[enums.ImageGroupAlignment] = strawberry.field(
+        description="Indicates the vertical alignment of an image inside a group.",
+        default=strawberry.UNSET,
+    )
+    image_size: typing.Optional[int] = strawberry.field(
+        description="The size of the image in a range 0-100."
+    )
+    image_borders: typing.Optional[BordersInput] = strawberry.field(
+        description="What borders should the image have.",
+    )
+    description_position: typing.Optional[enums.Location] = strawberry.field(
+        description="The position of the description relative to the image.",
+        default=strawberry.UNSET,
+    )
+    description_borders: typing.Optional[BordersInput] = strawberry.field(
+        description="What borders should the description have.",
+    )
+    description_logo_position: typing.Optional[enums.Location] = strawberry.field(
+        description="The position of the logo relative to the description.",
+        default=strawberry.UNSET,
+    )
+    logo_position: typing.Optional[enums.Location] = strawberry.field(
+        description="The position of the logo relative to the image.",
+        default=strawberry.UNSET,
+    )
+    logo_borders: typing.Optional[BordersInput] = strawberry.field(
+        description="What borders should the logo have.",
     )
 
 

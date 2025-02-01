@@ -264,8 +264,10 @@ class AdminResourceManager(ResourceManager):
         description: str | None = None,
         description_font: str | None = None,
         sculpture: bool | None = None,
-        phone_config: inputs.phoneConfigInput | None = None,
+        phone_config: inputs.PhoneConfigInput | None = None,
+        desktop_config: inputs.DesktopConfigInput | None = None,
     ) -> typing.Optional[schemas.Image]:
+        # TODO: Add update to desktop_config
         """
         Updates the alt text of the given image.
 
@@ -289,7 +291,7 @@ class AdminResourceManager(ResourceManager):
         image_id = image["id"]
 
         self.database_manager.query(
-            """
+            f"""
                 UPDATE image 
                 SET alt_text = COALESCE(%s, alt_text),
                 main_page = COALESCE(%s, main_page),
@@ -300,9 +302,19 @@ class AdminResourceManager(ResourceManager):
                 phone_config = ROW(
                 COALESCE(%s, (phone_config).borders), 
                 COALESCE(%s, (phone_config).alignment), 
-                COALESCE(%s, (phone_config).description_position), 
+                {"%s" if phone_config and phone_config.description_pos != UNSET else "COALESCE(%s, (phone_config).description_pos)"}, 
                 COALESCE(%s, (phone_config).description_alignment)
-                )::image_phone_config
+                )::image_phone_config,
+                desktop_config = ROW(
+                {"%s" if desktop_config and desktop_config.group_alignment != UNSET else "COALESCE(%s, (desktop_config).group_alignment)"}, 
+                    COALESCE(%s, (desktop_config).image_size),
+                    COALESCE(%s, (desktop_config).image_borders),
+                    COALESCE(%s, (desktop_config).description_position),
+                    COALESCE(%s, (desktop_config).description_borders),
+                    COALESCE(%s, (desktop_config).description_logo_position),
+                    COALESCE(%s, (desktop_config).logo_position),
+                    COALESCE(%s, (desktop_config).logo_borders)
+                )::image_desktop_config
                 WHERE id = %s
                 """,
             (
@@ -312,10 +324,39 @@ class AdminResourceManager(ResourceManager):
                 description,
                 description_font,
                 sculpture,
-                phone_config.borders.to_bits() if phone_config else None,
-                phone_config.alignment if phone_config else None,
-                phone_config.description_pos if phone_config else None,
-                phone_config.description_alignment if phone_config else None,
+                (
+                    phone_config.borders.to_bits()
+                    if getattr(phone_config, "borders", None)
+                    else None
+                ),
+                getattr(phone_config, "alignment", None),
+                (
+                    phone_config.description_pos
+                    if getattr(phone_config, "description_pos", UNSET) != UNSET
+                    else None
+                ),
+                getattr(phone_config, "description_alignment", None),
+                getattr(desktop_config, "group_alignment", None),
+                getattr(desktop_config, "image_size", None),
+                getattr(desktop_config, "image_borders", None),
+                (
+                    desktop_config.description_position
+                    if getattr(desktop_config, "description_position", UNSET) != UNSET
+                    else None
+                ),
+                getattr(desktop_config, "description_borders", None),
+                (
+                    desktop_config.description_logo_position
+                    if getattr(desktop_config, "description_logo_position", UNSET)
+                    != UNSET
+                    else None
+                ),
+                (
+                    desktop_config.logo_position
+                    if getattr(desktop_config, "logo_position", UNSET) != UNSET
+                    else None
+                ),
+                getattr(desktop_config, "logo_borders", None),
                 image_id,
             ),
             commit=False,
