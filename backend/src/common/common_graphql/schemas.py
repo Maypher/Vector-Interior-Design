@@ -73,11 +73,16 @@ class Space:
 
     @strawberry.field(description="The images of this ambiente.")
     def images(self, info: ResourceInfo) -> typing.List["Image"]:
+        path_root = info.path
+
+        while path_root.prev is not None:
+            path_root = path_root.prev
+
         image_data = info.context["resource_manager"].database_manager.query(
-            """
+            f"""
         SELECT image.* FROM image
         JOIN space ON image.space_id = space.id
-        WHERE space.id = %s ORDER BY index;
+        WHERE space.id = %s {"AND NOT image.hide_in_project" if path_root.key == "project" else ""} ORDER BY index;
         """,
             (self.id,),
         )
@@ -210,35 +215,39 @@ class PhoneImageConfig:
     description="The configuration for an image when shown in a specific project's page in desktop."
 )
 class DesktopImageConfig:
-    group_alignment: enums.ImageGroupAlignment
+    group_alignment: typing.Optional[enums.ImageGroupAlignment]
+    group_end: bool
     image_size: int
     image_borders: "Borders"
-    description_position: enums.Location
+    description_position: typing.Optional[enums.Location]
+    description_alignment: str
     description_borders: "Borders"
-    description_logo_position: enums.Location
-    logo_position: enums.Location
+    description_logo_position: typing.Optional[enums.Location]
+    logo_position: typing.Optional[enums.Location]
     logo_borders: "Borders"
 
     @staticmethod
     def from_db(data: str) -> "DesktopImageConfig":
         # Since the data is returned from the db as a string in the form
-        # (group_alignment, image_size, image_borders, description_position, description_borders, description_logo_position, logo_position, logo_borders)
+        # (group_alignment, group_end, image_size, image_borders, description_position, description_alignment, description_borders, description_logo_position, logo_position, logo_borders)
         #  it needs to be transformed into a tuple.
         # Doing data[1:-1] since the string is surrounded by parentheses.
         data = tuple(data[1:-1].split(","))
 
-        image_borders = int(data[2], 2)
-        description_borders = int(data[4], 2)
-        logo_borders = int(data[7], 2)
+        image_borders = int(data[3], 2)
+        description_borders = int(data[6], 2)
+        logo_borders = int(data[9], 2)
 
         return DesktopImageConfig(
-            group_alignment=data[0],
-            image_size=data[1],
+            group_alignment=data[0] or None,
+            group_end=data[1] == "t",
+            image_size=data[2],
             image_borders=Borders.from_bits(image_borders),
-            description_position=enums.Location[data[3]] if data[3] else None,
+            description_position=enums.Location[data[4]] if data[4] else None,
+            description_alignment=data[5],
             description_borders=Borders.from_bits(description_borders),
-            description_logo_position=enums.Location[data[5]] if data[5] else None,
-            logo_position=enums.Location[data[6]] if data[6] else None,
+            description_logo_position=enums.Location[data[7]] if data[7] else None,
+            logo_position=enums.Location[data[8]] if data[8] else None,
             logo_borders=Borders.from_bits(logo_borders),
         )
 
