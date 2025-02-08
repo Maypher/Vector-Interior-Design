@@ -53,6 +53,9 @@ class DesktopConfigInput:
         description="Indicates the vertical alignment of an image inside a group.",
         default=strawberry.UNSET,
     )
+    group_end: typing.Optional[bool] = strawberry.field(
+        description="Force a group to end. This is used if two consecutive groups are needed so they don't merge into one."
+    )
     image_size: typing.Optional[int] = strawberry.field(
         description="The size of the image in a range 0-100."
     )
@@ -62,6 +65,9 @@ class DesktopConfigInput:
     description_position: typing.Optional[enums.Location] = strawberry.field(
         description="The position of the description relative to the image.",
         default=strawberry.UNSET,
+    )
+    description_alignment: typing.Optional[str] = strawberry.field(
+        description="The alignment of the description text. **Should by any of tailwind's text-align variations.**"
     )
     description_borders: typing.Optional[BordersInput] = strawberry.field(
         description="What borders should the description have.",
