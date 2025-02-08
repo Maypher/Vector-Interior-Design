@@ -4,9 +4,11 @@ CREATE TYPE image_group_alignment AS ENUM ('TOP', 'MIDDLE', 'BOTTOM');
 
 CREATE TYPE image_desktop_config AS (
     group_alignment image_group_alignment,
+    group_end BOOLEAN,
     image_size INT,
     image_borders BIT(4),
     description_position location,
+    description_alignment VARCHAR(50),
     description_borders BIT(4),
     description_logo_position location,
     logo_position location,
@@ -14,4 +16,4 @@ CREATE TYPE image_desktop_config AS (
 );
 
 ALTER TABLE image ADD COLUMN desktop_config image_desktop_config DEFAULT 
-ROW('MIDDLE', 100, B'0000', NULL, B'0000', NULL, NULL, B'0000')::image_desktop_config;
+ROW(NULL, false, 100, B'0000', NULL, 'text-justify', B'0000', NULL, NULL, B'0000')::image_desktop_config;
