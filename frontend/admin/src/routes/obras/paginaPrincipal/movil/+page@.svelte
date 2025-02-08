@@ -131,52 +131,41 @@
 
 {#snippet mainImage(imageData: any)}
 	<div
-		class="flex size-full gap-20 @md:hidden"
+		class="flex gap-20 @md:hidden h-full"
 		class:flex-col={imageData.mainImageConfig.phoneConfig.logoPosition === Directions.N}
 		class:flex-col-reverse={imageData.mainImageConfig.phoneConfig.logoPosition === Directions.S}
 	>
 		{#if imageData.mainImageConfig.phoneConfig.logoPosition}
-			{#if !preview}
-				<Movable
-					up={imageData.mainImageConfig.phoneConfig.logoPosition !== Directions.N
-						? () => (imageData.mainImageConfig.phoneConfig.logoPosition = Directions.N)
-						: undefined}
-					down={imageData.mainImageConfig.phoneConfig.logoPosition !== Directions.S
-						? () => (imageData.mainImageConfig.phoneConfig.logoPosition = Directions.S)
-						: undefined}
-					class="border-white m-auto w-10/12"
+			<Movable
+				up={imageData.mainImageConfig.phoneConfig.logoPosition !== Directions.N
+					? () => (imageData.mainImageConfig.phoneConfig.logoPosition = Directions.N)
+					: undefined}
+				down={imageData.mainImageConfig.phoneConfig.logoPosition !== Directions.S
+					? () => (imageData.mainImageConfig.phoneConfig.logoPosition = Directions.S)
+					: undefined}
+				class="border-white px-8 h-fit!"
+				bind:preview
+			>
+				<Borders
+					id={`logo-${imageData.filename}`}
+					bind:n={imageData.mainImageConfig.phoneConfig.logoBorders.n}
+					bind:s={imageData.mainImageConfig.phoneConfig.logoBorders.s}
+					bind:e={imageData.mainImageConfig.phoneConfig.logoBorders.e}
+					bind:w={imageData.mainImageConfig.phoneConfig.logoBorders.w}
 					bind:preview
 				>
-					<Borders
-						id={`logo-${imageData.filename}`}
-						bind:n={imageData.mainImageConfig.phoneConfig.logoBorders.n}
-						bind:s={imageData.mainImageConfig.phoneConfig.logoBorders.s}
-						bind:e={imageData.mainImageConfig.phoneConfig.logoBorders.e}
-						bind:w={imageData.mainImageConfig.phoneConfig.logoBorders.w}
-					>
-						<img src={symbol} alt="symbol" class="mx-auto w-20" />
-					</Borders>
-				</Movable>
-			{:else}
-				<div
-					class={`border-vector-orange m-auto w-10/12 ${
-						imageData.mainImageConfig.phoneConfig.logoBorders.n ? 'border-t-2 pt-10' : ''
-					} ${imageData.mainImageConfig.phoneConfig.logoBorders.s ? 'border-b-2 pb-10' : ''} ${
-						imageData.mainImageConfig.phoneConfig.logoBorders.e ? 'border-r-2 pr-10' : ''
-					} ${imageData.mainImageConfig.phoneConfig.logoBorders.w ? 'border-l-2 pl-10' : ''}`}
-				>
 					<img src={symbol} alt="symbol" class="mx-auto w-20" />
-				</div>
-			{/if}
+				</Borders>
+			</Movable>
 		{/if}
 		<div
-			class={`flex gap-16 ${
+			class={`flex gap-12 ${
 				imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.S
 					? 'flex-col-reverse'
 					: ''
 			} ${imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.N ? 'flex-col' : ''}`}
 		>
-			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.descriptionEs}
+			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition}
 				<Movable
 					up={imageData.mainImageConfig.phoneConfig.descriptionPosition !== Directions.N
 						? () => (imageData.mainImageConfig.phoneConfig.descriptionPosition = Directions.N)
@@ -184,29 +173,18 @@
 					down={imageData.mainImageConfig.phoneConfig.descriptionPosition !== Directions.S
 						? () => (imageData.mainImageConfig.phoneConfig.descriptionPosition = Directions.S)
 						: undefined}
-					class={`class m-auto w-10/12 text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription flex flex-col`}
+					class={`class m-auto px-8 text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription flex flex-col justify-center`}
 					style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
 					bind:preview
 				>
-					{#if !preview}
-						<EditorDescription
-							id={imageData.id}
-							bind:descriptionEs={imageData.mainImageConfig.descriptionEs}
-							bind:descriptionEn={imageData.mainImageConfig.descriptionEn}
-							bind:descriptionAlignment={imageData.mainImageConfig.descriptionAlignment}
-							bind:descriptionFont={imageData.mainImageConfig.descriptionFont}
-						/>
-					{:else}
-						<div
-							class={`markdownDescription text-white ${imageData.mainImageConfig.descriptionAlignment} font-${imageData.mainImageConfig.descriptionFont}`}
-						>
-							{@html mdToHTML(
-								englishDescription
-									? imageData.mainImageConfig.descriptionEn
-									: imageData.mainImageConfig.descriptionEs
-							)}
-						</div>
-					{/if}
+					<EditorDescription
+						id={imageData.id}
+						bind:descriptionEs={imageData.mainImageConfig.descriptionEs}
+						bind:descriptionEn={imageData.mainImageConfig.descriptionEn}
+						bind:descriptionAlignment={imageData.mainImageConfig.descriptionAlignment}
+						bind:descriptionFont={imageData.mainImageConfig.descriptionFont}
+						bind:preview
+					/>
 				</Movable>
 			{/if}
 			{#if !preview}
@@ -325,7 +303,7 @@
 			</p>
 		</header>
 		<Phone>
-			<div class="flex flex-col size-full">
+			<div class="flex flex-col h-full">
 				<header class="bg-vector-grey flex h-28 items-center justify-center gap-20 p-5">
 					<a href="/" class="h-full">
 						<img src={logo} alt="logo" class="h-full" />
@@ -337,174 +315,171 @@
 						Obras únicas y exclusivas
 					</p>
 				</header>
-				<div class="size-full">
-					{#each updatedMainPageImages.slice(0, 1) as image, i (image.filename)}
-						<Movable
-							down={() => {
-								const fromIndex = i;
+				{#each updatedMainPageImages.slice(0, 1) as image, i (image.filename)}
+					<Movable
+						down={() => {
+							const fromIndex = i;
+							const element = updatedMainPageImages.splice(fromIndex, 1)[0];
+							updatedMainPageImages.splice(fromIndex + 1, 0, element);
+						}}
+						class={`transition-all h-full!`}
+						bind:preview
+					>
+						{@render mainImage(image)}
+					</Movable>
+				{/each}
+			</div>
+
+			{#each updatedMainPageImages.slice(1, 5) as image, i (image.filename)}
+				<Movable
+					up={() => {
+						const fromIndex = i + 1; // Adding once since the first image is at the top then it should start at index 1
+						const element = updatedMainPageImages.splice(fromIndex, 1)[0];
+						updatedMainPageImages.splice(fromIndex - 1, 0, element);
+					}}
+					down={i + 1 !== updatedMainPageImages.length - 1
+						? () => {
+								const fromIndex = i + 1;
 								const element = updatedMainPageImages.splice(fromIndex, 1)[0];
 								updatedMainPageImages.splice(fromIndex + 1, 0, element);
-							}}
-							class={`transition-all mb-20`}
-							bind:preview
-						>
-							{@render mainImage(image)}
-						</Movable>
-					{/each}
-					{#each updatedMainPageImages.slice(1, 5) as image, i (image.filename)}
-						<Movable
-							up={() => {
-								const fromIndex = i + 1; // Adding once since the first image is at the top then it should start at index 1
-								const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-								updatedMainPageImages.splice(fromIndex - 1, 0, element);
-							}}
-							down={i + 1 !== updatedMainPageImages.length - 1
-								? () => {
-										const fromIndex = i + 1;
-										const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-										updatedMainPageImages.splice(fromIndex + 1, 0, element);
-									}
-								: undefined}
-							bind:preview
-							class="my-20"
-						>
-							{@render mainImage(image)}
-						</Movable>
-					{/each}
-					<div
-						class="@lg:my-50 relative my-20 flex flex-col items-center justify-start gap-x-5 gap-y-10 @lg:ml-10 @lg:h-[85vh] @lg:flex-row @xl:ml-20"
-					>
-						<img src={tony} alt="Diseñador" class="max-h-[70vh]" />
-						<div
-							class="mx-auto flex h-full w-3/4 flex-col items-center justify-center gap-20 text-justify indent-3 text-lg text-white @lg:w-1/2 @lg:items-end"
-						>
-							<p>
-								{`De lo sublime a lo majestuoso, el límite de este  este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero y a veces hasta inimaginable.`}
-							</p>
-							<img src={logoWhite} alt="Logo white" class="w-44" />
-						</div>
-					</div>
-					{#each updatedMainPageImages.slice(5, 8) as image, i (image.filename)}
-						<Movable
-							up={() => {
-								const fromIndex = i + 6; // Adding once since the first image is at the top then it should start at index 1
-								const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-								updatedMainPageImages.splice(fromIndex - 1, 0, element);
-							}}
-							down={i + 6 !== updatedMainPageImages.length - 1
-								? () => {
-										const fromIndex = i + 6;
-										const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-										updatedMainPageImages.splice(fromIndex + 1, 0, element);
-									}
-								: undefined}
-							bind:preview
-							class="my-20"
-						>
-							{@render mainImage(image)}
-						</Movable>
-					{/each}
-
-					<div
-						class="border-vector-orange @lg:my-50 m-auto my-20 w-5/6 border-2 p-8 text-center font-[Bahnschrift] text-2xl font-thin tracking-[0.5rem] text-white @md:w-fit @md:text-4xl"
-						style="word-spacing: 1rem;"
-					>
-						Interior Design
-					</div>
-
-					{#each updatedMainPageImages.slice(8, -1) as image, i (image.filename)}
-						<Movable
-							up={() => {
-								const fromIndex = i + 8; // Adding once since the first image is at the top then it should start at index 1
-								const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-								updatedMainPageImages.splice(fromIndex - 1, 0, element);
-							}}
-							down={i + 8 !== updatedMainPageImages.length - 1
-								? () => {
-										const fromIndex = i + 8;
-										const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-										updatedMainPageImages.splice(fromIndex + 1, 0, element);
-									}
-								: undefined}
-							bind:preview
-							class="my-20 h-fit"
-						>
-							{@render mainImage(image)}
-						</Movable>
-					{/each}
-
-					{#each updatedMainPageImages.slice(-1) as image, i (image.filename)}
-						<Movable
-							up={() => {
-								const fromIndex = i + updatedMainPageImages.length - 1; // Adding once since the first image is at the top then it should start at index 1
-								const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-								updatedMainPageImages.splice(fromIndex - 1, 0, element);
-							}}
-							bind:preview
-							id="pencil-wrapper"
-							class="@lg:my-50 @lg:ml-15 mt-20 flex h-screen flex-col gap-y-10 overflow-visible @lg:h-[70vh] @lg:flex-row @lg:justify-between @xl:h-[90vh] @xl:justify-evenly"
-						>
-							<img
-								src={`${PUBLIC_imageURL}${updatedMainPageImages.at(-1)!.filename}`}
-								alt={updatedMainPageImages.at(-1)!.altText}
-								class="@lg:max-w-2/3 max-w-full @lg:my-auto @lg:max-h-full"
-							/>
-							<div class="relative flex size-full items-center justify-center gap-5 p-5">
-								<a
-									href="/esculturas/"
-									class="border-vector-orange after:bg-vector-orange relative top-10 w-fit text-4xl text-white hover:border-b-2 z-20"
-									style="font-family: Agency-FB;"
-								>
-									Esculturas
-								</a>
-								<div
-									class="z-10 flex size-full w-[2px] flex-col items-center overflow-visible"
-									id="pencil"
-								>
-									<img src={symbol} alt="Logo" class="min-h-32 min-w-32" />
-									<div class="bg-vector-orange relative bottom-1.5 h-full w-[2px]"></div>
-								</div>
-								<a
-									href="/proyectos/"
-									class="border-vector-orange relative bottom-10 w-fit text-4xl text-white hover:border-b-2 z-20"
-									style="font-family: Agency-FB;"
-									>Proyectos
-								</a>
-							</div>
-						</Movable>
-					{/each}
-					<footer
-						class="my-15 relative flex flex-col items-center justify-center gap-10 @lg:flex-row"
-					>
-						<div class="max-w-4/5 @lg:max-w-6/7 relative grid gap-y-5">
-							<div
-								class="flex size-fit flex-col gap-4 self-end justify-self-start text-white"
-								style="font-family: Agency-FB; font-size: 5rem; line-height: 4rem;"
-							>
-								<p>CON</p>
-								<p class="indent-[2.1ch]">TAC</p>
-								<p
-									class="col-start-2 row-start-2 text-center indent-[3.9ch] text-[5rem] text-white"
-									style="font-family: Agency-FB; line-height: 4rem;"
-								>
-									TO
-								</p>
-							</div>
-							<img
-								src={tonyContact}
-								alt="Contacto"
-								class="col-start-2 block max-h-[70vh] align-middle @xl:max-h-[80vh]"
-							/>
-							<p class="col-start-2 row-start-2 justify-self-center text-white">Vector@gmail.com</p>
-						</div>
-						<img
-							src={logoWhite}
-							alt="Logo white"
-							class="max-w-42 bottom-0 right-20 w-1/2 @lg:absolute"
-						/>
-					</footer>
+							}
+						: undefined}
+					bind:preview
+					class="my-20 h-fit!"
+				>
+					{@render mainImage(image)}
+				</Movable>
+			{/each}
+			<div
+				class="@lg:my-50 relative my-20 flex flex-col items-center justify-start gap-x-5 gap-y-10 @lg:ml-10 @lg:h-[85vh] @lg:flex-row @xl:ml-20"
+			>
+				<img src={tony} alt="Diseñador" class="max-h-[70vh]" />
+				<div
+					class="mx-auto flex h-full w-3/4 flex-col items-center justify-center gap-20 text-justify indent-3 text-lg text-white @lg:w-1/2 @lg:items-end"
+				>
+					<p>
+						{`De lo sublime a lo majestuoso, el límite de este  este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero y a veces hasta inimaginable.`}
+					</p>
+					<img src={logoWhite} alt="Logo white" class="w-44" />
 				</div>
 			</div>
+			{#each updatedMainPageImages.slice(5, 8) as image, i (image.filename)}
+				<Movable
+					up={() => {
+						const fromIndex = i + 6; // Adding once since the first image is at the top then it should start at index 1
+						const element = updatedMainPageImages.splice(fromIndex, 1)[0];
+						updatedMainPageImages.splice(fromIndex - 1, 0, element);
+					}}
+					down={i + 6 !== updatedMainPageImages.length - 1
+						? () => {
+								const fromIndex = i + 6;
+								const element = updatedMainPageImages.splice(fromIndex, 1)[0];
+								updatedMainPageImages.splice(fromIndex + 1, 0, element);
+							}
+						: undefined}
+					bind:preview
+					class="my-20 h-fit!"
+				>
+					{@render mainImage(image)}
+				</Movable>
+			{/each}
+
+			<div
+				class="border-vector-orange @lg:my-50 m-auto my-20 w-5/6 border-2 p-8 text-center font-[Bahnschrift] text-2xl font-thin tracking-[0.5rem] text-white @md:w-fit @md:text-4xl"
+				style="word-spacing: 1rem;"
+			>
+				Interior Design
+			</div>
+
+			{#each updatedMainPageImages.slice(8, -1) as image, i (image.filename)}
+				<Movable
+					up={() => {
+						const fromIndex = i + 8; // Adding once since the first image is at the top then it should start at index 1
+						const element = updatedMainPageImages.splice(fromIndex, 1)[0];
+						updatedMainPageImages.splice(fromIndex - 1, 0, element);
+					}}
+					down={i + 8 !== updatedMainPageImages.length - 1
+						? () => {
+								const fromIndex = i + 8;
+								const element = updatedMainPageImages.splice(fromIndex, 1)[0];
+								updatedMainPageImages.splice(fromIndex + 1, 0, element);
+							}
+						: undefined}
+					bind:preview
+					class="my-20 h-fit!"
+				>
+					{@render mainImage(image)}
+				</Movable>
+			{/each}
+
+			{#each updatedMainPageImages.slice(-1) as image, i (image.filename)}
+				<Movable
+					up={() => {
+						const fromIndex = i + updatedMainPageImages.length - 1; // Adding once since the first image is at the top then it should start at index 1
+						const element = updatedMainPageImages.splice(fromIndex, 1)[0];
+						updatedMainPageImages.splice(fromIndex - 1, 0, element);
+					}}
+					bind:preview
+					id="pencil-wrapper"
+					class="@lg:my-50 @lg:ml-15 mt-20 flex h-screen flex-col gap-y-10 overflow-visible @lg:h-[70vh] @lg:flex-row @lg:justify-between @xl:h-[90vh] @xl:justify-evenly"
+				>
+					<img
+						src={`${PUBLIC_imageURL}${updatedMainPageImages.at(-1)!.filename}`}
+						alt={updatedMainPageImages.at(-1)!.altText}
+						class="@lg:max-w-2/3 max-w-full @lg:my-auto @lg:max-h-full"
+					/>
+					<div class="relative flex size-full items-center justify-center gap-5 p-5">
+						<a
+							href="/esculturas/"
+							class="border-vector-orange after:bg-vector-orange relative top-10 w-fit text-4xl text-white hover:border-b-2 z-20"
+							style="font-family: Agency-FB;"
+						>
+							Esculturas
+						</a>
+						<div
+							class="z-10 flex size-full w-[2px] flex-col items-center overflow-visible"
+							id="pencil"
+						>
+							<img src={symbol} alt="Logo" class="min-h-32 min-w-32" />
+							<div class="bg-vector-orange relative bottom-1.5 h-full w-[2px]"></div>
+						</div>
+						<a
+							href="/proyectos/"
+							class="border-vector-orange relative bottom-10 w-fit text-4xl text-white hover:border-b-2 z-20"
+							style="font-family: Agency-FB;"
+							>Proyectos
+						</a>
+					</div>
+				</Movable>
+			{/each}
+			<footer class="my-15 relative flex flex-col items-center justify-center gap-10 @lg:flex-row">
+				<div class="max-w-4/5 @lg:max-w-6/7 relative grid gap-y-5">
+					<div
+						class="flex size-fit flex-col gap-4 self-end justify-self-start text-white"
+						style="font-family: Agency-FB; font-size: 5rem; line-height: 4rem;"
+					>
+						<p>CON</p>
+						<p class="indent-[2.1ch]">TAC</p>
+						<p
+							class="col-start-2 row-start-2 text-center indent-[3.9ch] text-[5rem] text-white"
+							style="font-family: Agency-FB; line-height: 4rem;"
+						>
+							TO
+						</p>
+					</div>
+					<img
+						src={tonyContact}
+						alt="Contacto"
+						class="col-start-2 block max-h-[70vh] align-middle @xl:max-h-[80vh]"
+					/>
+					<p class="col-start-2 row-start-2 justify-self-center text-white">Vector@gmail.com</p>
+				</div>
+				<img
+					src={logoWhite}
+					alt="Logo white"
+					class="max-w-42 bottom-0 right-20 w-1/2 @lg:absolute"
+				/>
+			</footer>
 		</Phone>
 	</div>
 </div>
