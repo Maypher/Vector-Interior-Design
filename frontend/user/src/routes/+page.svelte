@@ -231,12 +231,6 @@
 	<a href="/" class="h-full">
 		<img src={logo} alt="logo" class="h-full" />
 	</a>
-	<p
-		class="font-Agency-FB hidden w-fit text-center text-4xl tracking-widest xl:inline"
-		style="word-spacing: 1.5rem;"
-	>
-		Obras únicas y exclusivas
-	</p>
 </header>
 
 {#each mainImages.slice(0, 1) as image (image.filename)}

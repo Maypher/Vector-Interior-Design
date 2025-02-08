@@ -211,7 +211,7 @@
 					}
 				: undefined}
 			bind:preview
-			class={`relative h-full transition-all`}
+			class={`relative h-full w-fit transition-all`}
 		>
 			<img
 				src={`${PUBLIC_imageURL}${image.filename}`}
@@ -451,9 +451,6 @@
 			<a href="/" class="h-full">
 				<img src={logo} alt="logo" class="h-full" />
 			</a>
-			<p class="font-Agency-FB tracking-widest text-4xl text-center" style="word-spacing: 1.5rem;">
-				Obras únicas y exclusivas
-			</p>
 		</header>
 		<Movable
 			down={() => {
@@ -560,7 +557,7 @@
 			}}
 			bind:preview
 			id="pencil-wrapper"
-			class="lg:my-50 lg:ml-15 mt-20 flex h-screen flex-col gap-y-10 overflow-visible lg:h-[70vh] lg:flex-row lg:justify-between xl:h-[90vh] xl:justify-evenly"
+			class="p-15 lg:my-50 mt-20 flex h-screen flex-col gap-y-10 overflow-visible lg:h-[70vh] lg:flex-row lg:justify-between xl:h-[90vh] xl:justify-evenly"
 		>
 			<img
 				src={`${PUBLIC_imageURL}${updatedMainPageImages.at(-1)!.filename}`}
@@ -577,7 +574,7 @@
 				</a>
 				<div class="z-10 flex size-full w-[2px] flex-col items-center overflow-visible" id="pencil">
 					<img src={symbol} alt="Logo" class="min-h-32 min-w-32" />
-					<div class="bg-vector-orange relative bottom-1.5 h-full w-[2px]"></div>
+					<div class="bg-vector-orange relative bottom-4.5 h-full w-[2px]"></div>
 				</div>
 				<a
 					href="/proyectos/"
