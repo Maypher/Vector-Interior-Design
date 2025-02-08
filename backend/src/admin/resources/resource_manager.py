@@ -175,7 +175,8 @@ class AdminResourceManager(ResourceManager):
             """,
                 (space.id,),
                 count=1,
-            )[0]
+                row_factory=rows.scalar_row,
+            )
 
             self.update_index(id, "space", new_index, "project_id", project_id)
 
@@ -302,14 +303,16 @@ class AdminResourceManager(ResourceManager):
                 phone_config = ROW(
                 COALESCE(%s, (phone_config).borders), 
                 COALESCE(%s, (phone_config).alignment), 
-                {"%s" if phone_config and phone_config.description_pos != UNSET else "COALESCE(%s, (phone_config).description_pos)"}, 
+                {"%s" if phone_config and phone_config.description_pos != UNSET else "COALESCE(%s, (phone_config).description_position)"}, 
                 COALESCE(%s, (phone_config).description_alignment)
                 )::image_phone_config,
                 desktop_config = ROW(
-                {"%s" if desktop_config and desktop_config.group_alignment != UNSET else "COALESCE(%s, (desktop_config).group_alignment)"}, 
+                {"%s" if desktop_config and desktop_config.group_alignment != UNSET else "COALESCE(%s, (desktop_config).group_alignment)"},
+                    COALESCE(%s, (desktop_config).group_end),
                     COALESCE(%s, (desktop_config).image_size),
                     COALESCE(%s, (desktop_config).image_borders),
-                    COALESCE(%s, (desktop_config).description_position),
+                    {"%s" if desktop_config and desktop_config.description_position != UNSET else "COALESCE(%s, (desktop_config).description_position)"},
+                    COALESCE(%s, (desktop_config).description_alignment),
                     COALESCE(%s, (desktop_config).description_borders),
                     COALESCE(%s, (desktop_config).description_logo_position),
                     COALESCE(%s, (desktop_config).logo_position),
@@ -337,14 +340,24 @@ class AdminResourceManager(ResourceManager):
                 ),
                 getattr(phone_config, "description_alignment", None),
                 getattr(desktop_config, "group_alignment", None),
+                getattr(desktop_config, "group_end", None),
                 getattr(desktop_config, "image_size", None),
-                getattr(desktop_config, "image_borders", None),
+                (
+                    desktop_config.image_borders.to_bits()
+                    if getattr(desktop_config, "image_borders", None)
+                    else None
+                ),
                 (
                     desktop_config.description_position
                     if getattr(desktop_config, "description_position", UNSET) != UNSET
                     else None
                 ),
-                getattr(desktop_config, "description_borders", None),
+                getattr(desktop_config, "description_alignment", None),
+                (
+                    desktop_config.description_borders.to_bits()
+                    if getattr(desktop_config, "description_borders", None)
+                    else None
+                ),
                 (
                     desktop_config.description_logo_position
                     if getattr(desktop_config, "description_logo_position", UNSET)
@@ -356,7 +369,11 @@ class AdminResourceManager(ResourceManager):
                     if getattr(desktop_config, "logo_position", UNSET) != UNSET
                     else None
                 ),
-                getattr(desktop_config, "logo_borders", None),
+                (
+                    desktop_config.logo_borders.to_bits()
+                    if getattr(desktop_config, "logo_borders", None)
+                    else None
+                ),
                 image_id,
             ),
             commit=False,
