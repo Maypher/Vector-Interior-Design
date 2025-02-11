@@ -287,7 +287,7 @@
 {/each}
 
 <div
-	class="lg:my-50 lg:ml-15 mt-20 flex h-screen flex-col gap-y-10 overflow-hidden lg:h-[70vh] lg:flex-row lg:justify-between xl:h-[90vh] xl:justify-evenly"
+	class="lg:my-50 lg:ml-15 mt-20 flex h-screen flex-col gap-y-10 overflow-hidden p-10 lg:h-[70vh] lg:flex-row lg:justify-between xl:h-[90vh] xl:justify-evenly"
 	id="pencil-wrapper"
 >
 	<img
@@ -298,18 +298,18 @@
 	<div class="relative flex size-full items-center justify-center gap-5 p-5">
 		<a
 			href="/esculturas/"
-			class="border-vector-orange after:bg-vector-orange relative top-10 w-fit text-4xl text-white hover:border-b-2"
+			class="hover-link relative top-10 h-fit w-fit text-4xl text-white"
 			style="font-family: Agency-FB;"
 		>
 			Esculturas
 		</a>
 		<div class="-z-10 flex size-full w-[2px] flex-col items-center overflow-visible" id="pencil">
 			<img src={symbol} alt="Logo" class="min-h-32 min-w-32" />
-			<div class="bg-vector-orange relative bottom-1.5 h-full w-[2px]"></div>
+			<div class="bg-vector-orange relative bottom-5 h-full w-[2px]"></div>
 		</div>
 		<a
 			href="/proyectos/"
-			class="border-vector-orange relative bottom-10 w-fit text-4xl text-white hover:border-b-2"
+			class="hover-link relative bottom-10 w-fit text-4xl text-white after:relative after:top-1"
 			style="font-family: Agency-FB;"
 			>Proyectos
 		</a>
@@ -342,6 +342,20 @@
 </footer>
 
 <style>
+	.hover-link::after {
+		display: block;
+		content: '';
+		background-color: var(--color-vector-orange);
+		height: 0.13rem;
+		width: 100%;
+		transition: all 0.3s ease-out;
+		transform: scale(0, 1);
+	}
+
+	.hover-link:hover::after {
+		transform: scale(1, 1);
+	}
+
 	#pencil {
 		position: relative;
 		top: 110%;
