@@ -32,3 +32,8 @@ export const DesktopPosition = {
     RIGHT: "RIGHT"
 }
 
+export const GroupAlignment = {
+    Arriba: "TOP",
+    Centro: "MIDDLE",
+    Abajo: "BOTTOM"
+}
