@@ -5,6 +5,7 @@ export const load = async ({ params, fetch }) => {
     const query = `
         query getProject($id: Int!) {
             project(id: $id) {
+                id
                 name
                 description
                 area
@@ -21,7 +22,6 @@ export const load = async ({ params, fetch }) => {
                         altText
                         description
                         descriptionFont
-                        hideInProject
                         phoneConfig {
                             borders {
                                 n
@@ -33,18 +33,53 @@ export const load = async ({ params, fetch }) => {
                             descriptionPos
                             descriptionAlignment
                         }
+                        desktopConfig {
+                            groupAlignment
+                            groupEnd
+                            imageSize
+                            imageBorders {
+                                n
+                                s
+                                e
+                                w
+                            }
+                            descriptionPosition
+                            descriptionAlignment
+                            descriptionBorders {
+                                n
+                                s
+                                e
+                                w
+                            }
+                            descriptionLogoPosition
+                            logoPosition
+                            logoBorders {
+                                n
+                                s
+                                e
+                                w
+                            }
+                        }
                     }
                 }
+            }
+            projects {
+                id
+                name
             }
         }
     `;
 
-    const proyectoID = Number(params.ProyectoID);
+    const projectId = Number(params.ProyectoID);
 
-    if (!Number.isInteger(proyectoID)) error(404, "Proyecto no existe");
+    if (!Number.isInteger(projectId)) error(404, "Proyecto no existe");
 
-    const projectData = (await graphql(query, { id: proyectoID }, fetch)).project;
+    const data = await graphql(query, { id: projectId }, fetch);
+
+    const projectData = data.project;
     if (!projectData) error(404, "Proyecto no existe");
 
-    return { projectData };
+    const projects: { id: number, name: string }[] = data.projects;
+
+    return { projectData, projects };
 }
