@@ -282,7 +282,7 @@
 			</div>
 		{/if}
 		<div
-			class={`h-full flex items-center gap-x-12 border-vector-orange ${!preview ? 'gap-y-12' : ''} ${
+			class={`h-full flex items-center justify-center gap-x-12 border-vector-orange ${!preview ? 'gap-y-12' : ''} ${
 				image.desktopConfig.groupAlignment === GroupAlignment.Centro ? 'items-center' : ''
 			} ${image.desktopConfig.groupAlignment === GroupAlignment.Arriba ? 'items-start' : ''} ${
 				image.desktopConfig.groupAlignment === GroupAlignment.Abajo ? 'items-end' : ''
@@ -324,14 +324,14 @@
 					bind:e={image.desktopConfig.descriptionBorders.e}
 					bind:w={image.desktopConfig.descriptionBorders.w}
 					bind:preview
-					class={`size-fit! border-vector-orange ${preview && image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
+					class={`${preview ? 'max-w-1/2' : ''} size-fit! border-vector-orange ${preview && image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
 						preview && image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
 					} ${preview && image.desktopConfig.descriptionBorders.e ? 'border-r-2 pr-5' : ''} ${
 						preview && image.desktopConfig.descriptionBorders.w ? 'border-l-2 pl-5' : ''
 					}`}
 				>
 					<Movable
-						class={`m-auto size-fit! ${
+						class={`size-fit! ${
 							image.desktopConfig.descriptionPosition === Directions.N ? 'absolute top-0' : ''
 						} ${image.desktopConfig.descriptionPosition === Directions.S ? 'absolute bottom-0' : ''}`}
 						up={image.desktopConfig.descriptionPosition !== Directions.N

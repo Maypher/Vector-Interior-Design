@@ -102,7 +102,7 @@
 				</div>
 			{/if}
 			<div
-				class={`border-vector-orange m-auto ${!imageData.mainImageConfig.phoneConfig.overflow ? 'w-5/6' : ''} ${imageData.mainImageConfig.phoneConfig.imageBorders.e ? 'border-r-2 pr-20' : ''}`}
+				class={`border-vector-orange mx-auto ${!imageData.mainImageConfig.phoneConfig.overflow ? 'w-5/6' : ''} ${imageData.mainImageConfig.phoneConfig.imageBorders.e ? 'border-r-2 pr-20' : ''}`}
 			>
 				{#if imageData.mainImageConfig.phoneConfig.imageBorders.n}
 					<div class="bg-vector-orange max-w-83/10 mx-auto mb-20 h-px w-full"></div>
@@ -235,7 +235,7 @@
 
 {#each mainImages.slice(0, 1) as image (image.filename)}
 	<div
-		class={`mb-50 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[calc(100vh-7rem)]' : 'lg:mt-20 lg:h-[calc(80vh-7rem)]'}`}
+		class={`mb-50 h-[calc(100svh-7rem)] ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[calc(100svh-7rem)]' : 'lg:mt-20 lg:h-[calc(80svh-7rem)]'}`}
 	>
 		{@render mainImage(image)}
 	</div>

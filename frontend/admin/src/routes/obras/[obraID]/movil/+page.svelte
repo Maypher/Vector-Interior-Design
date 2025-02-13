@@ -142,7 +142,7 @@
 								? () => (imageData.phoneConfig.descriptionPos = Directions.S)
 								: undefined}
 						>
-							<div>
+							<div class="max-w-9/10 mx-auto">
 								<EditorDescription
 									id={imageData.filename}
 									bind:descriptionEs={imageData.description}
@@ -196,7 +196,7 @@
 			</Borders>
 		{:else}
 			<div
-				class={`border-vector-orange my-12 gap-12 flex ${imageData.phoneConfig.borders.e && 'border-r-2 pr-12'} ${imageData.phoneConfig.borders.w && 'border-l-2 pl-12'}`}
+				class={`border-vector-orange my-20 gap-12 flex ${imageData.phoneConfig.borders.e && 'border-r-2 pr-12'} ${imageData.phoneConfig.borders.w && 'border-l-2 pl-12'}`}
 				class:px-8={imageData.phoneConfig.alignment !== Alignment.Sangrar}
 				class:justify-center={imageData.phoneConfig.alignment === Alignment.Centro}
 				class:flex-row={imageData.phoneConfig.descriptionPos === Directions.W}
@@ -206,7 +206,7 @@
 			>
 				{#if imageData.description && imageData.phoneConfig.descriptionPos}
 					<div
-						class={`markdownDescription font-${imageData.descriptionFont} ${imageData.phoneConfig.descriptionAlignment}`}
+						class={`max-w-9/10 mx-auto markdownDescription font-${imageData.descriptionFont} ${imageData.phoneConfig.descriptionAlignment}`}
 					>
 						{@html mdToHTML(imageData.description)}
 					</div>
@@ -214,7 +214,7 @@
 				<div>
 					{#if imageData.phoneConfig.borders.n}
 						<div class:px-8={imageData.phoneConfig.alignment === Alignment.Sangrar}>
-							<div class="h-1 w-full bg-vector-orange mb-12"></div>
+							<div class="h-0.5 w-full bg-vector-orange mb-12"></div>
 						</div>
 					{/if}
 					<img
@@ -226,7 +226,7 @@
 					/>
 					{#if imageData.phoneConfig.borders.s}
 						<div class:px-8={imageData.phoneConfig.alignment === Alignment.Sangrar}>
-							<div class="h-1 w-full bg-vector-orange mt-12"></div>
+							<div class="h-0.5 w-full bg-vector-orange mt-20"></div>
 						</div>
 					{/if}
 				</div>
@@ -262,7 +262,7 @@
 	</div>
 	<Phone>
 		<div class="text-white">
-			<header class="bg-vector-grey flex h-28 items-center justify-center gap-20 p-5 mb-12">
+			<header class="bg-vector-grey flex h-20 items-center justify-center gap-20 p-3 mb-12">
 				<a href="/" class="h-full">
 					<img src={logo} alt="logo" class="h-full" />
 				</a>
