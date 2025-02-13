@@ -10,15 +10,6 @@
 	const { data }: { data: PageData } = $props();
 	const projectData = data.projectData;
 
-	const projects = data.projects;
-	const projectIndex = projects.findIndex((project) => project.id === projectData.id);
-	console.log(projectIndex);
-	const nextProject = projectIndex !== undefined ? projects[projectIndex + 1] : undefined;
-	console.log(nextProject);
-	const prevProject = projectIndex !== undefined ? projects[projectIndex - 1] : undefined;
-
-	console.log(nextProject);
-
 	let groupedImageData = $derived.by(() => {
 		let newSpaces = [];
 
@@ -59,7 +50,7 @@
 				}
 			}
 
-			let spaceCopy = $state.snapshot(space);
+			let spaceCopy = { ...$state.snapshot(space), images: null };
 			spaceCopy.images = updatedImages;
 			newSpaces.push(spaceCopy);
 		}
@@ -74,7 +65,7 @@
 	</div>
 {/snippet}
 
-{#snippet imageView(image: any)}
+{#snippet desktopImageView(image: any)}
 	<div
 		class={`mx-auto flex h-full w-fit items-center justify-center gap-10`}
 		class:flex-row={image.desktopConfig.descriptionPosition === enums.Directions.E}
@@ -141,7 +132,40 @@
 	</div>
 {/snippet}
 
-<div class="min-h-screen bg-black">
+{#snippet phoneImageView(image: any)}
+	<div
+		class={`border-vector-orange my-30 gap-12 ${
+			image.phoneConfig?.borders?.n && 'pt-30 border-t-2'
+		} ${image.phoneConfig?.borders?.s && 'pb-30 border-b-2'} ${
+			image.phoneConfig?.borders?.e && 'pr-30 border-r-2'
+		} ${image.phoneConfig?.borders?.w && 'pl-30 border-l-2'}`}
+		class:mx-8={image.phoneConfig?.alignment !== enums.Alignment.OVERFLOW}
+		class:flex={image.phoneConfig?.descriptionPos}
+		class:flex-row={image.phoneConfig?.descriptionPos === enums.Directions.W}
+		class:flex-row-reverse={image.phoneConfig?.descriptionPos === enums.Directions.E}
+		class:flex-col={image.phoneConfig?.descriptionPos === enums.Directions.N}
+		class:flex-col-reverse={image.phoneConfig?.descriptionPos === enums.Directions.S}
+	>
+		{#if image.description && image.phoneConfig.descriptionPos}
+			<div class="mx-auto max-w-[90vw]">
+				{@render descriptionContainer(
+					image.description,
+					image.phoneConfig.descriptionAlignment,
+					image.descriptionFont
+				)}
+			</div>
+		{/if}
+		<img
+			src={`${PUBLIC_imagesUrl}${image.filename}`}
+			alt={image.altText}
+			class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig?.alignment) ? 'w-4/5' : ''}`}
+			class:ml-auto={image.phoneConfig?.alignment === enums.Alignment.RIGHT}
+			class:mr-auto={image.phoneConfig?.alignment === enums.Alignment.LEFT}
+		/>
+	</div>
+{/snippet}
+
+<div class="relative min-h-screen bg-black">
 	<header class="bg-vector-grey sticky top-0 z-10 h-20 p-4 lg:static">
 		<div class="flex h-full items-center justify-center gap-10">
 			<a href="/" class="h-full transition-transform hover:scale-105">
@@ -150,71 +174,53 @@
 		</div>
 	</header>
 
-	<div class="block lg:hidden">
+	<div class="block pb-1 lg:hidden">
 		{#each projectData.spaces.slice(0, 1) as space (space.id)}
-			<img
-				src={`${PUBLIC_imagesUrl}${space.images.at(0)?.filename}`}
-				alt={space.images.at(0)?.altText}
-				class:px-8={space.images.at(0)?.phoneConfig.alignment !== enums.Alignment.OVERFLOW}
-			/>
-
-			<div class="mx-8 my-12 text-white">
-				<h1 class="font-Agency-FB border-b-vector-orange my-2 border-b-2 pb-2 indent-1 text-3xl">
-					{projectData.name}
-				</h1>
-				<p class="font-Arial text-right text-sm">Área: {projectData.area} metros cuadrados</p>
-				<div class="white markdownDescription my-6 text-justify">
-					{@html mdToHtml(projectData.description)}
+			{#each space.images.slice(0, 1) as image (image.filename)}
+				<div class="my-20">
+					<img
+						src={`${PUBLIC_imagesUrl}${image.filename}`}
+						alt={image.altText}
+						class:px-8={image.phoneConfig.alignment !== enums.Alignment.OVERFLOW}
+					/>
+					<div class="mx-8 my-12 text-white">
+						<h1
+							class="font-Agency-FB border-b-vector-orange my-2 border-b-2 pb-2 indent-1 text-3xl"
+						>
+							{projectData.name}
+						</h1>
+						<p class="font-Arial text-right text-sm">Área: {projectData.area} metros cuadrados</p>
+						<div class="white markdownDescription my-6 text-justify">
+							{@html mdToHtml(projectData.description)}
+						</div>
+					</div>
 				</div>
-			</div>
+			{/each}
+			{#each space.images.slice(1) as image (image.filename)}
+				{@render phoneImageView(image)}
+			{/each}
 		{/each}
 
 		<div>
-			{#each projectData.spaces as space (space.id)}
+			{#each projectData.spaces.slice(1) as space (space.id)}
 				{#each space.images as image (image.filename)}
-					<div
-						class={`border-vector-orange my-12 gap-12 ${
-							image.phoneConfig?.borders?.n && 'border-t-2 pt-12'
-						} ${image.phoneConfig?.borders?.s && 'border-b-2 pb-12'} ${
-							image.phoneConfig?.borders?.e && 'border-r-2 pr-12'
-						} ${image.phoneConfig?.borders?.w && 'border-l-2 pl-12'}`}
-						class:mx-8={image.phoneConfig?.alignment !== enums.Alignment.OVERFLOW}
-						class:flex={image.phoneConfig?.descriptionPos}
-						class:flex-row={image.phoneConfig?.descriptionPos === enums.Directions.W}
-						class:flex-row-reverse={image.phoneConfig?.descriptionPos === enums.Directions.E}
-						class:flex-col={image.phoneConfig?.descriptionPos === enums.Directions.N}
-						class:flex-col-reverse={image.phoneConfig?.descriptionPos === enums.Directions.S}
-					>
-						{#if image.descriptionEs && image.phoneConfig.descriptionPos}
-							{@render descriptionContainer(
-								image.descriptionEs,
-								image.phoneConfig.descriptionAlignment,
-								image.descriptionFont
-							)}
-						{/if}
-						<img
-							src={`${PUBLIC_imagesUrl}${image.filename}`}
-							alt={image.altText}
-							class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig?.alignment) ? 'w-2/3' : ''}`}
-							class:ml-auto={image.phoneConfig?.alignment === enums.Alignment.RIGHT}
-							class:mr-auto={image.phoneConfig?.alignment === enums.Alignment.LEFT}
-						/>
-					</div>
+					{@render phoneImageView(image)}
 				{/each}
 			{/each}
 		</div>
 	</div>
-	<div class="relative hidden text-white lg:block">
+	<div class="hidden text-white lg:block">
 		{#each groupedImageData.slice(0, 1) as space, spaceId (space.id)}
 			{#each space.images.slice(0, 1) as image}
-				<div class="p-15 flex h-[calc(100vh-5rem)] items-center justify-evenly gap-5">
-					<div class="h-full w-fit">
-						{#if Array.isArray(image)}
-							{@render imageView(image[0])}
-						{:else}
-							{@render imageView(image)}
-						{/if}
-					</div>
+				<div class="p-15 flex h-[calc(100vh-5rem)] w-fit items-center justify-evenly gap-5">
+					<img
+						src={`${PUBLIC_imagesUrl}${image.filename}`}
+						alt={image.altText}
+						class={`border-vector-orange object-cover ${
+							image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
+						} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''}`}
+						style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
+					/>
 					<div class="max-w-1/2 flex size-full flex-col gap-y-5 p-4 pb-0">
 						<div class="border-vector-orange flex w-full justify-between border-b-2 px-4 pb-2">
 							<h1 class="font-Agency-FB text-4xl text-white">
@@ -227,18 +233,14 @@
 						</div>
 
 						<div class="h-fit shrink-0">
-							{@render descriptionContainer(
-								projectData.description,
-								projectData.descriptionAlignment,
-								projectData.descriptionFont
-							)}
+							{@render descriptionContainer(projectData.description, 'text-left', 'Arial')}
 						</div>
 
 						{#if Array.isArray(image)}
 							<div class="mt-auto flex min-h-0 w-full gap-5">
 								{#each image.slice(1) as imageGroup, i (imageGroup.filename)}
 									<div class="ml-auto w-fit">
-										{@render imageView(imageGroup)}
+										{@render desktopImageView(imageGroup)}
 									</div>
 								{/each}
 							</div>
@@ -252,44 +254,44 @@
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
 								<div class="h-full w-fit">
-									{@render imageView(groupImage)}
+									{@render desktopImageView(groupImage)}
 								</div>
 							{/each}
 						</div>
 					{:else}
 						<div class="relative size-full">
-							{@render imageView(image)}
+							{@render desktopImageView(image)}
 						</div>
 					{/if}
 				</div>
 			{/each}
 		{/each}
 		{#each groupedImageData.slice(1) as space, spaceId (space.id)}
-			{#each space.images as image, i}
+			{#each space.images as image}
 				<div class="p-25 flex h-screen justify-center">
 					{#if Array.isArray(image)}
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
 								<div class="h-full w-fit">
-									{@render imageView(groupImage)}
+									{@render desktopImageView(groupImage)}
 								</div>
 							{/each}
 						</div>
 					{:else}
 						<div class="size-full">
-							{@render imageView(image)}
+							{@render desktopImageView(image)}
 						</div>
 					{/if}
 				</div>
 			{/each}
 		{/each}
-		<div
-			class="-translate-1/2 absolute bottom-1 left-1/2 w-fit text-white transition-transform hover:scale-105"
-		>
-			<a href="/proyectos" class="font-Agency-FB gradient-background text-3xl text-transparent"
-				>Siguiente -&gt;</a
-			>
-		</div>
+	</div>
+	<div
+		class="-translate-1/2 absolute bottom-0 left-1/2 w-fit text-white transition-transform hover:scale-105"
+	>
+		<a href="/proyectos" class="font-Agency-FB gradient-background text-3xl text-transparent"
+			>Siguiente -&gt;
+		</a>
 	</div>
 </div>
 

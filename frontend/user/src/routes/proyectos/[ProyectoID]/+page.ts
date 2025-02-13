@@ -63,10 +63,6 @@ export const load = async ({ params, fetch }) => {
                     }
                 }
             }
-            projects {
-                id
-                name
-            }
         }
     `;
 
@@ -79,7 +75,5 @@ export const load = async ({ params, fetch }) => {
     const projectData = data.project;
     if (!projectData) error(404, "Proyecto no existe");
 
-    const projects: { id: number, name: string }[] = data.projects;
-
-    return { projectData, projects };
+    return { projectData };
 }
