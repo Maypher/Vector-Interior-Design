@@ -43,7 +43,7 @@
 <div class="bg-red-200 w-full max-w-md p-9 rounded-lg">
 	<h1 class="text-center">NODO Iniciar Sesión</h1>
 	<div class="flex justify-center">
-		<form action="POST" id="form" class="flex flex-col max-w-60" use:enhance>
+		<form id="form" class="flex flex-col max-w-60" use:enhance>
 			<fieldset disabled={submitting}>
 				<TextInput
 					name="email"
