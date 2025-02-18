@@ -59,8 +59,8 @@ class UserManager:
         """,
             (email,),
             count=1,
-            row_factory=rows.tuple_row,
-        )[0]
+            row_factory=rows.scalar_row,
+        )
 
         if user_exists:
             raise errors.UserAlreadyExists(email)
