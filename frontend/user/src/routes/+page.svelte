@@ -243,16 +243,16 @@
 
 {#each mainImages.slice(1, 5) as image (image.filename)}
 	<div
-		class={`lg:my-50 my-20 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
+		class={`my-50 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
 	>
 		{@render mainImage(image)}
 	</div>
 {/each}
 
 <div
-	class="lg:my-50 relative my-20 flex flex-col items-center justify-start gap-x-5 gap-y-10 lg:ml-10 lg:h-[85vh] lg:flex-row xl:ml-20"
+	class="lg:my-50 my-50 relative flex flex-col items-center justify-start gap-x-5 gap-y-10 lg:ml-10 lg:h-[85vh] lg:flex-row xl:ml-20"
 >
-	<img src={tony} alt="Diseñador" class="max-h-[70vh]" />
+	<img src={tony} alt="Diseñador" class="max-h-[60vh] lg:max-h-[70vh]" />
 	<div
 		class="mx-auto flex h-full w-3/4 flex-col items-center justify-center gap-20 text-justify indent-3 text-lg text-white lg:w-1/2 lg:items-end"
 	>
@@ -265,14 +265,14 @@
 
 {#each mainImages.slice(5, 8) as image (image.filename)}
 	<div
-		class={`lg:my-50 my-20 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
+		class={`lg:my-50 my-50 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
 	>
 		{@render mainImage(image)}
 	</div>
 {/each}
 
 <div
-	class="border-vector-orange lg:my-50 m-auto my-20 w-5/6 border-2 p-8 text-center font-[Bahnschrift] text-2xl font-thin tracking-[0.5rem] text-white md:w-fit md:text-4xl"
+	class="border-vector-orange lg:my-50 my-50 m-auto w-5/6 border-2 py-8 text-center font-[Bahnschrift] text-2xl font-thin tracking-[0.5rem] text-white md:w-fit md:px-6 md:text-4xl"
 	style="word-spacing: 1rem;"
 >
 	Interior Design
@@ -280,7 +280,7 @@
 
 {#each mainImages.slice(8, -1) as image (image.filename)}
 	<div
-		class={`lg:my-50 my-20 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
+		class={`lg:my-50 my-50 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
 	>
 		{@render mainImage(image)}
 	</div>
@@ -319,14 +319,14 @@
 <footer class="my-15 relative flex flex-col items-center justify-center gap-10 lg:flex-row">
 	<div class="max-w-4/5 lg:max-w-6/7 relative grid gap-y-5">
 		<div
-			class="flex size-fit flex-col gap-4 self-end justify-self-start text-white"
-			style="font-family: Agency-FB; font-size: 5rem; line-height: 4rem;"
+			class="md:leading-16 leading-12 flex size-fit flex-col self-end justify-self-start text-[3rem] text-white md:gap-4 md:text-[5rem]"
+			style="font-family: Agency-FB;"
 		>
 			<p>CON</p>
 			<p class="indent-[2.1ch]">TAC</p>
 			<p
-				class="col-start-2 row-start-2 text-center indent-[3.9ch] text-[5rem] text-white"
-				style="font-family: Agency-FB; line-height: 4rem;"
+				class="col-start-2 row-start-2 text-center indent-[3.9ch] text-white"
+				style="font-family: Agency-FB;"
 			>
 				TO
 			</p>
@@ -336,9 +336,13 @@
 			alt="Contacto"
 			class="col-start-2 block max-h-[70vh] align-middle xl:max-h-[80vh]"
 		/>
-		<p class="col-start-2 row-start-2 justify-self-center text-white">Vector@gmail.com</p>
+		<a
+			href="mailto:k@vectorinterior.design"
+			class="font-Agency-FB col-start-2 row-start-2 justify-self-center text-2xl text-white"
+			>k@vectorinterior.design</a
+		>
 	</div>
-	<img src={logoWhite} alt="Logo white" class="max-w-42 bottom-0 right-20 w-1/2 lg:absolute" />
+	<img src={logoWhite} alt="Logo white" class="bottom-0 right-20 w-1/2 max-w-32 lg:absolute" />
 </footer>
 
 <style>

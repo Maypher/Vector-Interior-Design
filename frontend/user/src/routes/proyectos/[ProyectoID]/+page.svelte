@@ -74,7 +74,7 @@
 		class:flex-col-reverse={image.desktopConfig.descriptionPosition === enums.Directions.N}
 	>
 		<div
-			class={`border-vector-orange flex h-full items-center gap-12 ${
+			class={`border-vector-orange flex h-full items-center justify-center gap-12 ${
 				image.desktopConfig.groupAlignment === enums.GroupAlignment.Centro ? 'items-center' : ''
 			} ${image.desktopConfig.groupAlignment === enums.GroupAlignment.Arriba ? 'items-start' : ''} ${
 				image.desktopConfig.groupAlignment === enums.GroupAlignment.Abajo ? 'items-end' : ''
@@ -104,7 +104,7 @@
 			</div>
 			{#if image.description && image.desktopConfig.descriptionPosition}
 				<div
-					class={`size-fit! border-vector-orange ${image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
+					class={`size-fit! max-w-1/2 border-vector-orange ${image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
 						image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
 					} ${image.desktopConfig.descriptionBorders.e ? 'border-r-2 pr-5' : ''} ${
 						image.desktopConfig.descriptionBorders.w ? 'border-l-2 pl-5' : ''
