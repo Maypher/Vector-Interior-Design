@@ -502,7 +502,7 @@
 	{#each updatedMainPageImages.slice(5, 8) as image, i (image.filename)}
 		<Movable
 			up={() => {
-				const fromIndex = i + 6; // Adding once since the first image is at the top then it should start at index 1
+				const fromIndex = i + 5; // Adding once since the first image is at the top then it should start at index 1
 				const element = updatedMainPageImages.splice(fromIndex, 1)[0];
 				updatedMainPageImages.splice(fromIndex - 1, 0, element);
 			}}
