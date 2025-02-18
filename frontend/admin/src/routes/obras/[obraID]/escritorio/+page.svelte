@@ -178,7 +178,7 @@
 
 {#snippet imageEditor(image: any)}
 	<div
-		class={`relative h-full w-fit mx-auto flex justify-center items-center gap-10`}
+		class={`relative h-full ${preview ? 'w-fit' : ''} mx-auto flex justify-center items-center gap-10`}
 		class:flex-row={image.desktopConfig.logoPosition === Directions.E}
 		class:flex-row-reverse={image.desktopConfig.logoPosition === Directions.W}
 		class:flex-col={image.desktopConfig.logoPosition === Directions.S}
@@ -400,7 +400,7 @@
 					down={!Array.isArray(image) ? () => moveImage(0) : undefined}
 					right={Array.isArray(image) ? () => moveImage(0) : undefined}
 					bind:preview
-					class="w-fit"
+					class={`${preview ? 'w-fit' : ''}`}
 				>
 					{#if Array.isArray(image)}
 						{@render imageEditor(image[0])}
