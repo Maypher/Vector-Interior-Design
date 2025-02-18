@@ -10,6 +10,9 @@ export const load = async ({ fetch }) => {
                     descriptionEs
                     descriptionEn
                 }
+                desktopConfig {
+                    groupAlignment
+                }
             }
         }
     `;
