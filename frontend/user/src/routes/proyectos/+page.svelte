@@ -41,7 +41,9 @@
 </script>
 
 <header class="bg-vector-grey absolute top-0 z-10 flex h-24 w-full justify-center p-5 lg:static">
-	<img src={logo} alt="logo" class="h-full" />
+	<a href="/" class="h-full transition-transform hover:scale-125">
+		<img src={logo} alt="logo" class="h-full" />
+	</a>
 </header>
 
 <div class="h-dvh snap-y snap-mandatory overflow-y-scroll lg:hidden">
