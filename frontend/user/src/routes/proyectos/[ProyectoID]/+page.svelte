@@ -74,7 +74,7 @@
 		class:flex-col-reverse={image.desktopConfig.descriptionPosition === enums.Directions.N}
 	>
 		<div
-			class={`border-vector-orange flex h-full items-center justify-center gap-12 ${
+			class={`border-vector-orange flex h-full items-center justify-center gap-x-12 ${
 				image.desktopConfig.groupAlignment === enums.GroupAlignment.Centro ? 'items-center' : ''
 			} ${image.desktopConfig.groupAlignment === enums.GroupAlignment.Arriba ? 'items-start' : ''} ${
 				image.desktopConfig.groupAlignment === enums.GroupAlignment.Abajo ? 'items-end' : ''
@@ -87,7 +87,7 @@
 			class:flex-col-reverse={image.desktopConfig.descriptionPosition === enums.Directions.N}
 		>
 			<div
-				class={`flex h-full w-fit items-center ${
+				class={`flex size-full w-fit items-center ${
 					image.desktopConfig.groupAlignment === enums.GroupAlignment.Centro ? 'items-center' : ''
 				} ${image.desktopConfig.groupAlignment === enums.GroupAlignment.Arriba ? 'items-start' : ''} ${
 					image.desktopConfig.groupAlignment === enums.GroupAlignment.Abajo ? 'items-end' : ''
@@ -96,7 +96,7 @@
 				<img
 					src={`${PUBLIC_imagesUrl}${image.filename}`}
 					alt={image.altText}
-					class={`border-vector-orange object-cover ${
+					class={`border-vector-orange w-auto object-cover ${
 						image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
 					} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''}`}
 					style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
@@ -104,17 +104,13 @@
 			</div>
 			{#if image.description && image.desktopConfig.descriptionPosition}
 				<div
-					class={`size-fit! max-w-1/2 border-vector-orange ${image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
+					class={`max-w-1/2 border-vector-orange relative size-fit ${image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
 						image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
 					} ${image.desktopConfig.descriptionBorders.e ? 'border-r-2 pr-5' : ''} ${
 						image.desktopConfig.descriptionBorders.w ? 'border-l-2 pl-5' : ''
 					}`}
 				>
-					<div
-						class={`m-auto size-fit ${
-							image.desktopConfig.descriptionPosition === enums.Directions.N ? 'absolute top-0' : ''
-						} ${image.desktopConfig.descriptionPosition === enums.Directions.S ? 'absolute bottom-0' : ''}`}
-					>
+					<div class={`m-auto size-fit`}>
 						{@render descriptionContainer(
 							image.description,
 							image.desktopConfig.descriptionAlignment,
