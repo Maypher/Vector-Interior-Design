@@ -9,6 +9,7 @@
 	import { goto } from '$app/navigation';
 	import { error } from '$lib/utilities/toasts';
 	import { PUBLIC_apiURL } from '$env/static/public';
+	import logo from '$lib/images/logo.svg';
 
 	const { data }: { data: PageData } = $props();
 	const { form, errors, constraints, enhance } = superForm(data.loginForm, {
@@ -40,11 +41,13 @@
 	let submitting: boolean = $state(false);
 </script>
 
-<div class="bg-red-200 w-full max-w-md p-9 rounded-lg">
-	<h1 class="text-center">NODO Iniciar Sesión</h1>
+<div
+	class=" bg-vector-grey/40 backdrop-blur-xl w-full max-w-md p-10 md:rounded-lg shadow-lg shadow-white"
+>
+	<img src={logo} alt="Logo" class="w-1/2 mx-auto" />
 	<div class="flex justify-center">
 		<form id="form" class="flex flex-col max-w-60" use:enhance>
-			<fieldset disabled={submitting}>
+			<fieldset disabled={submitting} class="text-white">
 				<TextInput
 					name="email"
 					label="Correo Electrónico"
@@ -62,7 +65,7 @@
 				/>
 				<button
 					type="submit"
-					class="block bg-blue-100 mt-5 p-2 rounded-lg hover:bg-blue-200 disabled:cursor-not-allowed"
+					class="block bg-gray-500 mt-5 p-2 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer disabled:cursor-not-allowed"
 				>
 					Iniciar Sesión
 				</button>

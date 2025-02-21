@@ -1,5 +1,4 @@
 <script lang="ts">
-	import EditableInput from '$lib/components/input/EditableInput.svelte';
 	import Markdown from '$lib/components/markdown/Markdown.svelte';
 	import { yup } from 'sveltekit-superforms/adapters';
 	import type { PageData } from './$types';
@@ -12,19 +11,20 @@
 	import { error } from '@sveltejs/kit';
 	import SortableList from '$lib/components/input/SortableList.svelte';
 	import Sortable, { type Options } from 'sortablejs';
-	import '$lib/styles/ordenableList.css';
-	import { PUBLIC_imageURL } from '$env/static/public';
+	import ImageGrid from '$lib/components/layout/imageGrid.svelte';
+
 	import getArrayDifference from '$lib/utilities/arrayOrder';
 	import EditorLinks from '$lib/components/layout/editorLinks.svelte';
 
 	const { data }: { data: PageData } = $props();
 	let projectData = $state(data.projectData!);
+	let originalSpaceNames: string[] = $state(projectData.spaces.map((space: any) => space.name));
 	let submitting: boolean = $state(false);
 
 	let sortable: Sortable | undefined = $state();
 	let originalOrder: string[] = $state(projectData.spaces.map((x: { id: string }) => x.id));
 	// svelte-ignore state_referenced_locally
-	let updatedElements: string[] = $state(originalOrder);
+	let updatedElements: string[] = $state($state.snapshot(originalOrder));
 	let saveDisabled = $derived(updatedElements.toString() === originalOrder.toString());
 
 	const sortableOptions: Options = {
@@ -33,7 +33,7 @@
 		chosenClass: 'item-chosen',
 		ghostClass: 'item-ghost',
 		animation: 150,
-		dataIdAttr: 'data-ambienteId',
+		dataIdAttr: 'data-spaceId',
 		onEnd: () => (updatedElements = sortable!.toArray())
 	};
 
@@ -126,116 +126,233 @@
 
 		success('Orden actualizado con éxito.');
 	}
+
+	async function deleteSpace(space: any) {
+		if (
+			await confirmationDialog(
+				`Seguro que quieres borrar el ambiente <b>${space.name}</b> 
+				de del proyecto <b>${projectData.name}</b>? 
+				Esta acción no puede ser revertida.`
+			)
+		) {
+			const query = `
+				mutation deleteSpace($id: Int!) {
+					deleteSpace(id: $id)
+				}
+			`;
+
+			const variables = { id: space.id };
+
+			const deletedAmbiente = (await graphql(query, variables)).deleteSpace;
+
+			if (deletedAmbiente) {
+				window.location.reload();
+			} else error(404, `Ambiente con ID ${space.id} no existe.`);
+		}
+	}
+
+	async function updateSpace(space: any, spaceIndex: number) {
+		const query = `
+			mutation updateSpace($id: Int!, $name: String) {
+				updateSpace(id: $id, name: $name) {
+					name
+				}
+			}
+		`;
+
+		const updatedName = (await graphql(query, { id: space.id, name: space.name })).updateSpace.name;
+
+		// Doing it this way since the input are handled inside an {#each} block and I can access the index.
+		// Otherwise I'd have to filter the array and what a hassle.
+		originalSpaceNames[spaceIndex] = updatedName;
+
+		success(`Espacio ${updatedName} actualizado con éxito.`);
+	}
 </script>
 
-<div class="bg-green-700 py-20">
+<div class="bg-black py-5 lg:flex gap-x-10 lg:px-10 overflow-y-hidden lg:h-[calc(100vh-5rem)]">
 	<!-- Name, area and description -->
-	<form class="bg-purple-900 m-auto p-4 max-w-xl rounded-lg" use:enhance>
-		<button
-			type="button"
-			class={`${projectData.public ? 'bg-red-500' : 'bg-blue-500'} block w-fit ml-auto p-3 m-3 rounded-md`}
-			onclick={changeProjectStatus}>{projectData.public ? 'Privatizar' : 'Publicar'}</button
-		>
-		<button
-			type="button"
-			class="block w-fit ml-auto p-3 m-1 bg-red-500 hover:bg-green-600"
-			onclick={deleteProject}>Borrar Proyecto</button
-		>
-		<fieldset disabled={submitting}>
-			<EditableInput
-				name="name"
-				label="Nombre"
-				bind:value={$form.name}
-				errors={$errors.name}
-				type="text"
-				{...$constraints.name}
-			/>
-			<EditableInput
-				name="area"
-				label="Área (m²)"
-				bind:value={$form.area}
-				errors={$errors.area}
-				type="number"
-				{...$constraints.area}
-			/>
-			<div class="max-w-xl">
-				<Markdown
-					label="Descripción"
-					name="description"
-					bind:value={$form.description}
-					errors={$errors.description}
-					{...$constraints.description}
-				/>
-			</div>
-			<button class="bg-red-400 p-1 m-1 rounded-md">Actualizar</button>
-		</fieldset>
-	</form>
-	<hr class="m-3" />
-	<!-- Ambientes -->
-	<h1 class="text-xl m-3 font-bold text-center">Ambientes</h1>
-	<div class="max-w-md m-auto">
-		<SortableList bind:sortable sortableId="sortable" {sortableOptions}>
-			<div id="sortable">
-				{#each projectData.spaces as space (space.id)}
-					<div class="item flex items-center" data-ambienteId={space.id}>
-						<span
-							class="material-symbols-outlined handle border-r-2 p-2 h-full content-center border-gray-800 hover:cursor-pointer"
-						>
-							drag_indicator
-						</span>
-						<div class="size-full">
-							<a
-								href={`/obras/${projectData.id}/ambientes/${space.id}`}
-								class="size-full pl-2 flex justify-between items-center hover:bg-amber-600"
-							>
-								<p>
-									{space.name}
-								</p>
-								{#if space.images.at(0)}
-									<img
-										src={`${PUBLIC_imageURL}${space.images[0].filename}`}
-										alt={space.images[0].altText}
-										class="h-full"
-									/>
-								{/if}
-							</a>
-						</div>
-					</div>
-				{/each}
-			</div>
-		</SortableList>
-		<div class="flex w-full border-2 border-black rounded-xs">
+	<form
+		class="bg-vector-grey/50 p-4 lg:rounded-lg flex flex-col justify-stretch gap-y-20 lg:gap-y-10"
+		use:enhance
+	>
+		<div class="flex justify-between">
 			<button
 				type="button"
-				onclick={updateOrder}
-				disabled={saveDisabled}
-				class="w-full bg-blue-300 p-1 disabled:bg-gray-600 disabled:text-gray-400 hover:bg-gray-200 transition-colors disabled:cursor-not-allowed border-r-2"
-				>Guardar nuevo orden</button
+				class={`bg-vector-grey brightness-80 hover:brightness-100 p-2 transition-all cursor-pointer rounded-md`}
+				onclick={changeProjectStatus}>{projectData.public ? 'Privatizar' : 'Publicar'}</button
 			>
 			<button
 				type="button"
-				onclick={() => {
-					sortable?.sort(originalOrder!);
-					updatedElements = originalOrder;
-				}}
-				disabled={saveDisabled}
-				class="w-full bg-blue-300 p-1 disabled:bg-gray-600 disabled:text-gray-400 hover:bg-gray-200 transition-colors disabled:cursor-not-allowed border-l-2"
-				>Cancelar</button
+				class="p-2 bg-red-500 hover:brightness-80 cursor-pointer transition-all rounded-md"
+				onclick={deleteProject}>Borrar Proyecto</button
 			>
 		</div>
-		<a
-			href={`/obras/${projectData.id}/ambientes/crear/`}
-			class="block bg-amber-400 hover:bg-amber-600 w-full text-center p-2 border-2 border-black sticky bottom-0"
-			>Nuevo Ambiente</a
+		<fieldset
+			disabled={submitting}
+			class="grow flex flex-col gap-y-20 lg:gap-y-0 justify-between items-start"
 		>
-	</div>
-	<hr class="m-3" />
-	<!-- Editores -->
-	<h1 class="text-xl m-3 font-bold text-center">Editor</h1>
-	<div class="flex items-center justify-center">
-		<EditorLinks
-			mobileUrl={`/obras/${projectData.id}/movil`}
-			desktopUrl={`/obras/${projectData.id}/escritorio`}
-		/>
+			<div class="text-3xl">
+				<div class="w-1/2 flex items-center input-container">
+					<input
+						type="text"
+						id="project-name"
+						class="outline-0 font-Agency-FB"
+						bind:value={$form.name}
+					/>
+					<label for="project-name" class="material-symbols-outlined"> edit </label>
+				</div>
+				<div class="h-0.5 w-full bg-vector-grey input-underline"></div>
+			</div>
+			<div class="text-2xl flex gap-2">
+				<label for="project-area">Área(m²):</label>
+				<div>
+					<div class="w-1/2 flex items-center input-container">
+						<input
+							type="number"
+							id="project-area"
+							min="0"
+							class="outline-0 font-Agency-FB w-15"
+							bind:value={$form.area}
+						/>
+					</div>
+					<div class="h-0.5 w-full bg-vector-grey input-underline"></div>
+				</div>
+			</div>
+			<div class="w-full">
+				<label for="descripiton" class="block mb-2 text-2xl">Descripción</label>
+				<textarea
+					id="descripiton"
+					bind:value={$form.description}
+					class="border-2 border-dashed w-full p-2 min-h-40 max-h-50 font-mono bg-gray-700/70 text-white"
+				></textarea>
+			</div>
+			<button
+				class="bg-vector-grey hover:brightness-75 transition-colors p-1 rounded-md cursor-pointer"
+				>Actualizar
+			</button>
+		</fieldset>
+	</form>
+	<div class="grow flex h-full flex-col justify-between">
+		<!-- Ambientes -->
+		<div class="h-full my-10 lg:my-0">
+			<h1 class="text-xl m-3 mt-0 font-bold text-center text-white">Ambientes</h1>
+			<div class="max-h-9/10 overflow-y-scroll">
+				<SortableList bind:sortable sortableId="sortable" {sortableOptions}>
+					<div id="sortable" class="overflow-y-scroll h-full">
+						{#each projectData.spaces as space, i (space.id)}
+							{@const radioId = `${space.id}-collapse`}
+							<div class="item bg-gray-600 border-2 border-black" data-spaceId={space.id}>
+								<div class="space-header h-10 flex items-center" data-ambienteId={space.id}>
+									<span
+										class="material-symbols-outlined handle p-2 h-fit content-center hover:cursor-pointer self-start"
+									>
+										drag_indicator
+									</span>
+									<div
+										class="cursor-pointer size-full pl-2 flex justify-between items-center transition-colors from-transparent to-transparent bg-gradient-to-r from-0% hover:from-transparent hover:to-vector-orange text-white"
+									>
+										<div class="flex items-center gap-2">
+											<input type="text" id={`${space.id}-name`} bind:value={space.name} />
+											<label for={`${space.id}-name`} class="cursor-pointer">
+												<span class="material-symbols-outlined"> edit </span>
+											</label>
+											<button
+												type="button"
+												class="cursor-pointer transition-all text-green-500 hover:text-green-700"
+												class:opacity-0={originalSpaceNames[i] === space.name}
+												onclick={() => updateSpace(space, i)}
+											>
+												<span class="material-symbols-outlined"> check </span>
+											</button>
+										</div>
+										<button
+											class="grow flex justify-end cursor-pointer"
+											onclick={() => {
+												const radioBtn = document.getElementById(radioId) as HTMLInputElement;
+												radioBtn.checked = !radioBtn.checked;
+											}}
+										>
+											<span class="mx-2 arrow transition-transform">&lt;</span>
+										</button>
+									</div>
+									<input type="radio" name="space-images" id={radioId} hidden />
+									<button
+										class="ml-2 p-2 cursor-pointer hover:bg-red-500 hover:text-black transition-colors font-bold text-red-500"
+										onclick={() => deleteSpace(space)}
+										>X
+									</button>
+								</div>
+								<div class="grid images-wrapper transition-all overflow-hidden bg-gray-800">
+									<ImageGrid projectId={projectData.id} spaceId={space.id} images={space.images} />
+								</div>
+							</div>
+						{/each}
+					</div>
+				</SortableList>
+				<div class="sticky bottom-0">
+					<div class="flex w-full border-2 border-black rounded-xs">
+						<button
+							type="button"
+							onclick={updateOrder}
+							disabled={saveDisabled}
+							class="w-full cursor-pointer bg-blue-300 p-1 disabled:bg-gray-800 disabled:text-gray-400 hover:bg-gray-200 transition-colors disabled:cursor-not-allowed border-r-2"
+							>Guardar nuevo orden
+						</button>
+						<button
+							type="button"
+							onclick={() => {
+								sortable?.sort(originalOrder!, true);
+								updatedElements = $state.snapshot(originalOrder);
+							}}
+							disabled={saveDisabled}
+							class="w-full cursor-pointer bg-blue-300 p-1 disabled:bg-gray-800 disabled:text-gray-400 hover:bg-gray-200 transition-colors disabled:cursor-not-allowed border-l-2"
+							>Cancelar
+						</button>
+					</div>
+					<a
+						href={`/obras/${projectData.id}/ambientes/crear/`}
+						class="block transition-colors bg-amber-400 hover:bg-amber-600 w-full text-center p-2 border-2 border-black"
+						>Nuevo Ambiente
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="mx-auto">
+			<EditorLinks
+				mobileUrl={`/obras/${projectData.id}/movil`}
+				desktopUrl={`/obras/${projectData.id}/escritorio`}
+			/>
+		</div>
 	</div>
 </div>
+
+<style>
+	.images-wrapper {
+		grid-template-rows: 0fr;
+	}
+
+	.space-header:has(input[type='radio']:checked) + .images-wrapper {
+		padding: 0.5rem;
+		grid-template-rows: 1fr;
+	}
+
+	.space-header:has(input[type='radio']:checked) .arrow {
+		transform: rotate(-90deg);
+	}
+
+	.input-underline {
+		background: linear-gradient(
+			to right,
+			var(--color-vector-orange) 50%,
+			var(--color-vector-grey) 50%
+		);
+		background-size: 200%;
+		background-position: right;
+		transition: background-position 0.3s ease-out;
+	}
+
+	.input-container:has(input:focus) + .input-underline {
+		background-position: left;
+	}
+</style>

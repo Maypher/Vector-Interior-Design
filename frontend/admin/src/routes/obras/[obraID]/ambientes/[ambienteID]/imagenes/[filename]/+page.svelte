@@ -125,81 +125,67 @@
 				: 'Imagen removida de la página principal'
 		);
 	}
-
-	async function updatePhoneConfig(event: SubmitEvent) {
-		event.preventDefault();
-
-		const query = `
-			mutation updatePhoneConfig($filename: String!, $phoneConfig: PhoneConfigInput) {
-				updateImage(filename: $filename, phoneConfig: $phoneConfig) {
-					phoneConfig {
-						borders {
-							n
-							e
-							s
-							w
-						}
-						alignment
-						descriptionPos
-						descriptionAlignment
-					}
-				}
-			}
-		`;
-
-		const updatedConfig = (
-			await graphql(query, {
-				filename: imageData.filename,
-				phoneConfig
-			})
-		).updateImage.phoneConfig;
-
-		phoneConfig = updatedConfig;
-		success('Configuración de teléfono actualizada.');
-	}
 </script>
 
-<div class="w-full bg-green-600 p-3">
-	<form use:enhance class="max-w-xl m-auto bg-zinc-600 p-3 rounded-md">
-		<button
-			onclick={deleteImage}
-			type="button"
-			class="block w-fit ml-auto m-1 p-2 bg-red-500 hover:bg-blue-700">Borrar Imagen</button
-		>
-		<button
-			onclick={setThumbnail}
-			type="button"
-			class={`block w-fit ml-auto m-1 p-2 ${isThumbnail ? 'bg-red-500' : 'bg-green-500'} hover:bg-blue-700`}
-		>
-			{isThumbnail ? 'Quitar como imagen principal' : 'Colocar como imagen principal'}
-		</button>
-		<button
-			onclick={setMainPage}
-			type="button"
-			class={`block w-fit ml-auto m-1 p-2 ${isInMainPage ? 'bg-red-500' : 'bg-gray-500'} hover:bg-gray-200`}
-		>
-			{isInMainPage ? 'Remover de la página principal' : 'Colocar en página principal'}
-		</button>
-		<img src={`${PUBLIC_imageURL}${imageData.filename}`} alt={imageData.altText} />
-		<fieldset disabled={submitting}>
-			<EditableInput
-				name="altText"
-				label="Texto Alternativo"
-				bind:value={$form.altText}
-				errors={$errors.altText}
-				type="text"
-				{...$constraints.altText}
+<div class="w-full lg:h-[calc(100svh-5rem)] bg-black lg:p-3">
+	<form
+		use:enhance
+		class="m-auto flex flex-col lg:flex-row w-fit h-full gap-x-20 bg-zinc-500 p-3 lg:rounded-md"
+	>
+		<div class="flex flex-col justify-between h-full">
+			<h1 class="text-xl text-center">
+				Imagen de <b>{imageData.space.name}</b> en
+				<a href={`/obras/${imageData.space.project.id}`} class="border-b-2 border-black"
+					>{imageData.space.project.name}</a
+				>
+			</h1>
+			<img
+				src={`${PUBLIC_imageURL}${imageData.filename}`}
+				alt={imageData.altText}
+				class="h-full w-auto py-2"
 			/>
-			<Markdown
-				label="Descripción"
-				name="description"
-				bind:value={$form.description}
-				errors={$errors.description}
-			/>
+			<div class="flex justify-around items-center text-4xl">
+				<button
+					onclick={setThumbnail}
+					type="button"
+					class="w-fit p-2 text-yellow-300 hover:text-yellow-200 transition-colors cursor-pointer"
+					title={isThumbnail ? 'Imagen principal' : 'Colocar como imagen principal'}
+				>
+					{isThumbnail ? '★' : '☆'}
+				</button>
+				<button
+					onclick={setMainPage}
+					type="button"
+					class={`w-fit p-2 ${isInMainPage ? 'text-yellow-300' : 'text-black'} cursor-pointer`}
+					title={isInMainPage ? 'Remover de página principal' : 'Colocar en página principal'}
+				>
+					⌂
+				</button>
+				<button
+					onclick={deleteImage}
+					type="button"
+					class="w-fit p-2 text-red-500 hover:text-black transition-colors cursor-pointer"
+					>x
+				</button>
+			</div>
+		</div>
+		<fieldset disabled={submitting} class="flex flex-col justify-evenly">
+			<div class="flex flex-col gap-2">
+				<label for="alt-text">Texto Alternativo</label>
+				<input type="text" bind:value={$form.altText} class="p-2 bg-white rounded-md" />
+			</div>
+			<div class="flex flex-col gap-2">
+				<label for="description">Descripción</label>
+				<textarea
+					id="description"
+					class={`min-h-40 max-h-50 font-${$form.descriptionFont} border-2 border-dashed border-white p-2 bg-gray-600 text-white`}
+					bind:value={$form.description}
+				></textarea>
+			</div>
 
 			<div class="my-2">
 				<label for="descriptionFont">Tipografía de Descripción</label>
-				<select id="descriptionFont" bind:value={$form.descriptionFont}>
+				<select id="descriptionFont" bind:value={$form.descriptionFont} class="bg-white">
 					<option value="Arial" class="font-Arial">Arial</option>
 					<option value="Agency-FB" class="font-Agency-FB">Agency-FB</option>
 					<option value="Bahnschrift" class="font-Bahnschrift">Bahnschrift</option>
@@ -213,54 +199,9 @@
 				<label for="sculpture">Escultura</label>
 				<input id="sculpture" type="checkbox" bind:checked={$form.sculpture} />
 			</div>
-			<button class="bg-green-500 p-2 rounded-md hover:bg-orange-800 my-5">Actualizar</button>
+			<button class="bg-green-500 p-2 rounded-md hover:bg-orange-800 my-5 self-start"
+				>Actualizar
+			</button>
 		</fieldset>
-	</form>
-	<hr class="my-3" />
-	<h1 class="text-xl text-center">Configuración de Teléfono</h1>
-	<form onsubmit={updatePhoneConfig} class="bg-blue-500 p-2 max-w-lg m-auto my-10">
-		<div class="flex gap-4 items-center">
-			<div class="accent-vector-orange flex items-center gap-2">
-				<input type="checkbox" bind:checked={phoneConfig.borders.w} />
-				<div class="flex flex-col justify-center items-center gap-2">
-					<input type="checkbox" bind:checked={phoneConfig.borders.n} />
-					<p>Bordes</p>
-					<input type="checkbox" bind:checked={phoneConfig.borders.s} />
-				</div>
-				<input type="checkbox" bind:checked={phoneConfig.borders.e} />
-			</div>
-			<div>
-				<label for="phoneAlignment">Alineación</label>
-				<select id="phoneAlignment" bind:value={phoneConfig.alignment}>
-					{#each Object.entries(Alignment) as [alignment, value] (alignment)}
-						<option {value}>{alignment}</option>
-					{/each}
-				</select>
-			</div>
-			<div>
-				<div>
-					<label for="descriptionPosition">Posición de Descripción</label>
-					<select id="descriptionPosition" bind:value={phoneConfig.descriptionPos}>
-						{#each Object.entries(Directions) as [alignment, value] (alignment)}
-							<option {value}>{alignment}</option>
-						{/each}
-					</select>
-				</div>
-				<div>
-					<label for="descriptionAlignment">Alineación de la Descripción</label>
-					<select id="descriptionAlignment" bind:value={phoneConfig.descriptionAlignment}>
-						<option value="text-justify">Justificar</option>
-						<option value="text-center">Centrar</option>
-						<option value="text-left">Izquierda</option>
-						<option value="text-right">Derecha</option>
-					</select>
-				</div>
-			</div>
-		</div>
-		<div class="mx-auto size-fit">
-			<button type="submit" class="my-5 bg-violet-700 p-2 rounded-md hover:bg-violet-500"
-				>Actualizar</button
-			>
-		</div>
 	</form>
 </div>

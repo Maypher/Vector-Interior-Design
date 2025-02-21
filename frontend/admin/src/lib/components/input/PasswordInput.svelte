@@ -20,11 +20,11 @@
 			type={visible ? 'text' : 'password'}
 			{name}
 			bind:value
-			class="focus:outline-hidden"
+			class="focus:outline-hidden text-black"
 			{...constrains}
 		/>
 		<button
-			class="material-symbols-outlined size-min m-auto pl-2 border-l-2"
+			class="material-symbols-outlined size-min m-auto pl-2 border-l-2 text-black"
 			onclick={() => (visible = !visible)}
 			type="button"
 		>

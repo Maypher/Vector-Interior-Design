@@ -21,7 +21,10 @@ export const load = async ({ fetch, params }) => {
                 hideInProject
                 mainPage
                 space {
+                    name
                     project {
+                        id
+                        name
                         thumbnail {
                             filename
                         }

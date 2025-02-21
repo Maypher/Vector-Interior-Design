@@ -10,9 +10,10 @@
 <style>
 	:global {
 		.confirmationDialog {
-			background-color: aquamarine;
-			max-width: 15rem;
+			background-color: var(--color-vector-grey);
+			max-width: 30rem;
 			padding: 2rem;
+			margin: auto;
 		}
 
 		.confirmationDialog::backdrop {
@@ -25,24 +26,25 @@
 			justify-content: space-around;
 		}
 
-		.confirmationDialog .confirm {
-			background-color: greenyellow;
-			padding: 0.5rem;
-			border-radius: 10px;
+		.confirmationDialog button {
+			transition: background-color 0.1s ease-in;
+			cursor: pointer;
 		}
 
-		.confirmationDialog .confirm:hover {
-			background-color: aliceblue;
+		.confirmationDialog button:hover {
+			filter: brightness(70%);
+		}
+
+		.confirmationDialog .confirm {
+			background-color: red;
+			padding: 0.5rem;
+			border-radius: 10px;
 		}
 
 		.confirmationDialog .cancel {
 			background-color: royalblue;
 			padding: 0.5rem;
 			border-radius: 10px;
-		}
-
-		.confirmationDialog .cancel:hover {
-			background-color: aliceblue;
 		}
 	}
 </style>

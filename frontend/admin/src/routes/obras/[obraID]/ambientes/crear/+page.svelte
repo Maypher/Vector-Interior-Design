@@ -10,6 +10,7 @@
 	import { error } from '$lib/utilities/toasts';
 
 	const { data }: { data: PageData } = $props();
+	const project = data.project;
 	let submitting: boolean = $state(false);
 
 	const { form, errors, enhance } = superForm(data.createForm, {
@@ -60,21 +61,27 @@
 	});
 </script>
 
-<form method="POST" use:enhance class="max-w-xl bg-orange-600 m-auto my-5 p-3">
-	<fieldset disabled={submitting}>
-		<TextInput
-			name="nombre"
-			label="Nombre"
-			type="text"
-			errors={$errors.name}
-			bind:value={$form.name}
-		/>
-		<Markdown
-			name="description"
-			label="Descripción"
-			errors={$errors.description}
-			bind:value={$form.description}
-		/>
-		<button class="bg-purple-700 rounded-xs p-3 m-2">Crear</button>
-	</fieldset>
-</form>
+<div class="bg-black h-[calc(100svh-5rem)] flex items-center">
+	<form
+		method="POST"
+		use:enhance
+		class="max-w-xl w-full bg-gray-700 backdrop-brightness-75 m-auto p-5"
+	>
+		<h1 class="text-xl text-center text-white">
+			Crear ambiente para <a href={`/obras/${project.id}`} class="border-b-2 border-vector-grey"
+				>{project.name}</a
+			>
+		</h1>
+		<fieldset disabled={submitting}>
+			<div class="w-full my-10 flex flex-col gap-2">
+				<label for="name" class="block text-white">Nombre</label>
+				<input type="text" bind:value={$form.name} class="bg-white w-full p-2" />
+			</div>
+			<button
+				class="bg-vector-orange transition-colors hover:brightness-125 cursor-pointer rounded-md p-3 m-2 disabled:brightness-75 disabled:cursor-not-allowed"
+				disabled={!$form.name}
+				>Crear
+			</button>
+		</fieldset>
+	</form>
+</div>

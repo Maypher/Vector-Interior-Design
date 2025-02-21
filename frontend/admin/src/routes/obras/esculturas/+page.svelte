@@ -6,6 +6,7 @@
 	import getArrayDifference from '$lib/utilities/arrayOrder';
 	import graphql from '$lib/utilities/api';
 	import { success } from '$lib/utilities/toasts';
+	import { isEqual } from 'lodash-es';
 
 	const { data }: { data: PageData } = $props();
 	const sculptures = data.sculptures;
@@ -16,7 +17,7 @@
 	// svelte-ignore state_referenced_locally
 	let updatedElements: string[] = $state($state.snapshot(originalOrder));
 
-	let saveDisabled: boolean = $derived(updatedElements.every((val, i) => originalOrder[i] === val));
+	let saveDisabled: boolean = $derived(isEqual(updatedElements, originalOrder));
 
 	const sortableOptions: Options = {
 		handle: '.handle',
@@ -50,14 +51,14 @@
 	}
 </script>
 
-<h1 class="text-xl m-5 text-center">Esculturas</h1>
-<div class="flex flex-col justify-center items-center min-h-screen">
-	<div>
+<div class="flex flex-col py-3 md:p-3 gap-5 lg:h-[calc(100svh-5rem)] bg-black overflow-clip">
+	<h1 class="text-xl text-white text-center">Esculturas</h1>
+	<div class="h-full flex-col justify-center items-center w-full max-w-5xl mx-auto">
 		<SortableList sortableId="sculpturesList" {sortableOptions} bind:sortable>
-			<div id="sculpturesList" class="bg-gray-500 max-h-[39rem] overflow-y-scroll">
+			<div id="sculpturesList" class="bg-gray-500 overflow-y-scroll h-4/5">
 				{#each sculptures as sculpture (sculpture.filename)}
 					<div
-						class="sculpture flex border-2 border-black"
+						class="sculpture flex border-2 border-black h-1/2"
 						data-sculptureId={sculpture.sculptureData.id}
 					>
 						<span
@@ -75,7 +76,7 @@
 					</div>
 				{/each}
 			</div>
-			<div class="flex bg-gray-500">
+			<div class="flex w-full bg-gray-500">
 				<button
 					type="button"
 					class="w-full border-2 border-black disabled:bg-gray-300 disabled:cursor-not-allowed"
@@ -86,7 +87,10 @@
 					type="button"
 					class="w-full border-2 border-black disabled:bg-gray-300 disabled:cursor-not-allowed"
 					disabled={saveDisabled}
-					onclick={() => (updatedElements = originalOrder)}>Cancelar</button
+					onclick={() => {
+						sortable?.sort(originalOrder, true);
+						updatedElements = sortable!.toArray();
+					}}>Cancelar</button
 				>
 			</div>
 		</SortableList>

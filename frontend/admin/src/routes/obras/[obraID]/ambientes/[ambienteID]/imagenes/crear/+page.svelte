@@ -3,7 +3,6 @@
 	import type { PageData } from './$types';
 	import { yup } from 'sveltekit-superforms/adapters';
 	import { createProjectSchema } from '$lib/utilities/yupSchemas';
-	import TextInput from '$lib/components/input/TextInput.svelte';
 	import { PUBLIC_graphql } from '$env/static/public';
 	import { error } from '$lib/utilities/toasts';
 	import { goto } from '$app/navigation';
@@ -93,7 +92,7 @@
 							fileErrors.push(`Archivo tipo ${imageData.fileType} no es válido.`);
 							break;
 						case 'Image':
-							await goto(`/obras/${data.projectId}/ambientes/${data.ambienteID}/`);
+							await goto(`/obras/${data.projectId}`);
 							break;
 					}
 				} else if (res.status === 413) {
@@ -130,9 +129,9 @@
 	}
 </script>
 
-<div class="m-5">
-	<form use:enhance class="bg-amber-600 max-w-xl m-auto p-3">
-		<fieldset disabled={submitting}>
+<div class="bg-black flex items-center justify-center h-[calc(100svh-5rem)]">
+	<form use:enhance class="bg-gray-700 max-w-xl w-full p-3 rounded-md">
+		<fieldset disabled={submitting} class="flex flex-col gap-5">
 			<input
 				type="file"
 				class="hidden"
@@ -171,22 +170,25 @@
 						Arrastre o <label
 							for="imageInput"
 							class="text-blue-100 hover:pb-0.5 hover:cursor-pointer border-b-2 transition-all"
-							>seleccione un archivo</label
-						>.
+							>seleccione un archivo
+						</label>.
 					</p>
 				{/if}
 			</div>
 
 			<Errors errors={fileErrors} />
-			<TextInput
-				name="altText"
-				label="Texto Alternativo"
-				type="text"
-				bind:value={$form.altText}
-				errors={$errors.altText}
-				{...$constraints}
-			/>
-			<button class="bg-green-200 hover:bg-amber-200 p-2 rounded-md">Crear</button>
+			<div class="flex flex-col gap-2">
+				<label for="alt-text" class="text-white">Texto alternativo</label>
+				<input
+					type="text"
+					id="alt-text"
+					class="bg-white rounded-md p-2"
+					bind:value={$form.altText}
+				/>
+			</div>
+			<button type="submit" class="bg-green-200 hover:bg-amber-200 p-2 rounded-md self-start"
+				>Crear
+			</button>
 		</fieldset>
 	</form>
 </div>
