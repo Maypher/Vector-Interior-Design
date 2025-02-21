@@ -68,7 +68,7 @@
 			}
 		);
 
-		const pencil = document.getElementById('pencil-wrapper');
+		const pencil = document.getElementById('nav');
 		if (pencil) pencilObserver.observe(pencil);
 	});
 </script>
@@ -288,7 +288,7 @@
 
 <div
 	class="lg:my-50 lg:ml-15 mt-20 flex h-screen flex-col gap-y-10 overflow-hidden p-10 lg:h-[70vh] lg:flex-row lg:justify-between xl:h-[90vh] xl:justify-evenly"
-	id="pencil-wrapper"
+	id="nav"
 >
 	<img
 		src={`${PUBLIC_imagesUrl}${mainImages.at(-1)!.filename}`}

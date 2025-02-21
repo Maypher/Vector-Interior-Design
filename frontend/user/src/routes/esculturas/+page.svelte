@@ -71,7 +71,7 @@
 
 <div>
 	<header class="bg-vector-grey flex h-20 items-center justify-center gap-10 p-4 md:gap-20">
-		<a href="/" class="h-full transition-transform hover:scale-125">
+		<a href="/#nav" class="h-full transition-transform hover:scale-125">
 			<img src={logo} alt="Logo" class="h-full" />
 		</a>
 		<p class="font-Agency-FB text-center text-lg md:text-3xl" style="word-spacing: 0.5 trem;">
@@ -128,7 +128,7 @@
 				</div>
 			{:else}
 				<div
-					class={`mb-50 flex h-[calc(100vh-6rem)] flex-col items-center justify-center ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'}`}
+					class={`${i === groupedSculptures.length - 1 ? '' : 'mb-50'}  flex h-[calc(100vh-6rem)] flex-col items-center justify-center ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'}`}
 				>
 					<img
 						src={`${PUBLIC_imagesUrl}${sculpture.filename}`}
