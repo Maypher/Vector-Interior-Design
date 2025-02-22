@@ -63,17 +63,22 @@ export const load = async ({ params, fetch }) => {
                     }
                 }
             }
+            projects {
+                id
+            }
         }
     `;
 
     const projectId = Number(params.ProyectoID);
 
-    if (!Number.isInteger(projectId)) error(404, "Proyecto no existe");
+    if (!Number.isInteger(projectId)) error(404, "Proyecto no existente");
 
     const data = await graphql(query, { id: projectId }, fetch);
 
     const projectData = data.project;
-    if (!projectData) error(404, "Proyecto no existe");
+    if (!projectData) error(404, "Proyecto no existente");
+    // Used to determine if this is the final project to link to a different page
+    const finalProject = data.projects.findIndex((project: { id: number }) => project.id === projectData.id) === data.projects.length - 1;
 
-    return { projectData };
+    return { projectData, finalProject };
 }

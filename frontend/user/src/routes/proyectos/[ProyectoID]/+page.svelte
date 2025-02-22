@@ -9,6 +9,7 @@
 
 	const { data }: { data: PageData } = $props();
 	const projectData = data.projectData;
+	const finalProject = data.finalProject;
 
 	let groupedImageData = $derived.by(() => {
 		let newSpaces = [];
@@ -206,7 +207,7 @@
 		</div>
 	</div>
 	<div class="hidden text-white lg:block">
-		{#each groupedImageData.slice(0, 1) as space, spaceId (space.id)}
+		{#each groupedImageData.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image}
 				<div class="p-15 flex h-[calc(100vh-5rem)] w-fit items-center justify-evenly gap-5">
 					<img
@@ -262,7 +263,7 @@
 				</div>
 			{/each}
 		{/each}
-		{#each groupedImageData.slice(1) as space, spaceId (space.id)}
+		{#each groupedImageData.slice(1) as space (space.id)}
 			{#each space.images as image}
 				<div class="p-25 flex h-screen justify-center">
 					{#if Array.isArray(image)}
@@ -285,7 +286,9 @@
 	<div
 		class="-translate-1/2 absolute bottom-0 left-1/2 w-fit text-white transition-transform hover:scale-105"
 	>
-		<a href="/proyectos" class="font-Agency-FB gradient-background text-3xl text-transparent"
+		<a
+			href={finalProject ? '/proyectos/conclusion' : `/proyectos`}
+			class="font-Agency-FB gradient-background text-3xl text-transparent"
 			>Siguiente -&gt;
 		</a>
 	</div>
