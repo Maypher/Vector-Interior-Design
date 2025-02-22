@@ -23,7 +23,6 @@
 	let originalData = $state.snapshot(sculptureData);
 	let updatedData = $state($state.snapshot(sculptureData));
 	let shouldUpdate = $derived(!isEqual(originalData, updatedData));
-	$inspect(shouldUpdate);
 
 	let englishDesc: boolean = $state(false);
 
