@@ -80,22 +80,33 @@
 	</header>
 	<div class="md:hidden">
 		{#each sculptures as image, i (image.filename)}
+			{@const lastImage = i === sculptures.length - 1}
 			<div
-				class={`${i === 0 ? 'mt-20' : i < sculptures.length - 1 ? 'my-50' : 'my-10'} flex flex-col items-center justify-around gap-10`}
+				class={`${i === 0 ? 'mt-20' : !lastImage ? 'my-50' : 'my-2'} flex flex-col items-center justify-around gap-10`}
 			>
 				<img
 					src={`${PUBLIC_imagesUrl}${image.filename}`}
 					alt={image.altText}
 					class:px-8={i !== 0}
-					class="w-full md:w-auto"
+					class="w-full"
 				/>
 				{#if image.sculptureData.descriptionEs}
 					<div
 						class="border-b-vector-orange mx-auto flex w-3/4 flex-col justify-between gap-10 border-b-2 pb-4"
 					>
 						<img src={symbol} alt="Logo" class="size-28 w-fit self-end" />
-						<div class="markdownDescription self-start text-white">
-							{@html mdToHtml(image.sculptureData.descriptionEs)}
+						<div class="flex items-end justify-between">
+							<div class="markdownDescription self-start text-white">
+								{@html mdToHtml(image.sculptureData.descriptionEs)}
+							</div>
+							{#if lastImage}
+								<button
+									class="to-top text-vector-grey whitespace-pre-wrap text-3xl hover:cursor-pointer"
+									onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+								>
+									^
+								</button>
+							{/if}
 						</div>
 					</div>
 				{/if}
