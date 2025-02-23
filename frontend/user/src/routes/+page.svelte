@@ -11,6 +11,8 @@
 	import mdToHtml from '$lib/utilities/markdown';
 	import '$lib/styles/markdown.css';
 
+	import { getI18n } from '$lib/i18n';
+
 	interface Borders {
 		n: boolean;
 		s: boolean;
@@ -72,6 +74,8 @@
 		const pencil = document.getElementById('nav');
 		if (pencil) pencilObserver.observe(pencil);
 	});
+
+	const i18n = getI18n();
 </script>
 
 {#snippet mainImage(imageData: mainImageData)}
@@ -84,7 +88,7 @@
 			<div
 				class={`border-vector-orange m-auto w-10/12 ${imageData.mainImageConfig.phoneConfig.logoBorders.n ? 'border-t-2 pt-10' : ''} ${imageData.mainImageConfig.phoneConfig.logoBorders.s ? 'border-b-2 pb-10' : ''} ${imageData.mainImageConfig.phoneConfig.logoBorders.e ? 'border-r-2 pr-10' : ''} ${imageData.mainImageConfig.phoneConfig.logoBorders.w ? 'border-l-2 pl-10' : ''}`}
 			>
-				<img src={symbol} alt="symbol" class="mx-auto w-20" />
+				<img src={symbol} alt="V" class="mx-auto w-20" />
 			</div>
 		{/if}
 		<div
@@ -203,7 +207,7 @@
 					<div class="h-1/2 w-fit">
 						<img
 							src={symbol}
-							alt="symbol"
+							alt="V"
 							class="border-vector-orange h-full w-fit p-5"
 							class:border-t-4={imageData.mainImageConfig.desktopConfig.logoBorders.n}
 							class:border-b-4={imageData.mainImageConfig.desktopConfig.logoBorders.s}
@@ -229,8 +233,8 @@
 {/snippet}
 
 <header class="bg-vector-grey flex h-28 items-center justify-center gap-20 p-5">
-	<a href="/" class="h-full">
-		<img src={logo} alt="logo" class="h-full" />
+	<a href="/" class="hover:scale-120 h-full transition-transform">
+		<img src={logo} alt="Vector: Interior Design" class="h-full" />
 	</a>
 </header>
 
@@ -260,7 +264,7 @@
 		<p>
 			{`De lo sublime a lo majestuoso, el límite de este  este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero y a veces hasta inimaginable.`}
 		</p>
-		<img src={logoWhite} alt="Logo white" class="w-44" />
+		<img src={logoWhite} alt="Vector: Interior Design" class="w-44" />
 	</div>
 </div>
 
@@ -305,7 +309,7 @@
 			Esculturas
 		</a>
 		<div class="-z-10 flex size-full w-[2px] flex-col items-center overflow-visible" id="pencil">
-			<img src={symbol} alt="Logo" class="min-h-32 min-w-32" />
+			<img src={symbol} alt="V" class="min-h-32 min-w-32" />
 			<div class="bg-vector-orange relative bottom-5 h-full w-[2px]"></div>
 		</div>
 		<a
@@ -324,13 +328,15 @@
 			style="font-family: Agency-FB;"
 		>
 			<p>CON</p>
-			<p class="indent-[2.1ch]">TAC</p>
-			<p
-				class="col-start-2 row-start-2 text-center indent-[3.9ch] text-white"
-				style="font-family: Agency-FB;"
-			>
-				TO
-			</p>
+			<p class="indent-[2.1ch]">TAC{$i18n.language === 'en' ? 'T' : ''}</p>
+			{#if $i18n.language === 'es'}
+				<p
+					class="col-start-2 row-start-2 text-center indent-[3.9ch] text-white"
+					style="font-family: Agency-FB;"
+				>
+					TO
+				</p>
+			{/if}
 		</div>
 		<img
 			src={tonyContact}
@@ -343,7 +349,11 @@
 			>k@vectorinterior.design</a
 		>
 	</div>
-	<img src={logoWhite} alt="Logo white" class="bottom-0 right-20 w-1/2 max-w-32 lg:absolute" />
+	<img
+		src={logoWhite}
+		alt="Vector: Interior Design"
+		class="bottom-0 right-20 w-1/2 max-w-32 lg:absolute"
+	/>
 </footer>
 
 <style>
