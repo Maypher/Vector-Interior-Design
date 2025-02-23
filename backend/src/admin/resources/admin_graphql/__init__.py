@@ -306,9 +306,17 @@ class Mutation:
         filename: typing.Annotated[
             str, strawberry.argument(description="The filename of the image to update.")
         ],
-        alt_text: typing.Annotated[
+        alt_text_es: typing.Annotated[
             typing.Optional[str],
-            strawberry.argument(description="The new alt text of the image."),
+            strawberry.argument(
+                description="The new alt text of the image in Spanish."
+            ),
+        ] = None,
+        alt_text_en: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(
+                description="The new alt text of the image in English."
+            ),
         ] = None,
         description_es: typing.Annotated[
             typing.Optional[str],
@@ -359,7 +367,8 @@ class Mutation:
     ) -> typing.Optional[schemas.Image]:
         return info.context["resource_manager"].update_image(
             filename,
-            alt_text,
+            alt_text_es,
+            alt_text_en,
             index,
             main_page,
             hide_in_project,
