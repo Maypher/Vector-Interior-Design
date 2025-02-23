@@ -166,7 +166,7 @@
 	<header class="bg-vector-grey sticky top-0 z-10 h-20 p-4 lg:static">
 		<div class="flex h-full items-center justify-center gap-10">
 			<a href="/" class="h-full transition-transform hover:scale-105">
-				<img src={logo} alt="logo" class="h-full" />
+				<img src={logo} alt="Vector: Interior Design" class="h-full" />
 			</a>
 		</div>
 	</header>

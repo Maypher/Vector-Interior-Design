@@ -42,7 +42,7 @@
 
 <header class="bg-vector-grey absolute top-0 z-10 flex h-24 w-full justify-center p-5 lg:static">
 	<a href="/" class="h-full transition-transform hover:scale-125">
-		<img src={logo} alt="logo" class="h-full" />
+		<img src={logo} alt="Vector: Interior Design" class="h-full" />
 	</a>
 </header>
 
