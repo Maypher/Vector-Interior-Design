@@ -14,8 +14,10 @@ export const load = async ({ fetch, params }) => {
             image(filename: $filename) {
                 id
                 filename
-                altText
-                description
+                altTextEs
+                altTextEn
+                descriptionEs
+                descriptionEn
                 descriptionFont
                 sculpture
                 hideInProject
@@ -52,7 +54,10 @@ export const load = async ({ fetch, params }) => {
     if (!imageData) error(404, `Imagen ${filename} no existe.`);
     else {
         const updateForm = await superValidate({
-            altText: imageData.altText, description: imageData.description || "",
+            altTextEs: imageData.altTextEs,
+            altTextEn: imageData.altTextEn,
+            descriptionEs: imageData.descriptionEs || "",
+            descriptionEn: imageData.descriptionEn || '',
             descriptionFont: imageData.descriptionFont,
             hideInProject: imageData.hideInProject,
             sculpture: imageData.sculpture,

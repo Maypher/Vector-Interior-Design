@@ -25,7 +25,8 @@ export const signUpForm = object({
 export const projectCreateSchema = object({
     name: string().required("Nombre requerido.").min(5, "Nombre debe tener un mínimo de 5 caracteres"),
     area: number().default(1).min(1, "El debe ser mayor a cero."),
-    description: string().required("Descripción requerida.")
+    descriptionEs: string().required("Descripción requerida."),
+    descriptionEn: string().required("Descripción en ingles requerida")
 })
 
 export const spaceCreateSchema = object({
@@ -33,13 +34,16 @@ export const spaceCreateSchema = object({
     description: string().default('')
 });
 
-export const createProjectSchema = object({
-    altText: string().required("Texto alternativo requerido."),
+export const createImageSchema = object({
+    altTextEs: string().required("Texto alternativo requerido.").length(255),
+    altTextEn: string().required("Texto alternativo en ingles requerido.").length(255)
 });
 
 export const imageUpdateSchema = object({
-    altText: string().required("Texto alternativo requerido."),
-    description: string(),
+    altTextEs: string().required("Texto alternativo requerido."),
+    altTextEn: string().required("Text alternativo en ingles requerido."),
+    descriptionEs: string(),
+    descriptionEn: string(),
     descriptionFont: string().required("Fuente de descripción requerida."),
     hideInProject: bool(),
     sculpture: bool()

@@ -14,7 +14,8 @@ export async function load({ params, fetch }) {
                     project(id: $id) {
                         id
                         name
-                        description
+                        descriptionEs
+                        descriptionEn
                         area
                         public
                         spaces {
@@ -22,7 +23,7 @@ export async function load({ params, fetch }) {
                             name
                             images {
                                 filename
-                                altText
+                                altTextEs
                             }
                         }
                     }
@@ -32,7 +33,12 @@ export async function load({ params, fetch }) {
 
     const projectData = (await graphql(query, variables, fetch)).project;
 
-    const formData = { name: projectData.name, description: projectData.description, area: projectData.area };
+    const formData = {
+        name: projectData.name,
+        descriptionEs: projectData.descriptionEs,
+        descriptionEn: projectData.descriptionEn,
+        area: projectData.area
+    };
     const updateForm = await superValidate(formData, yup(projectCreateSchema));
 
     if (projectData) return { updateForm, projectData };

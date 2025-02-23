@@ -2,7 +2,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import type { PageData } from './$types';
 	import { yup } from 'sveltekit-superforms/adapters';
-	import { createProjectSchema } from '$lib/utilities/yupSchemas';
+	import { createImageSchema } from '$lib/utilities/yupSchemas';
 	import { PUBLIC_graphql } from '$env/static/public';
 	import { error } from '$lib/utilities/toasts';
 	import { goto } from '$app/navigation';
@@ -15,7 +15,7 @@
 
 	const { form, errors, enhance, constraints } = superForm(data.createForm, {
 		SPA: true,
-		validators: yup(createProjectSchema),
+		validators: yup(createImageSchema),
 		async onUpdate({ form: createForm }) {
 			fileErrors = [];
 			submitting = true;
@@ -37,12 +37,14 @@
                     mutation createImage(
                         $spaceId: Int!,
                         $file: Upload!,
-                        $altText: String!
+                        $altTextEs: String!,
+						$altTextEn: String!,
                         ) {
                         createImage(
                             spaceId: $spaceId,
                             image: $file,
-                            altText: $altText
+                            altTextEs: $altTextEs,
+							altTextEn: $altTextEn
                         ) {
                             __typename
                             ... on Image {
@@ -60,7 +62,7 @@
 
 				const variables = {
 					file: null,
-					altText: createForm.data.altText,
+					altText: createForm.data.altTextEs,
 					spaceId: data.ambienteID
 				};
 
@@ -178,12 +180,23 @@
 
 			<Errors errors={fileErrors} />
 			<div class="flex flex-col gap-2">
-				<label for="alt-text" class="text-white">Texto alternativo</label>
+				<label for="alt-text-es" class="text-white">Texto alternativo</label>
 				<input
 					type="text"
-					id="alt-text"
+					id="alt-text-es"
 					class="bg-white rounded-md p-2"
-					bind:value={$form.altText}
+					maxlength="255"
+					bind:value={$form.altTextEs}
+				/>
+			</div>
+			<div class="flex flex-col gap-2">
+				<label for="alt-text-en" class="text-white">Texto alternativo (Ingles)</label>
+				<input
+					type="text"
+					id="alt-text-en"
+					class="bg-white rounded-md p-2"
+					bind:value={$form.altTextEn}
+					maxlength="255"
 				/>
 			</div>
 			<button type="submit" class="bg-green-200 hover:bg-amber-200 p-2 rounded-md self-start"

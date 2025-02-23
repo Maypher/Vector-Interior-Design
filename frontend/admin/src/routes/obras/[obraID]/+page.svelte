@@ -20,6 +20,7 @@
 	let projectData = $state(data.projectData!);
 	let originalSpaceNames: string[] = $state(projectData.spaces.map((space: any) => space.name));
 	let submitting: boolean = $state(false);
+	let englishDesc: boolean = $state(false);
 
 	let sortable: Sortable | undefined = $state();
 	let originalOrder: string[] = $state(projectData.spaces.map((x: { id: string }) => x.id));
@@ -44,10 +45,11 @@
 		async onUpdate({ form: updateForm }) {
 			if (updateForm.valid) {
 				const query = `
-					mutation updateProject($id: Int!, $name: String, $description: String, $area: Int) {
-						updateProject(id: $id, name: $name, description: $description, area: $area) {
+					mutation updateProject($id: Int!, $name: String, $descriptionEs: String, $descriptionEn: String, $area: Int) {
+						updateProject(id: $id, name: $name, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
 							name
-							description
+							descriptionEs
+							descriptionEn
 							area
 						}
 					}
@@ -55,13 +57,15 @@
 				const variables = {
 					id: projectData.id,
 					name: updateForm.data.name,
-					description: updateForm.data.description,
+					descriptionEs: updateForm.data.descriptionEs,
+					descriptionEn: updateForm.data.descriptionEn,
 					area: updateForm.data.area
 				};
 
 				const updateProject = (await graphql(query, variables)).updateProject;
 				$form.name = updateProject.name;
-				$form.description = updateProject.description;
+				$form.descriptionEs = updateProject.descriptionEs;
+				$form.descriptionEn = updateProject.descriptionEn;
 				$form.area = updateProject.area;
 
 				success(`Proyecto "${updateProject.name}" actualizado con éxito.`);
@@ -220,12 +224,26 @@
 				</div>
 			</div>
 			<div class="w-full">
-				<label for="descripiton" class="block mb-2 text-2xl">Descripción</label>
-				<textarea
-					id="descripiton"
-					bind:value={$form.description}
-					class="border-2 border-dashed w-full p-2 min-h-40 max-h-50 font-mono bg-gray-700/70 text-white"
-				></textarea>
+				<div class="flex gap-2 items-center mb-2">
+					<label for="description" class="block mb-2 text-2xl">Descripción</label>
+					<label for="en-desc" class="bg-vector-orange border-2 border-black p-1"
+						>{englishDesc ? 'Ingles' : 'Español'}</label
+					>
+					<input type="checkbox" id="en-desc" hidden bind:checked={englishDesc} />
+				</div>
+				{#if englishDesc}
+					<textarea
+						id="description"
+						bind:value={$form.descriptionEn}
+						class="border-2 border-dashed w-full p-2 min-h-40 max-h-50 font-mono bg-gray-700/70 text-white"
+					></textarea>
+				{:else}
+					<textarea
+						id="description"
+						bind:value={$form.descriptionEs}
+						class="border-2 border-dashed w-full p-2 min-h-40 max-h-50 font-mono bg-gray-700/70 text-white"
+					></textarea>
+				{/if}
 			</div>
 			<button
 				class="bg-vector-grey hover:brightness-75 transition-colors p-1 rounded-md cursor-pointer"

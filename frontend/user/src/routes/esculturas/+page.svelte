@@ -86,7 +86,7 @@
 			>
 				<img
 					src={`${PUBLIC_imagesUrl}${image.filename}`}
-					alt={image.altText}
+					alt={image.altTextEs}
 					class:px-8={i !== 0}
 					class="w-full"
 				/>
@@ -125,7 +125,7 @@
 						{#each sculpture as sculptureGroup}
 							<img
 								src={`${PUBLIC_imagesUrl}${sculptureGroup.filename}`}
-								alt={sculptureGroup.altText}
+								alt={sculptureGroup.altTextEs}
 								class="h-full w-auto"
 							/>
 						{/each}
@@ -143,7 +143,7 @@
 				>
 					<img
 						src={`${PUBLIC_imagesUrl}${sculpture.filename}`}
-						alt={sculpture.altText}
+						alt={sculpture.altTextEs}
 						class:px-8={i !== 0}
 						class="h-13/20 max-h-4/5 w-auto"
 					/>

@@ -63,7 +63,7 @@
 				class="image-item transition-all border-vector-orange hover:border-4"
 				data-imageId={image.filename}
 			>
-				<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altText} />
+				<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altTextEs} />
 			</a>
 		{/each}
 		<a

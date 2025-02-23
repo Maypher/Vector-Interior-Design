@@ -17,6 +17,7 @@
 	let isThumbnail = $derived(imageData.space.project.thumbnail?.filename === imageData.filename);
 	let isInMainPage = $derived(imageData.mainPage);
 	let submitting: boolean = $state(false);
+	let english: boolean = $state(false);
 
 	const { form, errors, enhance, constraints } = superForm(data.updateForm!, {
 		SPA: true,
@@ -26,12 +27,14 @@
 			submitting = true;
 			if (updateForm.valid) {
 				const query = `
-					mutation updateImage($filename: String!, $altText: String!, $description: String, 
-					$descriptionFont: String, $hideInProject: Boolean, $sculpture: Boolean) {
-						updateImage(filename: $filename, altText: $altText, description: $description, 
-						descriptionFont: $descriptionFont, hideInProject: $hideInProject, sculpture: $sculpture) {
-							altText
-							description
+					mutation updateImage($filename: String!, $altTextEs: String, $altTextEn: String, $descriptionEs: String, 
+					$descriptionEn: String, $descriptionFont: String, $hideInProject: Boolean, $sculpture: Boolean) {
+						updateImage(filename: $filename, altTextEs: $altTextEs, altTextEn: $altTextEn, descriptionEs: $descriptionEs, 
+						$descriptionEn: $descriptionEn, descriptionFont: $descriptionFont, hideInProject: $hideInProject, sculpture: $sculpture) {
+							altTextEs
+							altTextEn
+							descriptionEs
+							descriptionEn
 							descriptionFont
 							hideInProject
 							sculpture
@@ -43,8 +46,10 @@
 
 				const updatedImageData = (await graphql(query, variables)).updateImage;
 				success(`Imagen actualizada con éxito.`);
-				$form.altText = updatedImageData.altText;
-				$form.description = updatedImageData.description;
+				$form.altTextEs = updatedImageData.altTextEs;
+				$form.altTextEn = updatedImageData.altTextEn;
+				$form.descriptionEs = updatedImageData.descriptionEs;
+				$form.descriptionEn = updatedImageData.descriptionEn;
 				$form.descriptionFont = updatedImageData.descriptionFont;
 				$form.hideInProject = updatedImageData.hideInProject;
 				$form.sculpture = updatedImageData.sculpture;
@@ -141,8 +146,8 @@
 			</h1>
 			<img
 				src={`${PUBLIC_imageURL}${imageData.filename}`}
-				alt={imageData.altText}
-				class="h-full w-auto py-2"
+				alt={imageData.altTextEs}
+				class="h-full w-auto my-2 shadow-md shadow-black"
 			/>
 			<div class="flex justify-around items-center text-4xl">
 				<button
@@ -171,16 +176,40 @@
 		</div>
 		<fieldset disabled={submitting} class="flex flex-col justify-evenly">
 			<div class="flex flex-col gap-2">
-				<label for="alt-text">Texto Alternativo</label>
-				<input type="text" bind:value={$form.altText} class="p-2 bg-white rounded-md" />
+				<div>
+					<label for="alt-text">Texto Alternativo</label>
+					<label class="bg-vector-orange border-2 border-black p-1" for="alt-text-lang"
+						>{english ? 'Ingles' : 'Español'}</label
+					>
+					<input type="checkbox" id="alt-text-lang" bind:checked={english} hidden />
+				</div>
+				{#if english}
+					<input type="text" bind:value={$form.altTextEn} class="p-2 bg-white rounded-md" />
+				{:else}
+					<input type="text" bind:value={$form.altTextEs} class="p-2 bg-white rounded-md" />
+				{/if}
 			</div>
 			<div class="flex flex-col gap-2">
-				<label for="description">Descripción</label>
-				<textarea
-					id="description"
-					class={`min-h-40 max-h-50 font-${$form.descriptionFont} border-2 border-dashed border-white p-2 bg-gray-600 text-white`}
-					bind:value={$form.description}
-				></textarea>
+				<div>
+					<label for="description">Descripción</label>
+					<label class="bg-vector-orange border-2 border-black p-1" for="desc-lang"
+						>{english ? 'Ingles' : 'Español'}</label
+					>
+					<input type="checkbox" id="desc-lang" bind:checked={english} hidden />
+				</div>
+				{#if english}
+					<textarea
+						id="description"
+						class={`min-h-40 max-h-50 font-${$form.descriptionFont} border-2 border-dashed border-white p-2 bg-gray-600 text-white`}
+						bind:value={$form.descriptionEn}
+					></textarea>
+				{:else}
+					<textarea
+						id="description"
+						class={`min-h-40 max-h-50 font-${$form.descriptionFont} border-2 border-dashed border-white p-2 bg-gray-600 text-white`}
+						bind:value={$form.descriptionEs}
+					></textarea>
+				{/if}
 			</div>
 
 			<div class="my-2">
@@ -199,7 +228,8 @@
 				<label for="sculpture">Escultura</label>
 				<input id="sculpture" type="checkbox" bind:checked={$form.sculpture} />
 			</div>
-			<button class="bg-green-500 p-2 rounded-md hover:bg-orange-800 my-5 self-start"
+			<button
+				class="bg-green-500 p-2 rounded-md hover:bg-orange-800 my-5 self-start transition-colors cursor-pointer"
 				>Actualizar
 			</button>
 		</fieldset>

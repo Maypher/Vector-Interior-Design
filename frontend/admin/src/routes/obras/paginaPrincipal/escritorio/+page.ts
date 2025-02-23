@@ -6,7 +6,7 @@ export const load = async ({ fetch }) => {
             mainPageImages {
                 id
                 filename
-                altText
+                altTextEs
                 mainImageConfig {
                     id
                     descriptionEs

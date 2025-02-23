@@ -60,7 +60,7 @@
 					image {
 						id
 						filename
-						altText
+						altTextEs
 					}
 				}
 			}
@@ -196,7 +196,7 @@
 					bind:w={imageData.mainImageConfig.phoneConfig.imageBorders.w}
 					class={`relative m-auto transition-all ${!imageData.mainImageConfig.phoneConfig.overflow ? 'w-5/6' : 'w-full'}`}
 				>
-					<img src={`${PUBLIC_imageURL}${imageData.filename}`} alt={imageData.altText} />
+					<img src={`${PUBLIC_imageURL}${imageData.filename}`} alt={imageData.altTextEs} />
 					<div class="absolute top-0 flex justify-between w-full">
 						<div>
 							<button
@@ -255,7 +255,7 @@
 					{#if imageData.mainImageConfig.phoneConfig.imageBorders.n}
 						<div class="bg-vector-orange max-w-83/10 mx-auto mb-20 h-px w-full"></div>
 					{/if}
-					<img src={`${PUBLIC_imageURL}${imageData.filename}`} alt={imageData.altText} />
+					<img src={`${PUBLIC_imageURL}${imageData.filename}`} alt={imageData.altTextEs} />
 					{#if imageData.mainImageConfig.phoneConfig.imageBorders.s}
 						<div class="bg-vector-orange max-w-83/10 mx-auto mt-20 h-px w-full"></div>
 					{/if}
@@ -425,7 +425,7 @@
 				>
 					<img
 						src={`${PUBLIC_imageURL}${updatedMainPageImages.at(-1)!.filename}`}
-						alt={updatedMainPageImages.at(-1)!.altText}
+						alt={updatedMainPageImages.at(-1)!.altTextEs}
 						class="@lg:max-w-2/3 max-w-full @lg:my-auto @lg:max-h-full"
 					/>
 					<div class="relative flex size-full items-center justify-center gap-5 p-5">

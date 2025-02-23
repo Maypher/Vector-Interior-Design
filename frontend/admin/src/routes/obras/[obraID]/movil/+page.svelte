@@ -24,11 +24,12 @@
 
 	async function updateMobileConfig() {
 		const projectMutation = `
-			mutation updateProject($projectId: Int!, $name: String, $description: String, $area: Int) {
-				updateProject(id: $projectId, name: $name, description: $description, area: $area) {
+			mutation updateProject($projectId: Int!, $name: String, $descriptionEs: String!, $descriptionEn: String!, $area: Int) {
+				updateProject(id: $projectId, name: $name, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
 					id
 					name
-					description
+					descriptionEs
+					descriptionEn
 					area
 				}
 			}
@@ -38,13 +39,14 @@
 		// and that's done in a different page.
 
 		const imageMutation = `
-			mutation updateImage($filename: String!, $description: String, $descriptionFont: String,
+			mutation updateImage($filename: String!, $descriptionEs: String, $descriptionEn: String, $descriptionFont: String,
 			$index: Int, $phoneConfig: PhoneConfigInput) {
-				updateImage(filename: $filename, description: $description, descriptionFont: $descriptionFont,
-				index: $index, phoneConfig: $phoneConfig) {
+				updateImage(filename: $filename, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn,
+				descriptionFont: $descriptionFont, index: $index, phoneConfig: $phoneConfig) {
 					filename
-					altText
-					description
+					altTextEs
+					descriptionEs
+					descriptionEn
 					descriptionFont
 					phoneConfig {
 						borders {
@@ -65,7 +67,8 @@
 			await graphql(projectMutation, {
 				projectId: updatedProjectData.id,
 				name: updatedProjectData.name,
-				description: updatedProjectData.description,
+				descriptionEs: updatedProjectData.descriptionEs,
+				descriptionEn: updatedProjectData.descriptionEn,
 				area: updatedProjectData.area
 			})
 		).updateProject;
@@ -90,7 +93,8 @@
 					const updatedImage = (
 						await graphql(imageMutation, {
 							filename: image.filename,
-							description: image.description,
+							descriptionEs: image.descriptionEs,
+							descriptionEn: image.descriptionEn,
 							descriptionFont: image.descriptionAlignment,
 							index: ordersToUpdate.find((val) => val.id === image.filename)?.newPos,
 							phoneConfig: image.phoneConfig
@@ -145,7 +149,8 @@
 							<div class="max-w-9/10 mx-auto">
 								<EditorDescription
 									id={imageData.filename}
-									bind:descriptionEs={imageData.description}
+									bind:descriptionEs={imageData.descriptionEs}
+									bind:descriptionEn={imageData.descriptionEn}
 									bind:descriptionAlignment={imageData.phoneConfig.descriptionAlignment}
 									bind:descriptionFont={imageData.descriptionFont}
 								/>
@@ -323,18 +328,15 @@
 							Área: {updatedProjectData.area} metros cuadrados
 						</p>
 					{/if}
-					{#if !preview}
-						<div class="my-6">
-							<EditorDescription
-								id={updatedProjectData.id}
-								bind:descriptionEs={updatedProjectData.description}
-							/>
-						</div>
-					{:else}
-						<div class="white markdownDescription my-6 text-justify">
-							{@html mdToHTML(updatedProjectData.description)}
-						</div>
-					{/if}
+					<div class="my-6">
+						<EditorDescription
+							id={updatedProjectData.id}
+							bind:descriptionEs={updatedProjectData.descriptionEs}
+							bind:descriptionEn={updatedProjectData.descriptionEn}
+							descriptionAlignment="text-justify"
+							bind:preview
+						/>
+					</div>
 				</div>
 
 				{#each space.images as image, i (image.filename)}

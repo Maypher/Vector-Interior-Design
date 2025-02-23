@@ -5,7 +5,7 @@ export const load = async ({ fetch }) => {
         query sculptures {
             sculptures {
                 filename
-                altText
+                altTextEs
                 sculptureData {
                     id
                     descriptionEs

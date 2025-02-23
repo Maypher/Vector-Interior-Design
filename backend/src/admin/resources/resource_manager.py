@@ -26,13 +26,15 @@ class AdminResourceManager(ResourceManager):
         self.database_manager = database_manager
         self.allow_private = True
 
-    def create_project(self, name: str, description: str, area: int) -> schemas.Project:
+    def create_project(
+        self, name: str, description_es: str, description_en: str, area: int
+    ) -> schemas.Project:
         """Creates a new project. Data validation is assumed."""
         project_data = self.database_manager.query(
             """
-        INSERT INTO project (name, description, area) VALUES (%s, %s, %s) RETURNING *;
+        INSERT INTO project (name, description_es, description_en, area) VALUES (%s, %s, %s, %s) RETURNING *;
         """,
-            (name, description, area),
+            (name, description_es, description_en, area),
             1,
         )
 
@@ -64,7 +66,8 @@ class AdminResourceManager(ResourceManager):
         self,
         id: int,
         name: str | None = None,
-        description: str | None = None,
+        description_es: str | None = None,
+        description_en: str | None = None,
         area: int | None = None,
         thumbnail: int | None = UNSET,
         index: int | None = None,
@@ -82,6 +85,7 @@ class AdminResourceManager(ResourceManager):
         """
 
         project = self.get_project_by_id(id)
+        logger.debug(description_en)
 
         if not project:
             return
@@ -107,18 +111,23 @@ class AdminResourceManager(ResourceManager):
             """
                 UPDATE project SET 
                 name = COALESCE(%s, name),
-                description = COALESCE(%s, description),
+                description_es = COALESCE(%s, description_es),
+                description_en = COALESCE(%s, description_en),
                 area = COALESCE(%s, area),
                 public = COALESCE(%s, public)
                 WHERE id = %s RETURNING *;
             """,
-            (name, description, area, public, id),
+            (name, description_es, description_en, area, public, id),
             count=1,
             row_factory=rows.class_row(schemas.Project),
         )
 
     def create_space(
-        self, project_id: int, name: str, description: typing.Optional[str]
+        self,
+        project_id: int,
+        name: str,
+        description_es: typing.Optional[str],
+        description_en: typing.Optional[str],
     ) -> typing.Optional[schemas.Space]:
         """Creates a new space for the given project"""
 
@@ -129,9 +138,9 @@ class AdminResourceManager(ResourceManager):
 
         space = self.database_manager.query(
             """
-        INSERT INTO space (name, description, project_id) VALUES (%s, %s, %s) RETURNING *;
+        INSERT INTO space (name, description_es, description_en, project_id) VALUES (%s, %s, %s, %s) RETURNING *;
         """,
-            (name, description, project_id),
+            (name, description_es, description_en, project_id),
             1,
         )
 
@@ -141,7 +150,8 @@ class AdminResourceManager(ResourceManager):
         self,
         id: int,
         new_name: str | None = None,
-        new_description: str | None = None,
+        new_description_es: str | None = None,
+        new_description_en: str | None = None,
         new_index: int | None = None,
     ):
         """
@@ -153,6 +163,7 @@ class AdminResourceManager(ResourceManager):
         :param index: The new zero-based index of the space inside the project.
         """
         space = self.get_space_by_id(id)
+        logger.debug(new_description_en)
 
         if not space:
             return
@@ -161,10 +172,11 @@ class AdminResourceManager(ResourceManager):
             """
                 UPDATE space SET 
                 name = COALESCE(%s, name),
-                description = COALESCE(%s, description)
+                description_es = COALESCE(%s, description_es),
+                description_en = COALESCE(%s, description_en)
                 WHERE id = %s;
             """,
-            (new_name, new_description, id),
+            (new_name, new_description_es, new_description_en, id),
             commit=False,
         )
 
@@ -208,7 +220,8 @@ class AdminResourceManager(ResourceManager):
     async def create_image(
         self,
         image: File,
-        alt_text: str,
+        alt_text_es: str,
+        alt_text_en: str,
         space_id: int,
     ) -> typing.Union[
         schemas.Image,
@@ -230,7 +243,6 @@ class AdminResourceManager(ResourceManager):
             return GraphqlErrors.SpaceNotFoundImage(space_id=space_id)
 
         file_extension = utilities.file_extension(image.name)
-        logger.debug(file_extension)
 
         image_name = uuid.uuid4().hex
         image_filename = f"{image_name}{file_extension}"
@@ -243,10 +255,10 @@ class AdminResourceManager(ResourceManager):
         try:
             data = self.database_manager.query(
                 """
-            INSERT INTO image (filename, alt_text, space_id) VALUES (%s, %s, %s)
+            INSERT INTO image (filename, alt_text_es, alt_text_en, space_id) VALUES (%s, %s, %s, %s)
             RETURNING *;
             """,
-                (image_filename, alt_text, space.id),
+                (image_filename, alt_text_es, alt_text_en, space.id),
                 count=1,
             )
         except Exception as e:
@@ -258,11 +270,13 @@ class AdminResourceManager(ResourceManager):
     def update_image(
         self,
         filename: str,
-        alt_text: str | None = None,
+        alt_text_es: str | None = None,
+        alt_text_en: str | None = None,
         new_index: int | None = None,
         main_page: bool | None = None,
         hide_in_project: bool | None = None,
-        description: str | None = None,
+        description_es: str | None = None,
+        description_en: str | None = None,
         description_font: str | None = None,
         sculpture: bool | None = None,
         phone_config: inputs.PhoneConfigInput | None = None,
@@ -294,10 +308,12 @@ class AdminResourceManager(ResourceManager):
         self.database_manager.query(
             f"""
                 UPDATE image 
-                SET alt_text = COALESCE(%s, alt_text),
+                SET alt_text_es = COALESCE(%s, alt_text_es),
+                alt_text_en = COALESCE(%s, alt_text_en),
                 main_page = COALESCE(%s, main_page),
                 hide_in_project = COALESCE(%s, hide_in_project),
-                description = COALESCE(%s, description),
+                description_es = COALESCE(%s, description_es),
+                description_en = COALESCE(%s, description_en),
                 description_font = COALESCE(%s, description_font),
                 sculpture =  COALESCE(%s, sculpture),
                 phone_config = ROW(
@@ -321,10 +337,12 @@ class AdminResourceManager(ResourceManager):
                 WHERE id = %s
                 """,
             (
-                alt_text,
+                alt_text_es,
+                alt_text_en,
                 main_page,
                 hide_in_project,
-                description,
+                description_es,
+                description_en,
                 description_font,
                 sculpture,
                 (

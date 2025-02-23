@@ -40,7 +40,7 @@
 				</select>
 			</div>
 		{/if}
-		{#if englishDescription}
+		{#if descriptionEn !== undefined && descriptionEs !== undefined}
 			<div class="flex items-center justify-center">
 				<label
 					for={`main-image-desc-lang-${id}`}

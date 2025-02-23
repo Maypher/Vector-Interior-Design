@@ -8,7 +8,8 @@ export const load = async ({ fetch }) => {
                 name
                 thumbnail {
                     filename
-                    altText
+                    altTextEs
+                    altTextEn
                 }
             }
         }

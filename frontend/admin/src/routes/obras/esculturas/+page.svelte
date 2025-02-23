@@ -68,7 +68,7 @@
 						</span>
 						<SculptureConfig
 							filename={sculpture.filename}
-							altText={sculpture.altText}
+							altText={sculpture.altTextEs}
 							spaceId={sculpture.space.id}
 							projectId={sculpture.space.project.id}
 							sculptureData={sculpture.sculptureData}

@@ -71,11 +71,12 @@
 
 	async function updateProjectDesktop() {
 		const projectMutation = `
-			mutation updateProject($projectId: Int!, $name: String, $description: String, $area: Int) {
-				updateProject(id: $projectId, name: $name, description: $description, area: $area) {
+			mutation updateProject($projectId: Int!, $name: String, $descriptionEs: String, $descriptionEn: String, $area: Int) {
+				updateProject(id: $projectId, name: $name, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
 					id
 					name
-					description
+					descriptionEs
+					descriptionEn
 					area
 				}
 			}
@@ -85,13 +86,14 @@
 		// and that's done in a different page.
 
 		const imageMutation = `
-			mutation updateImage($filename: String!, $description: String, $descriptionFont: String,
+			mutation updateImage($filename: String!, $descriptionEs: String, $descriptionEn: String, $descriptionFont: String,
 			$index: Int, $desktopConfig: DesktopConfigInput) {
-				updateImage(filename: $filename, description: $description, descriptionFont: $descriptionFont,
+				updateImage(filename: $filename, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, descriptionFont: $descriptionFont,
 				index: $index, desktopConfig: $desktopConfig) {
 					filename
-					altText
-					description
+					altTextEs
+					descriptionEs
+					descriptionEn
 					descriptionFont
 					desktopConfig {
 						    groupAlignment
@@ -128,7 +130,8 @@
 			await graphql(projectMutation, {
 				projectId: updatedProjectData.id,
 				name: updatedProjectData.name,
-				description: updatedProjectData.description,
+				descriptionEs: updatedProjectData.descriptionEs,
+				descriptionEn: updatedProjectData.descriptionEn,
 				area: updatedProjectData.area
 			})
 		).updateProject;
@@ -153,7 +156,8 @@
 					const updatedImage = (
 						await graphql(imageMutation, {
 							filename: image.filename,
-							description: image.description,
+							descriptionEs: image.descriptionEs,
+							descriptionEn: image.descriptionEn,
 							descriptionFont: image.descriptionFont,
 							index: ordersToUpdate.find((val) => val.id === image.filename)?.newPos,
 							desktopConfig: image.desktopConfig
@@ -309,7 +313,7 @@
 			>
 				<img
 					src={`${PUBLIC_imageURL}${image.filename}`}
-					alt={image.altText}
+					alt={image.altTextEs}
 					class={`object-cover transition-[height] border-vector-orange ${
 						image.desktopConfig.imageBorders.e && preview ? 'border-r-2 px-12' : ''
 					} ${image.desktopConfig.imageBorders.w && preview ? 'border-l-2 px-12' : ''}`}
@@ -324,14 +328,14 @@
 					bind:e={image.desktopConfig.descriptionBorders.e}
 					bind:w={image.desktopConfig.descriptionBorders.w}
 					bind:preview
-					class={`${preview ? 'max-w-1/2' : ''} size-fit! border-vector-orange ${preview && image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
+					class={`${preview ? 'max-w-1/2' : ''} h-fit border-vector-orange ${preview && image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
 						preview && image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
 					} ${preview && image.desktopConfig.descriptionBorders.e ? 'border-r-2 pr-5' : ''} ${
 						preview && image.desktopConfig.descriptionBorders.w ? 'border-l-2 pl-5' : ''
 					}`}
 				>
 					<Movable
-						class={`size-fit! ${
+						class={`h-fit ${
 							image.desktopConfig.descriptionPosition === Directions.N ? 'absolute top-0' : ''
 						} ${image.desktopConfig.descriptionPosition === Directions.S ? 'absolute bottom-0' : ''}`}
 						up={image.desktopConfig.descriptionPosition !== Directions.N
@@ -350,7 +354,8 @@
 					>
 						<EditorDescription
 							id={`description-${image.filename}`}
-							bind:descriptionEs={image.description}
+							bind:descriptionEs={image.descriptionEs}
+							bind:descriptionEn={image.descriptionEn}
 							bind:descriptionFont={image.descriptionFont}
 							bind:descriptionAlignment={image.desktopConfig.descriptionAlignment}
 							bind:preview
@@ -450,7 +455,8 @@
 					<div class="h-fit shrink-0">
 						<EditorDescription
 							id="project-description"
-							bind:descriptionEs={updatedProjectData.description}
+							bind:descriptionEs={updatedProjectData.descriptionEs}
+							bind:descriptionEn={updatedProjectData.descriptionEn}
 							bind:preview
 						/>
 					</div>

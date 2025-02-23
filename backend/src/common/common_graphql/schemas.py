@@ -11,8 +11,13 @@ from sanic.log import logger
 class Project:
     id: int = strawberry.field(description="The ID of the project in the database.")
     name: str = strawberry.field(description="The name of the project.")
-    description: str = strawberry.field(
-        description="The description of the project written in markdown format."
+    description_es: str = (
+        strawberry.field(
+            description="The description of the project in Spanish written in markdown format."
+        ),
+    )
+    description_en: str = strawberry.field(
+        description="The description of the project in English in markdown syntax."
     )
     area: int = strawberry.field(
         description="The area of the project in meters squared."
@@ -50,8 +55,11 @@ class Project:
 class Space:
     id: int = strawberry.field(description="The ID of the space in the database.")
     name: str = strawberry.field(description="The  name of the space.")
-    description: typing.Optional[str] = strawberry.field(
-        description="The description of the space in markdown format. Can be null."
+    description_es: typing.Optional[str] = strawberry.field(
+        description="The description of the space in Spanish in markdown format. Can be null."
+    )
+    description_en: typing.Optional[str] = strawberry.field(
+        description="The description of the space in English in markdown format. Can be null."
     )
     index: float = strawberry.field(
         description="The index of the space for UI ordering purposes. It's a float due to how the database handles reordering."
@@ -96,11 +104,17 @@ class Image:
     filename: str = strawberry.field(
         description="The unique filename of the image. **Use this to fetch the actual image.**"
     )
-    alt_text: str = strawberry.field(
-        description="The alt text of the image. Not to be shown in the UI."
+    alt_text_es: str = strawberry.field(
+        description="The alt text of the image in Spanish. Not to be shown in the UI."
     )
-    description: typing.Optional[str] = strawberry.field(
-        description="The description of the image."
+    alt_text_en: str = strawberry.field(
+        description="The alt text of the image in English. Not to be shown in the UI."
+    )
+    description_es: typing.Optional[str] = strawberry.field(
+        description="The description of the image in Spanish."
+    )
+    description_en: typing.Optional[str] = strawberry.field(
+        description="The description of the image in English."
     )
     description_font: str = strawberry.field(
         description="The font of the description text."

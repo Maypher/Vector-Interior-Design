@@ -66,7 +66,7 @@
 					image {
 						id
 						filename
-						altText
+						altTextEs
 					}
 				}
 			}
@@ -215,7 +215,7 @@
 		>
 			<img
 				src={`${PUBLIC_imageURL}${image.filename}`}
-				alt={image.altText}
+				alt={image.altTextEs}
 				class="h-full max-w-full transition-all"
 			/>
 			<div class="absolute top-0 w-full flex justify-between" class:hidden={preview}>
@@ -561,7 +561,7 @@
 		>
 			<img
 				src={`${PUBLIC_imageURL}${updatedMainPageImages.at(-1)!.filename}`}
-				alt={updatedMainPageImages.at(-1)!.altText}
+				alt={updatedMainPageImages.at(-1)!.altTextEs}
 				class="max-w-2/3 md:max-lg:max-w-full lg:my-auto lg:max-h-full"
 			/>
 			<div class="relative flex size-full items-center justify-center gap-5 p-5">

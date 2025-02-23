@@ -6,7 +6,8 @@ export const load = async ({ fetch, params }) => {
             project(id: $id) {
                 id
                 name
-                description
+                descriptionEs
+                descriptionEn
                 area
                 public
                 spaces {
@@ -14,8 +15,9 @@ export const load = async ({ fetch, params }) => {
                     name
                     images {
                         filename
-                        altText
-                        description
+                        altTextEs
+                        descriptionEs
+                        descriptionEn
                         descriptionFont
                         desktopConfig {
                             groupAlignment

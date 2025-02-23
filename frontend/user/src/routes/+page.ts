@@ -5,7 +5,8 @@ export const load = async ({ fetch }) => {
         query mainPageImages {
             mainPageImages {
                 filename
-                altText
+                altTextEs
+                altTextEn
                 mainImageConfig {
                     descriptionEn
                     descriptionEs

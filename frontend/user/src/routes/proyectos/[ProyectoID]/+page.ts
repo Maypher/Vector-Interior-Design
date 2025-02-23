@@ -7,20 +7,23 @@ export const load = async ({ params, fetch }) => {
             project(id: $id) {
                 id
                 name
-                description
+                descriptionEs
+                descriptionEn
                 area
                 thumbnail {
                     filename
-                    altText
+                    altTextEs
+                    altTextEn
                 }
                 spaces {
                     id
                     name
-                    description
                     images {
                         filename
-                        altText
-                        description
+                        altTextEs
+                        altTextEn
+                        descriptionEs
+                        descriptionEn
                         descriptionFont
                         phoneConfig {
                             borders {

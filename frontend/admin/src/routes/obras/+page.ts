@@ -1,7 +1,7 @@
 import graphql from '$lib/utilities/api.js';
 
 export const load = async ({ fetch }) => {
-    const query = `
+	const query = `
 			query getProjects($name: String) {
 				projects(name: $name) {
 					id
@@ -9,12 +9,12 @@ export const load = async ({ fetch }) => {
 					public
 					thumbnail {
 						filename
-						altText
+						altTextEs
 					}
 				}
 			}	
 		`;
-    const projects = (await graphql(query, {}, fetch)).projects;
+	const projects = (await graphql(query, {}, fetch)).projects;
 
-    return { projects };
+	return { projects };
 }

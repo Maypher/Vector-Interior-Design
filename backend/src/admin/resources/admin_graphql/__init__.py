@@ -92,10 +92,16 @@ class Mutation:
         name: typing.Annotated[
             str, strawberry.argument(description="The name of the new project.")
         ],
-        description: typing.Annotated[
+        description_es: typing.Annotated[
             str,
             strawberry.argument(
-                description="The description of the new project in markdown syntax."
+                description="The description of the new project in Spanish."
+            ),
+        ],
+        description_en: typing.Annotated[
+            str,
+            strawberry.argument(
+                description="The description of the new project in English."
             ),
         ],
         area: typing.Annotated[
@@ -105,7 +111,9 @@ class Mutation:
             ),
         ],
     ) -> schemas.Project:
-        return info.context["resource_manager"].create_project(name, description, area)
+        return info.context["resource_manager"].create_project(
+            name, description_es, description_en, area
+        )
 
     @strawberry.mutation(
         description="Deletes a given project alongside all its spaces and images. Returns a boolean indicating if the project was successfully deleted."
@@ -132,10 +140,16 @@ class Mutation:
             typing.Optional[str],
             strawberry.argument(description="The new name of the project."),
         ] = None,
-        description: typing.Annotated[
+        description_es: typing.Annotated[
             typing.Optional[str],
             strawberry.argument(
-                description="The new description of the project in markdown format."
+                description="The new description of the project in Spanish in markdown format."
+            ),
+        ] = None,
+        description_en: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(
+                description="The new description in English in markdown format"
             ),
         ] = None,
         area: typing.Annotated[
@@ -164,7 +178,7 @@ class Mutation:
         ] = None,
     ) -> typing.Optional[schemas.Project]:
         return info.context["resource_manager"].update_project(
-            id, name, description, area, thumbnail, index, public
+            id, name, description_es, description_en, area, thumbnail, index, public
         )
 
     @strawberry.mutation(description="Creates a new space.")
@@ -181,15 +195,21 @@ class Mutation:
             str,
             strawberry.argument(description="The name of the new space."),
         ],
-        description: typing.Annotated[
+        description_es: typing.Annotated[
             typing.Optional[str],
             strawberry.argument(
-                description="The description of the new space in markdown format. **Can be left blank.**"
+                description="The description of the new space in Spanish markdown format. **Can be left blank.**"
+            ),
+        ] = None,
+        description_en: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(
+                description="The description of the new space in English markdown format. **Can be left blank.**"
             ),
         ] = None,
     ) -> typing.Union[schemas.Space, errors.ProjectNotFoundSpace]:
         return info.context["resource_manager"].create_space(
-            project_id, name, description
+            project_id, name, description_es, description_en
         )
 
     @strawberry.mutation(
@@ -206,10 +226,16 @@ class Mutation:
             typing.Optional[str],
             strawberry.argument(description="The new name of the space."),
         ] = None,
-        description: typing.Annotated[
+        description_es: typing.Annotated[
             typing.Optional[str],
             strawberry.argument(
-                description="The new description of the space in markdown format. ***Leave blank to remove description.**"
+                description="The new description of the space in Spanish markdown format. ***Leave blank to remove description.**"
+            ),
+        ] = None,
+        description_en: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(
+                description="The new description of the space in English markdown format. ***Leave blank to remove description.**"
             ),
         ] = None,
         index: typing.Annotated[
@@ -220,7 +246,9 @@ class Mutation:
         ] = None,
     ) -> typing.Optional[schemas.Space]:
         resource_manager: AdminResourceManager = info.context["resource_manager"]
-        return resource_manager.update_space(id, name, description, index)
+        return resource_manager.update_space(
+            id, name, description_es, description_en, index
+        )
 
     @strawberry.mutation(
         description="Deletes a given space alongside all its images returning the deleted data. **If null it means the space wasn't found.**"
@@ -250,17 +278,23 @@ class Mutation:
             strawberry.file_uploads.Upload,
             strawberry.argument(description="The image file to upload."),
         ],
-        alt_text: typing.Annotated[
+        alt_text_es: typing.Annotated[
             str,
             strawberry.argument(
                 description="The alt text of the image. This is meant for impaired vision, not a description."
+            ),
+        ],
+        alt_text_en: typing.Annotated[
+            str,
+            strawberry.argument(
+                description="The alt text of the image in English. This is meant for impaired vision, not a description."
             ),
         ],
     ) -> typing.Union[
         schemas.Image, errors.SpaceNotFoundImage, errors.UnsupportedFileType
     ]:
         return await info.context["resource_manager"].create_image(
-            image, alt_text, space_id
+            image, alt_text_es, alt_text_en, space_id
         )
 
     @strawberry.mutation(
@@ -276,9 +310,17 @@ class Mutation:
             typing.Optional[str],
             strawberry.argument(description="The new alt text of the image."),
         ] = None,
-        description: typing.Annotated[
+        description_es: typing.Annotated[
             typing.Optional[str],
-            strawberry.argument(description="The new description of the image."),
+            strawberry.argument(
+                description="The new description of the image in Spanish."
+            ),
+        ] = None,
+        description_en: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(
+                description="The new description of the image in English."
+            ),
         ] = None,
         description_font: typing.Annotated[
             typing.Optional[str],
@@ -321,7 +363,8 @@ class Mutation:
             index,
             main_page,
             hide_in_project,
-            description,
+            description_es,
+            description_en,
             description_font,
             sculpture,
             phone_config,

@@ -54,7 +54,7 @@
 					<a href={`/proyectos/${project.id}`} class="flex flex-col gap-6 px-8">
 						<img
 							src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
-							alt={project.thumbnail.altText}
+							alt={project.thumbnail.altTextEs}
 						/>
 						<p class="font-Agency-FB text-[1.7rem]">{project.name}</p>
 					</a>
@@ -81,7 +81,7 @@
 			>
 				<img
 					src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
-					alt={project.thumbnail.altText}
+					alt={project.thumbnail.altTextEs}
 					class="h-full"
 				/>
 				<p class="font-Agency-FB ml-2 text-xl text-white">{project.name}</p>
