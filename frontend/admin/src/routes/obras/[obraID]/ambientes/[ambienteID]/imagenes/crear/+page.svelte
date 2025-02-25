@@ -62,7 +62,8 @@
 
 				const variables = {
 					file: null,
-					altText: createForm.data.altTextEs,
+					altTextEs: createForm.data.altTextEs,
+					altTextEn: createForm.data.altTextEn,
 					spaceId: data.ambienteID
 				};
 

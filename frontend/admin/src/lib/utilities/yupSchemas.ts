@@ -35,8 +35,8 @@ export const spaceCreateSchema = object({
 });
 
 export const createImageSchema = object({
-    altTextEs: string().required("Texto alternativo requerido.").length(255),
-    altTextEn: string().required("Texto alternativo en ingles requerido.").length(255)
+    altTextEs: string().required("Texto alternativo requerido.").max(255),
+    altTextEn: string().required("Texto alternativo en ingles requerido.").max(255)
 });
 
 export const imageUpdateSchema = object({

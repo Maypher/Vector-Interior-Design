@@ -1,6 +1,9 @@
 <script lang="ts">
 	import logo from '$lib/images/logo.svg';
 	import pencil from '$lib/images/pencil.svg';
+	import { getI18n } from '$lib/i18n';
+
+	const i18n = getI18n();
 </script>
 
 <div
@@ -11,13 +14,12 @@
 	</a>
 	<div class="flex flex-col items-center gap-20 text-center text-xl">
 		<p class="relative z-10 md:whitespace-pre-wrap">
-			{`Todo proyecto requiere de un diseño complejo, basado en lineamientos claros y objetivos, sin embargo a la hora 
-de crear se pueden romper las reglas manteniendo siempre armonía, ofreciendo exclusividad y mejoras en tu calidad de vida.`}
+			{$i18n.t('conclusionMain')}
 		</p>
 		<p>
-			Es por eso que...
+			{$i18n.t('conclusionSecondary')}
 			<b class="relative block md:inline">
-				Ser diferente tiene sus ventajas <b class="text-vector-orange">.</b>
+				{$i18n.t('slogan')}<b class="text-vector-orange ml-1">.</b>
 
 				<img
 					src={pencil}

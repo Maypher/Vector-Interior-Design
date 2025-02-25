@@ -3,6 +3,7 @@
 	import logo from '$lib/images/logo.svg';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
+	import { getI18n } from '$lib/i18n';
 
 	const { data }: { data: PageData } = $props();
 	const projects = data.projects;
@@ -38,10 +39,12 @@
 			observer.observe(arrowLimit);
 		}
 	});
+
+	const i18n = getI18n();
 </script>
 
 <header class="bg-vector-grey absolute top-0 z-10 flex h-24 w-full justify-center p-5 lg:static">
-	<a href="/" class="h-full transition-transform hover:scale-125">
+	<a href={`/${$i18n.language}`} class="h-full transition-transform hover:scale-125">
 		<img src={logo} alt="Vector: Interior Design" class="h-full" />
 	</a>
 </header>
@@ -51,7 +54,7 @@
 		{#if project.thumbnail}
 			<div class="flex h-dvh snap-center items-center justify-center bg-black text-white">
 				<div class="relative top-16">
-					<a href={`/proyectos/${project.id}`} class="flex flex-col gap-6 px-8">
+					<a href={`/${$i18n.language}/proyectos/${project.id}`} class="flex flex-col gap-6 px-8">
 						<img
 							src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
 							alt={project.thumbnail.altTextEs}
@@ -76,7 +79,7 @@
 			class={`flex basis-1/3 ${i <= 2 ? 'h-[calc(100svh-6rem)]' : 'h-screen'} w-fit flex-col justify-center self-center justify-self-center`}
 		>
 			<a
-				href={`/proyectos/${project.id}`}
+				href={`/${$i18n.language}/proyectos/${project.id}`}
 				class="m-auto flex h-2/3 flex-col items-start gap-y-2 transition-transform hover:scale-110"
 			>
 				<img

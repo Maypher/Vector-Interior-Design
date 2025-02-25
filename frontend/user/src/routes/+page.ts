@@ -1,59 +1,10 @@
-import graphql from '$lib/utilities/api.js'
+import { goto } from '$app/navigation'
+import { browser } from '$app/environment';
+import { redirect } from '@sveltejs/kit';
 
-export const load = async ({ fetch }) => {
-    const query = `
-        query mainPageImages {
-            mainPageImages {
-                filename
-                altTextEs
-                altTextEn
-                mainImageConfig {
-                    descriptionEn
-                    descriptionEs
-                    descriptionFont
-                    descriptionAlignment
-                    descriptionFontSize
-                    phoneConfig {
-                        descriptionPosition
-                        logoPosition
-                        overflow
-                        logoBorders {
-                            n
-                            s
-                            e
-                            w
-                        }
-                        imageBorders {
-                            n
-                            s
-                            e
-                            w
-                        }
-                    }
-                    desktopConfig {
-                        overflow
-                        imagePosition
-                        descriptionPosition
-                        descriptionLogoPosition
-                        descriptionBorders {
-                            n
-                            s
-                            e
-                            w
-                        }
-                        logoPosition
-                        logoBorders {
-                            n
-                            s
-                            e
-                            w
-                        }
-                    }
-                }
-            }
-        }
-    `;
-
-    const mainImages = (await graphql(query, {}, fetch)).mainPageImages;
-    return { mainImages };
+export const load = async ({ parent }) => {
+    const { selectedLanguage } = await parent();
+    const redirectTo = `/${selectedLanguage}`;
+    if (browser) await goto(redirectTo);
+    else redirect(302, redirectTo);
 }

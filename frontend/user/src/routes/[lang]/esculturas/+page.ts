@@ -1,15 +1,16 @@
 import graphql from "$lib/utilities/api";
 
-export const load = async ({ fetch }) => {
+export const load = async ({ fetch, parent }) => {
+    const { selectedLanguage } = await parent();
+    const english = selectedLanguage === 'en';
+
     const query = `
         query {
             sculptures {
                 filename
-                altTextEs
-                altTextEn
+                altText: ${english ? 'altTextEn' : 'altTextEs'}
                 sculptureData {
-                    descriptionEs
-                    descriptionEn
+                    description: ${english ? 'descriptionEn' : 'descriptionEs'}
                 }
                 desktopConfig {
                     groupAlignment

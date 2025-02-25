@@ -6,6 +6,7 @@
 	import mdToHtml from '$lib/utilities/markdown';
 	import * as enums from '$lib/utilities/enums';
 	import symbol from '$lib/images/symbol.svg';
+	import { getI18n } from '$lib/i18n';
 
 	const { data }: { data: PageData } = $props();
 	const projectData = data.projectData;
@@ -58,6 +59,8 @@
 
 		return newSpaces;
 	});
+
+	const i18n = getI18n();
 </script>
 
 {#snippet descriptionContainer(description: string, alignment: string, font: string)}
@@ -96,14 +99,14 @@
 			>
 				<img
 					src={`${PUBLIC_imagesUrl}${image.filename}`}
-					alt={image.altTextEs}
+					alt={image.altText}
 					class={`border-vector-orange w-auto object-cover ${
 						image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
 					} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''}`}
 					style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
 				/>
 			</div>
-			{#if image.descriptionEs && image.desktopConfig.descriptionPosition}
+			{#if image.description && image.desktopConfig.descriptionPosition}
 				<div
 					class={`max-w-1/2 border-vector-orange relative size-fit ${image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
 						image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
@@ -113,7 +116,7 @@
 				>
 					<div class={`m-auto size-fit`}>
 						{@render descriptionContainer(
-							image.descriptionEs,
+							image.description,
 							image.desktopConfig.descriptionAlignment,
 							image.descriptionFont
 						)}
@@ -143,10 +146,10 @@
 		class:flex-col={image.phoneConfig?.descriptionPos === enums.Directions.N}
 		class:flex-col-reverse={image.phoneConfig?.descriptionPos === enums.Directions.S}
 	>
-		{#if image.descriptionEs && image.phoneConfig.descriptionPos}
+		{#if image.description && image.phoneConfig.descriptionPos}
 			<div class="mx-auto max-w-[90vw]">
 				{@render descriptionContainer(
-					image.descriptionEs,
+					image.description,
 					image.phoneConfig.descriptionAlignment,
 					image.descriptionFont
 				)}
@@ -154,7 +157,7 @@
 		{/if}
 		<img
 			src={`${PUBLIC_imagesUrl}${image.filename}`}
-			alt={image.altTextEs}
+			alt={image.altText}
 			class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig?.alignment) ? 'w-4/5' : ''}`}
 			class:ml-auto={image.phoneConfig?.alignment === enums.Alignment.RIGHT}
 			class:mr-auto={image.phoneConfig?.alignment === enums.Alignment.LEFT}
@@ -165,7 +168,7 @@
 <div class="relative min-h-screen bg-black">
 	<header class="bg-vector-grey sticky top-0 z-10 h-20 p-4 lg:static">
 		<div class="flex h-full items-center justify-center gap-10">
-			<a href="/" class="h-full transition-transform hover:scale-105">
+			<a href={`/${$i18n.language}`} class="h-full transition-transform hover:scale-105">
 				<img src={logo} alt="Vector: Interior Design" class="h-full" />
 			</a>
 		</div>
@@ -177,7 +180,7 @@
 				<div class="my-20">
 					<img
 						src={`${PUBLIC_imagesUrl}${image.filename}`}
-						alt={image.altTextEs}
+						alt={image.altText}
 						class:px-8={image.phoneConfig.alignment !== enums.Alignment.OVERFLOW}
 					/>
 					<div class="mx-8 my-12 text-white">
@@ -188,7 +191,7 @@
 						</h1>
 						<p class="font-Arial text-right text-sm">Área: {projectData.area} metros cuadrados</p>
 						<div class="white markdownDescription my-6 text-justify">
-							{@html mdToHtml(projectData.descriptionEs)}
+							{@html mdToHtml(projectData.description)}
 						</div>
 					</div>
 				</div>
@@ -209,10 +212,10 @@
 	<div class="hidden text-white lg:block">
 		{#each groupedImageData.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image}
-				<div class="p-15 flex h-[calc(100vh-5rem)] w-fit items-center justify-evenly gap-5">
+				<div class="p-15 flex h-[calc(100vh-5rem)] w-full items-center justify-evenly gap-5">
 					<img
 						src={`${PUBLIC_imagesUrl}${image.filename}`}
-						alt={image.altTextEs}
+						alt={image.altText}
 						class={`border-vector-orange object-cover ${
 							image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
 						} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''}`}
@@ -224,13 +227,13 @@
 								{projectData.name}
 							</h1>
 							<p class="grow self-end text-right text-white">
-								Área: {projectData.area}
-								metros cuadrados
+								{$i18n.t('area')}: <b>{projectData.area}</b>
+								{$i18n.t('areaUnits')}
 							</p>
 						</div>
 
 						<div class="h-fit shrink-0">
-							{@render descriptionContainer(projectData.descriptionEs, 'text-left', 'Arial')}
+							{@render descriptionContainer(projectData.description, 'text-left', 'Arial')}
 						</div>
 
 						{#if Array.isArray(image)}
@@ -287,7 +290,9 @@
 		class="-translate-1/2 absolute bottom-0 left-1/2 w-fit text-white transition-transform hover:scale-105"
 	>
 		<a
-			href={finalProject ? '/proyectos/conclusion' : `/proyectos`}
+			href={finalProject
+				? `/${$i18n.language}/proyectos/conclusion`
+				: `/${$i18n.language}/proyectos`}
 			class="font-Agency-FB gradient-background text-3xl text-transparent"
 			>Siguiente -&gt;
 		</a>

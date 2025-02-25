@@ -126,6 +126,7 @@
 				bind:s={imageData.phoneConfig.borders.s}
 				bind:e={imageData.phoneConfig.borders.e}
 				bind:w={imageData.phoneConfig.borders.w}
+				bind:preview
 			>
 				<div
 					class={`border-vector-orange gap-12 ${
@@ -145,6 +146,7 @@
 							down={imageData.phoneConfig.descriptionPos !== Directions.S
 								? () => (imageData.phoneConfig.descriptionPos = Directions.S)
 								: undefined}
+							bind:preview
 						>
 							<div class="max-w-9/10 mx-auto">
 								<EditorDescription
@@ -153,6 +155,7 @@
 									bind:descriptionEn={imageData.descriptionEn}
 									bind:descriptionAlignment={imageData.phoneConfig.descriptionAlignment}
 									bind:descriptionFont={imageData.descriptionFont}
+									bind:preview
 								/>
 							</div>
 						</Movable>
@@ -200,40 +203,42 @@
 				</div>
 			</Borders>
 		{:else}
-			<div
-				class={`border-vector-orange my-20 gap-12 flex ${imageData.phoneConfig.borders.e && 'border-r-2 pr-12'} ${imageData.phoneConfig.borders.w && 'border-l-2 pl-12'}`}
-				class:px-8={imageData.phoneConfig.alignment !== Alignment.Sangrar}
-				class:justify-center={imageData.phoneConfig.alignment === Alignment.Centro}
-				class:flex-row={imageData.phoneConfig.descriptionPos === Directions.W}
-				class:flex-row-reverse={imageData.phoneConfig.descriptionPos === Directions.E}
-				class:flex-col={imageData.phoneConfig.descriptionPos === Directions.N}
-				class:flex-col-reverse={imageData.phoneConfig.descriptionPos === Directions.S}
-			>
-				{#if imageData.description && imageData.phoneConfig.descriptionPos}
-					<div
-						class={`max-w-9/10 mx-auto markdownDescription font-${imageData.descriptionFont} ${imageData.phoneConfig.descriptionAlignment}`}
-					>
-						{@html mdToHTML(imageData.description)}
+			<div class:px-8={imageData.phoneConfig.alignment !== Alignment.Sangrar}>
+				<div
+					class={`border-vector-orange my-20 gap-12 flex ${
+						imageData.phoneConfig.borders.e && 'border-r-2 pr-30'
+					} ${imageData.phoneConfig.borders.w && 'border-l-2 pl-30'} ${
+						imageData.phoneConfig.borders.n && 'border-t-2 pt-30'
+					} ${imageData.phoneConfig.borders.s && 'border-b-2 pb-30'}`}
+					class:justify-center={imageData.phoneConfig.alignment === Alignment.Centro}
+					class:flex-row={imageData.phoneConfig.descriptionPos === Directions.W}
+					class:flex-row-reverse={imageData.phoneConfig.descriptionPos === Directions.E}
+					class:flex-col={imageData.phoneConfig.descriptionPos === Directions.N}
+					class:flex-col-reverse={imageData.phoneConfig.descriptionPos === Directions.S}
+				>
+					{#if imageData.descriptionEs && imageData.phoneConfig.descriptionPos}
+						<div
+							class={`max-w-9/10 mx-auto markdownDescription font-${imageData.descriptionFont} ${imageData.phoneConfig.descriptionAlignment}`}
+						>
+							<EditorDescription
+								id={imageData.filename}
+								bind:descriptionEs={imageData.descriptionEs}
+								bind:descriptionEn={imageData.descriptionEn}
+								bind:descriptionAlignment={imageData.phoneConfig.descriptionAlignment}
+								bind:descriptionFont={imageData.descriptionFont}
+								bind:preview
+							/>
+						</div>
+					{/if}
+					<div>
+						<img
+							src={`${PUBLIC_imageURL}${imageData.filename}`}
+							alt={imageData.altText}
+							class={`${[Alignment.Derecha, Alignment.Izquierda].includes(imageData.phoneConfig.alignment) ? 'w-2/3' : ''}`}
+							class:ml-auto={imageData.phoneConfig.alignment === Alignment.Derecha}
+							class:mr-auto={imageData.phoneConfig.alignment === Alignment.Izquierda}
+						/>
 					</div>
-				{/if}
-				<div>
-					{#if imageData.phoneConfig.borders.n}
-						<div class:px-8={imageData.phoneConfig.alignment === Alignment.Sangrar}>
-							<div class="h-0.5 w-full bg-vector-orange mb-12"></div>
-						</div>
-					{/if}
-					<img
-						src={`${PUBLIC_imageURL}${imageData.filename}`}
-						alt={imageData.altText}
-						class={`${[Alignment.Derecha, Alignment.Izquierda].includes(imageData.phoneConfig.alignment) ? 'w-2/3' : ''}`}
-						class:ml-auto={imageData.phoneConfig.alignment === Alignment.Derecha}
-						class:mr-auto={imageData.phoneConfig.alignment === Alignment.Izquierda}
-					/>
-					{#if imageData.phoneConfig.borders.s}
-						<div class:px-8={imageData.phoneConfig.alignment === Alignment.Sangrar}>
-							<div class="h-0.5 w-full bg-vector-orange mt-20"></div>
-						</div>
-					{/if}
 				</div>
 			</div>
 		{/if}

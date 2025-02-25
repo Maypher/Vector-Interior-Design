@@ -5,9 +5,12 @@
 	import mdToHtml from '$lib/utilities/markdown';
 	import logo from '$lib/images/logo.svg';
 	import '$lib/styles/markdown.css';
+	import { getI18n } from '$lib/i18n';
 
 	const { data }: { data: PageData } = $props();
 	const sculptures = data.sculptures;
+
+	const i18n = getI18n();
 
 	let groupedSculptures = $derived.by(() => {
 		let newImages = [];
@@ -74,8 +77,8 @@
 		<a href="/#nav" class="h-full transition-transform hover:scale-125">
 			<img src={logo} alt="Vector: Interior Design" class="h-full" />
 		</a>
-		<p class="font-Agency-FB text-center text-lg md:text-3xl" style="word-spacing: 0.5 trem;">
-			Obras únicas y exclusivas
+		<p class="font-Agency-FB text-center text-lg md:text-3xl" style="word-spacing: 0.5 rem;">
+			{$i18n.t('sculptureHeader')}
 		</p>
 	</header>
 	<div class="md:hidden">
@@ -90,14 +93,14 @@
 					class:px-8={i !== 0}
 					class="w-full"
 				/>
-				{#if image.sculptureData.descriptionEs}
+				{#if image.sculptureData.description}
 					<div
 						class="border-b-vector-orange mx-auto flex w-3/4 flex-col justify-between gap-10 border-b-2 pb-4"
 					>
 						<img src={symbol} alt="Logo" class="size-28 w-fit self-end" />
 						<div class="flex items-end justify-between">
 							<div class="markdownDescription self-start text-white">
-								{@html mdToHtml(image.sculptureData.descriptionEs)}
+								{@html mdToHtml(image.sculptureData.description)}
 							</div>
 							{#if lastImage}
 								<button
@@ -130,9 +133,9 @@
 							/>
 						{/each}
 					</div>
-					{#if finalImage.sculptureData.descriptionEs}
+					{#if finalImage.sculptureData.description}
 						{@render desktopImageDescription(
-							finalImage.sculptureData.descriptionEs,
+							finalImage.sculptureData.description,
 							i === groupedSculptures.length - 1
 						)}
 					{/if}
@@ -147,9 +150,9 @@
 						class:px-8={i !== 0}
 						class="h-13/20 max-h-4/5 w-auto"
 					/>
-					{#if sculpture.sculptureData.descriptionEs}
+					{#if sculpture.sculptureData.description}
 						{@render desktopImageDescription(
-							sculpture.sculptureData.descriptionEs,
+							sculpture.sculptureData.description,
 							i === groupedSculptures.length - 1
 						)}
 					{/if}

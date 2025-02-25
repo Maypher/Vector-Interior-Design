@@ -10,7 +10,6 @@
 	import { onMount } from 'svelte';
 	import mdToHtml from '$lib/utilities/markdown';
 	import '$lib/styles/markdown.css';
-
 	import { getI18n } from '$lib/i18n';
 
 	interface Borders {
@@ -22,11 +21,9 @@
 
 	interface mainImageData {
 		filename: string;
-		altTextEs: string;
-		altTextEn: string;
+		altText: string;
 		mainImageConfig: {
-			descriptionEs?: string;
-			descriptionEn?: string;
+			description?: string;
 			descriptionFontSize: string;
 			descriptionFont: string;
 			descriptionAlignment: string;
@@ -98,12 +95,12 @@
 					: ''
 			} ${imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.N ? 'flex-col' : ''}`}
 		>
-			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.descriptionEs}
+			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.description}
 				<div
 					class={`class m-auto w-10/12 text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription`}
 					style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
 				>
-					{@html mdToHtml(imageData.mainImageConfig.descriptionEs)}
+					{@html mdToHtml(imageData.mainImageConfig.description)}
 				</div>
 			{/if}
 			<div
@@ -112,7 +109,7 @@
 				{#if imageData.mainImageConfig.phoneConfig.imageBorders.n}
 					<div class="bg-vector-orange max-w-83/10 mx-auto mb-20 h-px w-full"></div>
 				{/if}
-				<img src={`${PUBLIC_imagesUrl}${imageData.filename}`} alt={imageData.altTextEs} />
+				<img src={`${PUBLIC_imagesUrl}${imageData.filename}`} alt={imageData.altText} />
 				{#if imageData.mainImageConfig.phoneConfig.imageBorders.s}
 					<div class="bg-vector-orange max-w-83/10 mx-auto mt-20 h-px w-full"></div>
 				{/if}
@@ -139,12 +136,12 @@
 					: 'center'
 		};`}
 	>
-		{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.descriptionEs}
+		{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.description}
 			<div
 				class={`class m-auto w-10/12 p-5 text-center  text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription`}
 				style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
 			>
-				{@html mdToHtml(imageData.mainImageConfig.descriptionEs)}
+				{@html mdToHtml(imageData.mainImageConfig.description)}
 			</div>
 		{/if}
 		<div
@@ -153,7 +150,7 @@
 			{#if imageData.mainImageConfig.phoneConfig.imageBorders.n}
 				<div class="bg-vector-orange max-w-83/10 mx-auto mb-20 h-px w-full"></div>
 			{/if}
-			<img src={`${PUBLIC_imagesUrl}${imageData.filename}`} alt={imageData.altTextEs} />
+			<img src={`${PUBLIC_imagesUrl}${imageData.filename}`} alt={imageData.altText} />
 			{#if imageData.mainImageConfig.phoneConfig.imageBorders.s}
 				<div class="bg-vector-orange max-w-83/10 mx-auto mt-20 h-px w-full"></div>
 			{/if}
@@ -191,7 +188,7 @@
 	>
 		<img
 			src={`${PUBLIC_imagesUrl}${imageData.filename}`}
-			alt={imageData.altTextEs}
+			alt={imageData.altText}
 			class="h-full max-w-full transition-all"
 		/>
 
@@ -216,7 +213,7 @@
 						/>
 					</div>
 				{/if}
-				{#if imageData.mainImageConfig.desktopConfig.descriptionPosition && imageData.mainImageConfig.descriptionEs}
+				{#if imageData.mainImageConfig.desktopConfig.descriptionPosition && imageData.mainImageConfig.description}
 					<div
 						class={`markdownDescription border-vector-orange text-white ${imageData.mainImageConfig.descriptionAlignment} font-${imageData.mainImageConfig.descriptionFont}`}
 						class:border-t-4={imageData.mainImageConfig.desktopConfig.descriptionBorders.n}
@@ -224,7 +221,7 @@
 						class:border-r-4={imageData.mainImageConfig.desktopConfig.descriptionBorders.e}
 						class:border-l-4={imageData.mainImageConfig.desktopConfig.descriptionBorders.w}
 					>
-						{@html mdToHtml(imageData.mainImageConfig.descriptionEs)}
+						{@html mdToHtml(imageData.mainImageConfig.description)}
 					</div>
 				{/if}
 			</div>
@@ -233,7 +230,7 @@
 {/snippet}
 
 <header class="bg-vector-grey flex h-28 items-center justify-center gap-20 p-5">
-	<a href="/" class="hover:scale-120 h-full transition-transform">
+	<a href={`/${$i18n.language}`} class="hover:scale-120 h-full transition-transform">
 		<img src={logo} alt="Vector: Interior Design" class="h-full" />
 	</a>
 </header>
@@ -262,7 +259,7 @@
 		class="mx-auto flex h-full w-3/4 flex-col items-center justify-center gap-20 text-justify indent-3 text-lg text-white lg:w-1/2 lg:items-end"
 	>
 		<p>
-			{`De lo sublime a lo majestuoso, el límite de este  este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero y a veces hasta inimaginable.`}
+			{$i18n.t('mainPageMsg')}
 		</p>
 		<img src={logoWhite} alt="Vector: Interior Design" class="w-44" />
 	</div>
@@ -297,26 +294,27 @@
 >
 	<img
 		src={`${PUBLIC_imagesUrl}${mainImages.at(-1)!.filename}`}
-		alt={mainImages.at(-1)!.altTextEs}
+		alt={mainImages.at(-1)!.altText}
 		class="lg:max-w-2/3 max-w-full lg:my-auto lg:max-h-full"
 	/>
 	<div class="relative flex size-full items-center justify-center gap-5 p-5">
 		<a
-			href="/esculturas/"
+			href={`${$i18n.language}/esculturas/`}
 			class="hover-link relative top-10 h-fit w-fit text-4xl text-white"
 			style="font-family: Agency-FB;"
 		>
-			Esculturas
+			{$i18n.t('sculptures')}
 		</a>
 		<div class="-z-10 flex size-full w-[2px] flex-col items-center overflow-visible" id="pencil">
 			<img src={symbol} alt="V" class="min-h-32 min-w-32" />
 			<div class="bg-vector-orange relative bottom-5 h-full w-[2px]"></div>
 		</div>
 		<a
-			href="/proyectos/"
+			href={`/${$i18n.language}/proyectos/`}
 			class="hover-link relative bottom-10 w-fit text-4xl text-white after:relative after:top-1"
 			style="font-family: Agency-FB;"
-			>Proyectos
+		>
+			{$i18n.t('projects')}
 		</a>
 	</div>
 </div>
