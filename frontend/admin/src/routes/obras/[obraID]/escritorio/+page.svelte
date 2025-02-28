@@ -328,7 +328,7 @@
 					bind:e={image.desktopConfig.descriptionBorders.e}
 					bind:w={image.desktopConfig.descriptionBorders.w}
 					bind:preview
-					class={`${preview ? 'max-w-1/2' : ''} h-fit border-vector-orange ${preview && image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
+					class={`${preview ? 'max-w-1/2 w-fit' : ''} grow h-fit border-vector-orange ${preview && image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
 						preview && image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
 					} ${preview && image.desktopConfig.descriptionBorders.e ? 'border-r-2 pr-5' : ''} ${
 						preview && image.desktopConfig.descriptionBorders.w ? 'border-l-2 pl-5' : ''
@@ -457,6 +457,7 @@
 							id="project-description"
 							bind:descriptionEs={updatedProjectData.descriptionEs}
 							bind:descriptionEn={updatedProjectData.descriptionEn}
+							descriptionFont={'Arial'}
 							bind:preview
 						/>
 					</div>

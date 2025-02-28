@@ -49,15 +49,19 @@
 	</a>
 </header>
 
-<div class="h-dvh snap-y snap-mandatory overflow-y-scroll lg:hidden">
+<div class="h-svh snap-y snap-mandatory overflow-y-scroll lg:hidden">
 	{#each projects as project, i (project.id)}
 		{#if project.thumbnail}
-			<div class="flex h-dvh snap-center items-center justify-center bg-black text-white">
-				<div class="relative top-16">
-					<a href={`/${$i18n.language}/proyectos/${project.id}`} class="flex flex-col gap-6 px-8">
+			<div class="relative flex h-full snap-center items-center justify-center bg-black text-white">
+				<div class="absolute bottom-0 flex h-[calc(100%-6rem)] flex-col justify-center">
+					<a
+						href={`/${$i18n.language}/proyectos/${project.id}`}
+						class="flex h-3/4 flex-col justify-center gap-6 px-8"
+					>
 						<img
 							src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
 							alt={project.thumbnail.altTextEs}
+							class="h-full object-cover"
 						/>
 						<p class="font-Agency-FB text-[1.7rem]">{project.name}</p>
 					</a>
@@ -73,7 +77,7 @@
 	{/each}
 </div>
 
-<div class="hidden flex-wrap items-center justify-center lg:flex">
+<div class="hidden flex-wrap items-center justify-evenly lg:flex">
 	{#each projects as project, i (project.id)}
 		<div
 			class={`flex basis-1/3 ${i <= 2 ? 'h-[calc(100svh-6rem)]' : 'h-screen'} w-fit flex-col justify-center self-center justify-self-center`}

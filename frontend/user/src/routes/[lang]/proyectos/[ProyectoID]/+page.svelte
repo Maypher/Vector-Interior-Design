@@ -158,7 +158,7 @@
 		<img
 			src={`${PUBLIC_imagesUrl}${image.filename}`}
 			alt={image.altText}
-			class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig?.alignment) ? 'w-4/5' : ''}`}
+			class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig?.alignment) ? 'w-4/5' : ''} max-h-[90vh] object-contain`}
 			class:ml-auto={image.phoneConfig?.alignment === enums.Alignment.RIGHT}
 			class:mr-auto={image.phoneConfig?.alignment === enums.Alignment.LEFT}
 		/>
@@ -174,7 +174,7 @@
 		</div>
 	</header>
 
-	<div class="block pb-1 lg:hidden">
+	<div class="block pb-1 xl:hidden">
 		{#each projectData.spaces.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image (image.filename)}
 				<div class="my-20">
@@ -182,6 +182,7 @@
 						src={`${PUBLIC_imagesUrl}${image.filename}`}
 						alt={image.altText}
 						class:px-8={image.phoneConfig.alignment !== enums.Alignment.OVERFLOW}
+						class="mx-auto max-h-[80vh]"
 					/>
 					<div class="mx-8 my-12 text-white">
 						<h1
@@ -209,7 +210,7 @@
 			{/each}
 		</div>
 	</div>
-	<div class="hidden text-white lg:block">
+	<div class="hidden text-white xl:block">
 		{#each groupedImageData.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image}
 				<div class="p-15 flex h-[calc(100vh-5rem)] w-full items-center justify-evenly gap-5">
@@ -268,9 +269,9 @@
 		{/each}
 		{#each groupedImageData.slice(1) as space (space.id)}
 			{#each space.images as image}
-				<div class="p-25 flex h-screen justify-center">
+				<div class="py-25 flex h-screen justify-center">
 					{#if Array.isArray(image)}
-						<div class="flex size-full justify-evenly">
+						<div class="flex size-full justify-evenly gap-x-20">
 							{#each image as groupImage}
 								<div class="h-full w-fit">
 									{@render desktopImageView(groupImage)}

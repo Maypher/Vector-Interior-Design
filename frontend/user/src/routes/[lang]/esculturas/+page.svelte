@@ -59,7 +59,7 @@
 			{@html mdToHtml(description)}
 		</div>
 		<div class="flex items-center">
-			<img src={symbol} alt="Logo" class="size-28 w-fit self-end" />
+			<img src={symbol} alt="Logo" class="size-28 self-end" />
 			{#if moveToTop}
 				<button
 					class="to-top text-vector-grey whitespace-pre-wrap text-3xl hover:cursor-pointer"
@@ -74,30 +74,30 @@
 
 <div>
 	<header class="bg-vector-grey flex h-20 items-center justify-center gap-10 p-4 md:gap-20">
-		<a href="/#nav" class="h-full transition-transform hover:scale-125">
+		<a href={`/${$i18n.language}/#nav`} class="h-full transition-transform hover:scale-125">
 			<img src={logo} alt="Vector: Interior Design" class="h-full" />
 		</a>
 		<p class="font-Agency-FB text-center text-lg md:text-3xl" style="word-spacing: 0.5 rem;">
 			{$i18n.t('sculptureHeader')}
 		</p>
 	</header>
-	<div class="md:hidden">
+	<div class="lg:hidden">
 		{#each sculptures as image, i (image.filename)}
 			{@const lastImage = i === sculptures.length - 1}
 			<div
-				class={`${i === 0 ? 'mt-20' : !lastImage ? 'my-50' : 'my-2'} flex flex-col items-center justify-around gap-10`}
+				class={`${i === 0 ? 'mt-20' : !lastImage ? 'my-50' : 'my-12'} flex flex-col items-center justify-around gap-10`}
 			>
 				<img
 					src={`${PUBLIC_imagesUrl}${image.filename}`}
 					alt={image.altTextEs}
 					class:px-8={i !== 0}
-					class="w-full"
+					class="w-9/10 max-h-[90svh] object-contain"
 				/>
 				{#if image.sculptureData.description}
 					<div
 						class="border-b-vector-orange mx-auto flex w-3/4 flex-col justify-between gap-10 border-b-2 pb-4"
 					>
-						<img src={symbol} alt="Logo" class="size-28 w-fit self-end" />
+						<img src={symbol} alt="Logo" class="size-28 self-end" />
 						<div class="flex items-end justify-between">
 							<div class="markdownDescription self-start text-white">
 								{@html mdToHtml(image.sculptureData.description)}
@@ -116,12 +116,12 @@
 			</div>
 		{/each}
 	</div>
-	<div class="hidden md:block">
+	<div class="hidden lg:block">
 		{#each groupedSculptures as sculpture, i}
 			{#if Array.isArray(sculpture)}
 				{@const finalImage = sculpture.at(-1)}
 				<div
-					class={`mb-50 ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'} flex flex-col justify-center`}
+					class={`mb-50 ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'} flex flex-col justify-center gap-5`}
 					class:mb-50={i < groupedSculptures.length - 1}
 				>
 					<div class="h-13/20 flex justify-center gap-20">
@@ -142,7 +142,7 @@
 				</div>
 			{:else}
 				<div
-					class={`${i === groupedSculptures.length - 1 ? '' : 'mb-50'}  flex h-[calc(100vh-6rem)] flex-col items-center justify-center ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'}`}
+					class={`${i === groupedSculptures.length - 1 ? '' : 'mb-50'}  flex h-[calc(100vh-6rem)] flex-col items-center justify-center gap-5 ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'}`}
 				>
 					<img
 						src={`${PUBLIC_imagesUrl}${sculpture.filename}`}

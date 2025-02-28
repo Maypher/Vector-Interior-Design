@@ -77,7 +77,7 @@
 
 {#snippet mainImage(imageData: mainImageData)}
 	<div
-		class="flex size-full gap-20 md:hidden"
+		class="flex size-full gap-20 lg:hidden"
 		class:flex-col={imageData.mainImageConfig.phoneConfig.logoPosition === Directions.N}
 		class:flex-col-reverse={imageData.mainImageConfig.phoneConfig.logoPosition === Directions.S}
 	>
@@ -89,18 +89,20 @@
 			</div>
 		{/if}
 		<div
-			class={`flex gap-16 ${
+			class={`flex size-full items-center ${
 				imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.S
 					? 'flex-col-reverse'
 					: ''
-			} ${imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.N ? 'flex-col' : ''}`}
+			} ${imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.N ? 'flex-col' : 'flex-col-reverse'}`}
 		>
 			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.description}
-				<div
-					class={`class m-auto w-10/12 text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription`}
-					style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
-				>
-					{@html mdToHtml(imageData.mainImageConfig.description)}
+				<div class="flex w-10/12 grow flex-col justify-center text-white">
+					<div
+						class={`text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription my-16`}
+						style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
+					>
+						{@html mdToHtml(imageData.mainImageConfig.description)}
+					</div>
 				</div>
 			{/if}
 			<div
@@ -117,7 +119,7 @@
 		</div>
 	</div>
 	<div
-		class={`hidden size-full justify-center md:max-lg:flex ${
+		class={`hidden size-full justify-center ${
 			imageData.mainImageConfig.desktopConfig.descriptionPosition == Directions.E ||
 			imageData.mainImageConfig.desktopConfig.logoPosition == Directions.E
 				? 'flex-row-reverse'
