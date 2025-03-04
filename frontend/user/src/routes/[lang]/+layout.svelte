@@ -10,7 +10,7 @@
 	const i18n = getI18n();
 
 	afterNavigate(() => {
-		const selectedLang = data.selectedLanguage;
+		const selectedLang = $i18n.language;
 		const currentLang = page.url.pathname.split('/').at(1);
 
 		if (currentLang !== selectedLang) {
@@ -20,7 +20,6 @@
 	});
 
 	async function changeLanguage(lang: string) {
-		console.log(getRemainingUrl());
 		cookies.set('lang', lang, { path: '/', httpOnly: false });
 		const redirectTo = `/${lang}/${getRemainingUrl()}`;
 		location.replace(redirectTo);
