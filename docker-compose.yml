@@ -10,7 +10,6 @@ services:
             - PORT=${ADMIN_PORT:-3000}
             - HOST=database
             - USERNAME=${ADMIN_USERNAME:-admin}
-            - PASSWORD=${ADMIN_PASSWORD:?Password required for database setup.}
             - DB_PORT=${DATABASE_PORT:-5432}
             - DB_NAME=${DATABASE_NAME:-postgres}
             - FRONTEND_URL=${ADMIN_FRONTEND_URL:?Frontend URL required for CORS.}
@@ -34,6 +33,8 @@ services:
         restart: on-failure
         profiles:
             - prod
+        secrets:
+            - admin_password
     user-backend:
         build:
             context: ./backend/
@@ -58,13 +59,14 @@ services:
         environment:
             - PORT=${USER_PORT:-2800}
             - USERNAME=${USER_USERNAME:-frontend}
-            - PASSWORD=${USER_PASSWORD:?Password required for user database access.}
             - HOST=database
             - DB_PORT=${DATABASE_PORT:-5432}
             - DB_NAME=${DATABASE_NAME:-postgres}
             - FRONTEND_URL=${USER_FRONTEND_URL:?Frontend URL required for CORS.}
         profiles:
             - prod
+        secrets:
+            - user_password
     tests:
         build:
             context: ./backend/
@@ -80,19 +82,18 @@ services:
         environment:
             - DB_NAME=${DATABASE_NAME:-postgres}
             - DB_PORT=${DATABASE_PORT:-5432}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Database password required.}
+        secrets:
+            - postgres_password
     database:
         build: ./database/
         restart: always
         env_file:
             - .env
         environment:
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
             - POSTGRES_DB=${DATABASE_NAME}
             - ADMIN_USERNAME=${ADMIN_USERNAME}
-            - ADMIN_PASSWORD=${ADMIN_PASSWORD}
             - USER_USERNAME=${USER_USERNAME}
-            - USER_PASSWORD=${USER_PASSWORD}
             - PGPORT=${DATABASE_PORT}
             - PGUSER=postgres
             - LANG=es_ES.UTF-8
@@ -108,6 +109,10 @@ services:
             timeout: 30s
             retries: 5
             start_period: 30s
+        secrets:
+            - admin_password
+            - user_password
+            - postgres_password
     nginx:
         build: "./nginx/"
         profiles: [ prod ]
@@ -129,3 +134,10 @@ networks:
     user:
     admin:
     backend:
+secrets:
+    user_password:
+        file: ./secrets/user_password.txt
+    admin_password:
+        file: ./secrets/admin_password.txt
+    postgres_password:
+        file: ./secrets/postgres_password.txt

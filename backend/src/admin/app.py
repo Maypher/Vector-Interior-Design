@@ -10,6 +10,8 @@ from admin.auth.user import UserManager
 from admin.resources.resource_manager import AdminResourceManager
 from admin.utilities.types import AdminApp
 from sanic_ext import Extend, Config
+from common.utils import read_secret
+from sanic.log import logger
 
 
 def create_app(
@@ -33,7 +35,7 @@ def create_app(
     def init_context(app: AdminApp):
         db_manager = database_manager or AdminDatabaseManager(
             environ.get("USERNAME"),
-            environ.get("PASSWORD"),
+            read_secret("admin_password"),
             environ.get("HOST"),
             environ.get("DB_PORT"),
             environ.get("DB_NAME"),

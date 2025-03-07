@@ -8,6 +8,7 @@ import os
 from mimesis import Field, ImageFile, Locale
 from sanic.request import File
 from typing import AsyncGenerator
+from common.utils import read_secret
 
 
 @pytest.fixture(scope="session")
@@ -16,7 +17,7 @@ def postgres_manager() -> database.DatabaseManager:
     """Connects to the default 'postgres' database."""
     return database.DatabaseManager(
         os.environ.get("DB_NAME"),
-        os.environ.get("POSTGRES_PASSWORD"),
+        read_secret("postgres_password"),
         "database",
         os.environ.get("DB_PORT"),
         os.environ.get("DB_NAME"),
@@ -36,7 +37,7 @@ def database_manager(
     postgres_manager.database_connection.execute("CREATE DATABASE testing;")
 
     db_manager = database.DatabaseManager(
-        "postgres", os.environ.get("POSTGRES_PASSWORD"), "database", "5432", "testing"
+        "postgres", read_secret("postgres_password"), "database", "5432", "testing"
     )
 
     db_manager.database_connection.execute(
@@ -84,6 +85,7 @@ async def admin_resource_manager(
     for _ in range(project_count):
         resource_manager.create_project(
             mimesis("word"),
+            mimesis("text"),
             mimesis("text"),
             mimesis("integer_number", start=100, end=1000),
         )

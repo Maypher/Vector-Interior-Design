@@ -1,6 +1,7 @@
 from admin.db.migrations import MigrationManager, MigrationFileManager
 from psycopg import errors
 from common.database import DatabaseManager
+from common.utils import read_secret
 from os import environ
 import argparse
 
@@ -51,7 +52,7 @@ if __name__ == "__main__":
         try:
             migration_database_handler = DatabaseManager(
                 environ.get("USERNAME"),
-                environ.get("PASSWORD"),
+                read_secret("admin_password"),
                 environ.get("HOST"),
                 environ.get("DB_PORT"),
                 environ.get("DB_NAME"),

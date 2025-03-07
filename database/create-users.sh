@@ -5,6 +5,23 @@ set -e
 # Trap errors and print the error message
 trap 'echo "Error on line $LINENO: $BASH_COMMAND"' ERR
 
+ADMIN_PASSWORD_PATH="/run/secrets/admin_password"
+
+if [ ! -f "$ADMIN_PASSWORD_PATH" ] || [ ! -s "$ADMIN_PASSWORD_PATH" ]; then
+  echo "Error: Required secret admin_password is missing or empty."
+  exit 1
+fi
+
+USER_PASSWORD_PATH="/run/secrets/user_password"
+
+if [ ! -f "$USER_PASSWORD_PATH" ] || [ ! -s "$USER_PASSWORD_PATH" ]; then
+  echo "Error: Required secret user_password is missing or empty."
+  exit 1
+fi
+
+ADMIN_PASSWORD=$(< /run/secrets/admin_password)
+USER_PASSWORD=$(< /run/secrets/user_password)
+
 psql -U postgres << EOF
 BEGIN;
 

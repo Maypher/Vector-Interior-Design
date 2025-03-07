@@ -1,5 +1,14 @@
 #!/bin/bash
 
+set -e
+
+ADMIN_PASSWORD_PATH="/run/secrets/admin_password"
+
+if [ ! -f "$ADMIN_PASSWORD_PATH" ] || [ ! -s "$ADMIN_PASSWORD_PATH" ]; then
+  echo "Error: Required secret admin_password is missing or empty."
+  exit 1
+fi
+
 runningPort=$PORT
 
 if [ "$BUILD_TARGET" = 'dev' ]; then
