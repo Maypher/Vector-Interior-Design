@@ -64,12 +64,15 @@
 </script>
 
 {#snippet descriptionContainer(description: string, alignment: string, font: string)}
-	<div class={`markdownDescription text-white ${alignment} font-${font}`}>
+	<div class={`markdownDescription text-white ${alignment} font-${font} size-full`}>
 		{@html mdToHtml(description)}
 	</div>
 {/snippet}
 
 {#snippet desktopImageView(image: any)}
+	{@const descTopOrBottom = [enums.Directions.N, enums.Directions.S].includes(
+		image.desktopConfig.descriptionPosition
+	)}
 	<div
 		class={`mx-auto flex h-full w-fit items-center justify-center gap-10`}
 		class:flex-row={image.desktopConfig.descriptionPosition === enums.Directions.E}
@@ -77,53 +80,57 @@
 		class:flex-col={image.desktopConfig.descriptionPosition === enums.Directions.S}
 		class:flex-col-reverse={image.desktopConfig.descriptionPosition === enums.Directions.N}
 	>
-		<div
-			class={`border-vector-orange flex h-full items-center justify-center gap-x-12 ${
+		<figure
+			class={`border-vector-orange relative flex h-full w-fit items-center justify-center gap-x-12 ${
 				image.desktopConfig.groupAlignment === enums.GroupAlignment.Centro ? 'items-center' : ''
 			} ${image.desktopConfig.groupAlignment === enums.GroupAlignment.Arriba ? 'items-start' : ''} ${
 				image.desktopConfig.groupAlignment === enums.GroupAlignment.Abajo ? 'items-end' : ''
 			} ${image.desktopConfig.imageBorders.n ? 'border-t-2' : ''} ${
 				image.desktopConfig.imageBorders.s ? 'border-b-2' : ''
+			} ${
+				image.desktopConfig.groupAlignment === enums.GroupAlignment.Centro ? 'self-center' : ''
+			} ${image.desktopConfig.groupAlignment === enums.GroupAlignment.Arriba ? 'self-start' : ''} ${
+				image.desktopConfig.groupAlignment === enums.GroupAlignment.Abajo ? 'self-end' : ''
 			}`}
 			class:flex-row={image.desktopConfig.descriptionPosition === enums.Directions.E}
 			class:flex-row-reverse={image.desktopConfig.descriptionPosition === enums.Directions.W}
 			class:flex-col={image.desktopConfig.descriptionPosition === enums.Directions.S}
 			class:flex-col-reverse={image.desktopConfig.descriptionPosition === enums.Directions.N}
+			style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
 		>
-			<div
-				class={`flex size-full w-fit items-center ${
-					image.desktopConfig.groupAlignment === enums.GroupAlignment.Centro ? 'items-center' : ''
-				} ${image.desktopConfig.groupAlignment === enums.GroupAlignment.Arriba ? 'items-start' : ''} ${
-					image.desktopConfig.groupAlignment === enums.GroupAlignment.Abajo ? 'items-end' : ''
-				}`}
-			>
-				<img
-					src={`${PUBLIC_imagesUrl}${image.filename}`}
-					alt={image.altText}
-					class={`border-vector-orange w-auto object-cover ${
-						image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
-					} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''}`}
-					style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
-				/>
-			</div>
+			<img
+				src={`${PUBLIC_imagesUrl}${image.filename}`}
+				alt={image.altText}
+				class={`border-vector-orange h-full w-auto object-cover ${
+					image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
+				} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''} `}
+			/>
 			{#if image.description && image.desktopConfig.descriptionPosition}
-				<div
-					class={`max-w-1/2 border-vector-orange relative size-fit ${image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
+				<figcaption
+					class={`border-vector-orange  ${
+						image.desktopConfig.descriptionPosition === enums.Directions.N
+							? '-top-5 -translate-y-full'
+							: image.desktopConfig.descriptionPosition === enums.Directions.S
+								? '-bottom-5 translate-y-full'
+								: ''
+					} ${
+						descTopOrBottom ? 'min-w-9/10 absolute w-0' : 'max-w-1/2'
+					} ${image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
 						image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
 					} ${image.desktopConfig.descriptionBorders.e ? 'border-r-2 pr-5' : ''} ${
 						image.desktopConfig.descriptionBorders.w ? 'border-l-2 pl-5' : ''
 					}`}
 				>
-					<div class={`m-auto size-fit`}>
+					<div>
 						{@render descriptionContainer(
 							image.description,
 							image.desktopConfig.descriptionAlignment,
 							image.descriptionFont
 						)}
 					</div>
-				</div>
+				</figcaption>
 			{/if}
-		</div>
+		</figure>
 		{#if image.desktopConfig.logoPosition}
 			<div class="flex h-1/2 w-fit items-center">
 				<img src={symbol} alt="Símbolo" class="h-full" />
@@ -222,7 +229,7 @@
 						} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''}`}
 						style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
 					/>
-					<div class="max-w-1/2 flex size-full flex-col gap-y-5 p-4 pb-0">
+					<div class="max-w-1/2 flex flex-col gap-y-5 p-4 pb-0">
 						<div class="border-vector-orange flex w-full justify-between border-b-2 px-4 pb-2">
 							<h1 class="font-Agency-FB text-4xl text-white">
 								{projectData.name}
@@ -254,7 +261,7 @@
 					{#if Array.isArray(image)}
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
-								<div class="h-full w-fit">
+								<div class="h-full w-fit grow-0">
 									{@render desktopImageView(groupImage)}
 								</div>
 							{/each}
@@ -269,9 +276,9 @@
 		{/each}
 		{#each groupedImageData.slice(1) as space (space.id)}
 			{#each space.images as image}
-				<div class="py-25 flex h-screen justify-center">
+				<div class="p-25 flex h-screen justify-center">
 					{#if Array.isArray(image)}
-						<div class="flex size-full justify-evenly gap-x-20">
+						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
 								<div class="h-full w-fit">
 									{@render desktopImageView(groupImage)}
