@@ -13,7 +13,7 @@
 		<img src={logo} alt="Vector: Interior Design" class="w-64" />
 	</a>
 	<h1 class="text-4xl"><b>{$i18n.t('conclusionHeader')}</b></h1>
-	<div id="conclusion" class="text-justify indent-5 text-xl" style="text-align-last: justify;">
+	<div id="conclusion" class="text-center indent-5 text-xl">
 		{@html mdToHtml($i18n.t('conclusionBody'))}
 	</div>
 </div>
