@@ -490,10 +490,10 @@
 	>
 		<img src={tony} alt="Diseñador" class="max-h-[70vh]" />
 		<div
-			class="mx-auto flex h-full w-3/4 flex-col items-center justify-center gap-20 text-justify indent-3 text-lg text-white lg:w-1/2 lg:items-end"
+			class="mx-auto flex h-full w-3/4 flex-col items-center justify-center gap-20 text-justify indent-3 text-lg text-white lg:w-1/2 lg:items-end whitespace-pre-line"
 		>
 			<p>
-				{`De lo sublime a lo majestuoso, el límite de este  este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero y a veces hasta inimaginable.`}
+				{`De lo sublime a lo majestuoso, el límite de este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero e inimaginable.`}
 			</p>
 			<img src={logoWhite} alt="Logo white" class="w-44" />
 		</div>
