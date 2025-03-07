@@ -52,42 +52,40 @@
 </script>
 
 <div class="bg-black min-h-screen flex items-center justify-center flex-col gap-5">
-	{#if projects.length === 0}
-		<h1 class="text-white text-center text-xl">Ningún proyecto encontrado</h1>
-	{:else}
-		<SortableList bind:sortable {sortableOptions} sortableId="sortable">
-			<div class="flex-wrap items-center justify-center w-full lg:flex" id="sortable">
-				{#each projects as project, i (project.id)}
-					<div
-						class={`mx-auto md:mx-0 item flex basis-1/3 ${i <= 2 ? 'h-[calc(100svh-6rem)]' : 'h-screen'} w-fit flex-col justify-center self-center justify-self-center`}
-						data-projectId={project.id}
-					>
-						<a
-							href={`/obras/${project.id}`}
-							class="m-auto w-fit flex h-2/3 flex-col items-start gap-y-2 transition-transform hover:scale-110"
-						>
-							<img
-								src={`${PUBLIC_imageURL}${project.thumbnail.filename}`}
-								alt={project.thumbnail.altTextEs}
-								class="h-full"
-							/>
-							<p class="font-Agency-FB ml-2 text-xl text-white">{project.name}</p>
-						</a>
-					</div>
-				{/each}
-				<a
-					id="new-project"
-					href="obras/crear"
-					class="block p-3 mx-auto md:mx-0 size-20 text-red font-bold text-red-400 hover:bg-vector-grey transition-colors rounded-md"
+	<SortableList bind:sortable {sortableOptions} sortableId="sortable">
+		<div class="flex-wrap items-center justify-center w-full lg:flex" id="sortable">
+			{#each projects as project, i (project.id)}
+				<div
+					class={`mx-auto md:mx-0 item flex basis-1/3 ${i <= 2 ? 'h-[calc(100svh-6rem)]' : 'h-screen'} w-fit flex-col justify-center self-center justify-self-center`}
+					data-projectId={project.id}
 				>
-					<span
-						class="material-symbols-outlined size-full md:size-full text-center content-center text-4xl!"
+					<a
+						href={`/obras/${project.id}`}
+						class="m-auto w-fit flex h-2/3 flex-col items-start gap-y-2 transition-transform hover:scale-110"
 					>
-						add
-					</span>
-				</a>
-			</div>
-		</SortableList>
+						<img
+							src={`${PUBLIC_imageURL}${project.thumbnail.filename}`}
+							alt={project.thumbnail.altTextEs}
+							class="h-full"
+						/>
+						<p class="font-Agency-FB ml-2 text-xl text-white">{project.name}</p>
+					</a>
+				</div>
+			{/each}
+			<a
+				id="new-project"
+				href="obras/crear"
+				class="block p-3 mx-auto md:mx-0 size-20 text-red font-bold text-red-400 hover:bg-vector-grey transition-colors rounded-md"
+			>
+				<span
+					class="material-symbols-outlined size-full md:size-full text-center content-center text-4xl!"
+				>
+					add
+				</span>
+			</a>
+		</div>
+	</SortableList>
+	{#if projects.length > 0}
 		<div class="flex w-full mb-10 max-w-md border-2 border-black rounded-xs">
 			<button
 				type="button"
