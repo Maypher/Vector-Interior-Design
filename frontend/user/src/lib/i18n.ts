@@ -30,12 +30,12 @@ export const setupI18n = async (lang: 'en' | 'es'): Promise<Writable<i18n>> => {
                 translation: {
                     'english': "Ingles",
                     'Spanish': 'Español',
-                    'mainPageMsg': 'De lo sublime a lo majestuoso, el límite de este  este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero e inimaginable.',
+                    'mainPageMsg': 'De lo sublime a lo majestuoso, el límite de este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero e inimaginable.',
                     'sculptures': 'Esculturas',
                     'projects': 'Proyectos',
                     'sculptureHeader': 'Obras únicas y exclusivas',
                     'conclusionHeader': 'Trazando líneas con dirección, pasión y estilo.',
-                    'conclusionBody': `Las **líneas** como elemento inicial y esencial de todo diseño deben estar enfocadas\n en una dirección moldeando un marco de referencia, la **pasión** por transformar y\ndecorar los espacios siempre debe apuntar a la calidad y el confort, considerando\nun conjunto de características que ayuden a definir un **estilo** para garantizar de\nesta manera exclusividad en el proyecto.`,
+                    'conclusionBody': `Las **líneas** como elemento inicial y esencial de todo diseño deben estar enfocadas\n en una **dirección** moldeando un marco de referencia, la **pasión** por transformar y\ndecorar los espacios siempre debe apuntar a la calidad y el confort, considerando\nun conjunto de características que ayuden a definir un **estilo**\n para garantizar exclusividad en el proyecto.`,
                     'area': 'Área',
                     'areaUnits': 'metros cuadrados'
                 }
