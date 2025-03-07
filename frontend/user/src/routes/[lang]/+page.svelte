@@ -88,7 +88,7 @@
 				<img src={symbol} alt="V" class="mx-auto w-20" />
 			</div>
 		{/if}
-		<div
+		<figure
 			class={`flex size-full items-center ${
 				imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.S
 					? 'flex-col-reverse'
@@ -96,14 +96,14 @@
 			} ${imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.N ? 'flex-col' : 'flex-col-reverse'}`}
 		>
 			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.description}
-				<div class="flex w-10/12 grow flex-col justify-center text-white">
+				<figcaption class="flex w-10/12 grow flex-col justify-center text-white">
 					<div
 						class={`text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription my-16`}
 						style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
 					>
 						{@html mdToHtml(imageData.mainImageConfig.description)}
 					</div>
-				</div>
+				</figcaption>
 			{/if}
 			<div
 				class={`border-vector-orange mx-auto ${!imageData.mainImageConfig.phoneConfig.overflow ? 'w-5/6' : ''} ${imageData.mainImageConfig.phoneConfig.imageBorders.e ? 'border-r-2 pr-20' : ''}`}
@@ -116,49 +116,10 @@
 					<div class="bg-vector-orange max-w-83/10 mx-auto mt-20 h-px w-full"></div>
 				{/if}
 			</div>
-		</div>
+		</figure>
 	</div>
-	<div
-		class={`hidden size-full justify-center ${
-			imageData.mainImageConfig.desktopConfig.descriptionPosition == Directions.E ||
-			imageData.mainImageConfig.desktopConfig.logoPosition == Directions.E
-				? 'flex-row-reverse'
-				: ''
-		} ${
-			imageData.mainImageConfig.desktopConfig.descriptionPosition == Directions.W ||
-			imageData.mainImageConfig.desktopConfig.logoPosition == Directions.W
-				? 'flex-row'
-				: ''
-		}`}
-		style={`justify-content: ${
-			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.LEFT
-				? 'start'
-				: imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.RIGHT
-					? 'end'
-					: 'center'
-		};`}
-	>
-		{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.description}
-			<div
-				class={`class m-auto w-10/12 p-5 text-center  text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription`}
-				style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
-			>
-				{@html mdToHtml(imageData.mainImageConfig.description)}
-			</div>
-		{/if}
-		<div
-			class={`border-vector-orange ${imageData.mainImageConfig.phoneConfig.descriptionPosition ? 'max-w-1/2' : 'max-w-2/3'} ${imageData.mainImageConfig.phoneConfig.imageBorders.e ? 'border-r-2 pr-20' : ''}`}
-		>
-			{#if imageData.mainImageConfig.phoneConfig.imageBorders.n}
-				<div class="bg-vector-orange max-w-83/10 mx-auto mb-20 h-px w-full"></div>
-			{/if}
-			<img src={`${PUBLIC_imagesUrl}${imageData.filename}`} alt={imageData.altText} />
-			{#if imageData.mainImageConfig.phoneConfig.imageBorders.s}
-				<div class="bg-vector-orange max-w-83/10 mx-auto mt-20 h-px w-full"></div>
-			{/if}
-		</div>
-	</div>
-	<div
+
+	<figure
 		class={`m-auto hidden size-full items-center lg:flex ${
 			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.LEFT &&
 			!imageData.mainImageConfig.desktopConfig.overflow
@@ -195,7 +156,7 @@
 		/>
 
 		{#if imageData.mainImageConfig.desktopConfig.descriptionPosition || imageData.mainImageConfig.desktopConfig.logoPosition}
-			<div
+			<figcaption
 				class={`max-w-1/2 m-auto flex h-full flex-col items-center justify-around ${
 					imageData.mainImageConfig.desktopConfig.descriptionLogoPosition === Directions.S
 						? 'flex-col-reverse'
@@ -226,9 +187,9 @@
 						{@html mdToHtml(imageData.mainImageConfig.description)}
 					</div>
 				{/if}
-			</div>
+			</figcaption>
 		{/if}
-	</div>
+	</figure>
 {/snippet}
 
 <header class="bg-vector-grey flex h-28 items-center justify-center gap-20 p-5">
@@ -253,19 +214,19 @@
 	</div>
 {/each}
 
-<div
+<figure
 	class="lg:my-50 my-50 relative flex flex-col items-center justify-start gap-x-5 gap-y-10 lg:ml-10 lg:h-[85vh] lg:flex-row xl:ml-20"
 >
 	<img src={tony} alt="Diseñador" class="max-h-[60vh] lg:max-h-[70vh]" />
-	<div
+	<figcaption
 		class="mx-auto flex h-full w-3/4 flex-col items-center justify-center gap-20 text-justify indent-3 text-lg text-white lg:w-1/2 lg:items-end"
 	>
 		<p>
 			{$i18n.t('mainPageMsg')}
 		</p>
 		<img src={logoWhite} alt="Vector: Interior Design" class="w-44" />
-	</div>
-</div>
+	</figcaption>
+</figure>
 
 {#each mainImages.slice(5, 8) as image (image.filename)}
 	<div
@@ -299,26 +260,28 @@
 		alt={mainImages.at(-1)!.altText}
 		class="lg:max-w-2/3 max-w-full lg:my-auto lg:max-h-full"
 	/>
-	<div class="relative flex size-full items-center justify-center gap-5 p-5">
-		<a
-			href={`${$i18n.language}/esculturas/`}
+	<ul class="relative flex size-full items-center justify-center gap-5 p-5">
+		<li
 			class="hover-link relative top-10 h-fit w-fit text-4xl text-white"
 			style="font-family: Agency-FB;"
 		>
-			{$i18n.t('sculptures')}
-		</a>
+			<a href={`${$i18n.language}/esculturas/`}>
+				{$i18n.t('sculptures')}
+			</a>
+		</li>
 		<div class="-z-10 flex size-full w-[2px] flex-col items-center overflow-visible" id="pencil">
 			<img src={symbol} alt="V" class="min-h-32 min-w-32" />
 			<div class="bg-vector-orange relative bottom-5 h-full w-[2px]"></div>
 		</div>
-		<a
-			href={`/${$i18n.language}/proyectos/`}
+		<li
 			class="hover-link relative bottom-10 w-fit text-4xl text-white after:relative after:top-1"
 			style="font-family: Agency-FB;"
 		>
-			{$i18n.t('projects')}
-		</a>
-	</div>
+			<a href={`/${$i18n.language}/proyectos/`}>
+				{$i18n.t('projects')}
+			</a>
+		</li>
+	</ul>
 </div>
 
 <footer class="my-15 relative flex flex-col items-center justify-center gap-10 lg:flex-row">

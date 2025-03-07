@@ -49,53 +49,61 @@
 	</a>
 </header>
 
-<div class="h-svh snap-y snap-mandatory overflow-y-scroll lg:hidden">
+<ul class="h-svh snap-y snap-mandatory overflow-y-scroll lg:hidden">
 	{#each projects as project, i (project.id)}
 		{#if project.thumbnail}
-			<div class="relative flex h-full snap-center items-center justify-center bg-black text-white">
+			<li class="relative flex h-full snap-center items-center justify-center bg-black text-white">
 				<div class="absolute bottom-0 flex h-[calc(100%-6rem)] flex-col justify-center">
 					<a
 						href={`/${$i18n.language}/proyectos/${project.id}`}
 						class="flex h-3/4 flex-col justify-center gap-6 px-8"
 					>
-						<img
-							src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
-							alt={project.thumbnail.altTextEs}
-							class="h-full object-cover"
-						/>
-						<p class="font-Agency-FB text-[1.7rem]">{project.name}</p>
+						<figure class="h-full">
+							<img
+								src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
+								alt={project.thumbnail.altTextEs}
+								class="h-full object-cover"
+							/>
+							<figcaption>
+								<p class="font-Agency-FB text-[1.7rem]">{project.name}</p>
+							</figcaption>
+						</figure>
 					</a>
 				</div>
 				{#if i === 1}
 					<div id="arrowLimit" inert></div>
 				{/if}
-			</div>
+			</li>
 		{/if}
 		{#if i === 0}
 			<div id="arrow" inert></div>
 		{/if}
 	{/each}
-</div>
+</ul>
 
-<div class="hidden flex-wrap items-center justify-evenly lg:flex">
+<ul class="hidden flex-wrap items-center justify-evenly lg:flex">
 	{#each projects as project, i (project.id)}
-		<div
+		<li
 			class={`flex basis-1/3 ${i <= 2 ? 'h-[calc(100svh-6rem)]' : 'h-screen'} w-fit flex-col justify-center self-center justify-self-center`}
 		>
 			<a
 				href={`/${$i18n.language}/proyectos/${project.id}`}
 				class="m-auto flex h-2/3 flex-col items-start gap-y-2 transition-transform hover:scale-110"
 			>
-				<img
-					src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
-					alt={project.thumbnail.altTextEs}
-					class="h-full"
-				/>
-				<p class="font-Agency-FB ml-2 text-xl text-white">{project.name}</p>
+				<figure class="h-full">
+					<img
+						src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
+						alt={project.thumbnail.altTextEs}
+						class="h-full"
+					/>
+					<figcaption>
+						<p class="font-Agency-FB ml-2 text-xl text-white">{project.name}</p>
+					</figcaption>
+				</figure>
 			</a>
-		</div>
+		</li>
 	{/each}
-</div>
+</ul>
 
 <style>
 	#arrow {

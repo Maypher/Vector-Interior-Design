@@ -120,7 +120,7 @@
 		{#each groupedSculptures as sculpture, i}
 			{#if Array.isArray(sculpture)}
 				{@const finalImage = sculpture.at(-1)}
-				<div
+				<figure
 					class={`mb-50 ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'} flex flex-col justify-center gap-5`}
 					class:mb-50={i < groupedSculptures.length - 1}
 				>
@@ -134,14 +134,16 @@
 						{/each}
 					</div>
 					{#if finalImage.sculptureData.description}
-						{@render desktopImageDescription(
-							finalImage.sculptureData.description,
-							i === groupedSculptures.length - 1
-						)}
+						<figcaption class="w-full">
+							{@render desktopImageDescription(
+								finalImage.sculptureData.description,
+								i === groupedSculptures.length - 1
+							)}
+						</figcaption>
 					{/if}
-				</div>
+				</figure>
 			{:else}
-				<div
+				<figure
 					class={`${i === groupedSculptures.length - 1 ? '' : 'mb-50'}  flex h-[calc(100vh-6rem)] flex-col items-center justify-center gap-5 ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'}`}
 				>
 					<img
@@ -151,12 +153,14 @@
 						class="h-13/20 max-h-4/5 w-auto"
 					/>
 					{#if sculpture.sculptureData.description}
-						{@render desktopImageDescription(
-							sculpture.sculptureData.description,
-							i === groupedSculptures.length - 1
-						)}
+						<figcaption class="w-full">
+							{@render desktopImageDescription(
+								sculpture.sculptureData.description,
+								i === groupedSculptures.length - 1
+							)}
+						</figcaption>
 					{/if}
-				</div>
+				</figure>
 			{/if}
 		{/each}
 	</div>
