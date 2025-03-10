@@ -67,7 +67,7 @@
 							drag_indicator
 						</span>
 						<SculptureConfig
-							filename={sculpture.filename}
+							imageUrl={sculpture.imageUrl}
 							altText={sculpture.altTextEs}
 							spaceId={sculpture.space.id}
 							projectId={sculpture.space.project.id}

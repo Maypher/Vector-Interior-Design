@@ -7,7 +7,6 @@
 	import logoWhite from '$lib/images/logo white.svg';
 	import { mdToHTML } from '$lib/utilities/markdown';
 	import getArrayDifference from '$lib/utilities/arrayOrder';
-	import { PUBLIC_imageURL } from '$env/static/public';
 	import * as enums from '$lib/utilities/enums';
 	import Movable from '$lib/components/editor/Movable.svelte';
 	import Borders from '$lib/components/editor/Borders.svelte';

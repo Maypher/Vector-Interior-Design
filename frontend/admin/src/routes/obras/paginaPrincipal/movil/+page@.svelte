@@ -6,8 +6,6 @@
 	import tony from '$lib/images/tony.jpg';
 	import tonyContact from '$lib/images/contact.jpg';
 	import { Directions, TextAlignment, TextFont } from '$lib/utilities/enums';
-	import { mdToHTML } from '$lib/utilities/markdown';
-	import { PUBLIC_imageURL } from '$env/static/public';
 	import '$lib/styles/markdown.css';
 	import Movable from '$lib/components/editor/Movable.svelte';
 	import Borders from '$lib/components/editor/Borders.svelte';

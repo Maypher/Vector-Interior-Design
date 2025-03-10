@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_imageURL } from '$env/static/public';
 	import graphql from '$lib/utilities/api';
 	import { success } from '$lib/utilities/toasts';
 	import { cloneDeep, isEqual } from 'lodash-es';
@@ -11,14 +10,14 @@
 	}
 
 	interface Props {
-		filename: string;
+		imageUrl: string;
 		altText: string;
 		sculptureData: SculptureData;
 		spaceId: number;
 		projectId: number;
 	}
 
-	const { filename, altText, sculptureData, spaceId, projectId }: Props = $props();
+	const { imageUrl: filename, altText, sculptureData, spaceId, projectId }: Props = $props();
 
 	let originalData = $state.snapshot(sculptureData);
 	let updatedData = $state($state.snapshot(sculptureData));
@@ -50,7 +49,7 @@
 
 <form {onsubmit} class="flex flex-col md:flex-row size-full p-3 gap-4 justify-stretch">
 	<a href={`/obras/${projectId}/ambientes/${spaceId}/imagenes/${filename}`} class="h-full">
-		<img src={`${PUBLIC_imageURL}${filename}`} alt={altText} class="h-full w-auto" />
+		<img src={filename} alt={altText} class="h-full w-auto" />
 	</a>
 	<div class="flex flex-col gap-2 size-full">
 		<label for="description">Descripción</label>

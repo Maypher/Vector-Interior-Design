@@ -2,8 +2,6 @@
 	import Phone from '$lib/components/layout/phone.svelte';
 	import type { PageData } from './$types';
 	import logo from '$lib/images/logo.svg';
-	import { PUBLIC_imageURL } from '$env/static/public';
-	import { mdToHTML } from '$lib/utilities/markdown';
 	import Borders from '$lib/components/editor/Borders.svelte';
 	import Movable from '$lib/components/editor/Movable.svelte';
 	import { Alignment, Directions } from '$lib/utilities/enums';

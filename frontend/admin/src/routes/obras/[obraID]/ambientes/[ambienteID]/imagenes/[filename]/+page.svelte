@@ -3,14 +3,10 @@
 	import type { PageData } from './$types';
 	import { superForm } from 'sveltekit-superforms';
 	import { imageUpdateSchema } from '$lib/utilities/yupSchemas';
-	import EditableInput from '$lib/components/input/EditableInput.svelte';
 	import { success } from '$lib/utilities/toasts';
 	import confirmationDialog from '$lib/utilities/dialog';
 	import { goto } from '$app/navigation';
 	import graphql from '$lib/utilities/api';
-	import { PUBLIC_imageURL } from '$env/static/public';
-	import Markdown from '$lib/components/markdown/Markdown.svelte';
-	import { Alignment, Directions } from '$lib/utilities/enums';
 
 	const { data }: { data: PageData } = $props();
 	let imageData = $state(data.imageData!);
