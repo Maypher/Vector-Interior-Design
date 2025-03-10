@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { PUBLIC_imagesUrl } from '$env/static/public';
 	import symbol from '$lib/images/symbol.svg';
 	import mdToHtml from '$lib/utilities/markdown';
 	import logo from '$lib/images/logo.svg';

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_imagesUrl } from '$env/static/public';
 	import logo from '$lib/images/logo.svg';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
