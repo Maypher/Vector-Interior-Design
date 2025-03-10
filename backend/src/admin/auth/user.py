@@ -4,6 +4,7 @@ import bcrypt
 import re
 from admin.auth import errors
 from psycopg import rows
+from psycopg.rows import class_row
 
 
 @dataclass
@@ -141,3 +142,42 @@ class UserManager:
             return None
 
         return User(**user_data)
+
+    def change_password(self, email: str, new_password: str) -> User | None:
+        """Changes the password for the given email. Returns the updated user or `None` if the email is not found."""
+
+        salt = bcrypt.gensalt()
+        pwd = new_password.encode()
+
+        hashed_pwd = bcrypt.hashpw(pwd, salt)
+
+        updated_user = self.database_manager.query(
+            """
+            UPDATE administration.admin_user SET password_hash = %s 
+            WHERE email = %s RETURNING id, email, name;
+            """,
+            (hashed_pwd, email),
+            count=1,
+            row_factory=class_row(User),
+        )
+
+        return updated_user
+
+    def delete_user(self, email: str) -> User | None:
+        return self.database_manager.query(
+            """
+            DELETE FROM administration.admin_user WHERE email = %s RETURNING id, email, name;
+            """,
+            (email,),
+            1,
+            row_factory=class_row(User),
+        )
+
+    def users(self) -> list[User]:
+        """Returns a list of all available users."""
+        return self.database_manager.query(
+            """
+                SELECT id, name, email FROM administration.admin_user;
+            """,
+            row_factory=class_row(User),
+        )
