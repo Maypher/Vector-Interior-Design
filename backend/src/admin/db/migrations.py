@@ -22,7 +22,7 @@ class MigrationFileManager:
 
     def __init__(
         self,
-        migration_folder: str = "./migrations/",
+        migration_folder: str = "../migrations/",
         migration_filename_regex: str = r"^(\d+)_(\w+)_(\d+)_(up|down).sql",
         migration_version_regex: str = r".*?_(\d+)_(up|down).sql",
         up_regex: str = r"_up.sql",

@@ -10,20 +10,28 @@ if __name__ == "__main__":
         description="Utility file to create and handle migrations."
     )
 
-    parser.add_argument(
-        "command", choices=("migrate", "rollback", "new"), help="The command to run."
+    subparser = parser.add_subparsers(dest="command", required=True)
+
+    new_parser = subparser.add_parser(
+        "new", help="Creates a new migration and rollback files."
+    )
+    new_parser.add_argument(
+        "name", type=str, nargs=1, help="The name of the migration to create."
     )
 
-    parser.add_argument(
-        "-n", "--name", type=str, nargs=1, help="The name of the migration to create."
+    migrate_parser = subparser.add_parser(
+        "migrate",
+        help="Migrates to the given version or latest if no version was specified.",
+    )
+    migrate_parser.add_argument(
+        "version", nargs="?", type=int, help="The version to migrate to."
     )
 
-    parser.add_argument(
-        "-v",
-        "--version",
-        type=int,
-        nargs=1,
-        help="Migrates or rollbacks to the specified version. On migrate it applies all migrations up to the specified version, including it. On rollback it rolls back migrations up to the specified version but doesn't apply it.",
+    rollback_parser = subparser.add_parser(
+        "rollback", help="Rollback to the given version (Stops at version + 1)."
+    )
+    rollback_parser.add_argument(
+        "version", nargs=1, type=int, help="The version to rollback to."
     )
 
     parser.add_argument(
@@ -32,22 +40,16 @@ if __name__ == "__main__":
         type=str,
         nargs=1,
         help="The directory where the migrations are stored.",
-        default="./migrations/",
+        default="../migrations/",
     )
 
     args = parser.parse_args()
     command: str = args.command
 
     if command == "new":
-        name = args.name
-
-        if not name:
-            print("A new needs to be provided for the new migration.")
-            exit(1)
-
-        file_manager = MigrationFileManager()
-
-        file_manager.new_migration(name[0])
+        name = args.name[0]
+        file_manager = MigrationFileManager(migration_folder=args.directory)
+        file_manager.new_migration(name)
     else:
         try:
             migration_database_handler = DatabaseManager(
@@ -58,7 +60,9 @@ if __name__ == "__main__":
                 environ.get("DB_NAME"),
             )
 
-            migration_manager = MigrationManager(migration_database_handler)
+            migration_manager = MigrationManager(
+                migration_database_handler, migration_folder=args.directory
+            )
         except errors.InsufficientPrivilege:
             print(
                 "Unable to initialize migration system due to insufficient privileges."
