@@ -165,11 +165,7 @@
 						class:ml-auto={imageData.phoneConfig.alignment === Alignment.Derecha}
 						class:mr-auto={imageData.phoneConfig.alignment === Alignment.Izquierda}
 					>
-						<img
-							src={`${PUBLIC_imageURL}${imageData.filename}`}
-							alt={imageData.altText}
-							class="size-full"
-						/>
+						<img src={imageData.imageUrl} alt={imageData.altText} class="size-full" />
 						<div class="absolute top-0 flex justify-between h-10 w-full">
 							<button
 								class="hover:bg-gray-700/70 h-full p-2 cursor-pointer"
@@ -232,7 +228,7 @@
 					{/if}
 					<div>
 						<img
-							src={`${PUBLIC_imageURL}${imageData.filename}`}
+							src={imageData.imageUrl}
 							alt={imageData.altText}
 							class={`${[Alignment.Derecha, Alignment.Izquierda].includes(imageData.phoneConfig.alignment) ? 'w-2/3' : ''}`}
 							class:ml-auto={imageData.phoneConfig.alignment === Alignment.Derecha}

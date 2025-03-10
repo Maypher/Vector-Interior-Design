@@ -8,6 +8,7 @@ export const load = async ({ fetch, parent }) => {
         query {
             sculptures {
                 filename
+                imageUrl
                 altText: ${english ? 'altTextEn' : 'altTextEs'}
                 sculptureData {
                     description: ${english ? 'descriptionEn' : 'descriptionEs'}

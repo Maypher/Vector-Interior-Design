@@ -164,7 +164,7 @@
 									</span>
 								{/if}
 							</div>
-							<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altText} class="h-full" />
+							<img src={image.imageUrl} alt={image.altText} class="h-full" />
 						</a>
 					</div>
 				{/each}

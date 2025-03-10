@@ -1,7 +1,7 @@
 import { setupI18n } from '$lib/i18n';
 
 export const load = async ({ data }) => {
-    const i18n = await setupI18n(data.selectedLanguage!);
+    const i18n = await setupI18n(data.selectedLanguage);
 
-    return { i18n };
+    return { i18n, selectedLanguage: data.selectedLanguage };
 };

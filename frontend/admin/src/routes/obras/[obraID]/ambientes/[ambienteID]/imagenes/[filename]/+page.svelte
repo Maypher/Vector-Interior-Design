@@ -76,7 +76,7 @@
 
 			const deleted = (await graphql(query, variables)).deleteImage;
 
-			if (deleted) await goto(`/obras/${data.projectId}/ambientes/${data.ambienteId}`);
+			if (deleted) await goto(`/obras/${data.projectId}`);
 		}
 	}
 
@@ -145,7 +145,7 @@
 				>
 			</h1>
 			<img
-				src={`${PUBLIC_imageURL}${imageData.filename}`}
+				src={imageData.imageUrl}
 				alt={imageData.altTextEs}
 				class="h-full w-auto my-2 shadow-md shadow-black"
 			/>

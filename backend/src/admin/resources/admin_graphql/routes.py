@@ -2,22 +2,18 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from sanic import Blueprint
 from strawberry.sanic.views import GraphQLView
-from sanic.request import File
-from strawberry.file_uploads import Upload
 from admin.resources.admin_graphql import Query, Mutation
 from strawberry import Schema
 from admin.auth.decorators import login_required
 from strawberry.http.temporal_response import TemporalResponse
-from os import environ
+from common.utilities.environment import dev_mode
 
 if TYPE_CHECKING:
     from admin.utilities.types import AdminRequest, GraphQLContext
 
 
 class AuthGraphQLView(GraphQLView):
-    decorators = (
-        [login_required] if environ.get("BUILD_TARGET", "dev") != "dev" else None
-    )
+    decorators = [login_required] if not dev_mode else None
 
     async def get_context(
         self, request: AdminRequest, response: TemporalResponse

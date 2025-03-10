@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { isEqual, cloneDeep } from 'lodash-es';
 	import type { PageData } from './$types';
-	import { PUBLIC_imageURL } from '$env/static/public';
 	import ConfigButtons from '$lib/components/editor/ConfigButtons.svelte';
 	import EditorDescription from '$lib/components/editor/EditorDescription.svelte';
 	import '$lib/styles/markdown.css';
@@ -312,7 +311,7 @@
 				}`}
 			>
 				<img
-					src={`${PUBLIC_imageURL}${image.filename}`}
+					src={image.imageUrl}
 					alt={image.altTextEs}
 					class={`object-cover transition-[height] border-vector-orange ${
 						image.desktopConfig.imageBorders.e && preview ? 'border-r-2 px-12' : ''

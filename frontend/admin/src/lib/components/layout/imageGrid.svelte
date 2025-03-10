@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_imageURL } from '$env/static/public';
 	import Sortable, { type Options } from 'sortablejs';
 	import SortableList from '../input/SortableList.svelte';
 	import { isEqual } from 'lodash-es';
@@ -63,7 +62,7 @@
 				class="image-item transition-all border-vector-orange hover:border-4"
 				data-imageId={image.filename}
 			>
-				<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altTextEs} />
+				<img src={image.imageUrl} alt={image.altTextEs} />
 			</a>
 		{/each}
 		<a

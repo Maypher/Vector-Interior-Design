@@ -11,6 +11,7 @@ psycopg = "^3.2.3"
 # strawberry-graphql = "^0.257.0" # This is a temporary change until the bug fix is merged into the official repo
 strawberry-graphql = { git = "https://github.com/Maypher/strawberry.git", branch = "sanic-file-fix" }
 sanic = { extras = ["ext"], version = "^24.12.0" }
+cloudinary = "^1.42.2"
 
 [tool.poetry.group.admin]
 optional = true
@@ -18,6 +19,9 @@ optional = true
 [tool.poetry.group.admin.dependencies]
 bcrypt = "^4.2.1"
 aiofiles = "^24.1.0"
+requests = "^2.32.3"
+aiohttp = "^3.11.13"
+
 
 [tool.poetry.group.dev]
 optional = true

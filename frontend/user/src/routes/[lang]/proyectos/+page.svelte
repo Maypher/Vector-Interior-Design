@@ -60,8 +60,8 @@
 					>
 						<figure class="h-full">
 							<img
-								src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
-								alt={project.thumbnail.altTextEs}
+								src={project.thumbnail.imageUrl}
+								alt={project.thumbnail.altText}
 								class="h-full object-cover"
 							/>
 							<figcaption>
@@ -91,11 +91,7 @@
 				class="m-auto flex h-2/3 flex-col items-start gap-y-2 transition-transform hover:scale-110"
 			>
 				<figure class="h-full">
-					<img
-						src={`${PUBLIC_imagesUrl}${project.thumbnail.filename}`}
-						alt={project.thumbnail.altTextEs}
-						class="h-full"
-					/>
+					<img src={project.thumbnail.imageUrl} alt={project.thumbnail.altText} class="h-full" />
 					<figcaption>
 						<p class="font-Agency-FB ml-2 text-xl text-white">{project.name}</p>
 					</figcaption>

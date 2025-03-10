@@ -15,6 +15,7 @@ export const load = async ({ fetch, params }) => {
                             name
                             images {
                                 filename
+                                imageUrl
                                 altTextEs
                                 descriptionEs
                                 descriptionEn

@@ -13,6 +13,9 @@ services:
             - DB_PORT=${DATABASE_PORT:-5432}
             - DB_NAME=${DATABASE_NAME:-postgres}
             - FRONTEND_URL=${ADMIN_FRONTEND_URL:?Frontend URL required for CORS.}
+            - CLOUDINARY_NAME=${CLOUDINARY_NAME:?Name required for CDN connection}
+            - CLOUDINARY_PUBLIC_KEY=${CLOUDINARY_PUBLIC_KEY:?Key required for CDN connection.}
+            - IMAGES_URL=${IMAGES_URL:?URL required to return images.}
         volumes:
             - data:/storage/images/
         networks:
@@ -35,6 +38,7 @@ services:
             - prod
         secrets:
             - admin_password
+            - cloudinary_private_key
     user-backend:
         build:
             context: ./backend/
@@ -57,16 +61,21 @@ services:
                   path: ./backend/src/common/
                   target: /app/src/common/
         environment:
+            - BUILD_TARGET=${BUILD_TARGET:-dev}
             - PORT=${USER_PORT:-2800}
             - USERNAME=${USER_USERNAME:-frontend}
             - HOST=database
             - DB_PORT=${DATABASE_PORT:-5432}
             - DB_NAME=${DATABASE_NAME:-postgres}
             - FRONTEND_URL=${USER_FRONTEND_URL:?Frontend URL required for CORS.}
+            - CLOUDINARY_NAME=${CLOUDINARY_NAME:?Name required for CDN connection}
+            - CLOUDINARY_PUBLIC_KEY=${CLOUDINARY_PUBLIC_KEY:?Key required for CDN connection.}
+            - IMAGES_URL=${IMAGES_URL:?URL required to return images.}
         profiles:
             - prod
         secrets:
             - user_password
+            - cloudinary_private_key
     tests:
         build:
             context: ./backend/
@@ -141,3 +150,5 @@ secrets:
         file: ./secrets/admin_password.txt
     postgres_password:
         file: ./secrets/postgres_password.txt
+    cloudinary_private_key:
+        file: ./secrets/cloudinary_private_key.txt

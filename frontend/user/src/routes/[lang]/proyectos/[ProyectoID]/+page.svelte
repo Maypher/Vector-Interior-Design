@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import logo from '$lib/images/logo.svg';
-	import { PUBLIC_imagesUrl } from '$env/static/public';
 	import '$lib/styles/markdown.css';
 	import mdToHtml from '$lib/utilities/markdown';
 	import * as enums from '$lib/utilities/enums';
@@ -99,7 +98,7 @@
 			style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
 		>
 			<img
-				src={`${PUBLIC_imagesUrl}${image.filename}`}
+				src={image.imageUrl}
 				alt={image.altText}
 				class={`border-vector-orange h-full w-auto object-cover ${
 					image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
@@ -163,7 +162,7 @@
 			</div>
 		{/if}
 		<img
-			src={`${PUBLIC_imagesUrl}${image.filename}`}
+			src={image.imageUrl}
 			alt={image.altText}
 			class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig?.alignment) ? 'w-4/5' : ''} max-h-[90vh] object-contain`}
 			class:ml-auto={image.phoneConfig?.alignment === enums.Alignment.RIGHT}
@@ -186,7 +185,7 @@
 			{#each space.images.slice(0, 1) as image (image.filename)}
 				<div class="my-20">
 					<img
-						src={`${PUBLIC_imagesUrl}${image.filename}`}
+						src={image.imageUrl}
 						alt={image.altText}
 						class:px-8={image.phoneConfig.alignment !== enums.Alignment.OVERFLOW}
 						class="mx-auto max-h-[80vh]"
@@ -222,14 +221,14 @@
 			{#each space.images.slice(0, 1) as image}
 				<div class="p-15 flex h-[calc(100vh-5rem)] w-full items-center justify-evenly gap-5">
 					<img
-						src={`${PUBLIC_imagesUrl}${image.filename}`}
+						src={image.imageUrl}
 						alt={image.altText}
 						class={`border-vector-orange object-cover ${
 							image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
 						} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''}`}
 						style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
 					/>
-					<div class="max-w-1/2 flex flex-col gap-y-5 p-4 pb-0">
+					<div class="max-w-1/2 flex flex-col gap-y-5 self-start p-4 pb-0">
 						<div class="border-vector-orange flex w-full justify-between border-b-2 px-4 pb-2">
 							<h1 class="font-Agency-FB text-4xl text-white">
 								{projectData.name}

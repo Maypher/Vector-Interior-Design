@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_imagesUrl } from '$env/static/public';
 	import logo from '$lib/images/logo.svg';
 	import symbol from '$lib/images/symbol.svg';
 	import logoWhite from '$lib/images/logo white.svg';
@@ -21,6 +20,7 @@
 
 	interface mainImageData {
 		filename: string;
+		imageUrl: string;
 		altText: string;
 		mainImageConfig: {
 			description?: string;
@@ -111,7 +111,7 @@
 				{#if imageData.mainImageConfig.phoneConfig.imageBorders.n}
 					<div class="bg-vector-orange max-w-83/10 mx-auto mb-20 h-px w-full"></div>
 				{/if}
-				<img src={`${PUBLIC_imagesUrl}${imageData.filename}`} alt={imageData.altText} />
+				<img src={imageData.imageUrl} alt={imageData.altText} />
 				{#if imageData.mainImageConfig.phoneConfig.imageBorders.s}
 					<div class="bg-vector-orange max-w-83/10 mx-auto mt-20 h-px w-full"></div>
 				{/if}
@@ -150,7 +150,7 @@
 		};`}
 	>
 		<img
-			src={`${PUBLIC_imagesUrl}${imageData.filename}`}
+			src={imageData.imageUrl}
 			alt={imageData.altText}
 			class="h-full max-w-full transition-all"
 		/>
@@ -256,7 +256,7 @@
 	id="nav"
 >
 	<img
-		src={`${PUBLIC_imagesUrl}${mainImages.at(-1)!.filename}`}
+		src={mainImages.at(-1)!.imageUrl}
 		alt={mainImages.at(-1)!.altText}
 		class="lg:max-w-2/3 max-w-full lg:my-auto lg:max-h-full"
 	/>

@@ -132,7 +132,7 @@
 	}
 </script>
 
-<div class="bg-black flex items-center justify-center h-[calc(100svh-5rem)]">
+<div class="bg-black flex items-center justify-center p-5 min-h-[calc(100svh-5rem)]">
 	<form use:enhance class="bg-gray-700 max-w-xl w-full p-3 rounded-md">
 		<fieldset disabled={submitting} class="flex flex-col gap-5">
 			<input
@@ -200,7 +200,9 @@
 					maxlength="255"
 				/>
 			</div>
-			<button type="submit" class="bg-green-200 hover:bg-amber-200 p-2 rounded-md self-start"
+			<button
+				type="submit"
+				class="bg-green-200 hover:cursor-pointer hover:bg-amber-200 p-2 rounded-md self-start"
 				>Crear
 			</button>
 		</fieldset>

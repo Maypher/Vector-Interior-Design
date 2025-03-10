@@ -3,6 +3,7 @@ import { error } from '@sveltejs/kit';
 
 export const load = async ({ params, fetch, parent }) => {
     const { selectedLanguage } = await parent();
+    console.log(selectedLanguage);
     const english = selectedLanguage === 'en';
 
     const query = `
@@ -14,6 +15,7 @@ export const load = async ({ params, fetch, parent }) => {
                 area
                 thumbnail {
                     filename
+                    imageUrl
                     altText: ${english ? 'altTextEs' : 'altTextEs'}
                 }
                 spaces {
@@ -21,6 +23,7 @@ export const load = async ({ params, fetch, parent }) => {
                     name
                     images {
                         filename
+                        imageUrl
                         altText: ${english ? 'altTextEs' : 'altTextEn'}
                         description: ${english ? 'descriptionEn' : 'descriptionEs'}
                         descriptionFont

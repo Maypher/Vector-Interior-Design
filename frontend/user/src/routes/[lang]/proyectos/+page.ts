@@ -1,6 +1,9 @@
 import graphql from '$lib/utilities/api.js'
 
-export const load = async ({ fetch }) => {
+export const load = async ({ fetch, parent }) => {
+    const { selectedLanguage } = await parent();
+    const english = selectedLanguage == 'en';
+
     const query = `
         query projects {
             projects {
@@ -8,7 +11,8 @@ export const load = async ({ fetch }) => {
                 name
                 thumbnail {
                     filename
-                    altTextEs
+                    imageUrl
+                    altText: ${english ? 'altTextEn' : 'altTextEs'}
                     altTextEn
                 }
             }

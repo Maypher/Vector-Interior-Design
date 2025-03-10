@@ -3,7 +3,9 @@ import strawberry
 from common.common_graphql import enums
 from common.types import ResourceInfo
 from psycopg import rows
-
+from os import environ
+from common.utilities.environment import dev_mode
+from common.utilities.cdn import gen_image_url
 from sanic.log import logger
 
 
@@ -100,9 +102,10 @@ class Space:
 
 @strawberry.type(description="An image along a description of it.")
 class Image:
+    base_url: str = environ.get("IMAGES_URL")
     id: int = strawberry.field(description="The ID of the image in the database.")
     filename: str = strawberry.field(
-        description="The unique filename of the image. **Use this to fetch the actual image.**"
+        description="The filename of the image in the database. Don't use this for showing the image in the frontend. Instead use `imageUrl`."
     )
     alt_text_es: str = strawberry.field(
         description="The alt text of the image in Spanish. Not to be shown in the UI."
@@ -189,6 +192,16 @@ class Image:
             1,
             row_factory=rows.class_row(SculptureData),
         )
+
+    @strawberry.field(description="The url used to fetch the image in the frontend")
+    def image_url(self, info: ResourceInfo) -> str:
+        if dev_mode:
+            logger.debug(environ.get("IMAGES_URL"))
+            return f"{environ.get("IMAGES_URL")}{self.filename}"
+        else:
+            return gen_image_url(
+                self.filename, info.context["resource_manager"].allow_private
+            )
 
 
 @strawberry.type(

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import graphql from '$lib/utilities/api';
-	import { PUBLIC_imageURL } from '$env/static/public';
 	import SortableList from '$lib/components/input/SortableList.svelte';
 	import Sortable, { type Options } from 'sortablejs';
 	import getArrayDifference from '$lib/utilities/arrayOrder';
@@ -64,7 +63,7 @@
 						class="m-auto w-fit flex h-2/3 flex-col items-start gap-y-2 transition-transform hover:scale-110"
 					>
 						<img
-							src={`${PUBLIC_imageURL}${project.thumbnail.filename}`}
+							src={project.thumbnail.imageUrl}
 							alt={project.thumbnail.altTextEs}
 							class="h-full"
 						/>

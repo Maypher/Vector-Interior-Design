@@ -13,12 +13,11 @@ from admin.db.database import AdminDatabaseManager
 from common.resource_manager import ResourceManager
 from strawberry import UNSET
 from sanic.request import File
-import aiofiles
 from strawberry import UNSET
 from strawberry import Info
 from admin.utilities.types import GraphQLContext
-
-STORAGE_LOCATION = "/storage/images/"
+from admin.utilities import image_upload
+from common.utilities.environment import dev_mode
 
 
 class AdminResourceManager(ResourceManager):
@@ -242,28 +241,21 @@ class AdminResourceManager(ResourceManager):
         if not space:
             return GraphqlErrors.SpaceNotFoundImage(space_id=space_id)
 
-        file_extension = utilities.file_extension(image.name)
+        image_filename = None
 
-        image_name = uuid.uuid4().hex
-        image_filename = f"{image_name}{file_extension}"
-        image_location = f"{STORAGE_LOCATION}{image_filename}"
+        if dev_mode:
+            image_filename = await image_upload.upload_locally(image)
+        else:
+            image_filename = image_upload.upload_to_cdn(image)
 
-        async with aiofiles.open(image_location, "wb") as file:
-            await file.write(image.body)
-
-        # If for any reason the image doesn't save to the database remove it from storage and propagate the error.
-        try:
-            data = self.database_manager.query(
-                """
-            INSERT INTO image (filename, alt_text_es, alt_text_en, space_id) VALUES (%s, %s, %s, %s)
-            RETURNING *;
-            """,
-                (image_filename, alt_text_es, alt_text_en, space.id),
-                count=1,
-            )
-        except Exception as e:
-            os.remove(image_location)
-            raise e
+        data = self.database_manager.query(
+            """
+        INSERT INTO image (filename, alt_text_es, alt_text_en, space_id) VALUES (%s, %s, %s, %s)
+        RETURNING *;
+        """,
+            (image_filename, alt_text_es, alt_text_en, space.id),
+            count=1,
+        )
 
         return schemas.Image(**data)
 
@@ -433,18 +425,22 @@ class AdminResourceManager(ResourceManager):
         if not image:
             return False
 
-        location = f"{STORAGE_LOCATION}{filename}"
-        if os.path.exists(location):
-            self.database_manager.query(
-                """
+        if dev_mode:
+            location = f"{image_upload.STORAGE_LOCATION}{filename}"
+            if os.path.exists(location):
+                os.remove(location)
+            else:
+                return False
+        else:
+            image_upload.delete_from_cdn(filename)
+
+        self.database_manager.query(
+            """
             DELETE FROM image WHERE filename = %s;
             """,
-                (filename,),
-            )
-
-            os.remove(location)
-            return True
-        return False
+            (filename,),
+        )
+        return True
 
     def update_index(
         self,

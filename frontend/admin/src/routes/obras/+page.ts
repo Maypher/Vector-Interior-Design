@@ -9,6 +9,7 @@ export const load = async ({ fetch }) => {
 					public
 					thumbnail {
 						filename
+						imageUrl
 						altTextEs
 					}
 				}

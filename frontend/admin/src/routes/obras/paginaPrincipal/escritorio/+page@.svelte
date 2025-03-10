@@ -213,11 +213,7 @@
 			bind:preview
 			class={`relative h-full w-fit transition-all`}
 		>
-			<img
-				src={`${PUBLIC_imageURL}${image.filename}`}
-				alt={image.altTextEs}
-				class="h-full max-w-full transition-all"
-			/>
+			<img src={image.imageUrl} alt={image.altTextEs} class="h-full max-w-full transition-all" />
 			<div class="absolute top-0 w-full flex justify-between" class:hidden={preview}>
 				<div class="flex rounded-br-sm">
 					<button
@@ -560,7 +556,7 @@
 			class="p-15 lg:my-50 mt-20 flex h-screen flex-col gap-y-10 overflow-visible lg:h-[70vh] lg:flex-row lg:justify-between xl:h-[90vh] xl:justify-evenly"
 		>
 			<img
-				src={`${PUBLIC_imageURL}${updatedMainPageImages.at(-1)!.filename}`}
+				src={updatedMainPageImages.at(-1)!.imageUrl}
 				alt={updatedMainPageImages.at(-1)!.altTextEs}
 				class="max-w-2/3 md:max-lg:max-w-full lg:my-auto lg:max-h-full"
 			/>

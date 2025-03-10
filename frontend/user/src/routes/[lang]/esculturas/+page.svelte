@@ -88,7 +88,7 @@
 				class={`${i === 0 ? 'mt-20' : !lastImage ? 'my-50' : 'my-12'} flex flex-col items-center justify-around gap-10`}
 			>
 				<img
-					src={`${PUBLIC_imagesUrl}${image.filename}`}
+					src={image.imageUrl}
 					alt={image.altTextEs}
 					class:px-8={i !== 0}
 					class="w-9/10 max-h-[90svh] object-contain"
@@ -127,7 +127,7 @@
 					<div class="h-13/20 flex justify-center gap-20">
 						{#each sculpture as sculptureGroup}
 							<img
-								src={`${PUBLIC_imagesUrl}${sculptureGroup.filename}`}
+								src={sculptureGroup.imageUrl}
 								alt={sculptureGroup.altTextEs}
 								class="h-full w-auto"
 							/>
@@ -147,7 +147,7 @@
 					class={`${i === groupedSculptures.length - 1 ? '' : 'mb-50'}  flex h-[calc(100vh-6rem)] flex-col items-center justify-center gap-5 ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'}`}
 				>
 					<img
-						src={`${PUBLIC_imagesUrl}${sculpture.filename}`}
+						src={sculpture.imageUrl}
 						alt={sculpture.altTextEs}
 						class:px-8={i !== 0}
 						class="h-13/20 max-h-4/5 w-auto"

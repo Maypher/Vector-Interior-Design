@@ -8,6 +8,7 @@ export const load = async ({ fetch, parent }) => {
         query mainPageImages {
             mainPageImages {
                 filename
+                imageUrl
                 altText: ${english ? 'altTextEn' : 'altTextEs'}
                 mainImageConfig {
                     description: ${english ? 'descriptionEn' : 'descriptionEs'}

@@ -23,6 +23,7 @@ export async function load({ params, fetch }) {
                             name
                             images {
                                 filename
+                                imageUrl
                                 altTextEs
                             }
                         }

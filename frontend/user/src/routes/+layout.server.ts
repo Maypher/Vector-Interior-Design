@@ -1,4 +1,4 @@
-export const load = ({ cookies, request }) => {
+export const load = ({ cookies, request }): { selectedLanguage: 'en' | 'es' } => {
     const availableLanguages = ["en", "es"];
 
     let selectedLanguage = cookies.get('lang');
@@ -12,5 +12,5 @@ export const load = ({ cookies, request }) => {
     }
 
 
-    return { selectedLanguage };
+    return { selectedLanguage: selectedLanguage as 'en' | 'es' };
 }

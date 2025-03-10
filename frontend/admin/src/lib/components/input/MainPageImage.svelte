@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_imageURL } from '$env/static/public';
 	import { Directions } from '$lib/utilities/enums';
 	import Markdown from '../markdown/Markdown.svelte';
 	import graphql from '$lib/utilities/api';
@@ -34,6 +33,7 @@
 	interface Props {
 		image: {
 			filename: string;
+			imageUrl: string;
 			altText: string;
 			spaceId: number;
 			projectId: number;
@@ -114,7 +114,7 @@
 			<div class="flex gap-2">
 				<input type="checkbox" bind:checked={updatedConfig.phoneConfig.imageBorders.w} />
 				<a href={`/obras/${image.projectId}/ambientes/${image.spaceId}/imagenes/${image.filename}`}>
-					<img src={`${PUBLIC_imageURL}${image.filename}`} alt={image.altText} class="h-36" />
+					<img src={image.imageUrl} alt={image.altText} class="h-36" />
 				</a>
 				<input type="checkbox" bind:checked={updatedConfig.phoneConfig.imageBorders.e} />
 			</div>
