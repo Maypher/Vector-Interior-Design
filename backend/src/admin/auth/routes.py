@@ -13,51 +13,6 @@ async def main_user_created(request: AdminRequest):
     return response.text(str(user_count))
 
 
-@auth_blueprint.post("/crear-cuenta")
-async def create_account(request: AdminRequest):
-    user_count = request.app.ctx.user_manager.get_user_count()
-    if user_count > 0:
-        return response.text("Cuenta principal ya creada.", 401)
-
-    email = request.form.get("email")
-    name = request.form.get("name")
-    password = request.form.get("password")
-
-    if not email or not name or not password:
-        return response.text(
-            "Información incompleta. Correo y contraseña requeridas.", 400
-        )
-
-    user_manager = request.app.ctx.user_manager
-
-    if not user_manager.validate_email(email) or not user_manager.validate_password(
-        password
-    ):
-        return response.text(
-            "Datos incompletos. Verifique su correo electrónico y contraseña para ver si el formato es correcto.",
-            400,
-        )
-
-    if user_manager.get_user_by_email(email):
-        return response.text("Usuario con este correo ya existe.", 401)
-
-    user_id = user_manager.create_user(email, name, password)
-
-    user_session = request.app.ctx.session_manager.create_session(user_id)
-
-    res = response.empty(200)
-    res.add_cookie(
-        "session_id",
-        user_session.session_id,
-        expires=user_session.expires_at,
-        httponly=True,
-        samesite="None",
-        secure=True,
-    )
-
-    return res
-
-
 @auth_blueprint.post("/iniciar-sesion")
 async def login(request: AdminRequest):
     email = request.form.get("email")
