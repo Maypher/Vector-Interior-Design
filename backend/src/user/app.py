@@ -12,7 +12,7 @@ import os
 
 
 def create_app(ctx=Context()) -> Sanic:
-    app = Sanic("TQ-admin-backend", ctx=ctx)
+    app = Sanic("TQ-user-backend", ctx=ctx)
 
     app.add_route(
         UserGraphQLView.as_view(schema=Schema(query=Query)),
