@@ -561,7 +561,7 @@
 			/>
 			<div class="relative flex size-full items-center justify-center gap-5 p-5">
 				<a
-					href="/esculturas/"
+					href="/obras/esculturas/"
 					class="border-vector-orange after:bg-vector-orange relative top-10 w-fit text-4xl text-white hover:border-b-2 z-20"
 					style="font-family: Agency-FB;"
 				>
@@ -572,7 +572,7 @@
 					<div class="bg-vector-orange relative bottom-4.5 h-full w-[2px]"></div>
 				</div>
 				<a
-					href="/proyectos/"
+					href="/obras/"
 					class="border-vector-orange relative bottom-10 w-fit text-4xl text-white hover:border-b-2 z-20"
 					style="font-family: Agency-FB;"
 					>Proyectos
@@ -601,7 +601,9 @@
 				alt="Contacto"
 				class="col-start-2 block max-h-[70vh] align-middle xl:max-h-[80vh]"
 			/>
-			<p class="col-start-2 row-start-2 justify-self-center text-white">Vector@gmail.com</p>
+			<p class="col-start-2 row-start-2 justify-self-center text-white">
+				contact@vectorinterior.design
+			</p>
 		</div>
 		<img src={logoWhite} alt="Logo white" class="max-w-42 bottom-0 right-20 w-1/2 lg:absolute" />
 	</footer>
