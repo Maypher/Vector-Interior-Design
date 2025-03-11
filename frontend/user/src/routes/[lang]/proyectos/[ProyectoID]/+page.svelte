@@ -139,7 +139,7 @@
 {/snippet}
 
 {#snippet phoneImageView(image: any)}
-	<div
+	<figure
 		class={`border-vector-orange my-30 gap-12 ${
 			image.phoneConfig?.borders?.n && 'pt-30 border-t-2'
 		} ${image.phoneConfig?.borders?.s && 'pb-30 border-b-2'} ${
@@ -153,13 +153,13 @@
 		class:flex-col-reverse={image.phoneConfig?.descriptionPos === enums.Directions.S}
 	>
 		{#if image.description && image.phoneConfig.descriptionPos}
-			<div class="mx-auto max-w-[90vw]">
+			<figcaption class="mx-auto max-w-[90vw]">
 				{@render descriptionContainer(
 					image.description,
 					image.phoneConfig.descriptionAlignment,
 					image.descriptionFont
 				)}
-			</div>
+			</figcaption>
 		{/if}
 		<img
 			src={image.imageUrl}
@@ -167,8 +167,9 @@
 			class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig?.alignment) ? 'w-4/5' : ''} max-h-[90vh] object-contain`}
 			class:ml-auto={image.phoneConfig?.alignment === enums.Alignment.RIGHT}
 			class:mr-auto={image.phoneConfig?.alignment === enums.Alignment.LEFT}
+			class:mx-auto={image.phoneConfig?.alignment === enums.Alignment.CENTER}
 		/>
-	</div>
+	</figure>
 {/snippet}
 
 <div class="relative min-h-screen bg-black">

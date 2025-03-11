@@ -262,7 +262,7 @@
 	/>
 	<ul class="relative flex size-full items-center justify-center gap-5 p-5">
 		<li
-			class="hover-link relative top-10 h-fit w-fit text-4xl text-white"
+			class="hover-link relative top-10 h-fit w-fit text-4xl text-white md:max-lg:top-20"
 			style="font-family: Agency-FB;"
 		>
 			<a href={`${$i18n.language}/esculturas/`}>
@@ -274,7 +274,7 @@
 			<div class="bg-vector-orange relative bottom-5 h-full w-[2px]"></div>
 		</div>
 		<li
-			class="hover-link relative bottom-10 w-fit text-4xl text-white after:relative after:top-1"
+			class="hover-link relative bottom-0 w-fit text-4xl text-white after:relative after:top-1 md:max-lg:bottom-0"
 			style="font-family: Agency-FB;"
 		>
 			<a href={`/${$i18n.language}/proyectos/`}>
@@ -309,8 +309,9 @@
 		<a
 			href="mailto:k@vectorinterior.design"
 			class="font-Agency-FB col-start-2 row-start-2 justify-self-center text-2xl text-white"
-			>k@vectorinterior.design</a
 		>
+			contact@vectorinterior.design
+		</a>
 	</div>
 	<img
 		src={logoWhite}
