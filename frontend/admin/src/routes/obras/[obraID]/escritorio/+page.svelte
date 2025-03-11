@@ -90,6 +90,7 @@
 				updateImage(filename: $filename, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, descriptionFont: $descriptionFont,
 				index: $index, desktopConfig: $desktopConfig) {
 					filename
+					imageUrl
 					altTextEs
 					descriptionEs
 					descriptionEn

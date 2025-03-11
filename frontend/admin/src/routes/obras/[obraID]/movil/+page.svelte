@@ -42,6 +42,7 @@
 				updateImage(filename: $filename, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn,
 				descriptionFont: $descriptionFont, index: $index, phoneConfig: $phoneConfig) {
 					filename
+					imageUrl
 					altTextEs
 					descriptionEs
 					descriptionEn
