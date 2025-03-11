@@ -1,6 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { PUBLIC_apiURL } from '$env/static/public';
+	import { page } from '$app/stores';
 
 	let { children } = $props();
 
@@ -18,13 +19,27 @@
 	class="p-3 flex justify-between sticky top-0 z-10 md:static items-center bg-vector-grey h-20"
 >
 	<div class="flex items-center h-full">
-		<a href="/obras/" class="hover:bg-vector-orange p-3 rounded-md transition-colors">Proyectos</a>
-		<a href="/obras/paginaPrincipal" class="hover:bg-vector-orange p-3 rounded-md transition-colors"
-			>Página Principal</a
+		<a
+			href="/obras/"
+			class="hover:bg-vector-orange p-3 rounded-md transition-colors"
+			class:font-bold={$page.url.pathname === '/obras'}
 		>
-		<a href="/obras/esculturas" class="hover:bg-vector-orange p-3 rounded-md transition-colors"
-			>Esculturas</a
+			Proyectos
+		</a>
+		<a
+			href="/obras/paginaPrincipal"
+			class="hover:bg-vector-orange p-3 rounded-md transition-colors active:font-bold"
+			class:font-bold={$page.url.pathname === '/obras/paginaPrincipal'}
 		>
+			Página Principal
+		</a>
+		<a
+			href="/obras/esculturas"
+			class="hover:bg-vector-orange p-3 rounded-md transition-colors"
+			class:font-bold={$page.url.pathname === '/obras/esculturas'}
+		>
+			Esculturas
+		</a>
 	</div>
 	<button
 		type="button"
