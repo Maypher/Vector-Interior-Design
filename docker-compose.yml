@@ -127,7 +127,6 @@ services:
         profiles: [ prod ]
         ports:
             - "0.0.0.0:8080:80"
-            - "0.0.0.0:8090:20"
         volumes:
             - data:/storage/images/:ro
         depends_on:
@@ -137,6 +136,8 @@ services:
         environment:
             - ADMIN_PORT=${ADMIN_PORT:-3000}
             - USER_PORT=${USER_PORT:-2800}
+            - USER_FRONTEND_URL=${USER_FRONTEND_URL:?User frontend url required for reverse proxy.}
+            - ADMIN_FRONTEND_URL=${ADMIN_FRONTEND_URL:?Admin frontend url required for reverse proxy.}
 volumes:
     data:
 networks:
