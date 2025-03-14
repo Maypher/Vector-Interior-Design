@@ -20,6 +20,7 @@ export const load = async ({ fetch, params }) => {
                         descriptionEs
                         descriptionEn
                         descriptionFont
+                        bgColor
                         desktopConfig {
                             groupAlignment
                             groupEnd

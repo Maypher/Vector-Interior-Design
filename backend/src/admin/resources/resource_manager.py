@@ -263,6 +263,7 @@ class AdminResourceManager(ResourceManager):
         filename: str,
         alt_text_es: str | None = None,
         alt_text_en: str | None = None,
+        bg_color: str | None = None,
         new_index: int | None = None,
         main_page: bool | None = None,
         hide_in_project: bool | None = None,
@@ -324,7 +325,8 @@ class AdminResourceManager(ResourceManager):
                     COALESCE(%s, (desktop_config).description_logo_position),
                     COALESCE(%s, (desktop_config).logo_position),
                     COALESCE(%s, (desktop_config).logo_borders)
-                )::image_desktop_config
+                )::image_desktop_config,
+                bg_color = COALESCE(%s, bg_color)
                 WHERE id = %s
                 """,
             (
@@ -383,6 +385,7 @@ class AdminResourceManager(ResourceManager):
                     if getattr(desktop_config, "logo_borders", None)
                     else None
                 ),
+                bg_color,
                 image_id,
             ),
             commit=False,
@@ -612,6 +615,7 @@ class AdminResourceManager(ResourceManager):
         description_font: typing.Optional[str] = None,
         description_font_size: typing.Optional[float] = None,
         description_alignment: typing.Optional[str] = None,
+        bg_color: typing.Optional[str] = None,
         phone_config: typing.Optional[inputs.MainPageImagePhoneConfigInput] = None,
         desktop_config: typing.Optional[inputs.MainPageImageDesktopConfigInput] = None,
         index: typing.Optional[int] = None,
@@ -765,7 +769,8 @@ class AdminResourceManager(ResourceManager):
             description_en = COALESCE(%s, description_en),
             description_font = COALESCE(%s, description_font),
             description_font_size = COALESCE(%s, description_font_size),
-            description_alignment = COALESCE(%s, description_alignment)
+            description_alignment = COALESCE(%s, description_alignment),
+            bg_color = COALESCE(%s, bg_color)
             WHERE id = %s RETURNING *;
             """,
             (
@@ -774,6 +779,7 @@ class AdminResourceManager(ResourceManager):
                 description_font,
                 description_font_size,
                 description_alignment,
+                bg_color,
                 id,
             ),
             count=1,
@@ -785,6 +791,7 @@ class AdminResourceManager(ResourceManager):
         id: int,
         description_es: typing.Optional[str],
         description_en: typing.Optional[str],
+        bg_color: typing.Optional[str],
         index: typing.Optional[int],
     ) -> schemas.SculptureData:
         """
@@ -815,10 +822,11 @@ class AdminResourceManager(ResourceManager):
             """
             UPDATE sculpture_data SET 
             description_es = COALESCE(%s, description_es),
-            description_en = COALESCE(%s, description_en)
+            description_en = COALESCE(%s, description_en),
+            bg_color = COALESCE(%s, bg_color)
             WHERE id = %s RETURNING *;
             """,
-            (description_es, description_en, id),
+            (description_es, description_en, bg_color, id),
             count=1,
             row_factory=rows.class_row(schemas.SculptureData),
         )

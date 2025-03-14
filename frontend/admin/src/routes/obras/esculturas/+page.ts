@@ -11,6 +11,7 @@ export const load = async ({ fetch }) => {
                     id
                     descriptionEs
                     descriptionEn
+                    bgColor
                 }
                 space {
                     id

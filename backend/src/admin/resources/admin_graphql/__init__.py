@@ -334,6 +334,12 @@ class Mutation:
             typing.Optional[str],
             strawberry.argument(description="The font used for the description."),
         ] = None,
+        bg_color: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(
+                description="The color used in the background in hex format (include #)."
+            ),
+        ] = None,
         index: typing.Annotated[
             typing.Optional[int],
             strawberry.argument(
@@ -369,6 +375,7 @@ class Mutation:
             filename,
             alt_text_es,
             alt_text_en,
+            bg_color,
             index,
             main_page,
             hide_in_project,
@@ -426,6 +433,12 @@ class Mutation:
             typing.Optional[float],
             strawberry.argument("The size used for the description in rem units"),
         ] = None,
+        bg_color: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(
+                "The color used in the background in hex format (include #)."
+            ),
+        ] = None,
         index: typing.Annotated[
             typing.Optional[int],
             strawberry.argument(
@@ -452,6 +465,7 @@ class Mutation:
             description_font,
             description_font_size,
             description_alignment,
+            bg_color,
             phone_config,
             desktop_config,
             index,
@@ -479,6 +493,12 @@ class Mutation:
                 description="The description of the sculpture in English."
             ),
         ] = None,
+        bg_color: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(
+                description="The color used in the background in hex format (include #)."
+            ),
+        ] = None,
         index: typing.Annotated[
             typing.Optional[int],
             strawberry.argument(
@@ -487,5 +507,5 @@ class Mutation:
         ] = None,
     ) -> schemas.SculptureData:
         return info.context["resource_manager"].update_sculpture_data(
-            id, description_es, description_en, index
+            id, description_es, description_en, bg_color, index
         )

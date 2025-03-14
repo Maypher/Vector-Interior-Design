@@ -131,6 +131,9 @@ class Image:
     hide_in_project: bool = strawberry.field(
         description="Indicates if the image should be hidden in the project page."
     )
+    bg_color: str = strawberry.field(
+        description="The color of the background for this image in hexadecimal format #rrggbb (# included)"
+    )
     space_id: strawberry.Private[int]  # The id of the space this image belongs to.
     # Since the db returns this as a tuple string '(borders, alignment, description_pos, description_alignment)'
     # This needs to be preprocessed before being sent. That's why there are two phone_config fields
@@ -298,6 +301,9 @@ class MainPageImageConfig:
     description_alignment: str = strawberry.field(
         description="The alignment of the description. Will be one of tailwind's text-align values."
     )
+    bg_color: str = strawberry.field(
+        description="The color of the background for this image in hexadecimal format #rrggbb (# included)"
+    )
     index: float = strawberry.field(
         description="The index of this image in the main page in the form of a float."
     )
@@ -452,6 +458,9 @@ class SculptureData:
     )
     description_en: typing.Optional[str] = strawberry.field(
         description="The description of the sculpture in English."
+    )
+    bg_color: str = strawberry.field(
+        description="The color of the background for this image in hexadecimal format #rrggbb (# included)"
     )
     index: float = strawberry.field(
         description="The float index of the sculpture relative to all others."

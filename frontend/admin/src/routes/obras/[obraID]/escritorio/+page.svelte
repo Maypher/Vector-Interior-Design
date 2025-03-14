@@ -11,6 +11,7 @@
 	import graphql from '$lib/utilities/api';
 	import getArrayDifference from '$lib/utilities/arrayOrder';
 	import { success } from '$lib/utilities/toasts';
+	import BgColor from '$lib/components/editor/BgColor.svelte';
 
 	const { data }: { data: PageData } = $props();
 	let originalProjectData = $state(data.projectData);
@@ -86,15 +87,16 @@
 
 		const imageMutation = `
 			mutation updateImage($filename: String!, $descriptionEs: String, $descriptionEn: String, $descriptionFont: String,
-			$index: Int, $desktopConfig: DesktopConfigInput) {
+			$index: Int, $desktopConfig: DesktopConfigInput, $bgColor: String) {
 				updateImage(filename: $filename, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, descriptionFont: $descriptionFont,
-				index: $index, desktopConfig: $desktopConfig) {
+				index: $index, desktopConfig: $desktopConfig, bgColor: $bgColor) {
 					filename
 					imageUrl
 					altTextEs
 					descriptionEs
 					descriptionEn
 					descriptionFont
+					bgColor
 					desktopConfig {
 						    groupAlignment
                             groupEnd
@@ -159,6 +161,7 @@
 							descriptionEs: image.descriptionEs,
 							descriptionEn: image.descriptionEn,
 							descriptionFont: image.descriptionFont,
+							bgColor: image.bgColor,
 							index: ordersToUpdate.find((val) => val.id === image.filename)?.newPos,
 							desktopConfig: image.desktopConfig
 						})
@@ -214,6 +217,7 @@
 							<img src={symbol} alt="Símbolo" class="size-8" />
 						</span>
 					</button>
+					<BgColor bind:color={image.bgColor} imageId={image.filename} />
 					<span class="flex items-center w-fit gap-1">
 						<label for={`image-size-${image.filename}`}
 							>Tamaño de imagen (<input
@@ -400,12 +404,15 @@
 		}}
 
 		{#each space.images.slice(0, 1) as image}
-			<div class="header-screen p-15 flex justify-evenly items-center gap-5">
+			<div
+				class="header-screen p-15 flex justify-evenly items-center gap-5 transition-colors"
+				style={`background-color: ${image.bgColor}`}
+			>
 				<Movable
 					down={!Array.isArray(image) ? () => moveImage(0) : undefined}
 					right={Array.isArray(image) ? () => moveImage(0) : undefined}
 					bind:preview
-					class={`${preview ? 'w-fit' : ''}`}
+					class={`${preview ? 'w-fit' : ''} h-[calc(100vh-7rem)]`}
 				>
 					{#if Array.isArray(image)}
 						{@render imageEditor(image[0])}
@@ -474,7 +481,10 @@
 			</div>
 		{/each}
 		{#each space.images.slice(1) as image}
-			<div class="h-screen p-25 flex justify-center">
+			<div
+				class="h-screen p-25 flex justify-center transition-colors"
+				style={`background-color: ${image.bgColor}`}
+			>
 				{#if Array.isArray(image)}
 					<div class="size-full flex justify-evenly">
 						{#each image as groupImage, groupIndex}

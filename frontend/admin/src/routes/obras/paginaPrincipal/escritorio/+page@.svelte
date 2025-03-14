@@ -15,6 +15,7 @@
 	import { success } from '$lib/utilities/toasts';
 	import { onMount } from 'svelte';
 	import { isEqual, cloneDeep } from 'lodash-es';
+	import BgColor from '$lib/components/editor/BgColor.svelte';
 
 	const { data }: { data: PageData } = $props();
 	let originalMainPages: any[] = $state($state.snapshot(data.mainPageImages));
@@ -27,16 +28,17 @@
 	async function updatedMainPageDesktop() {
 		const query = `
 			mutation updateMainPageImage($id: Int!, $descriptionEs: String, $descriptionEn: String, 
-				$descriptionAlignment: String, $descriptionFont: String, $index: Int, 
+				$descriptionAlignment: String, $bgColor: String, $descriptionFont: String, $index: Int, 
 				$desktopConfig: MainPageImageDesktopConfigInput) {
 				updateMainPageConfig(id: $id, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, 
-				descriptionAlignment: $descriptionAlignment, descriptionFont: $descriptionFont, index: $index, 
+				descriptionAlignment: $descriptionAlignment, bgColor: $bgColor, descriptionFont: $descriptionFont, index: $index, 
 				desktopConfig: $desktopConfig) {
 					id
 					descriptionEs
 					descriptionEn
 					descriptionFont
 					descriptionAlignment
+					bgColor
 					desktopConfig {
 						imagePosition
 						descriptionPosition
@@ -87,6 +89,7 @@
 					descriptionEn: mainPageConfig.descriptionEn,
 					descriptionFont: mainPageConfig.descriptionFont,
 					descriptionAlignment: mainPageConfig.descriptionAlignment,
+					bgColor: mainPageConfig.bgColor,
 					index: ordersToUpdate.find((val) => val.id === mainPageConfig.id)?.newPos,
 					desktopConfig: mainPageConfig.desktopConfig
 				};
@@ -165,7 +168,7 @@
 				: image.mainImageConfig.desktopConfig.imagePosition === enums.DesktopPosition.RIGHT
 					? 'end'
 					: 'center'
-		};`}
+		}; background-color: ${image.mainImageConfig.bgColor};`}
 	>
 		<Movable
 			left={image.mainImageConfig.desktopConfig.imagePosition !== enums.DesktopPosition.LEFT
@@ -258,6 +261,7 @@
 					>
 						<img src={symbol} alt="symbol" class="size-full" />
 					</button>
+					<BgColor bind:color={image.mainImageConfig.bgColor} imageId={image.id} />
 				</div>
 				<button
 					class="absolute top-0 right-0 text-white hover:bg-gray-200/40 rounded-bl-sm transition-colors size-10 p-2"
