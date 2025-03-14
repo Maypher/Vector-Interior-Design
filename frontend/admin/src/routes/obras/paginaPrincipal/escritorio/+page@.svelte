@@ -559,12 +559,18 @@
 			bind:preview
 			id="pencil-wrapper"
 			class="p-15 lg:my-50 mt-20 flex h-screen flex-col gap-y-10 overflow-visible lg:h-[70vh] lg:flex-row lg:justify-between xl:h-[90vh] xl:justify-evenly"
+			style={`background-color: ${image.mainImageConfig.bgColor};`}
 		>
-			<img
-				src={updatedMainPageImages.at(-1)!.imageUrl}
-				alt={updatedMainPageImages.at(-1)!.altTextEs}
-				class="max-w-2/3 md:max-lg:max-w-full lg:my-auto lg:max-h-full"
-			/>
+			<div class="max-w-2/3 md:max-lg:max-w-full lg:my-auto lg:max-h-full relative">
+				<img
+					src={updatedMainPageImages.at(-1)!.imageUrl}
+					alt={updatedMainPageImages.at(-1)!.altTextEs}
+					class="h-full w-auto"
+				/>
+				<div class="absolute left-0 top-0">
+					<BgColor bind:color={image.mainImageConfig.bgColor} imageId={image.filename} />
+				</div>
+			</div>
 			<div class="relative flex size-full items-center justify-center gap-5 p-5">
 				<a
 					href="/obras/esculturas/"
