@@ -1,15 +1,16 @@
 .markdownDescription {
-  color: white;
+  color: var(--color-vector-cream);
 }
 
 .markdownDescription>p {
-  text-indent: 1rem;
   width: 100%;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.8;
 }
 
 .markdownDescription>h1 {
-  font-size: 1.8em;
+  font-size: 2.5em;
+  line-height: 1.1;
 }
 
 .markdownDescription>h2 {
@@ -29,7 +30,7 @@
 }
 
 .markdownDescription> :is(h1, h2, h3, h4, h5, h6) {
-  letter-spacing: 0.05rem;
+  letter-spacing: 0.001rem;
   word-spacing: 0.1rem;
   width: 100%;
 }

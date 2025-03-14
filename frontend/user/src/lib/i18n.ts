@@ -15,7 +15,9 @@ export const setupI18n = async (lang: 'en' | 'es'): Promise<Writable<i18n>> => {
                 translation: {
                     "english": "English",
                     'Spanish': 'Spanish',
-                    'mainPageMsg': "From sublime to majestic, the limit of this designer is infinite. Defining his client's personality he's capable of converting the most simple of spaces to unique and exclusive works, achieving an accurate and sometimes inimaginable visual aspect.",
+                    'about': 'About',
+                    'contact': 'Contact',
+                    'aboutUs': "From sublime to majestic, the limit of this designer is infinite. Defining his client's personality he's capable of converting the most simple of spaces to unique and exclusive works, achieving an accurate and sometimes inimaginable visual aspect.",
                     'sculptures': 'Sculptures',
                     'projects': 'Projects',
                     'sculptureHeader': 'Unique and exclusive works',
@@ -23,21 +25,40 @@ export const setupI18n = async (lang: 'en' | 'es'): Promise<Writable<i18n>> => {
                     'conclusionBody': '**Lines** as a starting and essential element of every design must be focused\n on a direction molding a frame of reference, the **passion** for transforming and\n decorating spaces must always aim for quality and confort, considering\n a set of characteristics that help define a **style** to guarantee in this way\n exclusivity in the project.',
                     'slogan': 'Being different has its advantages',
                     'area': 'Area',
-                    'areaUnits': 'square meters'
+                    'areaUnits': 'm²'
                 }
             },
             es: {
                 translation: {
                     'english': "Ingles",
                     'Spanish': 'Español',
-                    'mainPageMsg': 'De lo sublime a lo majestuoso, el límite de este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero e inimaginable.',
+                    'about': 'Nosotros',
+                    'contact': 'Contacto',
+                    'aboutUs': `Como diseñador de interiores, mi enfoque es profundamente personal 
+                    No sigo un solo estilo, sino que fusiono influencias de distintas partes 
+                    del mundo con las últimas tendencias para crear espacios únicos.
+
+                    Mi trabajo se basa en tres pilares fundamentales:
+                    confort, funcionalidad y distinción.
+
+                    Cada proyecto es una oportunidad para transformar ideas
+                    en ambientes que combinan estética y propósito, 
+                    siempre con una atención minuciosa a los detalles. 
+                    
+                    Me involucro en cada etapa del proceso, porque el diseño es mi pasión 
+                    y creo que la excelencia está en los detalles bien ejecutados.
+
+                    Más que imponer un estilo, interpreto y traduzco las necesidades 
+                    y aspiraciones de mis clientes en espacios que cuentan su historia.
+                    Mi trayectoria y mis proyectos hablan por si solos, respaldados por 
+                    un compromiso absoluto de calidad con creatividad.`,
                     'sculptures': 'Esculturas',
                     'projects': 'Proyectos',
                     'sculptureHeader': 'Obras únicas y exclusivas',
                     'conclusionHeader': 'Trazando líneas con dirección, pasión y estilo.',
                     'conclusionBody': `Las **líneas** como elemento inicial y esencial de todo diseño deben estar enfocadas\n en una **dirección** moldeando un marco de referencia, la **pasión** por transformar y\ndecorar los espacios siempre debe apuntar a la calidad y el confort, considerando\nun conjunto de características que ayuden a definir un **estilo**\n para garantizar exclusividad en el proyecto.`,
                     'area': 'Área',
-                    'areaUnits': 'metros cuadrados'
+                    'areaUnits': 'm²'
                 }
             }
         },

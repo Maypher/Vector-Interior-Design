@@ -5,6 +5,7 @@
 	import cookies from 'js-cookie';
 	import type { PageData } from './$types';
 	import { afterNavigate } from '$app/navigation';
+	import logo from '$lib/images/logo.svg';
 
 	let { children, data }: { data: PageData; children: Snippet } = $props();
 	const i18n = getI18n();
@@ -34,10 +35,18 @@
 	}
 </script>
 
-<div class="absolute right-0 top-0 z-20">
-	<select onchange={(e) => changeLanguage((e.target as HTMLSelectElement).value)}>
-		<option value="en" selected={$i18n.language === 'en'}>{$i18n.t('english')}</option>
-		<option value="es" selected={$i18n.language === 'es'}>{$i18n.t('Spanish')}</option>
-	</select>
-</div>
+<header class="bg-vector-cream flex h-20 items-center justify-between gap-20 p-5 px-10">
+	<a href={`/${$i18n.language}`} class="hover:scale-120 h-full transition-transform">
+		<img src={logo} alt="Vector: Interior Design" class="h-full" />
+	</a>
+	<div>
+		<select
+			onchange={(e) => changeLanguage((e.target as HTMLSelectElement).value)}
+			class="font-Nexa text-black"
+		>
+			<option value="en" selected={$i18n.language === 'en'}>{$i18n.t('english')}</option>
+			<option value="es" selected={$i18n.language === 'es'}>{$i18n.t('Spanish')}</option>
+		</select>
+	</div>
+</header>
 {@render children()}

@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { websiteUrl } from '$lib/utilities/constants';
 	import type { PageData } from './$types';
 	import symbol from '$lib/images/symbol.svg';
 	import mdToHtml from '$lib/utilities/markdown';
-	import logo from '$lib/images/logo.svg';
 	import '$lib/styles/markdown.css';
 	import { getI18n } from '$lib/i18n';
+	import Head from '$lib/components/Head.svelte';
+	import { page } from '$app/state';
 
 	const { data }: { data: PageData } = $props();
 	const sculptures = data.sculptures;
@@ -52,34 +54,26 @@
 	});
 </script>
 
+<Head
+	title={$i18n.language === 'es' ? 'Esculturas' : 'Sculptures'}
+	description={$i18n.language === 'es' ? '' : ''}
+	url={page.url.toString()}
+	alternateEn={`${websiteUrl}/en/esculturas`}
+	alternateEs={`${websiteUrl}/es/esculturas`}
+	ogTitle={$i18n.language === 'es'
+		? 'Vector: Interior Design (Esculturas)'
+		: 'Vector: Interior Design (Sculptures)'}
+	ogDescription={$i18n.language === 'es' ? '' : ''}
+	imageUrl={sculptures.at(0)?.imageUrl}
+/>
+
 {#snippet desktopImageDescription(description: string, moveToTop: boolean = false)}
-	<div class="border-b-vector-orange mx-auto flex w-3/4 justify-between gap-10 border-b-2 pb-4">
-		<div class="markdownDescription self-end text-white">
-			{@html mdToHtml(description)}
-		</div>
-		<div class="flex items-center">
-			<img src={symbol} alt="Logo" class="size-28 self-end" />
-			{#if moveToTop}
-				<button
-					class="to-top text-vector-grey whitespace-pre-wrap text-3xl hover:cursor-pointer"
-					onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-				>
-					^
-				</button>
-			{/if}
-		</div>
+	<div class="markdownDescription font-Nexa [&_em]:text-vector-orange w-fit">
+		{@html mdToHtml(description)}
 	</div>
 {/snippet}
 
 <div>
-	<header class="bg-vector-grey flex h-20 items-center justify-center gap-10 p-4 md:gap-20">
-		<a href={`/${$i18n.language}/#nav`} class="h-full transition-transform hover:scale-125">
-			<img src={logo} alt="Vector: Interior Design" class="h-full" />
-		</a>
-		<p class="font-Agency-FB text-center text-lg md:text-3xl" style="word-spacing: 0.5 rem;">
-			{$i18n.t('sculptureHeader')}
-		</p>
-	</header>
 	<div class="lg:hidden">
 		{#each sculptures as image, i (image.filename)}
 			{@const lastImage = i === sculptures.length - 1}
@@ -89,7 +83,6 @@
 				<img
 					src={image.imageUrl}
 					alt={image.altTextEs}
-					class:px-8={i !== 0}
 					class="w-9/10 max-h-[90svh] object-contain"
 				/>
 				{#if image.sculptureData.description}
@@ -115,15 +108,15 @@
 			</div>
 		{/each}
 	</div>
-	<div class="hidden lg:block">
+	<div class="bg-vector-grey hidden lg:block">
 		{#each groupedSculptures as sculpture, i}
 			{#if Array.isArray(sculpture)}
 				{@const finalImage = sculpture.at(-1)}
 				<figure
-					class={`mb-50 ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'} flex flex-col justify-center gap-5`}
+					class={`${i === 0 ? 'h-[calc(100vh-5rem)]' : 'h-screen'} flex items-center justify-center gap-20`}
 					class:mb-50={i < groupedSculptures.length - 1}
 				>
-					<div class="h-13/20 flex justify-center gap-20">
+					<div class="flex h-4/5 justify-center gap-20">
 						{#each sculpture as sculptureGroup}
 							<img
 								src={sculptureGroup.imageUrl}
@@ -133,7 +126,7 @@
 						{/each}
 					</div>
 					{#if finalImage.sculptureData.description}
-						<figcaption class="w-full">
+						<figcaption>
 							{@render desktopImageDescription(
 								finalImage.sculptureData.description,
 								i === groupedSculptures.length - 1
@@ -143,16 +136,11 @@
 				</figure>
 			{:else}
 				<figure
-					class={`${i === groupedSculptures.length - 1 ? '' : 'mb-50'}  flex h-[calc(100vh-6rem)] flex-col items-center justify-center gap-5 ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'}`}
+					class={`mx-auto flex h-[calc(100vh-5rem)] items-center justify-center gap-20 ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'}`}
 				>
-					<img
-						src={sculpture.imageUrl}
-						alt={sculpture.altTextEs}
-						class:px-8={i !== 0}
-						class="h-13/20 max-h-4/5 w-auto"
-					/>
+					<img src={sculpture.imageUrl} alt={sculpture.altTextEs} class="max-h-4/5 h-4/5 w-auto" />
 					{#if sculpture.sculptureData.description}
-						<figcaption class="w-full">
+						<figcaption>
 							{@render desktopImageDescription(
 								sculpture.sculptureData.description,
 								i === groupedSculptures.length - 1

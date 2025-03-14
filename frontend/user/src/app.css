@@ -5,9 +5,12 @@
   --font-Bahnschrift: Bahnschrift, Helvetica, sans-serif;
   --font-Arial: Arial, Helvetica, sans-serif;
   --font-Noopla: Noopla, Arial, Helvetica, sans-serif;
+  --font-Nexa: Nexa, Arial, Helvetica, sans-serif;
 
-  --color-vector-grey: #e6e6e6;
-  --color-vector-orange: #ff4800;
+  --color-vector-black: #101214;
+  --color-vector-grey: #1c2025;
+  --color-vector-orange: #ff682b;
+  --color-vector-cream: #f2e5da;
 }
 
 /*
@@ -47,6 +50,13 @@
   src: url('/fonts/noopla.ttf');
 }
 
+@font-face {
+  font-family: 'Nexa';
+  font-style: normal;
+  src: url('/fonts/nexa.otf');
+}
+
 body {
-  background-color: black;
+  background-color: var(--color-vector-black);
+  color: var(--color-vector-cream);
 }

@@ -12,9 +12,13 @@
 
 <div class="flex h-screen w-screen flex-col items-center justify-center gap-5 text-4xl text-white">
 	<h1 class="font-Noopla text-vector-orange text-[20rem]" style="line-height: 0.8;">X</h1>
-	<a href={`/${$i18n.language}/proyectos`} class="font-Noopla">
+	<a href={`/${$i18n.language}/`} class="font-Noopla">
 		<span id="arrow">&lt;-</span>
-		{page.error?.message}
+		{#if page.status === 404}
+			{$i18n.language === 'es' ? 'Página no encontrada' : 'Page not found'}
+		{:else}
+			{page.error?.message}
+		{/if}
 	</a>
 </div>
 

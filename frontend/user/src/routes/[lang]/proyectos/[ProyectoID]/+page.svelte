@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Head from '$lib/components/Head.svelte';
+	import { websiteUrl } from '$lib/utilities/constants';
 	import type { PageData } from './$types';
 	import logo from '$lib/images/logo.svg';
 	import '$lib/styles/markdown.css';
@@ -6,6 +8,7 @@
 	import * as enums from '$lib/utilities/enums';
 	import symbol from '$lib/images/symbol.svg';
 	import { getI18n } from '$lib/i18n';
+	import { page } from '$app/state';
 
 	const { data }: { data: PageData } = $props();
 	const projectData = data.projectData;
@@ -62,8 +65,19 @@
 	const i18n = getI18n();
 </script>
 
+<Head
+	title={projectData.name}
+	description={projectData.description}
+	url={page.url.toString()}
+	alternateEn={`${websiteUrl}/en/proyectos/${projectData.id}`}
+	alternateEs={`${websiteUrl}/es/proyectos/${projectData.id}`}
+	ogTitle={`Vector: Interior Design (${projectData.name})`}
+	ogDescription={projectData.description}
+	imageUrl={projectData.thumbnail.imageUrl}
+/>
+
 {#snippet descriptionContainer(description: string, alignment: string, font: string)}
-	<div class={`markdownDescription text-white ${alignment} font-${font} size-full`}>
+	<div class={`markdownDescription ${alignment} font-${font} size-full`}>
 		{@html mdToHtml(description)}
 	</div>
 {/snippet}
@@ -143,8 +157,8 @@
 		class={`border-vector-orange my-30 gap-12 ${
 			image.phoneConfig?.borders?.n && 'pt-30 border-t-2'
 		} ${image.phoneConfig?.borders?.s && 'pb-30 border-b-2'} ${
-			image.phoneConfig?.borders?.e && 'pr-30 border-r-2'
-		} ${image.phoneConfig?.borders?.w && 'pl-30 border-l-2'}`}
+			image.phoneConfig?.borders?.e && 'pr-30 border-r'
+		} ${image.phoneConfig?.borders?.w && 'pl-30 border-l'}`}
 		class:mx-8={image.phoneConfig?.alignment !== enums.Alignment.OVERFLOW}
 		class:flex={image.phoneConfig?.descriptionPos}
 		class:flex-row={image.phoneConfig?.descriptionPos === enums.Directions.W}
@@ -153,7 +167,7 @@
 		class:flex-col-reverse={image.phoneConfig?.descriptionPos === enums.Directions.S}
 	>
 		{#if image.description && image.phoneConfig.descriptionPos}
-			<figcaption class="mx-auto max-w-[90vw]">
+			<figcaption class="mx-auto w-full max-w-[90vw]">
 				{@render descriptionContainer(
 					image.description,
 					image.phoneConfig.descriptionAlignment,
@@ -172,15 +186,7 @@
 	</figure>
 {/snippet}
 
-<div class="relative min-h-screen bg-black">
-	<header class="bg-vector-grey sticky top-0 z-10 h-20 p-4 lg:static">
-		<div class="flex h-full items-center justify-center gap-10">
-			<a href={`/${$i18n.language}`} class="h-full transition-transform hover:scale-105">
-				<img src={logo} alt="Vector: Interior Design" class="h-full" />
-			</a>
-		</div>
-	</header>
-
+<div class="relative min-h-screen">
 	<div class="block pb-1 xl:hidden">
 		{#each projectData.spaces.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image (image.filename)}
@@ -191,10 +197,8 @@
 						class:px-8={image.phoneConfig.alignment !== enums.Alignment.OVERFLOW}
 						class="mx-auto max-h-[80vh]"
 					/>
-					<div class="mx-8 my-12 text-white">
-						<h1
-							class="font-Agency-FB border-b-vector-orange my-2 border-b-2 pb-2 indent-1 text-3xl"
-						>
+					<div class="mx-8 my-12">
+						<h1 class="font-Nexa border-b-vector-orange my-2 border-b-2 pb-2 indent-1 text-3xl">
 							{projectData.name}
 						</h1>
 						<p class="font-Arial text-right text-sm">Área: {projectData.area} metros cuadrados</p>
@@ -217,31 +221,35 @@
 			{/each}
 		</div>
 	</div>
-	<div class="hidden text-white xl:block">
+	<div class="hidden xl:block">
 		{#each groupedImageData.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image}
-				<div class="p-15 flex h-[calc(100vh-5rem)] w-full items-center justify-evenly gap-5">
+				<div
+					class="p-15 pl-50 gap-50 min-h-200 flex h-[calc(100vh-5rem)] w-full items-center justify-start pr-0"
+				>
 					<img
 						src={image.imageUrl}
 						alt={image.altText}
-						class={`border-vector-orange object-cover ${
+						class={`border-vector-orange min-h-110 object-cover ${
 							image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
 						} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''}`}
 						style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
 					/>
-					<div class="max-w-1/2 flex flex-col gap-y-5 self-start p-4 pb-0">
-						<div class="border-vector-orange flex w-full justify-between border-b-2 px-4 pb-2">
-							<h1 class="font-Agency-FB text-4xl text-white">
-								{projectData.name}
-							</h1>
-							<p class="grow self-end text-right text-white">
-								{$i18n.t('area')}: <b>{projectData.area}</b>
+					<div class="grow">
+						<div class="font-Nexa text-vector-cream flex w-full flex-col flex-wrap gap-y-20">
+							<p
+								class="after:bg-vector-orange w-full text-right text-sm after:ml-2 after:mr-20 after:inline-block after:h-2 after:w-8"
+							>
+								{$i18n.t('area')}: {projectData.area}
 								{$i18n.t('areaUnits')}
 							</p>
+							<h1 class="block text-4xl">
+								{projectData.name}
+							</h1>
 						</div>
 
-						<div class="h-fit shrink-0">
-							{@render descriptionContainer(projectData.description, 'text-left', 'Arial')}
+						<div class="my-5 h-fit shrink-0 grow">
+							{@render descriptionContainer(projectData.description, 'text-left', 'Nexa')}
 						</div>
 
 						{#if Array.isArray(image)}
@@ -257,7 +265,7 @@
 				</div>
 			{/each}
 			{#each space.images.slice(1) as image}
-				<div class="p-25 flex h-screen justify-center">
+				<div class="p-25 min-h-200 flex h-screen justify-center">
 					{#if Array.isArray(image)}
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
@@ -276,7 +284,7 @@
 		{/each}
 		{#each groupedImageData.slice(1) as space (space.id)}
 			{#each space.images as image}
-				<div class="p-25 flex h-screen justify-center">
+				<div class="p-25 min-h-200 flex h-screen justify-center">
 					{#if Array.isArray(image)}
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
@@ -294,14 +302,12 @@
 			{/each}
 		{/each}
 	</div>
-	<div
-		class="-translate-1/2 absolute bottom-0 left-1/2 w-fit text-white transition-transform hover:scale-105"
-	>
+	<div class="-translate-1/2 absolute bottom-0 left-1/2 w-fit transition-transform hover:scale-105">
 		<a
 			href={finalProject
 				? `/${$i18n.language}/proyectos/conclusion`
 				: `/${$i18n.language}/proyectos`}
-			class="font-Agency-FB gradient-background text-3xl text-transparent"
+			class="font-Nexa gradient-background text-2xl text-transparent"
 			>Siguiente -&gt;
 		</a>
 	</div>

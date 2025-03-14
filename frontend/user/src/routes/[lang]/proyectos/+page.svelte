@@ -1,8 +1,11 @@
 <script lang="ts">
+	import { websiteUrl } from '$lib/utilities/constants';
+	import Head from '$lib/components/Head.svelte';
 	import logo from '$lib/images/logo.svg';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import { getI18n } from '$lib/i18n';
+	import { page } from '$app/state';
 
 	const { data }: { data: PageData } = $props();
 	const projects = data.projects;
@@ -42,11 +45,18 @@
 	const i18n = getI18n();
 </script>
 
-<header class="bg-vector-grey absolute top-0 z-10 flex h-24 w-full justify-center p-5 lg:static">
-	<a href={`/${$i18n.language}`} class="h-full transition-transform hover:scale-125">
-		<img src={logo} alt="Vector: Interior Design" class="h-full" />
-	</a>
-</header>
+<Head
+	title={$i18n.language === 'es' ? 'Proyectos' : 'Projects'}
+	description={$i18n.language === 'es' ? '' : ''}
+	url={page.url.toString()}
+	alternateEn={`${websiteUrl}/en/proyectos`}
+	alternateEs={`${websiteUrl}/es/proyectos`}
+	ogTitle={$i18n.language === 'es'
+		? 'Vector: Interior Design (Proyectos)'
+		: 'Vector: Interior Design (Projects)'}
+	ogDescription={$i18n.language === 'es' ? '' : ''}
+	imageUrl={projects.at(0).thumbnail.imageUrl}
+/>
 
 <ul class="h-svh snap-y snap-mandatory overflow-y-scroll lg:hidden">
 	{#each projects as project, i (project.id)}
@@ -83,7 +93,7 @@
 <ul class="hidden flex-wrap items-center justify-evenly lg:flex">
 	{#each projects as project, i (project.id)}
 		<li
-			class={`flex basis-1/3 ${i <= 2 ? 'h-[calc(100svh-6rem)]' : 'h-screen'} w-fit flex-col justify-center self-center justify-self-center`}
+			class={`flex basis-1/3 ${i <= 2 ? 'h-[calc(100svh-5rem)]' : 'h-screen'} min-h-96 w-fit flex-col justify-center self-center justify-self-center`}
 		>
 			<a
 				href={`/${$i18n.language}/proyectos/${project.id}`}
@@ -92,7 +102,9 @@
 				<figure class="h-full">
 					<img src={project.thumbnail.imageUrl} alt={project.thumbnail.altText} class="h-full" />
 					<figcaption>
-						<p class="font-Agency-FB ml-2 text-xl text-white">{project.name}</p>
+						<p class="font-Nexa my-5 text-[0.6rem] font-extralight" style="letter-spacing: 0.1rem;">
+							{project.name}
+						</p>
 					</figcaption>
 				</figure>
 			</a>

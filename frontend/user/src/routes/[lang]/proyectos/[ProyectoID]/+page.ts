@@ -3,7 +3,6 @@ import { error } from '@sveltejs/kit';
 
 export const load = async ({ params, fetch, parent }) => {
     const { selectedLanguage } = await parent();
-    console.log(selectedLanguage);
     const english = selectedLanguage === 'en';
 
     const query = `

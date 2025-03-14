@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Head from '$lib/components/Head.svelte';
+	import { websiteUrl } from '$lib/utilities/constants';
 	import logo from '$lib/images/logo.svg';
 	import symbol from '$lib/images/symbol.svg';
 	import logoWhite from '$lib/images/logo white.svg';
@@ -10,6 +12,7 @@
 	import mdToHtml from '$lib/utilities/markdown';
 	import '$lib/styles/markdown.css';
 	import { getI18n } from '$lib/i18n';
+	import { page } from '$app/state';
 
 	interface Borders {
 		n: boolean;
@@ -75,6 +78,25 @@
 	const i18n = getI18n();
 </script>
 
+<Head
+	title="Vector: Interior Design"
+	description={$i18n.language === 'es' ? '' : ''}
+	url={page.url.toString()}
+	alternateEn={`${websiteUrl}/en`}
+	alternateEs={`${websiteUrl}/es`}
+	ogTitle="Vector: Interior Design"
+	ogDescription={$i18n.language === 'es' ? '' : ''}
+/>
+
+<svelte:head>
+	<title>Vector: Interior Design</title>
+
+	<meta name="description" content={$i18n.language === 'es' ? '' : ''} />
+
+	<link rel="alternate" hreflang="en" href={`${websiteUrl}/en`} />
+	<link rel="alternate" hreflang="es" href={`${websiteUrl}/es`} />
+</svelte:head>
+
 {#snippet mainImage(imageData: mainImageData)}
 	<div
 		class="flex size-full gap-20 lg:hidden"
@@ -98,7 +120,7 @@
 			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.description}
 				<figcaption class="flex w-10/12 grow flex-col justify-center text-white">
 					<div
-						class={`text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription my-16`}
+						class={`text-vector-cream ${imageData.mainImageConfig.descriptionAlignment} markdownDescription my-16`}
 						style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
 					>
 						{@html mdToHtml(imageData.mainImageConfig.description)}
@@ -106,7 +128,9 @@
 				</figcaption>
 			{/if}
 			<div
-				class={`border-vector-orange mx-auto ${!imageData.mainImageConfig.phoneConfig.overflow ? 'w-5/6' : ''} ${imageData.mainImageConfig.phoneConfig.imageBorders.e ? 'border-r-2 pr-20' : ''}`}
+				class={`border-vector-orange mx-auto ${
+					!imageData.mainImageConfig.phoneConfig.overflow ? 'w-5/6' : ''
+				} ${imageData.mainImageConfig.phoneConfig.imageBorders.e ? 'border-r-2 pr-20' : ''}`}
 			>
 				{#if imageData.mainImageConfig.phoneConfig.imageBorders.n}
 					<div class="bg-vector-orange max-w-83/10 mx-auto mb-20 h-px w-full"></div>
@@ -120,15 +144,15 @@
 	</div>
 
 	<figure
-		class={`m-auto hidden size-full items-center lg:flex ${
+		class={`m-auto hidden h-full max-h-full items-center gap-x-20 lg:flex ${
 			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.LEFT &&
 			!imageData.mainImageConfig.desktopConfig.overflow
-				? 'xl:pl-20'
+				? 'xl:pl-25'
 				: ''
 		} ${
 			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.RIGHT &&
 			!imageData.mainImageConfig.desktopConfig.overflow
-				? 'xl:pr-20'
+				? 'xl:pr-25'
 				: ''
 		} ${
 			imageData.mainImageConfig.desktopConfig.descriptionPosition == Directions.E ||
@@ -152,12 +176,12 @@
 		<img
 			src={imageData.imageUrl}
 			alt={imageData.altText}
-			class="h-full max-w-full transition-all"
+			class={`min-h-64 ${imageData.mainImageConfig.desktopConfig.overflow ? 'h-full' : 'h-2/3'}`}
 		/>
 
 		{#if imageData.mainImageConfig.desktopConfig.descriptionPosition || imageData.mainImageConfig.desktopConfig.logoPosition}
 			<figcaption
-				class={`max-w-1/2 m-auto flex h-full flex-col items-center justify-around ${
+				class={`max-w-1/2 flex h-full flex-col items-center justify-around ${
 					imageData.mainImageConfig.desktopConfig.descriptionLogoPosition === Directions.S
 						? 'flex-col-reverse'
 						: ''
@@ -178,7 +202,7 @@
 				{/if}
 				{#if imageData.mainImageConfig.desktopConfig.descriptionPosition && imageData.mainImageConfig.description}
 					<div
-						class={`markdownDescription border-vector-orange text-white ${imageData.mainImageConfig.descriptionAlignment} font-${imageData.mainImageConfig.descriptionFont}`}
+						class={`markdownDescription border-vector-orange text-white ${imageData.mainImageConfig.descriptionAlignment} font-${imageData.mainImageConfig.descriptionFont} text-vector-cream`}
 						class:border-t-4={imageData.mainImageConfig.desktopConfig.descriptionBorders.n}
 						class:border-b-4={imageData.mainImageConfig.desktopConfig.descriptionBorders.s}
 						class:border-r-4={imageData.mainImageConfig.desktopConfig.descriptionBorders.e}
@@ -192,90 +216,119 @@
 	</figure>
 {/snippet}
 
-<header class="bg-vector-grey flex h-28 items-center justify-center gap-20 p-5">
-	<a href={`/${$i18n.language}`} class="hover:scale-120 h-full transition-transform">
-		<img src={logo} alt="Vector: Interior Design" class="h-full" />
-	</a>
-</header>
-
 {#each mainImages.slice(0, 1) as image (image.filename)}
-	<div
-		class={`mb-50 h-[calc(100svh-7rem)] ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[calc(100svh-7rem)]' : 'lg:mt-20 lg:h-[calc(80svh-7rem)]'}`}
-	>
+	<div class="bg-vector-grey flex h-[calc(100vh-5rem)] min-h-72 pr-10">
+		{@render mainImage(image)}
+		<ul
+			class="font-Nexa text-vector-cream relative my-auto flex h-4/5 flex-col items-end gap-y-2 text-right text-[0.6rem] max-xl:pl-10"
+			style="letter-spacing: 0.05rem;"
+		>
+			<li class="before:bg-vector-orange w-fit">
+				<a
+					href="#about"
+					class="hover-link"
+					onclick={(e) => {
+						e.preventDefault();
+
+						document
+							.getElementById('about')
+							?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					}}
+				>
+					{$i18n.t('about')}
+				</a>
+			</li>
+			<li class="w-fit">
+				<a href={`${$i18n.language}/proyectos`} class="hover-link">{$i18n.t('projects')}</a>
+			</li>
+			<li class="w-fit">
+				<a href={`${$i18n.language}/esculturas`} class="hover-link">{$i18n.t('sculptures')}</a>
+			</li>
+			<li class="w-fit">
+				<a
+					href="#contact"
+					class="hover-link"
+					onclick={(e) => {
+						e.preventDefault();
+
+						document
+							.getElementById('contact')
+							?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					}}
+				>
+					{$i18n.t('contact')}
+				</a>
+			</li>
+		</ul>
+	</div>
+{/each}
+
+{#each mainImages.slice(1, 2) as image (image.filename)}
+	<div class="h-screen min-h-72">
 		{@render mainImage(image)}
 	</div>
 {/each}
 
-{#each mainImages.slice(1, 5) as image (image.filename)}
-	<div
-		class={`my-50 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
-	>
+{#each mainImages.slice(2, 4) as image (image.filename)}
+	<div class="bg-vector-grey h-screen min-h-72">
 		{@render mainImage(image)}
 	</div>
 {/each}
 
-<figure
-	class="lg:my-50 my-50 relative flex flex-col items-center justify-start gap-x-5 gap-y-10 lg:ml-10 lg:h-[85vh] lg:flex-row xl:ml-20"
->
-	<img src={tony} alt="Diseñador" class="max-h-[60vh] lg:max-h-[70vh]" />
-	<figcaption
-		class="mx-auto flex h-full w-3/4 flex-col items-center justify-center gap-20 text-justify indent-3 text-lg text-white lg:w-1/2 lg:items-end"
-	>
-		<p>
-			{$i18n.t('mainPageMsg')}
-		</p>
-		<img src={logoWhite} alt="Vector: Interior Design" class="w-44" />
-	</figcaption>
-</figure>
-
-{#each mainImages.slice(5, 8) as image (image.filename)}
-	<div
-		class={`lg:my-50 my-50 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
-	>
+{#each mainImages.slice(4, 5) as image (image.filename)}
+	<div class="h-screen min-h-72">
 		{@render mainImage(image)}
 	</div>
 {/each}
 
 <div
-	class="border-vector-orange lg:my-50 my-50 m-auto w-5/6 border-2 py-8 text-center font-[Bahnschrift] text-2xl font-thin tracking-[0.5rem] text-white md:w-fit md:px-6 md:text-4xl"
-	style="word-spacing: 1rem;"
+	class="bg-vector-grey relative flex min-h-96 items-center lg:h-screen lg:pl-10 xl:pl-20"
+	id="about"
 >
-	Interior Design
+	<figure class="gap-x-50 flex h-3/4 flex-col items-center justify-start gap-y-10 lg:flex-row">
+		<img src={tony} alt="Diseñador" class="h-full" />
+		<figcaption>
+			<p class="font-Nexa whitespace-pre-line text-sm">
+				{$i18n.t('aboutUs')}
+			</p>
+		</figcaption>
+	</figure>
+	<img src={logoWhite} alt="Vector: Interior Design" class="absolute bottom-20 right-20 w-20" />
 </div>
 
+{#each mainImages.slice(5, 8) as image (image.filename)}
+	<div class="h-screen min-h-72">
+		{@render mainImage(image)}
+	</div>
+{/each}
+
 {#each mainImages.slice(8, -1) as image (image.filename)}
-	<div
-		class={`lg:my-50 my-50 ${image.mainImageConfig.desktopConfig.overflow ? 'lg:h-[100vh]' : 'lg:h-[80vh]'}`}
-	>
+	<div class="bg-vector-grey h-screen min-h-72">
 		{@render mainImage(image)}
 	</div>
 {/each}
 
 <div
-	class="lg:my-50 lg:ml-15 mt-20 flex h-screen flex-col gap-y-10 overflow-hidden p-10 lg:h-[70vh] lg:flex-row lg:justify-between xl:h-[90vh] xl:justify-evenly"
+	class="lg:pl-15 bg-vector-grey flex h-[90vh] min-h-72 flex-col gap-y-10 overflow-hidden lg:flex-row lg:items-center lg:justify-between xl:justify-evenly"
 	id="nav"
 >
 	<img
 		src={mainImages.at(-1)!.imageUrl}
 		alt={mainImages.at(-1)!.altText}
-		class="lg:max-w-2/3 max-w-full lg:my-auto lg:max-h-full"
+		class="lg:max-w-2/3 lg:max-h-4/5 max-w-full"
 	/>
-	<ul class="relative flex size-full items-center justify-center gap-5 p-5">
-		<li
-			class="hover-link relative top-10 h-fit w-fit text-4xl text-white md:max-lg:top-20"
-			style="font-family: Agency-FB;"
-		>
+	<ul class="text-vector-cream relative flex h-4/5 items-center justify-center gap-5 p-5 text-xl">
+		<li class="hover-link font-Nexa relative top-10 z-10 h-fit w-fit md:max-lg:top-20">
 			<a href={`${$i18n.language}/esculturas/`}>
 				{$i18n.t('sculptures')}
 			</a>
 		</li>
-		<div class="-z-10 flex size-full w-[2px] flex-col items-center overflow-visible" id="pencil">
-			<img src={symbol} alt="V" class="min-h-32 min-w-32" />
-			<div class="bg-vector-orange relative bottom-5 h-full w-[2px]"></div>
+		<div class="flex size-full w-[2px] flex-col items-center overflow-visible" id="pencil">
+			<img src={symbol} alt="V" class="min-h-20 min-w-20" />
+			<div class="bg-vector-orange relative bottom-0 h-full w-px"></div>
 		</div>
 		<li
-			class="hover-link relative bottom-0 w-fit text-4xl text-white after:relative after:top-1 md:max-lg:bottom-0"
-			style="font-family: Agency-FB;"
+			class="hover-link font-Nexa relative bottom-0 z-10 w-fit after:relative after:top-1 md:max-lg:bottom-0"
 		>
 			<a href={`/${$i18n.language}/proyectos/`}>
 				{$i18n.t('projects')}
@@ -284,40 +337,14 @@
 	</ul>
 </div>
 
-<footer class="my-15 relative flex flex-col items-center justify-center gap-10 lg:flex-row">
-	<div class="max-w-4/5 lg:max-w-6/7 relative grid gap-y-5">
-		<div
-			class="md:leading-16 leading-12 flex size-fit flex-col self-end justify-self-start text-[3rem] text-white md:gap-4 md:text-[5rem]"
-			style="font-family: Agency-FB;"
-		>
-			<p>CON</p>
-			<p class="indent-[2.1ch]">TAC{$i18n.language === 'en' ? 'T' : ''}</p>
-			{#if $i18n.language === 'es'}
-				<p
-					class="col-start-2 row-start-2 text-center indent-[3.9ch] text-white"
-					style="font-family: Agency-FB;"
-				>
-					TO
-				</p>
-			{/if}
-		</div>
-		<img
-			src={tonyContact}
-			alt="Contacto"
-			class="col-start-2 block max-h-[70vh] align-middle xl:max-h-[80vh]"
-		/>
-		<a
-			href="mailto:k@vectorinterior.design"
-			class="font-Agency-FB col-start-2 row-start-2 justify-self-center text-2xl text-white"
-		>
-			contact@vectorinterior.design
-		</a>
+<footer class="text-vector-cream" id="contact">
+	<div class="font-Nexa relative flex items-center justify-center gap-x-5 py-20">
+		<p class="border-vector-orange border-r-1 px-5 py-2 text-2xl">{$i18n.t('contact')}</p>
+		<a href="mailto:contact@vectorinterior.design" class="py-5">contact@vectorinterior.design</a>
 	</div>
-	<img
-		src={logoWhite}
-		alt="Vector: Interior Design"
-		class="bottom-0 right-20 w-1/2 max-w-32 lg:absolute"
-	/>
+	<div class="bg-vector-grey flex h-20 justify-center p-6">
+		<img src={logoWhite} alt="vector: Interior Design" />
+	</div>
 </footer>
 
 <style>
@@ -328,6 +355,8 @@
 		height: 0.13rem;
 		width: 100%;
 		transition: all 0.3s ease-out;
+		transform-origin: right;
+		border-radius: 5px;
 		transform: scale(0, 1);
 	}
 
@@ -347,7 +376,7 @@
 
 	@keyframes pencil-draw {
 		from {
-			top: 110%;
+			top: 100%;
 		}
 
 		to {
