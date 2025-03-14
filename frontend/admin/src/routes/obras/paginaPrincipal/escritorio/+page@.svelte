@@ -66,6 +66,7 @@
 						id
 						filename
 						altTextEs
+						imageUrl
 					}
 				}
 			}
@@ -84,6 +85,7 @@
 					id: mainPageConfig.id,
 					descriptionEs: mainPageConfig.descriptionEs,
 					descriptionEn: mainPageConfig.descriptionEn,
+					descriptionFont: mainPageConfig.descriptionFont,
 					descriptionAlignment: mainPageConfig.descriptionAlignment,
 					index: ordersToUpdate.find((val) => val.id === mainPageConfig.id)?.newPos,
 					desktopConfig: mainPageConfig.desktopConfig
@@ -442,7 +444,7 @@
 		>
 	</div>
 	{#each updatedMainPageImages.slice(0, 1) as image, i (image.filename)}
-		<header class="bg-vector-grey h-28 p-5 flex items-center justify-center gap-20">
+		<header class="bg-vector-cream h-26 p-5 flex items-center justify-center gap-20">
 			<a href="/" class="h-full">
 				<img src={logo} alt="logo" class="h-full" />
 			</a>
