@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isEqual, cloneDeep } from 'lodash-es';
+	import { isEqual, cloneDeep, isArray } from 'lodash-es';
 	import type { PageData } from './$types';
 	import ConfigButtons from '$lib/components/editor/ConfigButtons.svelte';
 	import EditorDescription from '$lib/components/editor/EditorDescription.svelte';
@@ -404,17 +404,18 @@
 		}}
 
 		{#each space.images.slice(0, 1) as image}
+			{@const isGroup = Array.isArray(image)}
 			<div
 				class="header-screen p-15 flex justify-evenly items-center gap-5 transition-colors"
-				style={`background-color: ${image.bgColor}`}
+				style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor}`}
 			>
 				<Movable
-					down={!Array.isArray(image) ? () => moveImage(0) : undefined}
-					right={Array.isArray(image) ? () => moveImage(0) : undefined}
+					down={isGroup ? () => moveImage(0) : undefined}
+					right={isGroup ? () => moveImage(0) : undefined}
 					bind:preview
 					class={`${preview ? 'w-fit' : ''} h-[calc(100vh-7rem)]`}
 				>
-					{#if Array.isArray(image)}
+					{#if isGroup}
 						{@render imageEditor(image[0])}
 					{:else}
 						{@render imageEditor(image)}
@@ -468,7 +469,7 @@
 						/>
 					</div>
 
-					{#if Array.isArray(image)}
+					{#if isGroup}
 						<div class="w-full flex gap-5 min-h-0 mt-auto">
 							{#each image.slice(1) as imageGroup, i (imageGroup.filename)}
 								<Movable left={() => moveImage(i)} bind:preview class="w-fit! ml-auto">
@@ -481,11 +482,12 @@
 			</div>
 		{/each}
 		{#each space.images.slice(1) as image}
+			{@const isGroup = Array.isArray(image)}
 			<div
 				class="h-screen p-25 flex justify-center transition-colors"
-				style={`background-color: ${image.bgColor}`}
+				style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor};`}
 			>
-				{#if Array.isArray(image)}
+				{#if isGroup}
 					<div class="size-full flex justify-evenly">
 						{#each image as groupImage, groupIndex}
 							<Movable
@@ -541,8 +543,12 @@
 	{#each groupedImageData.slice(1) as space, spaceId (space.id)}
 		{@const flatSpace = updatedProjectData.spaces[spaceId + 1]}
 		{#each space.images as image, i}
-			<div class="h-screen p-25 flex justify-center">
-				{#if Array.isArray(image)}
+			{@const isGroup = Array.isArray(image)}
+			<div
+				class="h-screen p-25 flex justify-center transition-colors"
+				style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor};`}
+			>
+				{#if isGroup}
 					<div class="size-full flex justify-evenly">
 						{#each image as groupImage, groupIndex}
 							<Movable
