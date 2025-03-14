@@ -85,16 +85,11 @@ class Space:
     def images(
         self, info: ResourceInfo, show_hidden: bool = False
     ) -> typing.List["Image"]:
-        path_root = info.path
-
-        while path_root.prev is not None:
-            path_root = path_root.prev
-
         image_data = info.context["resource_manager"].database_manager.query(
             f"""
         SELECT image.* FROM image
         JOIN space ON image.space_id = space.id
-        WHERE space.id = %s {"AND NOT image.hide_in_project" if not show_hidden else ""} ORDER BY index;
+        WHERE space.id = %s {"AND NOT image.hide_in_project" if show_hidden else ""} ORDER BY index;
         """,
             (self.id,),
         )
