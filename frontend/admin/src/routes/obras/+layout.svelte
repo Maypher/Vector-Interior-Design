@@ -16,7 +16,7 @@
 </script>
 
 <header
-	class="p-3 flex justify-between sticky top-0 z-10 md:static items-center bg-vector-grey h-20"
+	class="p-3 flex justify-between sticky top-0 z-10 md:static items-center bg-vector-cream h-26"
 >
 	<div class="flex items-center h-full">
 		<a

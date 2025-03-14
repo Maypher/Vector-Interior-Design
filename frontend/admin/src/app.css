@@ -1,12 +1,16 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-Agency-FB: Agency-FB, Arial, sans-serif;
-  --font-Bahnschrift: Bahnschrift, Arial, sans-serif;
+  --font-Agency-FB: Agency-FB, Helvetica, sans-serif;
+  --font-Bahnschrift: Bahnschrift, Helvetica, sans-serif;
   --font-Arial: Arial, Helvetica, sans-serif;
+  --font-Noopla: Noopla, Arial, Helvetica, sans-serif;
+  --font-Nexa: Nexa, Arial, Helvetica, sans-serif;
 
-  --color-vector-grey: #e6e6e6;
-  --color-vector-orange: #ff4800;
+  --color-vector-black: #101214;
+  --color-vector-grey: #1c2025;
+  --color-vector-orange: #ff682b;
+  --color-vector-cream: #f2e5da;
 }
 
 /*
@@ -18,6 +22,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -28,13 +33,29 @@
 }
 
 @font-face {
-    font-family: 'Agency-FB';
-    font-style: normal;
-    src: url('/fonts/agency-fb.ttf');
+  font-family: 'Agency-FB';
+  font-style: normal;
+  src: url('/fonts/agency-fb.ttf');
 }
 
 @font-face {
-    font-family: 'Bahnschrift';
-    font-style: normal;
-    src: url('/fonts/bahnschrift.ttf');
+  font-family: 'Bahnschrift';
+  font-style: normal;
+  src: url('/fonts/bahnschrift.ttf');
+}
+
+@font-face {
+  font-family: 'Noopla';
+  font-style: normal;
+  src: url('/fonts/noopla.ttf');
+}
+
+@font-face {
+  font-family: 'Nexa';
+  font-style: normal;
+  src: url('/fonts/nexa.otf');
+}
+
+body {
+  background-color: black;
 }

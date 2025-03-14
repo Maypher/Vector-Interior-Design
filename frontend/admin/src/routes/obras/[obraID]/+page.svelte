@@ -174,16 +174,18 @@
 	}
 </script>
 
-<div class="bg-black py-5 lg:flex gap-x-10 lg:px-10 overflow-y-hidden lg:h-[calc(100vh-5rem)]">
+<div
+	class="bg-vector-black py-5 lg:flex gap-x-10 lg:px-10 overflow-y-hidden lg:h-[calc(100vh-5rem)]"
+>
 	<!-- Name, area and description -->
 	<form
-		class="bg-vector-grey/50 p-4 lg:rounded-lg flex flex-col justify-stretch gap-y-20 lg:gap-y-10"
+		class="bg-vector-cream/50 p-4 lg:rounded-lg flex flex-col justify-stretch gap-y-20 lg:gap-y-10"
 		use:enhance
 	>
 		<div class="flex justify-between">
 			<button
 				type="button"
-				class={`bg-vector-grey brightness-80 hover:brightness-100 p-2 transition-all cursor-pointer rounded-md`}
+				class={`${projectData.public ? 'bg-vector-black text-vector-cream' : 'bg-vector-cream text-black'} brightness-80 hover:brightness-100 p-2 transition-all cursor-pointer rounded-md`}
 				onclick={changeProjectStatus}>{projectData.public ? 'Privatizar' : 'Publicar'}</button
 			>
 			<button
@@ -246,7 +248,7 @@
 				{/if}
 			</div>
 			<button
-				class="bg-vector-grey hover:brightness-75 transition-colors p-1 rounded-md cursor-pointer"
+				class="bg-vector-cream hover:brightness-75 transition-colors p-1 rounded-md cursor-pointer"
 				>Actualizar
 			</button>
 		</fieldset>

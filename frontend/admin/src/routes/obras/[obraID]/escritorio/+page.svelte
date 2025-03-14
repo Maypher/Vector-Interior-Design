@@ -452,12 +452,11 @@
 						{/if}
 					</div>
 
-					<div class="h-fit shrink-0">
+					<div class="h-fit shrink-0 font-Nexa">
 						<EditorDescription
 							id="project-description"
 							bind:descriptionEs={updatedProjectData.descriptionEs}
 							bind:descriptionEn={updatedProjectData.descriptionEn}
-							descriptionFont={'Arial'}
 							bind:preview
 						/>
 					</div>

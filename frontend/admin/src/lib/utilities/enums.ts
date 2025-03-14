@@ -23,7 +23,8 @@ export const TextAlignment = {
 export const TextFont = {
     "Agency-FB": 'Agency-FB',
     Bahnschrift: 'Bahnschrift',
-    "Arial": 'Arial'
+    Arial: 'Arial',
+    Nexa: 'Nexa'
 }
 
 export const DesktopPosition = {

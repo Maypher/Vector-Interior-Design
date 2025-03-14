@@ -44,7 +44,7 @@
 			<div class="flex items-center justify-center">
 				<label
 					for={`main-image-desc-lang-${id}`}
-					class="hover:cursor-pointer bg-vector-grey p-1 rounded-xs hover:brightness-75 transition-colors select-none text-black"
+					class="hover:cursor-pointer bg-vector-cream p-1 rounded-xs hover:brightness-75 transition-colors select-none text-black"
 					>{englishDescription ? 'Inglés' : 'Español'}</label
 				>
 				<input
