@@ -26,7 +26,7 @@
 					mutation updateImage($filename: String!, $altTextEs: String, $altTextEn: String, $descriptionEs: String, 
 					$descriptionEn: String, $descriptionFont: String, $hideInProject: Boolean, $sculpture: Boolean) {
 						updateImage(filename: $filename, altTextEs: $altTextEs, altTextEn: $altTextEn, descriptionEs: $descriptionEs, 
-						$descriptionEn: $descriptionEn, descriptionFont: $descriptionFont, hideInProject: $hideInProject, sculpture: $sculpture) {
+						descriptionEn: $descriptionEn, descriptionFont: $descriptionFont, hideInProject: $hideInProject, sculpture: $sculpture) {
 							altTextEs
 							altTextEn
 							descriptionEs
