@@ -12,6 +12,7 @@ export const load = async ({ fetch, parent }) => {
                 altText: ${english ? 'altTextEn' : 'altTextEs'}
                 sculptureData {
                     description: ${english ? 'descriptionEn' : 'descriptionEs'}
+                    bgColor
                 }
                 desktopConfig {
                     groupAlignment

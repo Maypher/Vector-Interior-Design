@@ -108,13 +108,14 @@
 			</div>
 		{/each}
 	</div>
-	<div class="bg-vector-grey hidden lg:block">
+	<div class="hidden lg:block">
 		{#each groupedSculptures as sculpture, i}
 			{#if Array.isArray(sculpture)}
 				{@const finalImage = sculpture.at(-1)}
 				<figure
 					class={`${i === 0 ? 'header-screen' : 'h-screen'} flex items-center justify-center gap-20`}
 					class:mb-50={i < groupedSculptures.length - 1}
+					style={`background-color: ${sculpture.at(-1).sculptureData.bgColor};`}
 				>
 					<div class="flex h-4/5 justify-center gap-20">
 						{#each sculpture as sculptureGroup}
@@ -136,7 +137,8 @@
 				</figure>
 			{:else}
 				<figure
-					class={`header-screen mx-auto flex items-center justify-center gap-20 ${i === 0 ? 'header-screen' : 'h-screen'}`}
+					class={`mx-auto flex items-center justify-center gap-20 ${i === 0 ? 'header-screen' : 'h-screen'}`}
+					style={`background-color: ${sculpture.sculptureData.bgColor}`}
 				>
 					<img src={sculpture.imageUrl} alt={sculpture.altTextEs} class="max-h-4/5 h-4/5 w-auto" />
 					{#if sculpture.sculptureData.description}

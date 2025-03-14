@@ -26,6 +26,7 @@ export const load = async ({ params, fetch, parent }) => {
                         altText: ${english ? 'altTextEs' : 'altTextEn'}
                         description: ${english ? 'descriptionEn' : 'descriptionEs'}
                         descriptionFont
+                        bgColor
                         phoneConfig {
                             borders {
                                 n

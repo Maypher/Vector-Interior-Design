@@ -226,6 +226,7 @@
 			{#each space.images.slice(0, 1) as image}
 				<div
 					class="p-15 pl-50 gap-50 header-screen min-h-120 flex w-full items-center justify-start pr-0"
+					style={`background-color: ${image.bgColor};`}
 				>
 					<img
 						src={image.imageUrl}
@@ -265,8 +266,12 @@
 				</div>
 			{/each}
 			{#each space.images.slice(1) as image}
-				<div class="p-25 min-h-200 flex h-screen justify-center">
-					{#if Array.isArray(image)}
+				{@const isGroup = Array.isArray(image)}
+				<div
+					class="p-25 min-h-120 flex h-screen justify-center"
+					style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor};`}
+				>
+					{#if isGroup}
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
 								<div class="h-full w-fit grow-0">
@@ -284,8 +289,12 @@
 		{/each}
 		{#each groupedImageData.slice(1) as space (space.id)}
 			{#each space.images as image}
-				<div class="p-25 min-h-200 flex h-screen justify-center">
-					{#if Array.isArray(image)}
+				{@const isGroup = Array.isArray(image)}
+				<div
+					class="p-25 min-h-200 flex h-screen justify-center"
+					style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor};`}
+				>
+					{#if isGroup}
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
 								<div class="h-full w-fit">

@@ -30,6 +30,7 @@
 			descriptionFontSize: string;
 			descriptionFont: string;
 			descriptionAlignment: string;
+			bgColor: string;
 			phoneConfig: {
 				overflow?: boolean;
 				imageBorders: Borders;
@@ -217,7 +218,10 @@
 {/snippet}
 
 {#each mainImages.slice(0, 1) as image (image.filename)}
-	<div class="bg-vector-grey header-screen flex min-h-72 pr-10">
+	<div
+		class="header-screen flex min-h-72 pr-10"
+		style={`background-color: ${image.mainImageConfig.bgColor};`}
+	>
 		{@render mainImage(image)}
 		<ul
 			class="font-Nexa text-vector-cream relative my-auto flex h-4/5 flex-col items-end gap-y-2 text-right text-[0.7em] max-xl:pl-10"
@@ -263,20 +267,8 @@
 	</div>
 {/each}
 
-{#each mainImages.slice(1, 2) as image (image.filename)}
-	<div class="h-screen min-h-72">
-		{@render mainImage(image)}
-	</div>
-{/each}
-
-{#each mainImages.slice(2, 4) as image (image.filename)}
-	<div class="bg-vector-grey h-screen min-h-72">
-		{@render mainImage(image)}
-	</div>
-{/each}
-
-{#each mainImages.slice(4, 5) as image (image.filename)}
-	<div class="h-screen min-h-72">
+{#each mainImages.slice(1, 5) as image (image.filename)}
+	<div class="h-screen min-h-72" style={`background-color: ${image.mainImageConfig.bgColor};`}>
 		{@render mainImage(image)}
 	</div>
 {/each}
@@ -296,21 +288,16 @@
 	<img src={logoWhite} alt="Vector: Interior Design" class="absolute bottom-20 right-20 w-36" />
 </div>
 
-{#each mainImages.slice(5, 8) as image (image.filename)}
-	<div class="h-screen min-h-72">
-		{@render mainImage(image)}
-	</div>
-{/each}
-
-{#each mainImages.slice(8, -1) as image (image.filename)}
-	<div class="bg-vector-grey h-screen min-h-72">
+{#each mainImages.slice(5, -1) as image (image.filename)}
+	<div class="h-screen min-h-72" style={`background-color: ${image.mainImageConfig.bgColor};`}>
 		{@render mainImage(image)}
 	</div>
 {/each}
 
 <div
-	class="lg:pl-15 bg-vector-grey flex h-[90vh] min-h-72 flex-col gap-y-10 overflow-hidden lg:flex-row lg:items-center lg:justify-between xl:justify-evenly"
+	class="lg:pl-15 flex h-[90vh] min-h-72 flex-col gap-y-10 overflow-hidden lg:flex-row lg:items-center lg:justify-between xl:justify-evenly"
 	id="nav"
+	style={`background-color: ${mainImages.at(-1)!.mainImageConfig.bgColor};`}
 >
 	<img
 		src={mainImages.at(-1)!.imageUrl}
