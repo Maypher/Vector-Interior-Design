@@ -35,7 +35,7 @@
 	}
 </script>
 
-<header class="bg-vector-cream flex h-20 items-center justify-between gap-20 p-5 px-10">
+<header class="bg-vector-cream h-22 flex items-center justify-between gap-20 p-5 px-10">
 	<a href={`/${$i18n.language}`} class="hover:scale-120 h-full transition-transform">
 		<img src={logo} alt="Vector: Interior Design" class="h-full" />
 	</a>

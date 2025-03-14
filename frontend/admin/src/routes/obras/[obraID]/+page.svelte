@@ -174,9 +174,7 @@
 	}
 </script>
 
-<div
-	class="bg-vector-black py-5 lg:flex gap-x-10 lg:px-10 overflow-y-hidden lg:h-[calc(100vh-5rem)]"
->
+<div class="bg-vector-black py-5 lg:flex gap-x-10 lg:px-10 overflow-y-hidden lg:header-screen">
 	<!-- Name, area and description -->
 	<form
 		class="bg-vector-cream/50 p-4 lg:rounded-lg flex flex-col justify-stretch gap-y-20 lg:gap-y-10"

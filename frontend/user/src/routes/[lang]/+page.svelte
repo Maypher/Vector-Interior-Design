@@ -217,10 +217,10 @@
 {/snippet}
 
 {#each mainImages.slice(0, 1) as image (image.filename)}
-	<div class="bg-vector-grey flex h-[calc(100vh-5rem)] min-h-72 pr-10">
+	<div class="bg-vector-grey header-screen flex min-h-72 pr-10">
 		{@render mainImage(image)}
 		<ul
-			class="font-Nexa text-vector-cream relative my-auto flex h-4/5 flex-col items-end gap-y-2 text-right text-[0.6rem] max-xl:pl-10"
+			class="font-Nexa text-vector-cream relative my-auto flex h-4/5 flex-col items-end gap-y-2 text-right text-[0.7em] max-xl:pl-10"
 			style="letter-spacing: 0.05rem;"
 		>
 			<li class="before:bg-vector-orange w-fit">
@@ -293,7 +293,7 @@
 			</p>
 		</figcaption>
 	</figure>
-	<img src={logoWhite} alt="Vector: Interior Design" class="absolute bottom-20 right-20 w-20" />
+	<img src={logoWhite} alt="Vector: Interior Design" class="absolute bottom-20 right-20 w-36" />
 </div>
 
 {#each mainImages.slice(5, 8) as image (image.filename)}
@@ -342,7 +342,7 @@
 		<p class="border-vector-orange border-r-1 px-5 py-2 text-2xl">{$i18n.t('contact')}</p>
 		<a href="mailto:contact@vectorinterior.design" class="py-5">contact@vectorinterior.design</a>
 	</div>
-	<div class="bg-vector-grey flex h-20 justify-center p-6">
+	<div class="bg-vector-grey flex h-24 justify-center p-6">
 		<img src={logoWhite} alt="vector: Interior Design" />
 	</div>
 </footer>
@@ -358,6 +358,7 @@
 		transform-origin: right;
 		border-radius: 5px;
 		transform: scale(0, 1);
+		border-radius: 50%;
 	}
 
 	.hover-link:hover::after {

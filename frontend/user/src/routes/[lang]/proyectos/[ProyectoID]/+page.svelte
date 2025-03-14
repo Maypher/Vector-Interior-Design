@@ -225,7 +225,7 @@
 		{#each groupedImageData.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image}
 				<div
-					class="p-15 pl-50 gap-50 min-h-200 flex h-[calc(100vh-5rem)] w-full items-center justify-start pr-0"
+					class="p-15 pl-50 gap-50 header-screen min-h-120 flex w-full items-center justify-start pr-0"
 				>
 					<img
 						src={image.imageUrl}

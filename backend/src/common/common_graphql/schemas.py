@@ -82,7 +82,9 @@ class Space:
         return Project(**project_data)
 
     @strawberry.field(description="The images of this ambiente.")
-    def images(self, info: ResourceInfo) -> typing.List["Image"]:
+    def images(
+        self, info: ResourceInfo, show_hidden: bool = False
+    ) -> typing.List["Image"]:
         path_root = info.path
 
         while path_root.prev is not None:
@@ -92,7 +94,7 @@ class Space:
             f"""
         SELECT image.* FROM image
         JOIN space ON image.space_id = space.id
-        WHERE space.id = %s {"AND NOT image.hide_in_project" if path_root.key == "project" else ""} ORDER BY index;
+        WHERE space.id = %s {"AND NOT image.hide_in_project" if not show_hidden else ""} ORDER BY index;
         """,
             (self.id,),
         )

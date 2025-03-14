@@ -113,7 +113,7 @@
 			{#if Array.isArray(sculpture)}
 				{@const finalImage = sculpture.at(-1)}
 				<figure
-					class={`${i === 0 ? 'h-[calc(100vh-5rem)]' : 'h-screen'} flex items-center justify-center gap-20`}
+					class={`${i === 0 ? 'header-screen' : 'h-screen'} flex items-center justify-center gap-20`}
 					class:mb-50={i < groupedSculptures.length - 1}
 				>
 					<div class="flex h-4/5 justify-center gap-20">
@@ -136,7 +136,7 @@
 				</figure>
 			{:else}
 				<figure
-					class={`mx-auto flex h-[calc(100vh-5rem)] items-center justify-center gap-20 ${i === 0 ? 'h-[calc(100vh-6rem)]' : 'h-screen'}`}
+					class={`header-screen mx-auto flex items-center justify-center gap-20 ${i === 0 ? 'header-screen' : 'h-screen'}`}
 				>
 					<img src={sculpture.imageUrl} alt={sculpture.altTextEs} class="max-h-4/5 h-4/5 w-auto" />
 					{#if sculpture.sculptureData.description}

@@ -455,7 +455,7 @@
 				const element = updatedMainPageImages.splice(fromIndex, 1)[0];
 				updatedMainPageImages.splice(fromIndex + 1, 0, element);
 			}}
-			class={`transition-all mb-50 ${image.mainImageConfig.desktopConfig.overflow ? 'h-[calc(100vh-7rem)]' : 'h-[calc(80vh-7rem)]  mt-20'}`}
+			class={`transition-all mb-50 ${image.mainImageConfig.desktopConfig.overflow ? 'header-screen' : 'h-[calc(80vh-7rem)]  mt-20'}`}
 			bind:preview
 		>
 			{@render MainImage(image)}

@@ -60,3 +60,7 @@ body {
   background-color: var(--color-vector-black);
   color: var(--color-vector-cream);
 }
+
+.header-screen {
+  height: calc(100vh - 5.5rem);
+}

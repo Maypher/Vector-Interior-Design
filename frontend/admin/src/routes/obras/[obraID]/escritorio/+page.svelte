@@ -400,7 +400,7 @@
 		}}
 
 		{#each space.images.slice(0, 1) as image}
-			<div class="h-[calc(100vh-5rem)] p-15 flex justify-evenly items-center gap-5">
+			<div class="header-screen p-15 flex justify-evenly items-center gap-5">
 				<Movable
 					down={!Array.isArray(image) ? () => moveImage(0) : undefined}
 					right={Array.isArray(image) ? () => moveImage(0) : undefined}
