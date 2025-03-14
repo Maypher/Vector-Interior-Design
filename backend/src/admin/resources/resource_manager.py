@@ -84,7 +84,6 @@ class AdminResourceManager(ResourceManager):
         """
 
         project = self.get_project_by_id(id)
-        logger.debug(description_en)
 
         if not project:
             return
