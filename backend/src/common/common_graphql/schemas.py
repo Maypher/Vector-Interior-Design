@@ -304,6 +304,9 @@ class MainPageImageConfig:
     bg_color: str = strawberry.field(
         description="The color of the background for this image in hexadecimal format #rrggbb (# included)"
     )
+    image_size: int = strawberry.field(
+        description="The relative size of the image in the main page. Goes from 0% to 100%."
+    )
     index: float = strawberry.field(
         description="The index of this image in the main page in the form of a float."
     )

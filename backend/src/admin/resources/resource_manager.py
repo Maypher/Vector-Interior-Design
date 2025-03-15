@@ -616,6 +616,7 @@ class AdminResourceManager(ResourceManager):
         description_font_size: typing.Optional[float] = None,
         description_alignment: typing.Optional[str] = None,
         bg_color: typing.Optional[str] = None,
+        image_size: typing.Optional[int] = None,
         phone_config: typing.Optional[inputs.MainPageImagePhoneConfigInput] = None,
         desktop_config: typing.Optional[inputs.MainPageImageDesktopConfigInput] = None,
         index: typing.Optional[int] = None,
@@ -770,7 +771,8 @@ class AdminResourceManager(ResourceManager):
             description_font = COALESCE(%s, description_font),
             description_font_size = COALESCE(%s, description_font_size),
             description_alignment = COALESCE(%s, description_alignment),
-            bg_color = COALESCE(%s, bg_color)
+            bg_color = COALESCE(%s, bg_color),
+            image_size = COALESCE(%s, image_size)
             WHERE id = %s RETURNING *;
             """,
             (
@@ -780,6 +782,7 @@ class AdminResourceManager(ResourceManager):
                 description_font_size,
                 description_alignment,
                 bg_color,
+                image_size,
                 id,
             ),
             count=1,

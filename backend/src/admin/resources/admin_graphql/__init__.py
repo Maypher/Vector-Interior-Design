@@ -439,6 +439,12 @@ class Mutation:
                 "The color used in the background in hex format (include #)."
             ),
         ] = None,
+        image_size: typing.Annotated[
+            typing.Optional[int],
+            strawberry.argument(
+                "The relative size of the image in its container in a range of 0-100."
+            ),
+        ] = None,
         index: typing.Annotated[
             typing.Optional[int],
             strawberry.argument(
@@ -466,6 +472,7 @@ class Mutation:
             description_font_size,
             description_alignment,
             bg_color,
+            image_size,
             phone_config,
             desktop_config,
             index,
