@@ -28,10 +28,10 @@
 	async function updatedMainPageDesktop() {
 		const query = `
 			mutation updateMainPageImage($id: Int!, $descriptionEs: String, $descriptionEn: String, 
-				$descriptionAlignment: String, $bgColor: String, $descriptionFont: String, $index: Int, 
+				$descriptionAlignment: String, $bgColor: String, $descriptionFont: String, $imageSize: Int, $index: Int, 
 				$desktopConfig: MainPageImageDesktopConfigInput) {
 				updateMainPageConfig(id: $id, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, 
-				descriptionAlignment: $descriptionAlignment, bgColor: $bgColor, descriptionFont: $descriptionFont, index: $index, 
+				descriptionAlignment: $descriptionAlignment, bgColor: $bgColor, descriptionFont: $descriptionFont, imageSize: $imageSize, index: $index, 
 				desktopConfig: $desktopConfig) {
 					id
 					descriptionEs
@@ -39,6 +39,7 @@
 					descriptionFont
 					descriptionAlignment
 					bgColor
+					imageSize
 					desktopConfig {
 						imagePosition
 						descriptionPosition
@@ -90,6 +91,7 @@
 					descriptionFont: mainPageConfig.descriptionFont,
 					descriptionAlignment: mainPageConfig.descriptionAlignment,
 					bgColor: mainPageConfig.bgColor,
+					imageSize: mainPageConfig.imageSize,
 					index: ordersToUpdate.find((val) => val.id === mainPageConfig.id)?.newPos,
 					desktopConfig: mainPageConfig.desktopConfig
 				};
@@ -170,115 +172,139 @@
 					: 'center'
 		}; background-color: ${image.mainImageConfig.bgColor};`}
 	>
-		<Movable
-			left={image.mainImageConfig.desktopConfig.imagePosition !== enums.DesktopPosition.LEFT
-				? () => {
-						if (
-							image.mainImageConfig.desktopConfig.descriptionPosition ||
-							image.mainImageConfig.desktopConfig.logoPosition
-						) {
-							// If there's a description or logo only change between right and left
-							image.mainImageConfig.desktopConfig.imagePosition = enums.DesktopPosition.LEFT;
-							if (image.mainImageConfig.desktopConfig.descriptionPosition)
-								image.mainImageConfig.desktopConfig.descriptionPosition = enums.Directions.E;
-							if (image.mainImageConfig.desktopConfig.logoPosition)
-								image.mainImageConfig.desktopConfig.logoPosition = enums.Directions.E;
-						} else {
-							// Otherwise interpolate between left, center, right.
-							const enumValues = Object.values(enums.DesktopPosition);
-							const currentValue = image.mainImageConfig.desktopConfig.imagePosition;
-							const currentIndex = enumValues.indexOf(currentValue);
-							image.mainImageConfig.desktopConfig.imagePosition =
-								enumValues[currentIndex - 1] || currentValue;
-						}
-					}
-				: undefined}
-			right={image.mainImageConfig.desktopConfig.imagePosition !== enums.DesktopPosition.RIGHT
-				? () => {
-						if (
-							image.mainImageConfig.desktopConfig.descriptionPosition ||
-							image.mainImageConfig.desktopConfig.logoPosition
-						) {
-							// If there's a description or logo only change between right and left
-							image.mainImageConfig.desktopConfig.imagePosition = enums.DesktopPosition.RIGHT;
-							if (image.mainImageConfig.desktopConfig.descriptionPosition)
-								image.mainImageConfig.desktopConfig.descriptionPosition = enums.Directions.W;
-							if (image.mainImageConfig.desktopConfig.logoPosition)
-								image.mainImageConfig.desktopConfig.logoPosition = enums.Directions.W;
-						} else {
-							const enumValues = Object.values(enums.DesktopPosition);
-							const currentValue = image.mainImageConfig.desktopConfig.imagePosition;
-							const currentIndex = enumValues.indexOf(currentValue);
-							image.mainImageConfig.desktopConfig.imagePosition =
-								enumValues[currentIndex + 1] || currentValue;
-						}
-					}
-				: undefined}
-			bind:preview
-			class={`relative h-full w-fit transition-all`}
-		>
-			<img src={image.imageUrl} alt={image.altTextEs} class="h-full max-w-full transition-all" />
-			<div class="absolute top-0 w-full flex justify-between" class:hidden={preview}>
-				<div class="flex rounded-br-sm">
-					<button
-						class="text-white hover:bg-gray-200/40 p-2 transition-colors size-10"
-						title={image.mainImageConfig.desktopConfig.descriptionPosition
-							? 'Remover descripción'
-							: 'Añadir descripción'}
-						onclick={() => {
-							if (!image.mainImageConfig.desktopConfig.descriptionPosition) {
-								const newPosition =
-									image.mainImageConfig.desktopConfig.logoPosition || enums.Directions.E;
-								image.mainImageConfig.desktopConfig.descriptionPosition = newPosition;
+		<div class="h-full w-1/2 grow-0">
+			<Movable
+				left={image.mainImageConfig.desktopConfig.imagePosition !== enums.DesktopPosition.LEFT
+					? () => {
+							if (
+								image.mainImageConfig.desktopConfig.descriptionPosition ||
+								image.mainImageConfig.desktopConfig.logoPosition
+							) {
+								// If there's a description or logo only change between right and left
+								image.mainImageConfig.desktopConfig.imagePosition = enums.DesktopPosition.LEFT;
+								if (image.mainImageConfig.desktopConfig.descriptionPosition)
+									image.mainImageConfig.desktopConfig.descriptionPosition = enums.Directions.E;
+								if (image.mainImageConfig.desktopConfig.logoPosition)
+									image.mainImageConfig.desktopConfig.logoPosition = enums.Directions.E;
+							} else {
+								// Otherwise interpolate between left, center, right.
+								const enumValues = Object.values(enums.DesktopPosition);
+								const currentValue = image.mainImageConfig.desktopConfig.imagePosition;
+								const currentIndex = enumValues.indexOf(currentValue);
 								image.mainImageConfig.desktopConfig.imagePosition =
-									newPosition == enums.Directions.E
-										? enums.DesktopPosition.LEFT
-										: enums.DesktopPosition.RIGHT;
-							} else image.mainImageConfig.desktopConfig.descriptionPosition = null;
+									enumValues[currentIndex - 1] || currentValue;
+							}
+						}
+					: undefined}
+				right={image.mainImageConfig.desktopConfig.imagePosition !== enums.DesktopPosition.RIGHT
+					? () => {
+							if (
+								image.mainImageConfig.desktopConfig.descriptionPosition ||
+								image.mainImageConfig.desktopConfig.logoPosition
+							) {
+								// If there's a description or logo only change between right and left
+								image.mainImageConfig.desktopConfig.imagePosition = enums.DesktopPosition.RIGHT;
+								if (image.mainImageConfig.desktopConfig.descriptionPosition)
+									image.mainImageConfig.desktopConfig.descriptionPosition = enums.Directions.W;
+								if (image.mainImageConfig.desktopConfig.logoPosition)
+									image.mainImageConfig.desktopConfig.logoPosition = enums.Directions.W;
+							} else {
+								const enumValues = Object.values(enums.DesktopPosition);
+								const currentValue = image.mainImageConfig.desktopConfig.imagePosition;
+								const currentIndex = enumValues.indexOf(currentValue);
+								image.mainImageConfig.desktopConfig.imagePosition =
+									enumValues[currentIndex + 1] || currentValue;
+							}
+						}
+					: undefined}
+				bind:preview
+				class={`relative h-full flex items-center justify-center transition-all ${preview ? 'w-fit' : ''}`}
+			>
+				<img
+					src={image.imageUrl}
+					alt={image.altTextEs}
+					class="max-w-full transition-all object-cover"
+					style={`height: calc(${image.mainImageConfig.imageSize}/100 * 100%)`}
+				/>
+				<div class="absolute top-0 w-full flex justify-between" class:hidden={preview}>
+					<div class="flex rounded-br-sm">
+						<button
+							class="text-white hover:bg-gray-200/40 p-2 transition-colors size-10"
+							title={image.mainImageConfig.desktopConfig.descriptionPosition
+								? 'Remover descripción'
+								: 'Añadir descripción'}
+							onclick={() => {
+								if (!image.mainImageConfig.desktopConfig.descriptionPosition) {
+									const newPosition =
+										image.mainImageConfig.desktopConfig.logoPosition || enums.Directions.E;
+									image.mainImageConfig.desktopConfig.descriptionPosition = newPosition;
+									image.mainImageConfig.desktopConfig.imagePosition =
+										newPosition == enums.Directions.E
+											? enums.DesktopPosition.LEFT
+											: enums.DesktopPosition.RIGHT;
+								} else image.mainImageConfig.desktopConfig.descriptionPosition = null;
+							}}
+						>
+							<span class="material-symbols-outlined">
+								{image.mainImageConfig.desktopConfig.descriptionPosition ? 'delete' : 'description'}
+							</span>
+						</button>
+						<button
+							title="Logo"
+							class="size-10 p-2 hover:bg-gray-200/40"
+							onclick={() => {
+								if (!image.mainImageConfig.desktopConfig.logoPosition) {
+									const newPosition =
+										image.mainImageConfig.desktopConfig.descriptionPosition || enums.Directions.E;
+									image.mainImageConfig.desktopConfig.logoPosition = newPosition;
+									image.mainImageConfig.desktopConfig.descriptionLogoPosition = enums.Directions.N;
+									image.mainImageConfig.desktopConfig.imagePosition =
+										newPosition == enums.Directions.E
+											? enums.DesktopPosition.LEFT
+											: enums.DesktopPosition.RIGHT;
+								} else {
+									image.mainImageConfig.desktopConfig.logoPosition = null;
+								}
+							}}
+						>
+							<img src={symbol} alt="symbol" class="size-full" />
+						</button>
+						<BgColor bind:color={image.mainImageConfig.bgColor} imageId={image.id} />
+						<div class="bg-vector-cream/40 h-fit p-1 flex items-center">
+							<label for={`${image.id}-size`}>Tamaño</label>
+							<input
+								type="range"
+								min="0"
+								max="100"
+								step="10"
+								bind:value={image.mainImageConfig.imageSize}
+							/>
+							(<input
+								type="number"
+								min="0"
+								max="100"
+								step="10"
+								bind:value={image.mainImageConfig.imageSize}
+							/>)
+						</div>
+					</div>
+					<button
+						class="absolute top-0 right-0 text-white hover:bg-gray-200/40 rounded-bl-sm transition-colors size-10 p-2"
+						title="Sangrar"
+						onclick={() => {
+							image.mainImageConfig.desktopConfig.overflow =
+								!image.mainImageConfig.desktopConfig.overflow;
 						}}
 					>
 						<span class="material-symbols-outlined">
-							{image.mainImageConfig.desktopConfig.descriptionPosition ? 'delete' : 'description'}
+							{image.mainImageConfig.desktopConfig.overflow
+								? 'photo_size_select_small'
+								: 'photo_size_select_large'}
 						</span>
 					</button>
-					<button
-						title="Logo"
-						class="size-10 p-2 hover:bg-gray-200/40"
-						onclick={() => {
-							if (!image.mainImageConfig.desktopConfig.logoPosition) {
-								const newPosition =
-									image.mainImageConfig.desktopConfig.descriptionPosition || enums.Directions.E;
-								image.mainImageConfig.desktopConfig.logoPosition = newPosition;
-								image.mainImageConfig.desktopConfig.descriptionLogoPosition = enums.Directions.N;
-								image.mainImageConfig.desktopConfig.imagePosition =
-									newPosition == enums.Directions.E
-										? enums.DesktopPosition.LEFT
-										: enums.DesktopPosition.RIGHT;
-							} else {
-								image.mainImageConfig.desktopConfig.logoPosition = null;
-							}
-						}}
-					>
-						<img src={symbol} alt="symbol" class="size-full" />
-					</button>
-					<BgColor bind:color={image.mainImageConfig.bgColor} imageId={image.id} />
 				</div>
-				<button
-					class="absolute top-0 right-0 text-white hover:bg-gray-200/40 rounded-bl-sm transition-colors size-10 p-2"
-					title="Sangrar"
-					onclick={() => {
-						image.mainImageConfig.desktopConfig.overflow =
-							!image.mainImageConfig.desktopConfig.overflow;
-					}}
-				>
-					<span class="material-symbols-outlined">
-						{image.mainImageConfig.desktopConfig.overflow
-							? 'photo_size_select_small'
-							: 'photo_size_select_large'}
-					</span>
-				</button>
-			</div>
-		</Movable>
+			</Movable>
+		</div>
 		{#if image.mainImageConfig.desktopConfig.descriptionPosition || image.mainImageConfig.desktopConfig.logoPosition}
 			<div
 				class={`flex h-full ${!preview ? 'w-fit' : 'max-w-1/2 m-auto'} grow flex-col items-center justify-around gap-20 ${
@@ -558,20 +584,40 @@
 			}}
 			bind:preview
 			id="pencil-wrapper"
-			class="p-15 lg:my-50 mt-20 flex h-screen flex-col gap-y-10 overflow-visible lg:h-[70vh] lg:flex-row lg:justify-between xl:h-[90vh] xl:justify-evenly"
+			class="lg:my-50 mt-20 flex h-screen flex-col gap-y-10 overflow-visible lg:h-[70vh] lg:flex-row lg:justify-between xl:h-[90vh] xl:justify-evenly"
 			style={`background-color: ${image.mainImageConfig.bgColor};`}
 		>
-			<div class="max-w-2/3 md:max-lg:max-w-full lg:my-auto lg:max-h-full relative">
+			<div class="h-full grow relative flex items-center justify-center">
 				<img
 					src={updatedMainPageImages.at(-1)!.imageUrl}
 					alt={updatedMainPageImages.at(-1)!.altTextEs}
-					class="h-full w-auto"
+					class="transition-all object-cover"
+					style={`height: calc(${updatedMainPageImages.at(-1)!.mainImageConfig.imageSize} / 100 * 100%)`}
 				/>
 				<div class="absolute left-0 top-0">
 					<BgColor bind:color={image.mainImageConfig.bgColor} imageId={image.filename} />
 				</div>
+				<div class="absolute top-0 right-0">
+					<div class="bg-vector-cream/40 h-fit p-1 flex items-center">
+						<label for={`${image.id}-size`}>Tamaño</label>
+						<input
+							type="range"
+							min="0"
+							max="100"
+							step="10"
+							bind:value={image.mainImageConfig.imageSize}
+						/>
+						(<input
+							type="number"
+							min="0"
+							max="100"
+							step="10"
+							bind:value={image.mainImageConfig.imageSize}
+						/>)
+					</div>
+				</div>
 			</div>
-			<div class="relative flex size-full items-center justify-center gap-5 p-5">
+			<div class="relative flex items-center justify-center gap-5 p-5">
 				<a
 					href="/obras/esculturas/"
 					class="border-vector-orange after:bg-vector-orange relative top-10 w-fit text-4xl text-white hover:border-b-2 z-20"

@@ -31,6 +31,7 @@
 			descriptionFont: string;
 			descriptionAlignment: string;
 			bgColor: string;
+			imageSize: number;
 			phoneConfig: {
 				overflow?: boolean;
 				imageBorders: Borders;
@@ -153,7 +154,7 @@
 		} ${
 			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.RIGHT &&
 			!imageData.mainImageConfig.desktopConfig.overflow
-				? 'xl:pr-25'
+				? ''
 				: ''
 		} ${
 			imageData.mainImageConfig.desktopConfig.descriptionPosition == Directions.E ||
@@ -177,12 +178,13 @@
 		<img
 			src={imageData.imageUrl}
 			alt={imageData.altText}
-			class={`min-h-64 ${imageData.mainImageConfig.desktopConfig.overflow ? 'h-full' : 'h-2/3'}`}
+			class="min-h-64"
+			style={`height: calc(${imageData.mainImageConfig.imageSize} / 100 * 100%);`}
 		/>
 
 		{#if imageData.mainImageConfig.desktopConfig.descriptionPosition || imageData.mainImageConfig.desktopConfig.logoPosition}
 			<figcaption
-				class={`max-w-1/2 flex h-full flex-col items-center justify-around ${
+				class={`flex h-full flex-col items-center justify-around ${
 					imageData.mainImageConfig.desktopConfig.descriptionLogoPosition === Directions.S
 						? 'flex-col-reverse'
 						: ''
@@ -273,11 +275,8 @@
 	</div>
 {/each}
 
-<div
-	class="bg-vector-grey relative flex min-h-96 items-center lg:h-screen lg:pl-10 xl:pl-20"
-	id="about"
->
-	<figure class="gap-x-50 flex h-3/4 flex-col items-center justify-start gap-y-10 lg:flex-row">
+<div class="relative flex min-h-96 items-center lg:h-screen lg:pl-10 xl:pl-20" id="about">
+	<figure class="flex h-3/4 flex-col items-center justify-start gap-x-20 gap-y-10 lg:flex-row">
 		<img src={tony} alt="Diseñador" class="h-full" />
 		<figcaption>
 			<p class="font-Nexa whitespace-pre-line text-sm">
@@ -285,7 +284,7 @@
 			</p>
 		</figcaption>
 	</figure>
-	<img src={logoWhite} alt="Vector: Interior Design" class="absolute bottom-20 right-20 w-36" />
+	<img src={logoWhite} alt="Vector: Interior Design" class="w-30 absolute bottom-20 right-20" />
 </div>
 
 {#each mainImages.slice(5, -1) as image (image.filename)}
@@ -302,20 +301,21 @@
 	<img
 		src={mainImages.at(-1)!.imageUrl}
 		alt={mainImages.at(-1)!.altText}
-		class="lg:max-w-2/3 lg:max-h-4/5 max-w-full"
+		class="lg:max-w-2/3 max-h-full max-w-full object-contain"
+		style={`height: calc(${mainImages.at(-1)?.mainImageConfig.imageSize} / 100 * 100%);`}
 	/>
 	<ul class="text-vector-cream relative flex h-4/5 items-center justify-center gap-5 p-5 text-xl">
-		<li class="hover-link font-Nexa relative top-10 z-10 h-fit w-fit md:max-lg:top-20">
+		<li class="hover-link font-Nexa relative top-0 z-10 h-fit w-fit md:max-lg:top-20">
 			<a href={`${$i18n.language}/esculturas/`}>
 				{$i18n.t('sculptures')}
 			</a>
 		</li>
 		<div class="flex size-full w-[2px] flex-col items-center overflow-visible" id="pencil">
 			<img src={symbol} alt="V" class="min-h-20 min-w-20" />
-			<div class="bg-vector-orange relative bottom-0 h-full w-px"></div>
+			<div class="bg-vector-orange relative bottom-2 h-2/3 w-px"></div>
 		</div>
 		<li
-			class="hover-link font-Nexa relative bottom-0 z-10 w-fit after:relative after:top-1 md:max-lg:bottom-0"
+			class="hover-link font-Nexa relative bottom-10 z-10 w-fit after:relative after:top-1 md:max-lg:bottom-0"
 		>
 			<a href={`/${$i18n.language}/proyectos/`}>
 				{$i18n.t('projects')}

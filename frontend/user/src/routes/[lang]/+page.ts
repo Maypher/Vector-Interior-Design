@@ -16,6 +16,7 @@ export const load = async ({ fetch, parent }) => {
                     descriptionAlignment
                     descriptionFontSize
                     bgColor
+                    imageSize
                     phoneConfig {
                         descriptionPosition
                         logoPosition

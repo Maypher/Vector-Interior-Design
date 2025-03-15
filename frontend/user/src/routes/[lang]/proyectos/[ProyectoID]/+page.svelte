@@ -94,7 +94,7 @@
 		class:flex-col-reverse={image.desktopConfig.descriptionPosition === enums.Directions.N}
 	>
 		<figure
-			class={`border-vector-orange relative flex h-full w-fit items-center justify-center gap-x-12 ${
+			class={`border-vector-orange relative flex size-full items-center justify-center gap-x-12 ${
 				image.desktopConfig.groupAlignment === enums.GroupAlignment.Centro ? 'items-center' : ''
 			} ${image.desktopConfig.groupAlignment === enums.GroupAlignment.Arriba ? 'items-start' : ''} ${
 				image.desktopConfig.groupAlignment === enums.GroupAlignment.Abajo ? 'items-end' : ''
@@ -127,7 +127,7 @@
 								? '-bottom-5 translate-y-full'
 								: ''
 					} ${
-						descTopOrBottom ? 'min-w-9/10 absolute w-0' : 'max-w-1/2'
+						descTopOrBottom ? 'min-w-9/10 absolute w-0' : 'max-w-2/5'
 					} ${image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
 						image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
 					} ${image.desktopConfig.descriptionBorders.e ? 'border-r-2 pr-5' : ''} ${
@@ -225,7 +225,7 @@
 		{#each groupedImageData.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image}
 				<div
-					class="p-15 pl-50 gap-50 header-screen min-h-120 flex w-full items-center justify-start pr-0"
+					class="py-15 header-screen min-h-120 flex w-full items-center justify-evenly"
 					style={`background-color: ${image.bgColor};`}
 				>
 					<img
@@ -236,7 +236,7 @@
 						} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''}`}
 						style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
 					/>
-					<div class="grow">
+					<div class="max-w-2/5">
 						<div class="font-Nexa text-vector-cream flex w-full flex-col flex-wrap gap-y-20">
 							<p
 								class="after:bg-vector-orange w-full text-right text-sm after:ml-2 after:mr-20 after:inline-block after:h-2 after:w-8"
@@ -268,7 +268,7 @@
 			{#each space.images.slice(1) as image}
 				{@const isGroup = Array.isArray(image)}
 				<div
-					class="p-25 min-h-120 flex h-screen justify-center"
+					class="py-25 min-h-120 flex h-screen justify-center"
 					style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor};`}
 				>
 					{#if isGroup}
@@ -291,7 +291,7 @@
 			{#each space.images as image}
 				{@const isGroup = Array.isArray(image)}
 				<div
-					class="p-25 min-h-200 flex h-screen justify-center"
+					class="py-25 min-h-200 flex h-screen justify-center"
 					style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor};`}
 				>
 					{#if isGroup}

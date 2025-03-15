@@ -14,6 +14,7 @@ export const load = async ({ fetch }) => {
                     descriptionEn
                     descriptionFont
                     bgColor
+                    imageSize
                     descriptionAlignment
                     desktopConfig {
                         imagePosition
