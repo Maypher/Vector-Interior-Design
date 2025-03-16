@@ -58,11 +58,11 @@
 	imageUrl={projects.at(0).thumbnail.imageUrl}
 />
 
-<ul class="h-svh snap-y snap-mandatory overflow-y-scroll lg:hidden">
+<ul class="header-screen snap-y snap-mandatory overflow-y-scroll lg:hidden">
 	{#each projects as project, i (project.id)}
 		{#if project.thumbnail}
-			<li class="relative flex h-full snap-center items-center justify-center bg-black text-white">
-				<div class="absolute bottom-0 flex h-[calc(100%-6rem)] flex-col justify-center">
+			<li class="flex h-full snap-center items-center justify-center text-white">
+				<div class="flex h-[calc(100%-5.5rem)] flex-col justify-center">
 					<a
 						href={`/${$i18n.language}/proyectos/${project.id}`}
 						class="flex h-3/4 flex-col justify-center gap-6 px-8"
@@ -73,8 +73,8 @@
 								alt={project.thumbnail.altText}
 								class="h-full object-cover"
 							/>
-							<figcaption>
-								<p class="font-Agency-FB text-[1.7rem]">{project.name}</p>
+							<figcaption class="my-2">
+								<p class="font-Nexa text-[1.7rem]">{project.name}</p>
 							</figcaption>
 						</figure>
 					</a>
@@ -90,16 +90,16 @@
 	{/each}
 </ul>
 
-<ul class="hidden flex-wrap items-center justify-evenly lg:flex">
+<ul class="bg-vector-grey hidden flex-wrap items-center justify-evenly lg:flex">
 	{#each projects as project, i (project.id)}
 		<li
-			class={`flex basis-1/3 ${i <= 2 ? 'h-[calc(100svh-5rem)]' : 'h-screen'} min-h-96 w-fit flex-col justify-center self-center justify-self-center`}
+			class={`flex basis-1/3 ${i <= 2 ? 'header-screen' : 'h-svh'} min-h-96 w-fit flex-col justify-center self-center justify-self-center`}
 		>
 			<a
 				href={`/${$i18n.language}/proyectos/${project.id}`}
-				class="m-auto flex h-2/3 flex-col items-start gap-y-2 transition-transform hover:scale-110"
+				class="m-auto flex h-2/3 w-fit flex-col items-start gap-y-2 transition-transform hover:scale-110 hover:cursor-pointer"
 			>
-				<figure class="h-full">
+				<figure class="size-full">
 					<img src={project.thumbnail.imageUrl} alt={project.thumbnail.altText} class="h-full" />
 					<figcaption>
 						<p class="font-Nexa my-5 text-[0.6rem] font-extralight" style="letter-spacing: 0.1rem;">

@@ -17,6 +17,8 @@ export const setupI18n = async (lang: 'en' | 'es'): Promise<Writable<i18n>> => {
                     'Spanish': 'Spanish',
                     'about': 'About',
                     'contact': 'Contact',
+                    'aboutUsHead': `As an interior
+                    *designer,*`,
                     'aboutUs': "From sublime to majestic, the limit of this designer is infinite. Defining his client's personality he's capable of converting the most simple of spaces to unique and exclusive works, achieving an accurate and sometimes inimaginable visual aspect.",
                     'sculptures': 'Sculptures',
                     'projects': 'Projects',
@@ -34,7 +36,9 @@ export const setupI18n = async (lang: 'en' | 'es'): Promise<Writable<i18n>> => {
                     'Spanish': 'Español',
                     'about': 'Nosotros',
                     'contact': 'Contacto',
-                    'aboutUs': `Como diseñador de interiores, mi enfoque es profundamente personal 
+                    'aboutUsHead': `Como diseñador 
+                de *interiores*,`,
+                    'aboutUs': `mi enfoque es profundamente personal 
                     No sigo un solo estilo, sino que fusiono influencias de distintas partes 
                     del mundo con las últimas tendencias para crear espacios únicos.
 

@@ -1,12 +1,10 @@
 <script lang="ts">
 	import Head from '$lib/components/Head.svelte';
 	import { websiteUrl } from '$lib/utilities/constants';
-	import logo from '$lib/images/logo.svg';
 	import symbol from '$lib/images/symbol.svg';
 	import logoWhite from '$lib/images/logo white.svg';
 	import type { PageData } from './$types';
 	import tony from '$lib/images/tony.jpg';
-	import tonyContact from '$lib/images/contact.jpg';
 	import { Directions, DesktopPosition } from '$lib/utilities/enums';
 	import { onMount } from 'svelte';
 	import mdToHtml from '$lib/utilities/markdown';
@@ -100,6 +98,9 @@
 </svelte:head>
 
 {#snippet mainImage(imageData: mainImageData)}
+	{@const hasDescription =
+		imageData.mainImageConfig.desktopConfig.descriptionPosition &&
+		imageData.mainImageConfig.description}
 	<div
 		class="flex size-full gap-20 lg:hidden"
 		class:flex-col={imageData.mainImageConfig.phoneConfig.logoPosition === Directions.N}
@@ -149,12 +150,12 @@
 		class={`m-auto hidden h-full max-h-full items-center gap-x-20 lg:flex ${
 			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.LEFT &&
 			!imageData.mainImageConfig.desktopConfig.overflow
-				? 'xl:pl-25'
+				? 'pl-[5%]'
 				: ''
 		} ${
 			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.RIGHT &&
 			!imageData.mainImageConfig.desktopConfig.overflow
-				? ''
+				? 'pr-[5%]'
 				: ''
 		} ${
 			imageData.mainImageConfig.desktopConfig.descriptionPosition == Directions.E ||
@@ -178,13 +179,13 @@
 		<img
 			src={imageData.imageUrl}
 			alt={imageData.altText}
-			class="min-h-64"
+			class={`${hasDescription ? 'max-xl:max-w-1/2' : ''} min-h-64 object-contain`}
 			style={`height: calc(${imageData.mainImageConfig.imageSize} / 100 * 100%);`}
 		/>
 
 		{#if imageData.mainImageConfig.desktopConfig.descriptionPosition || imageData.mainImageConfig.desktopConfig.logoPosition}
 			<figcaption
-				class={`flex h-full flex-col items-center justify-around ${
+				class={`max-w-2/5 flex h-full flex-col items-center justify-around ${
 					imageData.mainImageConfig.desktopConfig.descriptionLogoPosition === Directions.S
 						? 'flex-col-reverse'
 						: ''
@@ -203,15 +204,15 @@
 						/>
 					</div>
 				{/if}
-				{#if imageData.mainImageConfig.desktopConfig.descriptionPosition && imageData.mainImageConfig.description}
+				{#if hasDescription}
 					<div
-						class={`markdownDescription border-vector-orange text-white ${imageData.mainImageConfig.descriptionAlignment} font-${imageData.mainImageConfig.descriptionFont} text-vector-cream`}
+						class={`markdownDescription border-vector-orange ${imageData.mainImageConfig.descriptionAlignment} font-${imageData.mainImageConfig.descriptionFont} text-vector-cream`}
 						class:border-t-4={imageData.mainImageConfig.desktopConfig.descriptionBorders.n}
 						class:border-b-4={imageData.mainImageConfig.desktopConfig.descriptionBorders.s}
 						class:border-r-4={imageData.mainImageConfig.desktopConfig.descriptionBorders.e}
 						class:border-l-4={imageData.mainImageConfig.desktopConfig.descriptionBorders.w}
 					>
-						{@html mdToHtml(imageData.mainImageConfig.description)}
+						{@html mdToHtml(imageData.mainImageConfig.description!)}
 					</div>
 				{/if}
 			</figcaption>
@@ -221,12 +222,12 @@
 
 {#each mainImages.slice(0, 1) as image (image.filename)}
 	<div
-		class="header-screen flex min-h-72 pr-10"
+		class="header-screen flex min-h-72 xl:pr-10"
 		style={`background-color: ${image.mainImageConfig.bgColor};`}
 	>
 		{@render mainImage(image)}
 		<ul
-			class="font-Nexa text-vector-cream relative my-auto flex h-4/5 flex-col items-end gap-y-2 text-right text-[0.7em] max-xl:pl-10"
+			class="font-Nexa text-vector-cream relative my-auto hidden h-4/5 flex-col items-end gap-y-2 text-right text-[0.7em] max-xl:pl-10 xl:flex"
 			style="letter-spacing: 0.05rem;"
 		>
 			<li class="before:bg-vector-orange w-fit">
@@ -275,16 +276,23 @@
 	</div>
 {/each}
 
-<div class="relative flex min-h-96 items-center lg:h-screen lg:pl-10 xl:pl-20" id="about">
-	<figure class="flex h-3/4 flex-col items-center justify-start gap-x-20 gap-y-10 lg:flex-row">
-		<img src={tony} alt="Diseñador" class="h-full" />
-		<figcaption>
-			<p class="font-Nexa whitespace-pre-line text-sm">
-				{$i18n.t('aboutUs')}
+<div class="relative flex min-h-96 items-center lg:h-screen lg:pl-10 xl:pl-80" id="about">
+	<figure class="flex size-full flex-col items-center justify-start gap-x-20 gap-y-10 lg:flex-row">
+		<img src={tony} alt="Diseñador" class="h-9/10" />
+		<figcaption class="w-full grow">
+			<p class="max-w-3/4 font-Nexa text-vector-cream whitespace-pre-line text-sm">
+				<span class="text-4xl brightness-100 [&_br]:hidden [&_em]:not-italic">
+					{@html mdToHtml($i18n.t('aboutUsHead'))}
+				</span>
+				<span class="brightness-50">{$i18n.t('aboutUs')}</span>
 			</p>
 		</figcaption>
 	</figure>
-	<img src={logoWhite} alt="Vector: Interior Design" class="w-30 absolute bottom-20 right-20" />
+	<img
+		src={logoWhite}
+		alt="Vector: Interior Design"
+		class="text-vector-cream w-25 absolute bottom-20 right-20"
+	/>
 </div>
 
 {#each mainImages.slice(5, -1) as image (image.filename)}
@@ -306,18 +314,18 @@
 	/>
 	<ul class="text-vector-cream relative flex h-4/5 items-center justify-center gap-5 p-5 text-xl">
 		<li class="hover-link font-Nexa relative top-0 z-10 h-fit w-fit md:max-lg:top-20">
-			<a href={`${$i18n.language}/esculturas/`}>
+			<a href={`${$i18n.language}/esculturas/`} class="text-vector-cream">
 				{$i18n.t('sculptures')}
 			</a>
 		</li>
 		<div class="flex size-full w-[2px] flex-col items-center overflow-visible" id="pencil">
 			<img src={symbol} alt="V" class="min-h-20 min-w-20" />
-			<div class="bg-vector-orange relative bottom-2 h-2/3 w-px"></div>
+			<div class="bg-vector-orange relative bottom-3 h-2/3 w-px"></div>
 		</div>
 		<li
 			class="hover-link font-Nexa relative bottom-10 z-10 w-fit after:relative after:top-1 md:max-lg:bottom-0"
 		>
-			<a href={`/${$i18n.language}/proyectos/`}>
+			<a href={`/${$i18n.language}/proyectos/`} class="text-vector-cream">
 				{$i18n.t('projects')}
 			</a>
 		</li>

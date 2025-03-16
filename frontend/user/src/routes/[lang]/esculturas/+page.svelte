@@ -117,12 +117,14 @@
 					class:mb-50={i < groupedSculptures.length - 1}
 					style={`background-color: ${sculpture.at(-1).sculptureData.bgColor};`}
 				>
-					<div class="flex h-4/5 justify-center gap-20">
-						{#each sculpture as sculptureGroup}
+					<div class="flex h-4/5 items-center justify-center gap-20">
+						{#each sculpture as sculptureGroup, groupIndex}
+							{@const groupLength = groupedSculptures.length}
 							<img
 								src={sculptureGroup.imageUrl}
 								alt={sculptureGroup.altTextEs}
-								class="h-full w-auto"
+								class="max-h-4/5 w-auto"
+								style={`height: calc(${groupLength - groupIndex}/${groupLength} * 90%);`}
 							/>
 						{/each}
 					</div>

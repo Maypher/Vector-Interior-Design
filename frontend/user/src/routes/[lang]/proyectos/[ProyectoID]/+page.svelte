@@ -2,7 +2,6 @@
 	import Head from '$lib/components/Head.svelte';
 	import { websiteUrl } from '$lib/utilities/constants';
 	import type { PageData } from './$types';
-	import logo from '$lib/images/logo.svg';
 	import '$lib/styles/markdown.css';
 	import mdToHtml from '$lib/utilities/markdown';
 	import * as enums from '$lib/utilities/enums';
@@ -83,6 +82,7 @@
 {/snippet}
 
 {#snippet desktopImageView(image: any)}
+	{@const hasDescription = image.description && image.desktopConfig.descriptionPosition}
 	{@const descTopOrBottom = [enums.Directions.N, enums.Directions.S].includes(
 		image.desktopConfig.descriptionPosition
 	)}
@@ -114,11 +114,11 @@
 			<img
 				src={image.imageUrl}
 				alt={image.altText}
-				class={`border-vector-orange h-full w-auto object-cover ${
+				class={`border-vector-orange h-full w-auto object-contain ${hasDescription && !descTopOrBottom ? 'max-w-1/2' : ''} ${
 					image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
 				} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''} `}
 			/>
-			{#if image.description && image.desktopConfig.descriptionPosition}
+			{#if hasDescription}
 				<figcaption
 					class={`border-vector-orange  ${
 						image.desktopConfig.descriptionPosition === enums.Directions.N
@@ -187,7 +187,7 @@
 {/snippet}
 
 <div class="relative min-h-screen">
-	<div class="block pb-1 xl:hidden">
+	<div class="block pb-1 lg:hidden">
 		{#each projectData.spaces.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image (image.filename)}
 				<div class="my-20">
@@ -221,7 +221,7 @@
 			{/each}
 		</div>
 	</div>
-	<div class="hidden xl:block">
+	<div class="hidden lg:block">
 		{#each groupedImageData.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image}
 				<div
@@ -268,13 +268,13 @@
 			{#each space.images.slice(1) as image}
 				{@const isGroup = Array.isArray(image)}
 				<div
-					class="py-25 min-h-120 flex h-screen justify-center"
+					class="py-25 min-h-120 flex h-lvh justify-center"
 					style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor};`}
 				>
 					{#if isGroup}
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
-								<div class="h-full w-fit grow-0">
+								<div class="max-xl:max-w-2/5 h-full w-fit grow-0">
 									{@render desktopImageView(groupImage)}
 								</div>
 							{/each}
@@ -291,13 +291,13 @@
 			{#each space.images as image}
 				{@const isGroup = Array.isArray(image)}
 				<div
-					class="py-25 min-h-200 flex h-screen justify-center"
+					class="py-25 min-h-120 flex h-lvh justify-center"
 					style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor};`}
 				>
 					{#if isGroup}
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
-								<div class="h-full w-fit">
+								<div class="max-xl:max-w-2/5 h-full w-fit grow-0">
 									{@render desktopImageView(groupImage)}
 								</div>
 							{/each}
