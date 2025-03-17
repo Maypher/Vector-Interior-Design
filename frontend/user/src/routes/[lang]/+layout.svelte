@@ -70,31 +70,39 @@
 {#snippet languageSelect()}
 	<select
 		onchange={(e) => changeLanguage((e.target as HTMLSelectElement).value)}
-		class="font-Nexa xl:text-vector-black"
+		class="font-Nexa xl:text-vector-black pr-1"
 	>
 		<option value="en" selected={$i18n.language === 'en'}>{$i18n.t('english')}</option>
 		<option value="es" selected={$i18n.language === 'es'}>{$i18n.t('Spanish')}</option>
 	</select>
 {/snippet}
 
-<header class="bg-vector-cream h-22 flex items-center justify-between gap-20 p-5 px-10">
+<header
+	class="bg-vector-cream h-22 relative z-50 flex items-center justify-between gap-20 p-5 px-10"
+>
 	<a href={`/${$i18n.language}`} class="hover:scale-120 h-full transition-transform">
 		<img src={logo} alt="Vector: Interior Design" class="h-full" />
 	</a>
 	<div
 		class={`font-Nexa text-vector-black hidden gap-20 [&_a]:transition-colors ${page.url.pathname === `/${$i18n.language}` ? 'hidden' : 'xl:flex'}`}
 	>
-		<a href={`/${$i18n.language}/`} class="hover:text-vector-orange"> Página principal </a>
-		<a href={`/${$i18n.language}/proyectos`} class="hover:text-vector-orange">Proyectos</a>
-		<a href={`/${$i18n.language}/esculturas`} class="hover:text-vector-orange">Esculturas</a>
-		<a href={`/${$i18n.language}/#about`} class="hover:text-vector-orange">Nosotros</a>
-		<a href={`/${$i18n.language}/#contact`} class="hover:text-vector-orange">Contacto</a>
+		<a href={`/${$i18n.language}/`} class="hover:text-vector-orange"> {$i18n.t('mainPage')} </a>
+		<a href={`/${$i18n.language}/proyectos`} class="hover:text-vector-orange">
+			{$i18n.t('projects')}
+		</a>
+		<a href={`/${$i18n.language}/esculturas`} class="hover:text-vector-orange">
+			{$i18n.t('sculptures')}
+		</a>
+		<a href={`/${$i18n.language}/#about`} class="hover:text-vector-orange">{$i18n.t('about')}</a>
+		<a href={`/${$i18n.language}/#contact`} class="hover:text-vector-orange">
+			{$i18n.t('contact')}
+		</a>
 	</div>
 	<div class="hidden xl:block">
 		{@render languageSelect()}
 	</div>
 	<button
-		class={`text-vector-black block text-4xl transition-transform ${menuOpen ? '-rotate-90' : ''} xl:hidden`}
+		class={`text-vector-black block text-2xl transition-transform md:text-4xl ${menuOpen ? '-rotate-90' : ''} xl:hidden`}
 		onclick={openMenu}
 	>
 		☰
@@ -109,6 +117,9 @@
 		class="font-Nexa text-vector-cream flex-col items-end gap-y-2 overflow-hidden [&>li]:p-2"
 		style="letter-spacing: 0.05rem;"
 	>
+		<li>
+			{@render languageSelect()}
+		</li>
 		<li class="before:bg-vector-orange">
 			<a href={`/${$i18n.language}/#about`} class="hover-link">
 				{$i18n.t('about')}
@@ -124,9 +135,6 @@
 			<a href={`/${$i18n.language}/#contact`} class="hover-link">
 				{$i18n.t('contact')}
 			</a>
-		</li>
-		<li>
-			{@render languageSelect()}
 		</li>
 	</ul>
 </div>
