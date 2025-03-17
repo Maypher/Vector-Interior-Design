@@ -76,7 +76,7 @@
 />
 
 {#snippet descriptionContainer(description: string, alignment: string, font: string)}
-	<div class={`markdownDescription ${alignment} font-${font} size-full`}>
+	<div class={`markdownDescription ${alignment} font-${font} size-full text-balance`}>
 		{@html mdToHtml(description)}
 	</div>
 {/snippet}
@@ -154,20 +154,21 @@
 
 {#snippet phoneImageView(image: any)}
 	<figure
-		class={`border-vector-orange my-30 gap-12 ${
+		class={`border-vector-orange py-15 gap-12 ${
 			image.phoneConfig?.borders?.n && 'pt-30 border-t-2'
 		} ${image.phoneConfig?.borders?.s && 'pb-30 border-b-2'} ${
 			image.phoneConfig?.borders?.e && 'pr-30 border-r'
 		} ${image.phoneConfig?.borders?.w && 'pl-30 border-l'}`}
-		class:mx-8={image.phoneConfig?.alignment !== enums.Alignment.OVERFLOW}
+		class:px-8={image.phoneConfig?.alignment !== enums.Alignment.OVERFLOW}
 		class:flex={image.phoneConfig?.descriptionPos}
 		class:flex-row={image.phoneConfig?.descriptionPos === enums.Directions.W}
 		class:flex-row-reverse={image.phoneConfig?.descriptionPos === enums.Directions.E}
 		class:flex-col={image.phoneConfig?.descriptionPos === enums.Directions.N}
 		class:flex-col-reverse={image.phoneConfig?.descriptionPos === enums.Directions.S}
+		style={`background-color: ${image.bgColor};`}
 	>
 		{#if image.description && image.phoneConfig.descriptionPos}
-			<figcaption class="mx-auto w-full max-w-[90vw]">
+			<figcaption class="max-w-9/10 mx-auto w-full">
 				{@render descriptionContainer(
 					image.description,
 					image.phoneConfig.descriptionAlignment,
@@ -178,7 +179,7 @@
 		<img
 			src={image.imageUrl}
 			alt={image.altText}
-			class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig?.alignment) ? 'w-4/5' : ''} max-h-[90vh] object-contain`}
+			class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig?.alignment) ? 'w-4/5' : ''} max-h-[90svh] object-contain`}
 			class:ml-auto={image.phoneConfig?.alignment === enums.Alignment.RIGHT}
 			class:mr-auto={image.phoneConfig?.alignment === enums.Alignment.LEFT}
 			class:mx-auto={image.phoneConfig?.alignment === enums.Alignment.CENTER}
@@ -190,19 +191,23 @@
 	<div class="block pb-1 lg:hidden">
 		{#each projectData.spaces.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image (image.filename)}
-				<div class="my-20">
-					<img
-						src={image.imageUrl}
-						alt={image.altText}
-						class:px-8={image.phoneConfig.alignment !== enums.Alignment.OVERFLOW}
-						class="mx-auto max-h-[80vh]"
-					/>
-					<div class="mx-8 my-12">
-						<h1 class="font-Nexa border-b-vector-orange my-2 border-b-2 pb-2 indent-1 text-3xl">
+				<div
+					class="flex flex-col justify-evenly gap-y-20 py-20"
+					style={`background-color: ${image.bgColor};`}
+				>
+					<img src={image.imageUrl} alt={image.altText} class="max-w-3/4 mx-auto" />
+					<div class="px-8">
+						<div>
+							<p
+								class="font-Nexa after:bg-vector-orange w-full text-right text-sm after:ml-2 after:inline-block after:h-2 after:w-8 max-md:mb-10 md:after:mr-20"
+							>
+								Área: {projectData.area} metros cuadrados
+							</p>
+						</div>
+						<h1 class="font-Nexa mb-6 text-3xl">
 							{projectData.name}
 						</h1>
-						<p class="font-Arial text-right text-sm">Área: {projectData.area} metros cuadrados</p>
-						<div class="white markdownDescription my-6 text-justify">
+						<div class="white markdownDescription font-Nexa text-pretty">
 							{@html mdToHtml(projectData.description)}
 						</div>
 					</div>

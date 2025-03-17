@@ -76,33 +76,14 @@
 <div>
 	<div class="lg:hidden">
 		{#each sculptures as image, i (image.filename)}
-			{@const lastImage = i === sculptures.length - 1}
 			<div
-				class={`${i === 0 ? 'mt-20' : !lastImage ? 'my-50' : 'my-12'} flex flex-col items-center justify-around gap-10`}
+				class={`${i === 0 ? 'header-screen' : 'h-svh'} flex flex-col items-center justify-evenly`}
+				style={`background-color: ${image.sculptureData.bgColor};`}
 			>
-				<img
-					src={image.imageUrl}
-					alt={image.altTextEs}
-					class="w-9/10 max-h-[90svh] object-contain"
-				/>
+				<img src={image.imageUrl} alt={image.altTextEs} class="w-9/10 max-h-3/4 object-contain" />
 				{#if image.sculptureData.description}
-					<div
-						class="border-b-vector-orange mx-auto flex w-3/4 flex-col justify-between gap-10 border-b-2 pb-4"
-					>
-						<img src={symbol} alt="Logo" class="size-28 self-end" />
-						<div class="flex items-end justify-between">
-							<div class="markdownDescription self-start text-white">
-								{@html mdToHtml(image.sculptureData.description)}
-							</div>
-							{#if lastImage}
-								<button
-									class="to-top text-vector-grey whitespace-pre-wrap text-3xl hover:cursor-pointer"
-									onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-								>
-									^
-								</button>
-							{/if}
-						</div>
+					<div class="markdownDescription font-Nexa [&_em]:text-vector-orange">
+						{@html mdToHtml(image.sculptureData.description)}
 					</div>
 				{/if}
 			</div>

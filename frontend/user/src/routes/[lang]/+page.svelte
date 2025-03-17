@@ -121,9 +121,13 @@
 			} ${imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.N ? 'flex-col' : 'flex-col-reverse'}`}
 		>
 			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.description}
-				<figcaption class="flex w-10/12 grow flex-col justify-center text-white">
+				<figcaption class="max-w-10/12 flex w-fit grow flex-col justify-center text-white">
 					<div
-						class={`text-vector-cream ${imageData.mainImageConfig.descriptionAlignment} markdownDescription my-16`}
+						class={`text-vector-cream ${imageData.mainImageConfig.descriptionAlignment} markdownDescription ${
+							imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.N
+								? 'mb-16'
+								: 'mt-16'
+						}`}
 						style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
 					>
 						{@html mdToHtml(imageData.mainImageConfig.description)}
@@ -138,7 +142,11 @@
 				{#if imageData.mainImageConfig.phoneConfig.imageBorders.n}
 					<div class="bg-vector-orange max-w-83/10 mx-auto mb-20 h-px w-full"></div>
 				{/if}
-				<img src={imageData.imageUrl} alt={imageData.altText} />
+				<img
+					src={imageData.imageUrl}
+					alt={imageData.altText}
+					class="mx-auto max-h-[80vh] object-contain"
+				/>
 				{#if imageData.mainImageConfig.phoneConfig.imageBorders.s}
 					<div class="bg-vector-orange max-w-83/10 mx-auto mt-20 h-px w-full"></div>
 				{/if}
@@ -221,8 +229,10 @@
 {/snippet}
 
 {#each mainImages.slice(0, 1) as image (image.filename)}
+	<!-- Doing [&_.markdownDescription]:mb-0! because here the description should be centered in its space
+ and the description by default has a margin that separates it from the Image causing it to decenter from its container-->
 	<div
-		class="header-screen flex min-h-72 xl:pr-10"
+		class="header-screen [&_.markdownDescription]:mb-0! min-h-130 flex max-lg:mb-20 xl:pr-10"
 		style={`background-color: ${image.mainImageConfig.bgColor};`}
 	>
 		{@render mainImage(image)}
@@ -271,38 +281,49 @@
 {/each}
 
 {#each mainImages.slice(1, 5) as image (image.filename)}
-	<div class="h-screen min-h-72" style={`background-color: ${image.mainImageConfig.bgColor};`}>
+	<div
+		class="min-h-130 max-lg:py-20 lg:h-svh"
+		style={`background-color: ${image.mainImageConfig.bgColor};`}
+	>
 		{@render mainImage(image)}
 	</div>
 {/each}
 
-<div class="relative flex min-h-96 items-center lg:h-screen lg:pl-10 xl:pl-80" id="about">
-	<figure class="flex size-full flex-col items-center justify-start gap-x-20 gap-y-10 lg:flex-row">
-		<img src={tony} alt="Diseñador" class="h-9/10" />
-		<figcaption class="w-full grow">
-			<p class="max-w-3/4 font-Nexa text-vector-cream whitespace-pre-line text-sm">
+<div
+	class="min-h-120 relative flex items-center pb-40 pt-20 lg:h-screen lg:py-0 lg:pl-10 xl:pl-80"
+	id="about"
+>
+	<figure
+		class="mx-auto flex flex-col items-center justify-start gap-x-20 gap-y-10 lg:size-full lg:flex-row"
+	>
+		<img src={tony} alt="Diseñador" class="lg:h-9/10 min-h-92 max-h-[70svh] w-auto" />
+		<figcaption class="max-w-3/4 grow lg:w-full">
+			<p class="lg:max-w-3/4 font-Nexa text-vector-cream whitespace-pre-line text-sm">
 				<span class="text-4xl brightness-100 [&_br]:hidden [&_em]:not-italic">
 					{@html mdToHtml($i18n.t('aboutUsHead'))}
 				</span>
-				<span class="brightness-50">{$i18n.t('aboutUs')}</span>
+				<span class="mt-5 block brightness-50">{$i18n.t('aboutUs')}</span>
 			</p>
 		</figcaption>
 	</figure>
 	<img
 		src={logoWhite}
 		alt="Vector: Interior Design"
-		class="text-vector-cream w-25 absolute bottom-20 right-20"
+		class="text-vector-cream w-25 absolute bottom-10 right-1/2 max-lg:translate-x-1/2 lg:bottom-20 lg:right-20"
 	/>
 </div>
 
 {#each mainImages.slice(5, -1) as image (image.filename)}
-	<div class="h-screen min-h-72" style={`background-color: ${image.mainImageConfig.bgColor};`}>
+	<div
+		class="min-h-72 max-lg:py-20 lg:h-svh"
+		style={`background-color: ${image.mainImageConfig.bgColor};`}
+	>
 		{@render mainImage(image)}
 	</div>
 {/each}
 
 <div
-	class="lg:pl-15 flex h-[90vh] min-h-72 flex-col gap-y-10 overflow-hidden lg:flex-row lg:items-center lg:justify-between xl:justify-evenly"
+	class="lg:pl-15 pt-30 flex min-h-72 flex-col gap-y-10 overflow-hidden lg:h-[70svh] lg:flex-row lg:items-center lg:justify-evenly lg:pt-0"
 	id="nav"
 	style={`background-color: ${mainImages.at(-1)!.mainImageConfig.bgColor};`}
 >
@@ -312,19 +333,19 @@
 		class="lg:max-w-2/3 max-h-full max-w-full object-contain"
 		style={`height: calc(${mainImages.at(-1)?.mainImageConfig.imageSize} / 100 * 100%);`}
 	/>
-	<ul class="text-vector-cream relative flex h-4/5 items-center justify-center gap-5 p-5 text-xl">
-		<li class="hover-link font-Nexa relative top-0 z-10 h-fit w-fit md:max-lg:top-20">
+	<ul
+		class="text-vector-cream relative flex items-center justify-center gap-5 p-5 text-xl lg:h-4/5"
+	>
+		<li class="hover-link font-Nexa relative top-0 z-10 h-fit w-fit">
 			<a href={`${$i18n.language}/esculturas/`} class="text-vector-cream">
 				{$i18n.t('sculptures')}
 			</a>
 		</li>
-		<div class="flex size-full w-[2px] flex-col items-center overflow-visible" id="pencil">
+		<div class="h-92 flex w-[2px] flex-col items-center overflow-visible" id="pencil">
 			<img src={symbol} alt="V" class="min-h-20 min-w-20" />
 			<div class="bg-vector-orange relative bottom-3 h-2/3 w-px"></div>
 		</div>
-		<li
-			class="hover-link font-Nexa relative bottom-10 z-10 w-fit after:relative after:top-1 md:max-lg:bottom-0"
-		>
+		<li class="hover-link font-Nexa relative bottom-10 z-10 w-fit after:relative after:top-1">
 			<a href={`/${$i18n.language}/proyectos/`} class="text-vector-cream">
 				{$i18n.t('projects')}
 			</a>
