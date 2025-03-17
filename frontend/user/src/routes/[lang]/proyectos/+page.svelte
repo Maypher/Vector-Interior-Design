@@ -1,16 +1,18 @@
 <script lang="ts">
 	import { websiteUrl } from '$lib/utilities/constants';
 	import Head from '$lib/components/Head.svelte';
-	import logo from '$lib/images/logo.svg';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import { getI18n } from '$lib/i18n';
 	import { page } from '$app/state';
+	import Glide, { Controls, Swipe } from '@glidejs/glide/dist/glide.modular.esm';
+	import '@glidejs/glide/dist/css/glide.core.min.css';
 
 	const { data }: { data: PageData } = $props();
-	const projects = data.projects;
+	const projects: any[] = data.projects;
 
 	onMount(() => {
+		// Mobile arrow
 		const arrow = document.getElementById('arrow')!;
 		arrow.addEventListener('transitionend', (e: TransitionEvent) => {
 			arrow.classList.add('animate');
@@ -40,6 +42,12 @@
 
 			observer.observe(arrowLimit);
 		}
+
+		new Glide('#carousel', {
+			type: 'slider',
+			perView: 3,
+			bound: true
+		}).mount({ Controls, Swipe });
 	});
 
 	const i18n = getI18n();
@@ -58,7 +66,7 @@
 	imageUrl={projects.at(0).thumbnail.imageUrl}
 />
 
-<ul class="header-screen snap-y snap-mandatory overflow-y-scroll lg:hidden">
+<ul class="header-screen bg-vector-grey snap-y overflow-y-scroll lg:hidden">
 	{#each projects as project, i (project.id)}
 		{#if project.thumbnail}
 			<li class="flex h-full snap-center items-center justify-center text-white">
@@ -74,7 +82,7 @@
 								class="h-full object-cover"
 							/>
 							<figcaption class="my-2">
-								<p class="font-Nexa text-[1.7rem]">{project.name}</p>
+								<p class="font-Nexa">{project.name}</p>
 							</figcaption>
 						</figure>
 					</a>
@@ -90,27 +98,42 @@
 	{/each}
 </ul>
 
-<ul class="bg-vector-grey hidden flex-wrap items-center justify-evenly lg:flex">
-	{#each projects as project, i (project.id)}
-		<li
-			class={`flex basis-1/3 ${i <= 2 ? 'header-screen' : 'h-svh'} min-h-96 w-fit flex-col justify-center self-center justify-self-center`}
+<div id="carousel" class="hidden lg:block">
+	<div
+		class="glide__track bg-vector-grey header-screen relative flex flex-col pb-10"
+		data-glide-el="track"
+	>
+		<ul class=" glide__slides h-full grow-0">
+			{#each projects as project, i (project.id)}
+				<li class="glide__slide flex items-center">
+					<a
+						href={`/${$i18n.language}/proyectos/${project.id}`}
+						class="m-auto flex h-2/3 w-fit flex-col items-start gap-y-2 transition-transform hover:scale-110 hover:cursor-pointer"
+					>
+						<figure class="size-full">
+							<img
+								src={project.thumbnail.imageUrl}
+								alt={project.thumbnail.altText}
+								class="h-full"
+							/>
+							<figcaption>
+								<p class="font-Nexa my-5 text-xs font-extralight" style="letter-spacing: 0.1rem;">
+									{project.name}
+								</p>
+							</figcaption>
+						</figure>
+					</a>
+				</li>
+			{/each}
+		</ul>
+		<div
+			data-glide-el="controls"
+			class="pointer-events-none flex items-center justify-end px-20 text-xl"
 		>
-			<a
-				href={`/${$i18n.language}/proyectos/${project.id}`}
-				class="m-auto flex h-2/3 w-fit flex-col items-start gap-y-2 transition-transform hover:scale-110 hover:cursor-pointer"
-			>
-				<figure class="size-full">
-					<img src={project.thumbnail.imageUrl} alt={project.thumbnail.altText} class="h-full" />
-					<figcaption>
-						<p class="font-Nexa my-5 text-[0.6rem] font-extralight" style="letter-spacing: 0.1rem;">
-							{project.name}
-						</p>
-					</figcaption>
-				</figure>
-			</a>
-		</li>
-	{/each}
-</ul>
+			<button data-glide-dir=">" class="font-Nexa pointer-events-auto">Siguiente &gt;</button>
+		</div>
+	</div>
+</div>
 
 <style>
 	#arrow {
