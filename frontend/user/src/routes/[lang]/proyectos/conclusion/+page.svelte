@@ -23,24 +23,37 @@
 />
 
 <div class="header-screen bg-vector-grey relative flex items-center justify-center overflow-clip">
-	<div class="-translate-y-1/6 absolute left-1/4 top-0 flex flex-col items-center">
+	<div class="-translate-y-1/6 absolute left-1/4 top-10 flex flex-col items-center lg:top-0">
 		<img src={symbol} alt="V" id="symbol" />
 		<div class="bg-vector-orange relative -top-10 h-screen w-px"></div>
 	</div>
 	<div
-		class="font-Nexa w-9/10 relative top-10 flex h-full flex-col items-center justify-center gap-y-10 lg:h-fit lg:w-full lg:flex-row lg:justify-evenly"
+		class="font-Nexa top-20 flex size-full flex-col items-center justify-center gap-y-10 px-8 md:flex-row md:justify-around md:px-0 lg:relative lg:h-fit lg:justify-evenly"
 	>
 		<span
-			class="text-vector-cream -top-[4ch] self-start text-4xl font-thin italic leading-10 lg:relative lg:justify-self-start [&_br]:hidden"
+			class="text-vector-cream relative self-start text-4xl font-thin italic leading-10 md:-top-[6ch] md:self-center lg:-top-[4ch] lg:self-start lg:justify-self-start [&_br]:hidden"
 			id="slogan"
 		>
 			{@html mdToHtml($i18n.t('slogan'))}
 		</span>
-		<p class="text-vector-cream text-justify brightness-50 lg:basis-1/3 [&_strong]:text-white">
+		<p
+			class="text-vector-cream block text-justify brightness-50 md:max-lg:hidden lg:basis-1/3 [&_strong]:text-white"
+		>
 			{@html mdToHtml($i18n.t('conclusionBody'))}
 		</p>
-		<img src={whiteLogo} alt="Vector: Interior Design" class="h-10" />
-		<div class="bg-vector-orange -bottom-30 absolute right-10 h-2 w-8"></div>
+		<img src={whiteLogo} alt="Vector: Interior Design" class="block h-10 md:max-lg:hidden" />
+		<div class="relative hidden basis-1/2 flex-col items-center gap-0 gap-y-10 md:max-lg:block">
+			<p class="text-vector-cream text-justify brightness-50 [&_strong]:text-white">
+				{@html mdToHtml($i18n.t('conclusionBody'))}
+			</p>
+			<img
+				src={whiteLogo}
+				alt="Vector: Interior Design"
+				class="-bottom-30 absolute right-1/2 h-10 translate-x-1/2"
+			/>
+			<div class="bg-vector-orange absolute -bottom-40 right-0 h-2 w-8"></div>
+		</div>
+		<div class="bg-vector-orange -bottom-15 right-10 hidden h-2 w-8 lg:absolute lg:block"></div>
 	</div>
 </div>
 
@@ -56,6 +69,13 @@
 			position: relative;
 			left: 2ch;
 		}
+
+		@media screen and (width <= 64rem) {
+			#slogan p strong:nth-last-of-type(2) {
+				left: 1ch;
+			}
+		}
+
 		#slogan p strong:last-of-type {
 			position: relative;
 			left: 1ch;
