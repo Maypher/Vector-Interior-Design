@@ -25,7 +25,7 @@ function _M.watermark_image()
     ngx.log(ngx.INFO, "GENERATING IMAGE")
 
     local cmd = string.format(
-        'magick %s /storage/watermark.png -geometry %%[fx:u.w*0.2]x+%%[fx:u.w*0.05]+%%[fx:u.h*0.05] -gravity southeast -define compose:args=50 -compose dissolve -composite -quality 75 webp:-',
+        'magick %s -quality 75 webp:-',
         img_path)
 
 
