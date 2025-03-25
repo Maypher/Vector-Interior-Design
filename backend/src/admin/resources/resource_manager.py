@@ -1,5 +1,5 @@
+import aiofiles.os
 from admin import utilities
-import uuid
 import os
 from common.resource_manager import *
 from psycopg import errors
@@ -17,7 +17,7 @@ from strawberry import UNSET
 from strawberry import Info
 from admin.utilities.types import GraphQLContext
 from admin.utilities import image_upload
-from common.utilities.environment import dev_mode
+import aiofiles
 
 
 class AdminResourceManager(ResourceManager):
@@ -39,7 +39,7 @@ class AdminResourceManager(ResourceManager):
 
         return schemas.Project(**project_data)
 
-    def delete_project(self, id: int, info: Info[GraphQLContext]) -> bool:
+    async def delete_project(self, id: int, info: Info[GraphQLContext]) -> bool:
         """
         Deletes the project identified by id alongside its related spaces and images.
         """
@@ -50,7 +50,7 @@ class AdminResourceManager(ResourceManager):
 
         for space in project.spaces(info):
             for image in space.images(info):
-                self.delete_image(image.filename)
+                await self.delete_image(image.filename)
 
         self.database_manager.query(
             """
@@ -193,7 +193,7 @@ class AdminResourceManager(ResourceManager):
         self.database_manager.commit()
         return self.get_space_by_id(id)
 
-    def delete_space(self, id: int, info: Info[GraphQLContext]) -> bool:
+    async def delete_space(self, id: int, info: Info[GraphQLContext]) -> bool:
         """
         Deletes the space identified by id alongside all images related to it.
         """
@@ -204,7 +204,7 @@ class AdminResourceManager(ResourceManager):
 
         # Image are collated in database but they also need to be removed from the filesystem
         for image in space.images(info):
-            self.delete_image(image.filename)
+            await self.delete_image(image.filename)
 
         self.database_manager.query(
             """
@@ -240,12 +240,7 @@ class AdminResourceManager(ResourceManager):
         if not space:
             return GraphqlErrors.SpaceNotFoundImage(space_id=space_id)
 
-        image_filename = None
-
-        if dev_mode:
-            image_filename = await image_upload.upload_locally(image)
-        else:
-            image_filename = image_upload.upload_to_cdn(image)
+        image_filename = await image_upload.upload_locally(image)
 
         data = self.database_manager.query(
             """
@@ -419,7 +414,7 @@ class AdminResourceManager(ResourceManager):
         self.database_manager.commit()
         return self.get_image_by_filename(filename)
 
-    def delete_image(self, filename: str) -> bool:
+    async def delete_image(self, filename: str) -> bool:
         """Deletes the given image from the database and file system."""
 
         image = self.get_image_by_filename(filename)
@@ -427,22 +422,17 @@ class AdminResourceManager(ResourceManager):
         if not image:
             return False
 
-        if dev_mode:
-            location = f"{image_upload.STORAGE_LOCATION}{filename}"
-            if os.path.exists(location):
-                os.remove(location)
-            else:
-                return False
-        else:
-            image_upload.delete_from_cdn(filename)
+        deleted = await image_upload.delete_locally(filename)
 
-        self.database_manager.query(
-            """
-            DELETE FROM image WHERE filename = %s;
-            """,
-            (filename,),
-        )
-        return True
+        if deleted:
+            self.database_manager.query(
+                """
+                DELETE FROM image WHERE filename = %s;
+                """,
+                (filename,),
+            )
+            return True
+        return False
 
     def update_index(
         self,

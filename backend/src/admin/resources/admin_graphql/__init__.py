@@ -390,7 +390,7 @@ class Mutation:
     @strawberry.mutation(
         description="Deletes the image identified by filename returning the deleted entry. **Returns null if no image was found.**"
     )
-    def deleteImage(
+    async def deleteImage(
         self,
         info: strawberry.Info[GraphQLContext],
         filename: typing.Annotated[
@@ -399,7 +399,7 @@ class Mutation:
         ],
     ) -> bool:
         resource_manager: AdminResourceManager = info.context["resource_manager"]
-        return resource_manager.delete_image(filename)
+        return await resource_manager.delete_image(filename)
 
     @strawberry.mutation(
         description="Updates the config of an image to be displayed in the site's main page."
