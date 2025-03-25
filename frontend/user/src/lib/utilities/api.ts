@@ -9,7 +9,7 @@ import { PUBLIC_graphql } from "$env/static/public";
 export default async function graphql(query: string,
     variables: Record<string, any> = {},
     customFetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response> = fetch): Promise<Record<string, any>> {
-    const res = await customFetch(PUBLIC_graphql, {
+    const res = await customFetch(`https://${PUBLIC_graphql}`, {
         method: "POST",
         body: JSON.stringify({ query, variables }),
         headers: {

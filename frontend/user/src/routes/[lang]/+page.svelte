@@ -290,15 +290,15 @@
 {/each}
 
 <div
-	class="min-h-120 relative flex items-center pb-40 pt-20 lg:h-screen lg:py-0 lg:pl-10 xl:pl-80"
+	class="min-h-120 relative flex items-center pb-40 pt-20 lg:h-screen lg:py-0 lg:pl-0"
 	id="about"
 >
 	<figure
-		class="mx-auto flex flex-col items-center justify-start gap-x-20 gap-y-10 lg:size-full lg:flex-row"
+		class="mx-auto flex flex-col items-center justify-center gap-x-20 gap-y-10 lg:size-full lg:flex-row"
 	>
 		<img src={tony} alt="Diseñador" class="lg:h-9/10 min-h-92 max-h-[70svh] w-auto" />
-		<figcaption class="max-w-3/4 grow lg:w-full">
-			<p class="lg:max-w-3/4 font-Nexa text-vector-cream whitespace-pre-line text-sm">
+		<figcaption class="max-w-1/2">
+			<p class="font-Nexa text-vector-cream whitespace-pre-line text-sm">
 				<span class="text-4xl brightness-100 [&_br]:hidden [&_em]:not-italic">
 					{@html mdToHtml($i18n.t('aboutUsHead'))}
 				</span>
@@ -309,7 +309,7 @@
 	<img
 		src={logoWhite}
 		alt="Vector: Interior Design"
-		class="text-vector-cream w-25 absolute bottom-10 right-1/2 max-lg:translate-x-1/2 lg:bottom-20 lg:right-20"
+		class="text-vector-cream w-25 lg:bottom-1/10 lg:right-1/20 absolute bottom-10 right-1/2 max-lg:translate-x-1/2"
 	/>
 </div>
 

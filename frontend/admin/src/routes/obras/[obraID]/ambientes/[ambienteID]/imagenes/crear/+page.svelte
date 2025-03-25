@@ -3,10 +3,10 @@
 	import type { PageData } from './$types';
 	import { yup } from 'sveltekit-superforms/adapters';
 	import { createImageSchema } from '$lib/utilities/yupSchemas';
-	import { PUBLIC_graphql } from '$env/static/public';
 	import { error } from '$lib/utilities/toasts';
 	import { goto } from '$app/navigation';
 	import Errors from '$lib/components/input/Errors.svelte';
+	import { PUBLIC_apiURL } from '$env/static/public';
 
 	const { data }: { data: PageData } = $props();
 	let inputFile: File | undefined | null = $state();
@@ -76,7 +76,7 @@
 				formData.append('map', map);
 				formData.append('file', inputFile);
 
-				const res = await fetch(PUBLIC_graphql, {
+				const res = await fetch(`${PUBLIC_apiURL}graphql/`, {
 					method: 'POST',
 					body: formData,
 					credentials: 'include'

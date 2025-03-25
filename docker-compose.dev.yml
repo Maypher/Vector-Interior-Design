@@ -1,0 +1,22 @@
+services:
+  user-frontend:
+    build:
+      target: development
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend/user/src/
+          target: /app/src/
+  admin-frontend:
+    build:
+      target: development
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend/admin/src/
+          target: /app/src/
+  nginx:
+    ports:
+      - "5173:5173"
+      - "5174:5174"
+      - "8080:8080"

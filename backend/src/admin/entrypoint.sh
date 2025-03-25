@@ -9,10 +9,8 @@ if [ ! -f "$ADMIN_PASSWORD_PATH" ] || [ ! -s "$ADMIN_PASSWORD_PATH" ]; then
   exit 1
 fi
 
-runningPort=$PORT
-
-if [ "$BUILD_TARGET" = 'dev' ]; then
-    sanic app:create_app --host=0.0.0.0 --port=$runningPort --factory --dev
+if [ $DEV_MODE = 1 ]; then
+    sanic app:create_app --host=0.0.0.0 --port=80 --factory --dev
 else
-    sanic app:create_app --host=0.0.0.0 --port=$runningPort --factory
+    sanic app:create_app --host=0.0.0.0 --port=80 --factory
 fi

@@ -12,6 +12,7 @@ from admin.utilities.types import AdminApp
 from sanic_ext import Extend, Config
 from common.utils import read_secret
 from sanic.log import logger
+import os
 
 
 def create_app(
@@ -25,7 +26,9 @@ def create_app(
     app.blueprint(auth_blueprint)
     app.config.CORS_ORIGINS = [
         environ.get("FRONTEND_URL", ""),
-        "https://192.168.0.8:5173",
+        f"https://{os.environ.get("FRONTEND_URL")}",
+        f"http://{os.environ.get("FRONTEND_URL").split(":")[0]}",  # Using this one for ssr since requests from within the containers drop the port
+        "http://admin-frontend",
     ]
     app.config.CORS_SUPPORTS_CREDENTIALS = True
     app.config.CORS_ALLOW_HEADERS = ["Content-Type"]

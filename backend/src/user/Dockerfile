@@ -28,4 +28,5 @@ COPY ./src/common/ ./src/common/
 
 WORKDIR /app/src/user/
 
+EXPOSE 80
 ENTRYPOINT [ "./entrypoint.sh" ]

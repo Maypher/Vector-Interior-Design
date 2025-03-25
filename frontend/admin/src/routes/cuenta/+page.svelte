@@ -18,9 +18,10 @@
 		resetForm: false,
 		async onUpdate({ form }) {
 			submitting = true;
+			console.log(PUBLIC_apiURL);
 
 			if (form.valid) {
-				const res = await fetch(`${PUBLIC_apiURL}auth/iniciar-sesion`, {
+				const res = await fetch(`https://${PUBLIC_apiURL}/auth/iniciar-sesion`, {
 					method: 'POST',
 					body: objectToFormData(form.data),
 					credentials: 'include'

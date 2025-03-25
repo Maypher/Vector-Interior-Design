@@ -2,10 +2,8 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { yup } from 'sveltekit-superforms/adapters';
 	import { spaceCreateSchema } from '$lib/utilities/yupSchemas';
-	import TextInput from '$lib/components/input/TextInput.svelte';
-	import Markdown from '$lib/components/markdown/Markdown.svelte';
 	import type { PageData } from './$types';
-	import { PUBLIC_graphql } from '$env/static/public';
+	import graphql from '$lib/utilities/api';
 	import { goto } from '$app/navigation';
 	import { error } from '$lib/utilities/toasts';
 
@@ -36,26 +34,15 @@
 
 				const variables = { projectId: Number.parseInt(data.projectId), ...form.data };
 
-				const res = await fetch(PUBLIC_graphql, {
-					method: 'POST',
-					body: JSON.stringify({ query, variables }),
-					credentials: 'include',
-					headers: {
-						'Content-Type': 'application/json'
-					}
-				});
+				const projectData = (await graphql(query, variables)).createSpace;
 
-				if (res.ok) {
-					const projectData = (await res.json()).data.createSpace;
-
-					switch (projectData.__typename) {
-						case 'ProjectNotFoundSpace':
-							error(`Proyecto con ID ${projectData.projectId} no existe.`);
-						case 'Space':
-							await goto(`/obras/${data.projectId}`);
-							break;
-					}
-				} else throw res.status;
+				switch (projectData.__typename) {
+					case 'ProjectNotFoundSpace':
+						error(`Proyecto con ID ${projectData.projectId} no existe.`);
+					case 'Space':
+						await goto(`/obras/${data.projectId}`);
+						break;
+				}
 			}
 		}
 	});
