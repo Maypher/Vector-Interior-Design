@@ -1,5 +1,6 @@
 import aiofiles
 import uuid
+import aiofiles.os
 import cloudinary.uploader
 from sanic.request import File
 import cloudinary
@@ -24,23 +25,11 @@ async def upload_locally(image: File) -> str:
     return image_filename
 
 
-cloudinary.config(
-    cloud_name=environ.get("CLOUDINARY_NAME"),
-    api_key=environ.get("CLOUDINARY_PUBLIC_KEY"),
-    api_secret=read_secret("cloudinary_private_key"),
-    secure=True,
-)
+async def delete_locally(filename: str) -> bool:
+    """Deletes the given image from system. Returns `True` if the image was found and deleted. Otherwise `False`."""
+    location = f"{STORAGE_LOCATION}{filename}"
+    if await aiofiles.os.path.exists(location):
+        await aiofiles.os.remove(location)
+        return True
 
-
-def upload_to_cdn(image: File) -> str:
-    """Uploads an image to the cdn and returns it's uuid"""
-    uploaded_file = cloudinary.uploader.upload(
-        image.body, quality="auto", format="jpeg"
-    )
-
-    return uploaded_file["public_id"]
-
-
-def delete_from_cdn(image_id: str) -> bool:
-    res = cloudinary.uploader.destroy(image_id)["result"] == "ok"
-    return res
+    return False
