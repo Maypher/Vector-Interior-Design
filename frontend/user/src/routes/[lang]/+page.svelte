@@ -11,6 +11,7 @@
 	import '$lib/styles/markdown.css';
 	import { getI18n } from '$lib/i18n';
 	import { page } from '$app/state';
+	import { scrollToTop } from '$lib/utilities/navigation';
 
 	interface Borders {
 		n: boolean;
@@ -306,11 +307,12 @@
 			</p>
 		</figcaption>
 	</figure>
-	<img
-		src={logoWhite}
-		alt="Vector: Interior Design"
-		class="text-vector-cream w-25 lg:bottom-1/10 lg:right-1/20 absolute bottom-10 right-1/2 max-lg:translate-x-1/2"
-	/>
+	<button
+		class="text-vector-cream w-25 lg:bottom-1/10 lg:right-1/20 hover:scale-120 absolute bottom-10 right-1/2 cursor-pointer transition-transform max-lg:translate-x-1/2"
+		onclick={scrollToTop}
+	>
+		<img src={logoWhite} alt="Vector: Interior Design" class="w-full" />
+	</button>
 </div>
 
 {#each mainImages.slice(5, -1) as image (image.filename)}
