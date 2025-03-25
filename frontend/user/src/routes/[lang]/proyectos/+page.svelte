@@ -5,7 +5,7 @@
 	import type { PageData } from './$types';
 	import { getI18n } from '$lib/i18n';
 	import { page } from '$app/state';
-	import Glide, { Controls, Swipe } from '@glidejs/glide/dist/glide.modular.esm';
+	import Glide, { Controls, Swipe } from '@glidejs/glide/dist/glide.modular.esm.js';
 	import '@glidejs/glide/dist/css/glide.core.min.css';
 
 	const { data }: { data: PageData } = $props();
