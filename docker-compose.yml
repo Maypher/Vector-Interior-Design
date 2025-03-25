@@ -15,7 +15,7 @@ services:
             - FRONTEND_URL=${ADMIN_FRONTEND_URL:?Frontend URL required for CORS.}
             - IMAGES_URL=${IMAGES_URL:?URL required to return images.}
         volumes:
-            - data:/storage/images/
+            - images_storage:/storage/images/
         networks:
             - admin
             - backend
@@ -40,8 +40,6 @@ services:
         build:
             context: ./backend/
             dockerfile: ./src/user/Dockerfile
-        volumes:
-            - data:/storage/images/
         networks:
             user:
             backend:
@@ -128,7 +126,7 @@ services:
             - LANGUAGE=es_ES.UTF-8
             - LC_ALL=es_ES.UTF-8
         volumes:
-            - data:/storage/database/
+            - database_storage:/var/lib/postgresql/data/
         networks:
             - backend
         healthcheck:
@@ -148,7 +146,7 @@ services:
             - "443:443"
             - "80:80"
         volumes:
-            - data:/storage/images/:ro
+            - images_storage:/storage/images/:ro
         depends_on:
             - admin-backend
         networks:
@@ -177,7 +175,8 @@ services:
                   target: /lua/app.lua
 
 volumes:
-    data:
+    images_storage:
+    database_storage:
 networks:
     user:
     admin:
