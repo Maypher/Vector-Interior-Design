@@ -31,7 +31,7 @@ graphql_blueprint = Blueprint("graphql", url_prefix="/graphql")
 graphql_blueprint.add_route(
     AuthGraphQLView.as_view(
         schema=Schema(query=Query, mutation=Mutation),
-        graphql_ide="graphiql",
+        graphql_ide="graphiql" if dev_mode else None,
         multipart_uploads_enabled=True,
     ),
     "/",

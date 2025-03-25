@@ -1,3 +1,3 @@
 from os import environ
 
-dev_mode = environ.get("BUILD_TARGET") == "dev"
+dev_mode = environ.get("DEV_MODE") == "1"
