@@ -463,22 +463,21 @@
 		<button
 			class="bg-green-500 disabled:brightness-50 hover:brightness-90 p-2 disabled:cursor-not-allowed rounded-xs transition-colors"
 			disabled={!saveEnabled}
-			onclick={updatedMainPageDesktop}>Guardar</button
+			onclick={updatedMainPageDesktop}
 		>
+			Guardar
+		</button>
 		<button
 			class="bg-red-500 disabled:brightness-50 hover:brightness-90 disabled:cursor-not-allowed p-2 rounded-xs transition-colors"
 			disabled={JSON.stringify(originalMainPages) === JSON.stringify(updatedMainPageImages)}
 			onclick={() => {
 				updatedMainPageImages = $state.snapshot(originalMainPages);
-			}}>Cancelar cambios</button
+			}}
 		>
+			Cancelar cambios
+		</button>
 	</div>
 	{#each updatedMainPageImages.slice(0, 1) as image, i (image.filename)}
-		<header class="bg-vector-cream h-26 p-5 flex items-center justify-center gap-20">
-			<a href="/" class="h-full">
-				<img src={logo} alt="logo" class="h-full" />
-			</a>
-		</header>
 		<Movable
 			down={() => {
 				const fromIndex = i;

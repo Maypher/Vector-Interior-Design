@@ -290,16 +290,6 @@
 	</div>
 
 	<div class="size-full flex flex-col items-center gap-10">
-		<header
-			class="bg-vector-grey h-28 p-5 hidden items-center justify-center gap-20 w-full md:flex"
-		>
-			<a href="/" class="h-full">
-				<img src={logo} alt="logo" class="h-full" />
-			</a>
-			<p class="font-Agency-FB tracking-widest text-4xl text-center" style="word-spacing: 1.5rem;">
-				Obras únicas y exclusivas
-			</p>
-		</header>
 		<Phone>
 			<div class="flex flex-col h-full">
 				<header class="bg-vector-grey flex h-28 items-center justify-center gap-20 p-5">
