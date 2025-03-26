@@ -156,7 +156,7 @@
 	</div>
 
 	<figure
-		class={`m-auto hidden h-full max-h-full items-center gap-x-20 lg:flex ${
+		class={`m-auto hidden size-full max-h-full items-center gap-x-20 lg:flex ${
 			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.LEFT &&
 			!imageData.mainImageConfig.desktopConfig.overflow
 				? 'pl-[5%]'
@@ -188,17 +188,15 @@
 		<img
 			src={imageData.imageUrl}
 			alt={imageData.altText}
-			class={`${hasDescription ? 'max-xl:max-w-1/2' : ''} min-h-64 object-contain`}
+			class={`${hasDescription ? 'max-w-3/5' : ''} min-h-64 object-contain`}
 			style={`height: calc(${imageData.mainImageConfig.imageSize} / 100 * 100%);`}
 		/>
 
 		{#if imageData.mainImageConfig.desktopConfig.descriptionPosition || imageData.mainImageConfig.desktopConfig.logoPosition}
 			<figcaption
-				class={`max-w-2/5 flex h-full flex-col items-center justify-around ${
-					imageData.mainImageConfig.desktopConfig.descriptionLogoPosition === Directions.S
-						? 'flex-col-reverse'
-						: ''
-				}`}
+				class="max-w-2/5 flex h-full flex-col items-center justify-around"
+				class:flex-col-reverse={imageData.mainImageConfig.desktopConfig.descriptionLogoPosition ===
+					Directions.S}
 			>
 				{#if imageData.mainImageConfig.desktopConfig.logoPosition}
 					<div class="h-1/2 w-fit">
@@ -233,7 +231,7 @@
 	<!-- Doing [&_.markdownDescription]:mb-0! because here the description should be centered in its space
  and the description by default has a margin that separates it from the Image causing it to decenter from its container-->
 	<div
-		class="header-screen [&_.markdownDescription]:mb-0! min-h-130 flex max-lg:mb-20 xl:pr-10"
+		class="header-screen [&_.markdownDescription]:mb-0! min-h-130 flex w-full max-lg:mb-20 xl:pr-10"
 		style={`background-color: ${image.mainImageConfig.bgColor};`}
 	>
 		{@render mainImage(image)}
@@ -317,7 +315,7 @@
 
 {#each mainImages.slice(5, -1) as image (image.filename)}
 	<div
-		class="min-h-72 max-lg:py-20 lg:h-svh"
+		class="min-h-120 max-lg:py-20 lg:h-svh"
 		style={`background-color: ${image.mainImageConfig.bgColor};`}
 	>
 		{@render mainImage(image)}
@@ -325,7 +323,7 @@
 {/each}
 
 <div
-	class="lg:pl-15 pt-30 flex min-h-72 flex-col gap-y-10 overflow-hidden lg:h-[70svh] lg:flex-row lg:items-center lg:justify-evenly lg:pt-0"
+	class="pt-30 min-h-120 flex w-full flex-col gap-y-10 overflow-hidden lg:h-[70svh] lg:flex-row lg:items-center lg:justify-evenly lg:pt-0"
 	id="nav"
 	style={`background-color: ${mainImages.at(-1)!.mainImageConfig.bgColor};`}
 >
@@ -361,7 +359,12 @@
 		<a href="mailto:contact@vectorinterior.design" class="py-5">contact@vectorinterior.design</a>
 	</div>
 	<div class="bg-vector-grey flex h-24 justify-center p-6">
-		<img src={logoWhite} alt="vector: Interior Design" />
+		<button
+			onclick={scrollToTop}
+			class="hover:scale-120 h-full cursor-pointer transition-transform"
+		>
+			<img src={logoWhite} alt="vector: Interior Design" class="h-full" />
+		</button>
 	</div>
 </footer>
 

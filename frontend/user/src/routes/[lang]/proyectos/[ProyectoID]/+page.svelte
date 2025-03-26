@@ -8,6 +8,7 @@
 	import symbol from '$lib/images/symbol.svg';
 	import { getI18n } from '$lib/i18n';
 	import { page } from '$app/state';
+	import logoWhite from '$lib/images/logo white.svg';
 
 	const { data }: { data: PageData } = $props();
 	const projectData = data.projectData;
@@ -316,13 +317,14 @@
 			{/each}
 		{/each}
 	</div>
-	<div class="-translate-1/2 absolute bottom-0 left-1/2 w-fit transition-transform hover:scale-105">
+	<div class="-translate-1/2 hover:scale-120 absolute bottom-0 left-1/2 w-fit transition-transform">
 		<a
 			href={finalProject
 				? `/${$i18n.language}/proyectos/conclusion`
 				: `/${$i18n.language}/proyectos`}
 			class="font-Nexa gradient-background text-2xl text-transparent"
-			>Siguiente -&gt;
+		>
+			<img src={logoWhite} alt="Vector: Interior Design" class="h-10" />
 		</a>
 	</div>
 </div>

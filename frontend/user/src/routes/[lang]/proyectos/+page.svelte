@@ -7,6 +7,7 @@
 	import { page } from '$app/state';
 	import Glide, { Controls, Swipe } from '@glidejs/glide/dist/glide.modular.esm.js';
 	import '@glidejs/glide/dist/css/glide.core.min.css';
+	import logoWhite from '$lib/images/logo white.svg';
 
 	const { data }: { data: PageData } = $props();
 	const projects: any[] = data.projects;
@@ -130,7 +131,12 @@
 			data-glide-el="controls"
 			class="pointer-events-none flex items-center justify-end px-20 text-xl"
 		>
-			<button data-glide-dir=">" class="font-Nexa pointer-events-auto">Siguiente &gt;</button>
+			<button
+				data-glide-dir=">"
+				class="font-Nexa hover:scale-120 pointer-events-auto cursor-pointer transition-transform"
+			>
+				<img src={logoWhite} alt="Vector: Interior Design" class="h-10" />
+			</button>
 		</div>
 	</div>
 </div>

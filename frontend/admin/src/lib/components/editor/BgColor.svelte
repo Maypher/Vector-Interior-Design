@@ -19,7 +19,7 @@
 	let customColor: boolean = $state(!baseColors.some((x) => x.hex === color));
 </script>
 
-<div class="bg-vector-black/20 p-2 rounded-sm">
+<div class="p-2 rounded-sm">
 	<div>
 		<label for={`${imageId}-bgColor`} class="font-bold">Color de fondo</label>
 		<span>

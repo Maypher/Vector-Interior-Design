@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { websiteUrl } from '$lib/utilities/constants';
 	import type { PageData } from './$types';
-	import symbol from '$lib/images/symbol.svg';
+	import whiteLogo from '$lib/images/logo white.svg';
 	import mdToHtml from '$lib/utilities/markdown';
 	import '$lib/styles/markdown.css';
 	import { getI18n } from '$lib/i18n';
 	import Head from '$lib/components/Head.svelte';
 	import { page } from '$app/state';
+	import { scrollToTop } from '$lib/utilities/navigation';
 
 	const { data }: { data: PageData } = $props();
 	const sculptures = data.sculptures;
@@ -89,7 +90,7 @@
 			</div>
 		{/each}
 	</div>
-	<div class="hidden lg:block">
+	<div class="relative hidden lg:block">
 		{#each groupedSculptures as sculpture, i}
 			{#if Array.isArray(sculpture)}
 				{@const finalImage = sculpture.at(-1)}
@@ -135,6 +136,12 @@
 				</figure>
 			{/if}
 		{/each}
+		<button
+			onclick={scrollToTop}
+			class="hover:scale-120 absolute bottom-5 right-5 cursor-pointer transition-transform"
+		>
+			<img src={whiteLogo} alt="Vector: Interior Design" class="h-10" />
+		</button>
 	</div>
 </div>
 

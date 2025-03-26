@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import logo from '$lib/images/logo.svg';
 	import symbol from '$lib/images/symbol.svg';
 	import tony from '$lib/images/tony.jpg';
 	import tonyContact from '$lib/images/contact.jpg';
@@ -136,43 +135,48 @@
 			}
 		);
 
-		const pencil = document.getElementById('pencil-wrapper');
+		const pencil = document.getElementById('nav');
 		if (pencil) pencilObserver.observe(pencil);
 	});
+
+	function scrollToTop() {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}
 </script>
 
 {#snippet MainImage(image: any)}
-	<div
-		class={`m-auto size-full items-center flex transition-all ${
-			image.mainImageConfig.desktopConfig.imagePosition === enums.DesktopPosition.LEFT &&
-			!image.mainImageConfig.desktopConfig.overflow
-				? 'xl:pl-20'
-				: ''
-		} ${
-			image.mainImageConfig.desktopConfig.imagePosition === enums.DesktopPosition.RIGHT &&
-			!image.mainImageConfig.desktopConfig.overflow
-				? 'xl:pr-20'
-				: ''
-		} ${
-			image.mainImageConfig.desktopConfig.descriptionPosition == enums.Directions.E ||
-			image.mainImageConfig.desktopConfig.logoPosition == enums.Directions.E
-				? 'flex-row'
-				: ''
-		} ${
-			image.mainImageConfig.desktopConfig.descriptionPosition == enums.Directions.W ||
-			image.mainImageConfig.desktopConfig.logoPosition == enums.Directions.W
-				? 'flex-row-reverse'
-				: ''
-		}`}
-		style={`justify-content: ${
-			image.mainImageConfig.desktopConfig.imagePosition === enums.DesktopPosition.LEFT
-				? 'start'
-				: image.mainImageConfig.desktopConfig.imagePosition === enums.DesktopPosition.RIGHT
-					? 'end'
-					: 'center'
-		}; background-color: ${image.mainImageConfig.bgColor};`}
-	>
-		<div class="h-full w-1/2 grow-0">
+	{@const hasDescription: boolean = image.mainImageConfig.desktopConfig.descriptionPosition != null}
+	<div class="size-full max-h-full" style={`background-color: ${image.mainImageConfig.bgColor};`}>
+		<figure
+			class={`mx-auto hidden size-full max-h-full items-center gap-x-20 lg:flex ${
+				image.mainImageConfig.desktopConfig.imagePosition === enums.DesktopPosition.LEFT &&
+				!image.mainImageConfig.desktopConfig.overflow
+					? 'pl-[5%]'
+					: ''
+			} ${
+				image.mainImageConfig.desktopConfig.imagePosition === enums.DesktopPosition.RIGHT &&
+				!image.mainImageConfig.desktopConfig.overflow
+					? 'pr-[5%]'
+					: ''
+			} ${
+				image.mainImageConfig.desktopConfig.descriptionPosition == enums.Directions.E ||
+				image.mainImageConfig.desktopConfig.logoPosition == enums.Directions.E
+					? 'flex-row'
+					: ''
+			} ${
+				image.mainImageConfig.desktopConfig.descriptionPosition == enums.Directions.W ||
+				image.mainImageConfig.desktopConfig.logoPosition == enums.Directions.W
+					? 'flex-row-reverse'
+					: ''
+			}`}
+			style={`justify-content: ${
+				image.mainImageConfig.desktopConfig.imagePosition === enums.DesktopPosition.LEFT
+					? 'start'
+					: image.mainImageConfig.desktopConfig.imagePosition === enums.DesktopPosition.RIGHT
+						? 'end'
+						: 'center'
+			};`}
+		>
 			<Movable
 				left={image.mainImageConfig.desktopConfig.imagePosition !== enums.DesktopPosition.LEFT
 					? () => {
@@ -218,16 +222,20 @@
 						}
 					: undefined}
 				bind:preview
-				class={`relative h-full flex items-center justify-center transition-all ${preview ? 'w-fit' : ''}`}
+				class={`${hasDescription || !preview ? 'max-w-3/5' : ''} ${preview ? 'w-auto' : ''} flex items-center min-h-64 justify-center`}
+				style={`${preview ? `height: calc(${image.mainImageConfig.imageSize}/100 * 100%)` : '100%'}`}
 			>
 				<img
 					src={image.imageUrl}
 					alt={image.altTextEs}
-					class="max-w-full transition-all object-cover"
-					style={`height: calc(${image.mainImageConfig.imageSize}/100 * 100%)`}
+					class={`${!hasDescription && !preview ? 'object-cover' : 'object-contain'}`}
+					style={`height: ${!preview ? `calc(${image.mainImageConfig.imageSize}/100 * 100%)` : '100%'}`}
 				/>
-				<div class="absolute top-0 w-full flex justify-between" class:hidden={preview}>
-					<div class="flex rounded-br-sm">
+				<div
+					class="absolute top-0 w-full flex justify-between bg-vector-cream/40"
+					class:hidden={preview}
+				>
+					<div class="flex gap-2 rounded-br-sm">
 						<button
 							class="text-white hover:bg-gray-200/40 p-2 transition-colors size-10"
 							title={image.mainImageConfig.desktopConfig.descriptionPosition
@@ -304,151 +312,148 @@
 					</button>
 				</div>
 			</Movable>
-		</div>
-		{#if image.mainImageConfig.desktopConfig.descriptionPosition || image.mainImageConfig.desktopConfig.logoPosition}
-			<div
-				class={`flex h-full ${!preview ? 'w-fit' : 'max-w-1/2 m-auto'} grow flex-col items-center justify-around gap-20 ${
-					image.mainImageConfig.desktopConfig.descriptionLogoPosition === enums.Directions.S
-						? 'flex-col-reverse'
-						: ''
-				}`}
-				class:flex-col-reverse={image.mainImageConfig.desktopConfig.descriptionLogoPosition ===
-					enums.Directions.S}
-			>
-				{#if image.mainImageConfig.desktopConfig.logoPosition}
-					{#if !preview}
-						<Movable
-							up={image.mainImageConfig.desktopConfig.descriptionLogoPosition !==
-								enums.Directions.N && image.mainImageConfig.desktopConfig.descriptionPosition
-								? () => {
-										image.mainImageConfig.desktopConfig.descriptionLogoPosition =
-											enums.Directions.N;
-									}
-								: undefined}
-							down={image.mainImageConfig.desktopConfig.descriptionLogoPosition !==
-								enums.Directions.S && image.mainImageConfig.desktopConfig.descriptionPosition
-								? () => {
-										image.mainImageConfig.desktopConfig.descriptionLogoPosition =
-											enums.Directions.S;
-									}
-								: undefined}
-							bind:preview
-							class="h-24 w-fit"
-						>
-							<Borders
-								class="h-full w-fit relative"
-								id={`logo-${image.id}`}
-								bind:n={image.mainImageConfig.desktopConfig.logoBorders.n}
-								bind:s={image.mainImageConfig.desktopConfig.logoBorders.s}
-								bind:e={image.mainImageConfig.desktopConfig.logoBorders.e}
-								bind:w={image.mainImageConfig.desktopConfig.logoBorders.w}
+			{#if image.mainImageConfig.desktopConfig.descriptionPosition || image.mainImageConfig.desktopConfig.logoPosition}
+				<figcaption
+					class={`${preview ? 'max-w-2/5' : 'w-1/2'} flex h-full flex-col items-center justify-around`}
+					class:flex-col-reverse={image.mainImageConfig.desktopConfig.descriptionLogoPosition ===
+						enums.Directions.S}
+				>
+					{#if image.mainImageConfig.desktopConfig.logoPosition}
+						{#if !preview}
+							<Movable
+								up={image.mainImageConfig.desktopConfig.descriptionLogoPosition !==
+									enums.Directions.N && image.mainImageConfig.desktopConfig.descriptionPosition
+									? () => {
+											image.mainImageConfig.desktopConfig.descriptionLogoPosition =
+												enums.Directions.N;
+										}
+									: undefined}
+								down={image.mainImageConfig.desktopConfig.descriptionLogoPosition !==
+									enums.Directions.S && image.mainImageConfig.desktopConfig.descriptionPosition
+									? () => {
+											image.mainImageConfig.desktopConfig.descriptionLogoPosition =
+												enums.Directions.S;
+										}
+									: undefined}
+								bind:preview
+								class="h-24 w-fit"
 							>
-								<img src={symbol} alt="symbol" class="h-full w-fit" />
-							</Borders>
-						</Movable>
-					{:else}
-						<div class="h-1/2 w-fit">
-							<img
-								src={symbol}
-								alt="symbol"
-								class="h-full w-fit border-vector-orange p-5"
-								class:border-t-4={image.mainImageConfig.desktopConfig.logoBorders.n}
-								class:border-b-4={image.mainImageConfig.desktopConfig.logoBorders.s}
-								class:border-r-4={image.mainImageConfig.desktopConfig.logoBorders.e}
-								class:border-l-4={image.mainImageConfig.desktopConfig.logoBorders.w}
-							/>
-						</div>
+								<Borders
+									class="h-full w-fit relative"
+									id={`logo-${image.id}`}
+									bind:n={image.mainImageConfig.desktopConfig.logoBorders.n}
+									bind:s={image.mainImageConfig.desktopConfig.logoBorders.s}
+									bind:e={image.mainImageConfig.desktopConfig.logoBorders.e}
+									bind:w={image.mainImageConfig.desktopConfig.logoBorders.w}
+								>
+									<img src={symbol} alt="symbol" class="h-full w-fit" />
+								</Borders>
+							</Movable>
+						{:else}
+							<div class="h-1/2 w-fit">
+								<img
+									src={symbol}
+									alt="symbol"
+									class="h-full w-fit border-vector-orange p-5"
+									class:border-t-4={image.mainImageConfig.desktopConfig.logoBorders.n}
+									class:border-b-4={image.mainImageConfig.desktopConfig.logoBorders.s}
+									class:border-r-4={image.mainImageConfig.desktopConfig.logoBorders.e}
+									class:border-l-4={image.mainImageConfig.desktopConfig.logoBorders.w}
+								/>
+							</div>
+						{/if}
 					{/if}
-				{/if}
-				{#if image.mainImageConfig.desktopConfig.descriptionPosition}
-					{#if !preview}
-						<div class="flex items-center justify-center h-full max-h-2/3 w-2/3">
-							<Borders
-								id={`description-${image.id}`}
-								bind:n={image.mainImageConfig.desktopConfig.descriptionBorders.n}
-								bind:s={image.mainImageConfig.desktopConfig.descriptionBorders.s}
-								bind:e={image.mainImageConfig.desktopConfig.descriptionBorders.e}
-								bind:w={image.mainImageConfig.desktopConfig.descriptionBorders.w}
-								class="flex flex-col gap-y-5"
+					{#if image.mainImageConfig.desktopConfig.descriptionPosition}
+						{#if !preview}
+							<div class="flex items-center justify-center h-full max-h-2/3 w-2/3">
+								<Borders
+									id={`description-${image.id}`}
+									bind:n={image.mainImageConfig.desktopConfig.descriptionBorders.n}
+									bind:s={image.mainImageConfig.desktopConfig.descriptionBorders.s}
+									bind:e={image.mainImageConfig.desktopConfig.descriptionBorders.e}
+									bind:w={image.mainImageConfig.desktopConfig.descriptionBorders.w}
+									class="flex flex-col gap-y-5"
+								>
+									<div class="flex flex-col justify-between xl:flex-row gap-1">
+										<div class="flex flex-col">
+											<label for={`main-image-desc-alignment-${image.id}`} class="text-white"
+												>Alineación</label
+											>
+											<select
+												id={`main-image-desc-alignment-${image.id}`}
+												bind:value={image.mainImageConfig.descriptionAlignment}
+												class="bg-white"
+											>
+												{#each Object.entries(enums.TextAlignment) as [key, val] (key)}
+													<option value={val}>{key}</option>
+												{/each}
+											</select>
+										</div>
+										<div class="flex items-center justify-center">
+											<label
+												for={`main-image-desc-lang-${image.id}`}
+												class="hover:cursor-pointer bg-vector-cream p-1 rounded-xs hover:brightness-75 transition-colors select-none"
+											>
+												{englishDescription ? 'Inglés' : 'Español'}
+											</label>
+											<input
+												type="checkbox"
+												id={`main-image-desc-lang-${image.id}`}
+												bind:checked={englishDescription}
+												hidden
+											/>
+										</div>
+										<div class="flex flex-col">
+											<label for={`main-image-desc-font-${image.id}`} class="text-white">
+												Tipografía
+											</label>
+											<select
+												id={`main-image-desc-font-${image.id}`}
+												bind:value={image.mainImageConfig.descriptionFont}
+												class="bg-white"
+											>
+												{#each Object.entries(enums.TextFont) as [key, val] (key)}
+													<option value={val}>{key}</option>
+												{/each}
+											</select>
+										</div>
+									</div>
+									{#if englishDescription}
+										<textarea
+											class={`text-white bg-transparent border-2 border-dashed w-full border-white h-full p-5 ${image.mainImageConfig.descriptionAlignment} font-${image.mainImageConfig.descriptionFont}`}
+											bind:value={image.mainImageConfig.descriptionEn}
+										></textarea>
+									{:else}
+										<textarea
+											class={`text-white bg-transparent border-2 border-dashed w-full border-white h-full p-5 ${image.mainImageConfig.descriptionAlignment} font-${image.mainImageConfig.descriptionFont}`}
+											bind:value={image.mainImageConfig.descriptionEs}
+										></textarea>
+									{/if}
+								</Borders>
+							</div>
+						{:else}
+							<div
+								class={`markdownDescription border-vector-orange ${image.mainImageConfig.descriptionAlignment} font-${image.mainImageConfig.descriptionFont}`}
+								class:border-t-4={image.mainImageConfig.desktopConfig.descriptionBorders.n}
+								class:border-b-4={image.mainImageConfig.desktopConfig.descriptionBorders.s}
+								class:border-r-4={image.mainImageConfig.desktopConfig.descriptionBorders.e}
+								class:border-l-4={image.mainImageConfig.desktopConfig.descriptionBorders.w}
 							>
-								<div class="flex flex-col justify-between xl:flex-row gap-1">
-									<div class="flex flex-col">
-										<label for={`main-image-desc-alignment-${image.id}`} class="text-white"
-											>Alineación</label
-										>
-										<select
-											id={`main-image-desc-alignment-${image.id}`}
-											bind:value={image.mainImageConfig.descriptionAlignment}
-											class="bg-white"
-										>
-											{#each Object.entries(enums.TextAlignment) as [key, val] (key)}
-												<option value={val}>{key}</option>
-											{/each}
-										</select>
-									</div>
-									<div class="flex items-center justify-center">
-										<label
-											for={`main-image-desc-lang-${image.id}`}
-											class="hover:cursor-pointer bg-vector-grey p-1 rounded-xs hover:brightness-75 transition-colors select-none"
-											>{englishDescription ? 'Inglés' : 'Español'}</label
-										>
-										<input
-											type="checkbox"
-											id={`main-image-desc-lang-${image.id}`}
-											bind:checked={englishDescription}
-											hidden
-										/>
-									</div>
-									<div class="flex flex-col">
-										<label for={`main-image-desc-font-${image.id}`} class="text-white"
-											>Tipografía</label
-										>
-										<select
-											id={`main-image-desc-font-${image.id}`}
-											bind:value={image.mainImageConfig.descriptionFont}
-											class="bg-white"
-										>
-											{#each Object.entries(enums.TextFont) as [key, val] (key)}
-												<option value={val}>{key}</option>
-											{/each}
-										</select>
-									</div>
-								</div>
-								{#if englishDescription}
-									<textarea
-										class={`text-white bg-transparent border-2 border-dashed w-full border-white h-full p-5 ${image.mainImageConfig.descriptionAlignment} font-${image.mainImageConfig.descriptionFont}`}
-										bind:value={image.mainImageConfig.descriptionEn}
-									></textarea>
-								{:else}
-									<textarea
-										class={`text-white bg-transparent border-2 border-dashed w-full border-white h-full p-5 ${image.mainImageConfig.descriptionAlignment} font-${image.mainImageConfig.descriptionFont}`}
-										bind:value={image.mainImageConfig.descriptionEs}
-									></textarea>
-								{/if}
-							</Borders>
-						</div>
-					{:else}
-						<div
-							class={`markdownDescription text-white border-vector-orange ${image.mainImageConfig.descriptionAlignment} font-${image.mainImageConfig.descriptionFont}`}
-							class:border-t-4={image.mainImageConfig.desktopConfig.descriptionBorders.n}
-							class:border-b-4={image.mainImageConfig.desktopConfig.descriptionBorders.s}
-							class:border-r-4={image.mainImageConfig.desktopConfig.descriptionBorders.e}
-							class:border-l-4={image.mainImageConfig.desktopConfig.descriptionBorders.w}
-						>
-							{@html mdToHTML(
-								englishDescription
-									? image.mainImageConfig.descriptionEn
-									: image.mainImageConfig.descriptionEs
-							)}
-						</div>
+								{@html mdToHTML(
+									englishDescription
+										? image.mainImageConfig.descriptionEn
+										: image.mainImageConfig.descriptionEs
+								)}
+							</div>
+						{/if}
 					{/if}
-				{/if}
-			</div>
-		{/if}
+				</figcaption>
+			{/if}
+		</figure>
 	</div>
 {/snippet}
 
-<div class="bg-black relative hidden md:block">
+<div class="bg-vector-black relative hidden md:block">
 	<div class="fixed top-5 right-5 flex flex-col items-end gap-2 z-30 opacity-70 hover:opacity-100">
 		<input id="previewToggle" type="checkbox" bind:checked={preview} hidden />
 		<label
@@ -477,192 +482,180 @@
 			Cancelar cambios
 		</button>
 	</div>
-	{#each updatedMainPageImages.slice(0, 1) as image, i (image.filename)}
-		<Movable
-			down={() => {
-				const fromIndex = i;
-				const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-				updatedMainPageImages.splice(fromIndex + 1, 0, element);
-			}}
-			class={`transition-all mb-50 ${image.mainImageConfig.desktopConfig.overflow ? 'header-screen' : 'h-[calc(80vh-7rem)]  mt-20'}`}
-			bind:preview
-		>
-			{@render MainImage(image)}
-		</Movable>
-	{/each}
-	{#each updatedMainPageImages.slice(1, 5) as image, i (image.filename)}
-		<Movable
-			up={() => {
-				const fromIndex = i + 1; // Adding once since the first image is at the top then it should start at index 1
-				const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-				updatedMainPageImages.splice(fromIndex - 1, 0, element);
-			}}
-			down={i + 1 !== updatedMainPageImages.length - 1
-				? () => {
-						const fromIndex = i + 1;
-						const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-						updatedMainPageImages.splice(fromIndex + 1, 0, element);
-					}
-				: undefined}
-			bind:preview
-			class={`my-50 transition-all ${!image.mainImageConfig.desktopConfig.overflow ? 'h-[80vh]' : 'h-screen'}`}
-		>
-			{@render MainImage(image)}
-		</Movable>
-	{/each}
-
 	<div
-		class="lg:my-50 relative my-20 flex flex-col items-center justify-start gap-x-5 gap-y-10 lg:ml-10 lg:h-[85vh] lg:flex-row xl:ml-20"
+		class="header-screen w-full [&_.markdownDescription]:mb-0! min-h-130 flex max-lg:mb-20 xl:pr-10 transition-colors"
+		style={`background-color: ${updatedMainPageImages.at(0).mainImageConfig.bgColor};`}
 	>
-		<img src={tony} alt="Diseñador" class="max-h-[70vh]" />
+		{#each updatedMainPageImages.slice(0, 1) as image (image.filename)}
+			{@render MainImage(image)}
+		{/each}
+		<ul
+			class="font-Nexa text-vector-cream relative my-auto hidden h-4/5 flex-col items-end gap-y-2 text-right text-[0.7em] max-xl:pl-10 xl:flex"
+			style="letter-spacing: 0.05rem;"
+		>
+			<li class="before:bg-vector-orange w-fit">
+				<a
+					href="#about"
+					class="hover-link"
+					onclick={(e) => {
+						e.preventDefault();
+
+						document
+							.getElementById('about')
+							?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					}}
+				>
+					Nosotros
+				</a>
+			</li>
+			<li class="w-fit">
+				<a href="/obras" class="hover-link">Proyectos</a>
+			</li>
+			<li class="w-fit">
+				<a href="/obras/esculturas" class="hover-link">Esculturas</a>
+			</li>
+			<li class="w-fit">
+				<a
+					href="#contact"
+					class="hover-link"
+					onclick={(e) => {
+						e.preventDefault();
+
+						document
+							.getElementById('contact')
+							?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					}}
+				>
+					Contacto
+				</a>
+			</li>
+		</ul>
+	</div>
+	{#each updatedMainPageImages.slice(1, 5) as image (image.filename)}
 		<div
-			class="mx-auto flex h-full w-3/4 flex-col items-center justify-center gap-20 text-justify indent-3 text-lg text-white lg:w-1/2 lg:items-end whitespace-pre-line"
-		>
-			<p>
-				{`De lo sublime a lo majestuoso, el límite de este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero e inimaginable.`}
-			</p>
-			<img src={logoWhite} alt="Logo white" class="w-44" />
-		</div>
-	</div>
-
-	{#each updatedMainPageImages.slice(5, 8) as image, i (image.filename)}
-		<Movable
-			up={() => {
-				const fromIndex = i + 5; // Adding once since the first image is at the top then it should start at index 1
-				const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-				updatedMainPageImages.splice(fromIndex - 1, 0, element);
-			}}
-			down={i + 6 !== updatedMainPageImages.length - 1
-				? () => {
-						const fromIndex = i + 6;
-						const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-						updatedMainPageImages.splice(fromIndex + 1, 0, element);
-					}
-				: undefined}
-			bind:preview
-			class="my-50 h-[80vh]"
-		>
-			{@render MainImage(image)}
-		</Movable>
-	{/each}
-
-	<div
-		class="border-vector-orange lg:my-50 m-auto my-20 w-5/6 border-2 p-8 text-center font-[Bahnschrift] text-2xl font-thin tracking-[0.5rem] text-white md:w-fit md:text-4xl"
-		style="word-spacing: 1rem;"
-	>
-		Interior Design
-	</div>
-
-	{#each updatedMainPageImages.slice(8, -1) as image, i (image.filename)}
-		<Movable
-			up={() => {
-				const fromIndex = i + 8; // Adding once since the first image is at the top then it should start at index 1
-				const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-				updatedMainPageImages.splice(fromIndex - 1, 0, element);
-			}}
-			down={i + 8 !== updatedMainPageImages.length - 1
-				? () => {
-						const fromIndex = i + 8;
-						const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-						updatedMainPageImages.splice(fromIndex + 1, 0, element);
-					}
-				: undefined}
-			bind:preview
-			class="my-50 h-[80vh]"
-		>
-			{@render MainImage(image)}
-		</Movable>
-	{/each}
-
-	{#each updatedMainPageImages.slice(-1) as image, i (image.filename)}
-		<Movable
-			up={() => {
-				const fromIndex = i + updatedMainPageImages.length - 1; // Adding once since the first image is at the top then it should start at index 1
-				const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-				updatedMainPageImages.splice(fromIndex - 1, 0, element);
-			}}
-			bind:preview
-			id="pencil-wrapper"
-			class="lg:my-50 mt-20 flex h-screen flex-col gap-y-10 overflow-visible lg:h-[70vh] lg:flex-row lg:justify-between xl:h-[90vh] xl:justify-evenly"
+			class="min-h-72 h-svh w-full transition-colors"
 			style={`background-color: ${image.mainImageConfig.bgColor};`}
 		>
-			<div class="h-full grow relative flex items-center justify-center">
-				<img
-					src={updatedMainPageImages.at(-1)!.imageUrl}
-					alt={updatedMainPageImages.at(-1)!.altTextEs}
-					class="transition-all object-cover"
-					style={`height: calc(${updatedMainPageImages.at(-1)!.mainImageConfig.imageSize} / 100 * 100%)`}
-				/>
-				<div class="absolute left-0 top-0">
-					<BgColor bind:color={image.mainImageConfig.bgColor} imageId={image.filename} />
-				</div>
-				<div class="absolute top-0 right-0">
-					<div class="bg-vector-cream/40 h-fit p-1 flex items-center">
-						<label for={`${image.id}-size`}>Tamaño</label>
-						<input
-							type="range"
-							min="0"
-							max="100"
-							step="10"
-							bind:value={image.mainImageConfig.imageSize}
-						/>
-						(<input
-							type="number"
-							min="0"
-							max="100"
-							step="10"
-							bind:value={image.mainImageConfig.imageSize}
-						/>)
-					</div>
-				</div>
-			</div>
-			<div class="relative flex items-center justify-center gap-5 p-5">
-				<a
-					href="/obras/esculturas/"
-					class="border-vector-orange after:bg-vector-orange relative top-10 w-fit text-4xl text-white hover:border-b-2 z-20"
-					style="font-family: Agency-FB;"
-				>
-					Esculturas
-				</a>
-				<div class="z-10 flex size-full w-[2px] flex-col items-center overflow-visible" id="pencil">
-					<img src={symbol} alt="Logo" class="min-h-32 min-w-32" />
-					<div class="bg-vector-orange relative bottom-4.5 h-full w-[2px]"></div>
-				</div>
-				<a
-					href="/obras/"
-					class="border-vector-orange relative bottom-10 w-fit text-4xl text-white hover:border-b-2 z-20"
-					style="font-family: Agency-FB;"
-					>Proyectos
-				</a>
-			</div>
-		</Movable>
+			{@render MainImage(image)}
+		</div>
 	{/each}
 
-	<footer class="my-15 relative flex flex-col items-center justify-center gap-10 lg:flex-row">
-		<div class="max-w-4/5 lg:max-w-6/7 relative grid gap-y-5">
-			<div
-				class="flex size-fit flex-col gap-4 self-end justify-self-start text-white"
-				style="font-family: Agency-FB; font-size: 5rem; line-height: 4rem;"
-			>
-				<p>CON</p>
-				<p class="indent-[2.1ch]">TAC</p>
-				<p
-					class="col-start-2 row-start-2 text-center indent-[3.9ch] text-[5rem] text-white"
-					style="font-family: Agency-FB; line-height: 4rem;"
-				>
-					TO
+	<div
+		class="min-h-120 relative flex items-center pb-40 pt-20 lg:h-screen lg:py-0 lg:pl-0"
+		id="about"
+	>
+		<figure
+			class="mx-auto flex flex-col items-center justify-center gap-x-20 gap-y-10 lg:size-full lg:flex-row"
+		>
+			<img src={tony} alt="Diseñador" class="lg:h-9/10 min-h-92 max-h-[70svh] w-auto" />
+			<figcaption class="max-w-1/2">
+				<p class="font-Nexa text-vector-cream whitespace-pre-line text-sm">
+					<span class="text-4xl brightness-100 [&_br]:hidden [&_em]:not-italic">
+						{@html mdToHTML(`Como diseñador 
+                de *interiores*,`)}
+					</span>
+					<span class="mt-5 block brightness-50">
+						{`mi enfoque es profundamente personal. No sigo un solo estilo, sino que fusiono influencias de distintas partes del mundo con las últimas tendencias para crear espacios únicos.
+
+                    Mi trabajo se basa en tres pilares fundamentales: confort, funcionalidad y distinción.
+
+                    Cada proyecto es una oportunidad para transformar ideas en ambientes que combinan estética y propósito, siempre con una atención minuciosa a los detalles. 
+                    
+                    Me involucro en cada etapa del proceso, porque el diseño es mi pasión y creo que la excelencia está en los detalles bien ejecutados.
+
+                    Más que imponer un estilo, interpreto y traduzco las necesidades y aspiraciones de mis clientes en espacios que cuentan su historia. Mi trayectoria y mis proyectos hablan por si solos, respaldados por un compromiso absoluto de calidad con creatividad.`}
+					</span>
 				</p>
-			</div>
-			<img
-				src={tonyContact}
-				alt="Contacto"
-				class="col-start-2 block max-h-[70vh] align-middle xl:max-h-[80vh]"
-			/>
-			<p class="col-start-2 row-start-2 justify-self-center text-white">
-				contact@vectorinterior.design
-			</p>
+			</figcaption>
+		</figure>
+		<button
+			class="text-vector-cream w-25 lg:bottom-1/10 lg:right-1/20 hover:scale-120 absolute bottom-10 right-1/2 cursor-pointer transition-transform max-lg:translate-x-1/2"
+			onclick={scrollToTop}
+		>
+			<img src={logoWhite} alt="Vector: Interior Design" class="w-full" />
+		</button>
+	</div>
+
+	{#each updatedMainPageImages.slice(5, -1) as image, i (image.filename)}
+		<div
+			class="min-h-72 h-svh w-full transition-colors"
+			style={`background-color: ${image.mainImageConfig.bgColor};`}
+		>
+			{@render MainImage(image)}
 		</div>
-		<img src={logoWhite} alt="Logo white" class="max-w-42 bottom-0 right-20 w-1/2 lg:absolute" />
+	{/each}
+
+	{#each updatedMainPageImages.slice(-1) as image (image.filename)}
+		<div
+			class="pt-30 min-h-120 flex flex-col gap-y-10 overflow-hidden lg:h-[70svh] lg:flex-row lg:items-center lg:justify-evenly lg:pt-0 transition-colors"
+			id="nav"
+			style={`background-color: ${image.mainImageConfig.bgColor};`}
+		>
+			<div
+				class={`lg:max-w-2/3 flex items-center justify-center max-h-full max-w-full relative ${!preview ? 'border-2 w-full' : 'w-auto'} border-dashed border-gray-500`}
+				style={`height: ${preview ? `calc(${image.mainImageConfig.imageSize} / 100 * 100%);` : '100%'}`}
+			>
+				<img
+					src={image.imageUrl}
+					alt={image.altTextEs}
+					class="object-cover"
+					style={`height: ${!preview ? `calc(${image.mainImageConfig.imageSize} / 100 * 100%)` : '100%'}`}
+				/>
+				{#if !preview}
+					<div class="absolute left-0 top-0 max-w-1/2">
+						<BgColor bind:color={image.mainImageConfig.bgColor} imageId={image.filename} />
+					</div>
+					<div class="absolute top-0 right-0">
+						<div class="bg-vector-cream/40 h-fit p-1 flex items-center">
+							<label for={`${image.id}-size`}>Tamaño</label>
+							<input
+								type="range"
+								min="0"
+								max="100"
+								step="10"
+								bind:value={image.mainImageConfig.imageSize}
+							/>
+							(<input
+								type="number"
+								min="0"
+								max="100"
+								step="10"
+								bind:value={image.mainImageConfig.imageSize}
+							/>)
+						</div>
+					</div>
+				{/if}
+			</div>
+			<ul
+				class="text-vector-cream relative flex items-center justify-center gap-5 p-5 text-xl lg:h-4/5"
+			>
+				<li class="hover-link font-Nexa relative top-0 z-10 h-fit w-fit">
+					<a href="obras/esculturas/" class="text-vector-cream"> Esculturas </a>
+				</li>
+				<div class="h-92 flex w-[2px] flex-col items-center overflow-visible" id="pencil">
+					<img src={symbol} alt="V" class="min-h-20 min-w-20" />
+					<div class="bg-vector-orange relative bottom-3 h-2/3 w-px"></div>
+				</div>
+				<li class="hover-link font-Nexa relative bottom-10 z-10 w-fit after:relative after:top-1">
+					<a href="/obras/proyectos/" class="text-vector-cream"> Proyectos </a>
+				</li>
+			</ul>
+		</div>
+	{/each}
+
+	<footer class="text-vector-cream" id="contact">
+		<div class="font-Nexa relative flex items-center justify-center gap-x-5 py-20">
+			<p class="border-vector-orange border-r-1 px-5 py-2 text-2xl">Contacto</p>
+			<a href="mailto:contact@vectorinterior.design" class="py-5">contact@vectorinterior.design</a>
+		</div>
+		<div class="bg-vector-grey flex h-24 justify-center p-6">
+			<button
+				onclick={scrollToTop}
+				class="hover:scale-120 h-full cursor-pointer transition-transform"
+			>
+				<img src={logoWhite} alt="vector: Interior Design" class="h-full" />
+			</button>
+		</div>
 	</footer>
 </div>
 
@@ -673,8 +666,21 @@
 </div>
 
 <style>
-	:global body {
-		background-color: black;
+	.hover-link::after {
+		display: block;
+		content: '';
+		background-color: var(--color-vector-orange);
+		height: 0.13rem;
+		width: 100%;
+		transition: all 0.3s ease-out;
+		transform-origin: right;
+		border-radius: 5px;
+		transform: scale(0, 1);
+		border-radius: 50%;
+	}
+
+	.hover-link:hover::after {
+		transform: scale(1, 1);
 	}
 
 	#pencil {
@@ -689,7 +695,7 @@
 
 	@keyframes pencil-draw {
 		from {
-			top: 110%;
+			top: 100%;
 		}
 
 		to {
