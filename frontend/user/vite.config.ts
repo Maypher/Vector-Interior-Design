@@ -3,5 +3,10 @@ import { defineConfig } from 'vite';
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()]
+	plugins: [tailwindcss(), sveltekit()],
+	server: {
+		hmr: {
+			clientPort: 5112
+		}
+	}
 });

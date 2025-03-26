@@ -17,6 +17,8 @@ services:
           target: /app/src/
   nginx:
     ports:
-      - "5173:5173"
-      - "5174:5174"
-      - "8080:8080"
+      - "5111:5111" # Admin frontend websocket for hmr
+      - "5173:5173" # Admin frontend
+      - "8080:8080" # Admin backend
+      - "5174:5174" # User frontend (user backend at port 443 thus no port)
+      - "5112:5112" # User frontend websocket for hmr
