@@ -25,7 +25,7 @@
 </script>
 
 {#if !preview}
-	<div class="flex flex-col justify-between xl:flex-row gap-1">
+	<div class="flex justify-between gap-1">
 		{#if descriptionAlignment}
 			<div class="flex flex-col items-center">
 				<label for={`main-image-desc-alignment-${id}`} class="text-white">Alineación</label>

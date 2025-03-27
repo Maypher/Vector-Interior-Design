@@ -16,6 +16,8 @@
 	import graphql from '$lib/utilities/api';
 	import Phone from '$lib/components/layout/phone.svelte';
 	import EditorDescription from '$lib/components/editor/EditorDescription.svelte';
+	import BgColor from '$lib/components/editor/BgColor.svelte';
+	import { mdToHTML } from '$lib/utilities/markdown';
 
 	const { data }: { data: PageData } = $props();
 	let originalMainPages: any[] = $state($state.snapshot(data.mainPageImages));
@@ -28,16 +30,17 @@
 	async function updatedMainPagePhone() {
 		const query = `
 			mutation updateMainPageImage($id: Int!, $descriptionEs: String, $descriptionEn: String, 
-				$descriptionAlignment: String, $descriptionFont: String, $index: Int, 
+				$descriptionAlignment: String, $descriptionFont: String, $index: Int, $bgColor: String
 				$phoneConfig: MainPageImagePhoneConfigInput) {
 				updateMainPageConfig(id: $id, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, 
 				descriptionAlignment: $descriptionAlignment, descriptionFont: $descriptionFont, index: $index, 
-				phoneConfig: $phoneConfig) {
+				phoneConfig: $phoneConfig, bgColor: $bgColor) {
 					id
 					descriptionEs
 					descriptionEn
 					descriptionFont
 					descriptionAlignment
+					bgColor
 					phoneConfig {
 						descriptionPosition
 						logoPosition
@@ -59,6 +62,7 @@
 						id
 						filename
 						altTextEs
+						imageUrl
 					}
 				}
 			}
@@ -79,7 +83,8 @@
 					descriptionEn: mainPageConfig.descriptionEn,
 					descriptionAlignment: mainPageConfig.descriptionAlignment,
 					index: ordersToUpdate.find((val) => val.id === mainPageConfig.id)?.newPos,
-					phoneConfig: mainPageConfig.phoneConfig
+					phoneConfig: mainPageConfig.phoneConfig,
+					bgColor: mainPageConfig.bgColor
 				};
 
 				const { image: updatedImage, ...updatedData } = (await graphql(query, variables))
@@ -125,11 +130,15 @@
 		const pencil = document.getElementById('pencil-wrapper');
 		if (pencil) pencilObserver.observe(pencil);
 	});
+
+	function scrollToTop() {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}
 </script>
 
 {#snippet mainImage(imageData: any)}
 	<div
-		class="flex gap-20 @md:hidden h-full"
+		class="@md:hidden h-full"
 		class:flex-col={imageData.mainImageConfig.phoneConfig.logoPosition === Directions.N}
 		class:flex-col-reverse={imageData.mainImageConfig.phoneConfig.logoPosition === Directions.S}
 	>
@@ -157,7 +166,7 @@
 			</Movable>
 		{/if}
 		<div
-			class={`flex gap-12 ${
+			class={`flex h-full items-center ${
 				imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.S
 					? 'flex-col-reverse'
 					: ''
@@ -171,7 +180,13 @@
 					down={imageData.mainImageConfig.phoneConfig.descriptionPosition !== Directions.S
 						? () => (imageData.mainImageConfig.phoneConfig.descriptionPosition = Directions.S)
 						: undefined}
-					class={`class m-auto px-8 text-white ${imageData.mainImageConfig.descriptionAlignment} markdownDescription flex flex-col justify-center`}
+					class={`grow size-auto text-vector-cream ${
+						imageData.mainImageConfig.descriptionAlignment
+					} markdownDescription flex flex-col justify-center max-w-5/6 ${
+						imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.N
+							? 'mb-16'
+							: 'mt-16'
+					}`}
 					style={`font-family: ${imageData.mainImageConfig.descriptionFont};`}
 					bind:preview
 				>
@@ -192,11 +207,11 @@
 					bind:s={imageData.mainImageConfig.phoneConfig.imageBorders.s}
 					bind:e={imageData.mainImageConfig.phoneConfig.imageBorders.e}
 					bind:w={imageData.mainImageConfig.phoneConfig.imageBorders.w}
-					class={`relative m-auto transition-all ${!imageData.mainImageConfig.phoneConfig.overflow ? 'w-5/6' : 'w-full'}`}
+					class={`relative m-auto transition-all ${!imageData.mainImageConfig.phoneConfig.overflow ? 'w-5/6' : 'w-full'} h-fit`}
 				>
 					<img src={imageData.imageUrl} alt={imageData.altTextEs} />
 					<div class="absolute top-0 flex justify-between w-full">
-						<div>
+						<div class="bg-vector-cream/40">
 							<button
 								class="text-white hover:bg-gray-200/40 p-2 transition-colors size-10"
 								title={imageData.mainImageConfig.phoneConfig.descriptionPosition
@@ -215,6 +230,10 @@
 										: 'description'}
 								</span>
 							</button>
+							<BgColor
+								imageId={imageData.filename}
+								bind:color={imageData.mainImageConfig.bgColor}
+							/>
 							<button
 								title="Logo"
 								class="size-10 p-2 hover:bg-gray-200/40"
@@ -236,7 +255,7 @@
 						/>
 						<label
 							for={`overflow-${imageData.filename}`}
-							class="text-white hover:bg-gray-200/40 p-1 flex items-center"
+							class="text-white hover:bg-gray-200/40 p-1 flex items-center self-start"
 						>
 							<span class="material-symbols-outlined">
 								{imageData.mainImageConfig.phoneConfig.overflow
@@ -278,197 +297,133 @@
 		<button
 			class="bg-green-500 disabled:brightness-50 hover:brightness-90 p-2 disabled:cursor-not-allowed rounded-xs transition-colors"
 			disabled={!saveEnabled}
-			onclick={updatedMainPagePhone}>Guardar</button
+			onclick={updatedMainPagePhone}
 		>
+			Guardar
+		</button>
 		<button
 			class="bg-red-500 disabled:brightness-50 hover:brightness-90 disabled:cursor-not-allowed p-2 rounded-xs transition-colors"
 			disabled={JSON.stringify(originalMainPages) === JSON.stringify(updatedMainPageImages)}
 			onclick={() => {
 				updatedMainPageImages = $state.snapshot(originalMainPages);
-			}}>Cancelar cambios</button
+			}}
 		>
+			Cancelar cambios
+		</button>
 	</div>
 
 	<div class="size-full flex flex-col items-center gap-10">
 		<Phone>
-			<div class="flex flex-col h-full">
-				<header class="bg-vector-grey flex h-28 items-center justify-center gap-20 p-5">
-					<a href="/" class="h-full">
+			<div class="flex flex-col h-full mb-20">
+				<header class="flex h-22 items-center justify-between gap-20 p-5 bg-vector-cream">
+					<a href="/obras" class="h-full">
 						<img src={logo} alt="logo" class="h-full" />
 					</a>
-					<p
-						class="font-Agency-FB hidden w-fit text-center text-4xl tracking-widest @xl:inline"
-						style="word-spacing: 1.5rem;"
-					>
-						Obras únicas y exclusivas
-					</p>
+					<p>☰</p>
 				</header>
 				{#each updatedMainPageImages.slice(0, 1) as image, i (image.filename)}
-					<Movable
-						down={() => {
-							const fromIndex = i;
-							const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-							updatedMainPageImages.splice(fromIndex + 1, 0, element);
-						}}
-						class={`transition-all h-full!`}
-						bind:preview
+					<div
+						class="header-screen [&_.markdownDescription]:mb-0! w-full"
+						style={`background-color: ${image.mainImageConfig.bgColor};`}
 					>
 						{@render mainImage(image)}
-					</Movable>
+					</div>
 				{/each}
 			</div>
 
-			{#each updatedMainPageImages.slice(1, 5) as image, i (image.filename)}
-				<Movable
-					up={() => {
-						const fromIndex = i + 1; // Adding once since the first image is at the top then it should start at index 1
-						const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-						updatedMainPageImages.splice(fromIndex - 1, 0, element);
-					}}
-					down={i + 1 !== updatedMainPageImages.length - 1
-						? () => {
-								const fromIndex = i + 1;
-								const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-								updatedMainPageImages.splice(fromIndex + 1, 0, element);
-							}
-						: undefined}
-					bind:preview
-					class="my-20 h-fit!"
-				>
-					{@render mainImage(image)}
-				</Movable>
-			{/each}
-			<div
-				class="@lg:my-50 relative my-20 flex flex-col items-center justify-start gap-x-5 gap-y-10 @lg:ml-10 @lg:h-[85vh] @lg:flex-row @xl:ml-20"
-			>
-				<img src={tony} alt="Diseñador" class="max-h-[70vh]" />
+			{#each updatedMainPageImages.slice(1, 5) as image (image.filename)}
 				<div
-					class="mx-auto flex h-full w-3/4 flex-col items-center justify-center gap-20 text-justify indent-3 text-lg text-white @lg:w-1/2 @lg:items-end"
+					class="py-20 transition-colors"
+					style={`background-color: ${image.mainImageConfig.bgColor};`}
 				>
-					<p>
-						{`De lo sublime a lo majestuoso, el límite de este  este diseñador es infinito. Definiendo la personalidad de sus clientes es capaz de convertir los espacios más simples en obras únicas y exclusivas, logrando un impacto visual certero y a veces hasta inimaginable.`}
-					</p>
-					<img src={logoWhite} alt="Logo white" class="w-44" />
+					{@render mainImage(image)}
 				</div>
-			</div>
-			{#each updatedMainPageImages.slice(5, 8) as image, i (image.filename)}
-				<Movable
-					up={() => {
-						const fromIndex = i + 6; // Adding once since the first image is at the top then it should start at index 1
-						const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-						updatedMainPageImages.splice(fromIndex - 1, 0, element);
-					}}
-					down={i + 6 !== updatedMainPageImages.length - 1
-						? () => {
-								const fromIndex = i + 6;
-								const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-								updatedMainPageImages.splice(fromIndex + 1, 0, element);
-							}
-						: undefined}
-					bind:preview
-					class="my-20 h-fit!"
-				>
-					{@render mainImage(image)}
-				</Movable>
 			{/each}
 
-			<div
-				class="border-vector-orange @lg:my-50 m-auto my-20 w-5/6 border-2 p-8 text-center font-[Bahnschrift] text-2xl font-thin tracking-[0.5rem] text-white @md:w-fit @md:text-4xl"
-				style="word-spacing: 1rem;"
-			>
-				Interior Design
-			</div>
+			<div class="relative flex items-center pb-40 pt-20" id="about">
+				<figure class="mx-auto flex flex-col items-center justify-center gap-x-20 gap-y-10 px-8">
+					<img src={tony} alt="Diseñador" class="lg:h-9/10 min-h-92 h-auto w-full" />
+					<figcaption>
+						<p class="font-Nexa text-vector-cream whitespace-pre-line text-sm">
+							<span class="text-4xl brightness-100 [&_br]:hidden [&_em]:not-italic">
+								{@html mdToHTML(`Como diseñador
+								de *interiores*`)}
+							</span>
+							<span class="mt-5 block brightness-50">
+								{`mi enfoque es profundamente personal. No sigo un solo estilo, sino que fusiono influencias de distintas partes del mundo con las últimas tendencias para crear espacios únicos.
 
-			{#each updatedMainPageImages.slice(8, -1) as image, i (image.filename)}
-				<Movable
-					up={() => {
-						const fromIndex = i + 8; // Adding once since the first image is at the top then it should start at index 1
-						const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-						updatedMainPageImages.splice(fromIndex - 1, 0, element);
-					}}
-					down={i + 8 !== updatedMainPageImages.length - 1
-						? () => {
-								const fromIndex = i + 8;
-								const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-								updatedMainPageImages.splice(fromIndex + 1, 0, element);
-							}
-						: undefined}
-					bind:preview
-					class="my-20 h-fit!"
-				>
-					{@render mainImage(image)}
-				</Movable>
-			{/each}
+                    Mi trabajo se basa en tres pilares fundamentales: confort, funcionalidad y distinción.
 
-			{#each updatedMainPageImages.slice(-1) as image, i (image.filename)}
-				<Movable
-					up={() => {
-						const fromIndex = i + updatedMainPageImages.length - 1; // Adding once since the first image is at the top then it should start at index 1
-						const element = updatedMainPageImages.splice(fromIndex, 1)[0];
-						updatedMainPageImages.splice(fromIndex - 1, 0, element);
-					}}
-					bind:preview
-					id="pencil-wrapper"
-					class="@lg:my-50 @lg:ml-15 mt-20 flex h-screen flex-col gap-y-10 overflow-visible @lg:h-[70vh] @lg:flex-row @lg:justify-between @xl:h-[90vh] @xl:justify-evenly"
-				>
-					<img
-						src={updatedMainPageImages.at(-1)!.imageUrl}
-						alt={updatedMainPageImages.at(-1)!.altTextEs}
-						class="@lg:max-w-2/3 max-w-full @lg:my-auto @lg:max-h-full"
-					/>
-					<div class="relative flex size-full items-center justify-center gap-5 p-5">
-						<a
-							href="/obras/esculturas/"
-							class="border-vector-orange after:bg-vector-orange relative top-10 w-fit text-4xl text-white hover:border-b-2 z-20"
-							style="font-family: Agency-FB;"
-						>
-							Esculturas
-						</a>
-						<div
-							class="z-10 flex size-full w-[2px] flex-col items-center overflow-visible"
-							id="pencil"
-						>
-							<img src={symbol} alt="Logo" class="min-h-32 min-w-32" />
-							<div class="bg-vector-orange relative bottom-1.5 h-full w-[2px]"></div>
-						</div>
-						<a
-							href="/obras/"
-							class="border-vector-orange relative bottom-10 w-fit text-4xl text-white hover:border-b-2 z-20"
-							style="font-family: Agency-FB;"
-							>Proyectos
-						</a>
-					</div>
-				</Movable>
-			{/each}
-			<footer class="my-15 relative flex flex-col items-center justify-center gap-10 @lg:flex-row">
-				<div class="max-w-4/5 @lg:max-w-6/7 relative grid gap-y-5">
-					<div
-						class="flex size-fit flex-col gap-4 self-end justify-self-start text-white"
-						style="font-family: Agency-FB; font-size: 5rem; line-height: 4rem;"
-					>
-						<p>CON</p>
-						<p class="indent-[2.1ch]">TAC</p>
-						<p
-							class="col-start-2 row-start-2 text-center indent-[3.9ch] text-[5rem] text-white"
-							style="font-family: Agency-FB; line-height: 4rem;"
-						>
-							TO
+                    Cada proyecto es una oportunidad para transformar ideas en ambientes que combinan estética y propósito, siempre con una atención minuciosa a los detalles. 
+                    
+                    Me involucro en cada etapa del proceso, porque el diseño es mi pasión y creo que la excelencia está en los detalles bien ejecutados.
+
+                    Más que imponer un estilo, interpreto y traduzco las necesidades y aspiraciones de mis clientes en espacios que cuentan su historia. Mi trayectoria y mis proyectos hablan por si solos, respaldados por un compromiso absoluto de calidad con creatividad.`}
+							</span>
 						</p>
-					</div>
-					<img
-						src={tonyContact}
-						alt="Contacto"
-						class="col-start-2 block max-h-[70vh] align-middle @xl:max-h-[80vh]"
-					/>
-					<p class="col-start-2 row-start-2 justify-self-center text-white">
-						contact@vectorinterior.design
-					</p>
+					</figcaption>
+				</figure>
+				<button
+					class="text-vector-cream w-25 hover:scale-120 absolute bottom-10 right-1/2 cursor-pointer transition-transform translate-x-1/2"
+					onclick={scrollToTop}
+				>
+					<img src={logoWhite} alt="Vector: Interior Design" class="w-full" />
+				</button>
+			</div>
+
+			{#each updatedMainPageImages.slice(5, -1) as image (image.filename)}
+				<div
+					class="py-20 transition-colors"
+					style={`background-color: ${image.mainImageConfig.bgColor};`}
+				>
+					{@render mainImage(image)}
 				</div>
-				<img
-					src={logoWhite}
-					alt="Logo white"
-					class="max-w-42 bottom-0 right-20 w-1/2 @lg:absolute"
-				/>
+			{/each}
+
+			{#each updatedMainPageImages.slice(-1) as image (image.filename)}
+				<div
+					class="mt-20 flex w-full flex-col gap-y-10 overflow-hidden"
+					id="nav"
+					style={`background-color: ${image.mainImageConfig.bgColor};`}
+				>
+					<img
+						src={image.imageUrl}
+						alt={image.altText}
+						class="max-h-full max-w-full object-contain"
+						style={`height: calc(${image.mainImageConfig.imageSize} / 100 * 100%);`}
+					/>
+					<ul class="text-vector-cream relative flex items-center justify-center gap-5 p-5 text-xl">
+						<li class="hover-link font-Nexa relative top-0 z-10 h-fit w-fit">
+							<a href={`/obras/esculturas/`} class="text-vector-cream"> Esculturas </a>
+						</li>
+						<div class="h-92 flex w-[2px] flex-col items-center overflow-visible" id="pencil">
+							<img src={symbol} alt="V" class="min-h-20 min-w-20" />
+							<div class="bg-vector-orange relative bottom-3 h-2/3 w-px"></div>
+						</div>
+						<li
+							class="hover-link font-Nexa relative bottom-10 z-10 w-fit after:relative after:top-1"
+						>
+							<a href={`/obras/`} class="text-vector-cream"> Proyectos </a>
+						</li>
+					</ul>
+				</div>
+			{/each}
+
+			<footer class="text-vector-cream" id="contact">
+				<div class="font-Nexa relative flex items-center justify-center gap-x-5 py-20">
+					<p class="border-vector-orange border-r-1 pr-5 py-2 text-2xl">Contacto</p>
+					<a href="mailto:contact@vectorinterior.design" class="py-5">
+						contact@vectorinterior.design
+					</a>
+				</div>
+				<div class="bg-vector-grey flex h-24 justify-center p-6">
+					<button
+						onclick={scrollToTop}
+						class="hover:scale-120 h-full cursor-pointer transition-transform"
+					>
+						<img src={logoWhite} alt="vector: Interior Design" class="h-full" />
+					</button>
+				</div>
 			</footer>
 		</Phone>
 	</div>

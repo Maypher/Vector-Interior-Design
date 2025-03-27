@@ -122,7 +122,7 @@
 			} ${imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.N ? 'flex-col' : 'flex-col-reverse'}`}
 		>
 			{#if imageData.mainImageConfig.phoneConfig.descriptionPosition && imageData.mainImageConfig.description}
-				<figcaption class="max-w-10/12 flex w-fit grow flex-col justify-center text-white">
+				<figcaption class="max-w-5/6 flex w-fit grow flex-col justify-center text-white">
 					<div
 						class={`text-vector-cream ${imageData.mainImageConfig.descriptionAlignment} markdownDescription ${
 							imageData.mainImageConfig.phoneConfig.descriptionPosition === Directions.N
@@ -281,7 +281,7 @@
 
 {#each mainImages.slice(1, 5) as image (image.filename)}
 	<div
-		class="min-h-130 max-lg:py-20 lg:h-svh"
+		class="lg:min-h-120 max-lg:py-20 lg:h-svh"
 		style={`background-color: ${image.mainImageConfig.bgColor};`}
 	>
 		{@render mainImage(image)}
@@ -289,14 +289,18 @@
 {/each}
 
 <div
-	class="min-h-120 relative flex items-center pb-40 pt-20 lg:h-screen lg:py-0 lg:pl-0"
+	class="lg:min-h-120 relative flex items-center pb-40 pt-20 lg:h-screen lg:py-0 lg:pl-0"
 	id="about"
 >
 	<figure
-		class="mx-auto flex flex-col items-center justify-center gap-x-20 gap-y-10 lg:size-full lg:flex-row"
+		class="mx-auto flex flex-col items-center justify-center gap-x-20 gap-y-10 px-8 lg:size-full lg:flex-row lg:px-0"
 	>
-		<img src={tony} alt="Diseñador" class="lg:h-9/10 min-h-92 max-h-[70svh] w-auto" />
-		<figcaption class="max-w-1/2">
+		<img
+			src={tony}
+			alt="Diseñador"
+			class="lg:h-9/10 min-h-92 h-auto w-full lg:max-h-[70svh] lg:w-auto"
+		/>
+		<figcaption class="lg:max-w-1/2">
 			<p class="font-Nexa text-vector-cream whitespace-pre-line text-sm">
 				<span class="text-4xl brightness-100 [&_br]:hidden [&_em]:not-italic">
 					{@html mdToHtml($i18n.t('aboutUsHead'))}
@@ -315,47 +319,49 @@
 
 {#each mainImages.slice(5, -1) as image (image.filename)}
 	<div
-		class="min-h-120 max-lg:py-20 lg:h-svh"
+		class="lg:min-h-120 max-lg:py-20 lg:h-svh"
 		style={`background-color: ${image.mainImageConfig.bgColor};`}
 	>
 		{@render mainImage(image)}
 	</div>
 {/each}
 
-<div
-	class="pt-30 min-h-120 flex w-full flex-col gap-y-10 overflow-hidden lg:h-[70svh] lg:flex-row lg:items-center lg:justify-evenly lg:pt-0"
-	id="nav"
-	style={`background-color: ${mainImages.at(-1)!.mainImageConfig.bgColor};`}
->
-	<img
-		src={mainImages.at(-1)!.imageUrl}
-		alt={mainImages.at(-1)!.altText}
-		class="lg:max-w-2/3 max-h-full max-w-full object-contain"
-		style={`height: calc(${mainImages.at(-1)?.mainImageConfig.imageSize} / 100 * 100%);`}
-	/>
-	<ul
-		class="text-vector-cream relative flex items-center justify-center gap-5 p-5 text-xl lg:h-4/5"
+{#each mainImages.slice(-1) as image (image.filename)}
+	<div
+		class="lg:min-h-120 mt-20 flex w-full flex-col gap-y-10 overflow-hidden lg:mt-0 lg:h-[70svh] lg:flex-row lg:items-center lg:justify-evenly"
+		id="nav"
+		style={`background-color: ${image.mainImageConfig.bgColor};`}
 	>
-		<li class="hover-link font-Nexa relative top-0 z-10 h-fit w-fit">
-			<a href={`${$i18n.language}/esculturas/`} class="text-vector-cream">
-				{$i18n.t('sculptures')}
-			</a>
-		</li>
-		<div class="h-92 flex w-[2px] flex-col items-center overflow-visible" id="pencil">
-			<img src={symbol} alt="V" class="min-h-20 min-w-20" />
-			<div class="bg-vector-orange relative bottom-3 h-2/3 w-px"></div>
-		</div>
-		<li class="hover-link font-Nexa relative bottom-10 z-10 w-fit after:relative after:top-1">
-			<a href={`/${$i18n.language}/proyectos/`} class="text-vector-cream">
-				{$i18n.t('projects')}
-			</a>
-		</li>
-	</ul>
-</div>
+		<img
+			src={image.imageUrl}
+			alt={image.altText}
+			class="lg:max-w-2/3 max-h-full max-w-full object-contain"
+			style={`height: calc(${image.mainImageConfig.imageSize} / 100 * 100%);`}
+		/>
+		<ul
+			class="text-vector-cream relative flex items-center justify-center gap-5 p-5 text-xl lg:h-4/5"
+		>
+			<li class="hover-link font-Nexa relative top-0 z-10 h-fit w-fit">
+				<a href={`${$i18n.language}/esculturas/`} class="text-vector-cream">
+					{$i18n.t('sculptures')}
+				</a>
+			</li>
+			<div class="h-92 flex w-[2px] flex-col items-center overflow-visible" id="pencil">
+				<img src={symbol} alt="V" class="min-h-20 min-w-20" />
+				<div class="bg-vector-orange relative bottom-3 h-2/3 w-px"></div>
+			</div>
+			<li class="hover-link font-Nexa relative bottom-10 z-10 w-fit after:relative after:top-1">
+				<a href={`/${$i18n.language}/proyectos/`} class="text-vector-cream">
+					{$i18n.t('projects')}
+				</a>
+			</li>
+		</ul>
+	</div>
+{/each}
 
 <footer class="text-vector-cream" id="contact">
 	<div class="font-Nexa relative flex items-center justify-center gap-x-5 py-20">
-		<p class="border-vector-orange border-r-1 px-5 py-2 text-2xl">{$i18n.t('contact')}</p>
+		<p class="border-vector-orange border-r-1 py-2 pr-5 text-2xl">{$i18n.t('contact')}</p>
 		<a href="mailto:contact@vectorinterior.design" class="py-5">contact@vectorinterior.design</a>
 	</div>
 	<div class="bg-vector-grey flex h-24 justify-center p-6">

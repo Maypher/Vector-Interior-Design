@@ -23,8 +23,13 @@
 	<div>
 		<label for={`${imageId}-bgColor`} class="font-bold">Color de fondo</label>
 		<span>
-			<label for={`${imageId}-custom`}>Personalizado</label>
-			<input id={`${imageId}-custom`} type="checkbox" bind:checked={customColor} />
+			<label
+				for={`${imageId}-custom`}
+				class={`transition-colors cursor-pointer ${customColor ? 'bg-vector-cream/50' : ''}`}
+			>
+				&#127912;
+			</label>
+			<input id={`${imageId}-custom`} type="checkbox" bind:checked={customColor} hidden />
 		</span>
 	</div>
 	{#if !customColor}
