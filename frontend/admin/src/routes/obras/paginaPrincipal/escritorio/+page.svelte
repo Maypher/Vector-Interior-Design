@@ -2,7 +2,6 @@
 	import type { PageData } from './$types';
 	import symbol from '$lib/images/symbol.svg';
 	import tony from '$lib/images/tony.jpg';
-	import tonyContact from '$lib/images/contact.jpg';
 	import logoWhite from '$lib/images/logo white.svg';
 	import { mdToHTML } from '$lib/utilities/markdown';
 	import getArrayDifference from '$lib/utilities/arrayOrder';

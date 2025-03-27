@@ -4,7 +4,6 @@
 	import symbol from '$lib/images/symbol.svg';
 	import logoWhite from '$lib/images/logo white.svg';
 	import tony from '$lib/images/tony.jpg';
-	import tonyContact from '$lib/images/contact.jpg';
 	import { Directions, TextAlignment, TextFont } from '$lib/utilities/enums';
 	import '$lib/styles/markdown.css';
 	import Movable from '$lib/components/editor/Movable.svelte';
