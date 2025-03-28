@@ -12,11 +12,12 @@
 	}
 
 	const { up, down, left, right, children, preview = $bindable(false), ...props }: Props = $props();
+	console.log(props.class);
 </script>
 
 <div
 	{...props}
-	class={`relative size-full ${!preview ? 'border-dashed border-2 border-gray-500' : ''} ${props.class}`}
+	class={`relative ${!preview ? 'border-dashed border-2 border-gray-500' : ''} ${props.class}`}
 >
 	{#if !preview && up}
 		<button

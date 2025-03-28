@@ -82,7 +82,9 @@
 		></textarea>
 	{/if}
 {:else}
-	<div class={`markdownDescription text-white ${descriptionAlignment} font-${descriptionFont}`}>
+	<div
+		class={`markdownDescription text-white size-full ${descriptionAlignment} font-${descriptionFont}`}
+	>
 		{@html mdToHTML(englishDescription ? descriptionEn! : descriptionEs)}
 	</div>
 {/if}

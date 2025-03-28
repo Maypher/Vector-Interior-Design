@@ -221,7 +221,7 @@
 						}
 					: undefined}
 				bind:preview
-				class={`${hasDescription || !preview ? 'max-w-3/5' : ''} ${preview ? 'w-auto' : ''} flex items-center min-h-64 justify-center`}
+				class={`${hasDescription || !preview ? 'max-w-3/5' : ''} ${preview ? 'w-auto' : ''} flex items-center min-h-64 justify-center size-full`}
 				style={`${preview ? `height: calc(${image.mainImageConfig.imageSize}/100 * 100%)` : '100%'}`}
 			>
 				<img
@@ -371,7 +371,7 @@
 									bind:s={image.mainImageConfig.desktopConfig.descriptionBorders.s}
 									bind:e={image.mainImageConfig.desktopConfig.descriptionBorders.e}
 									bind:w={image.mainImageConfig.desktopConfig.descriptionBorders.w}
-									class="flex flex-col gap-y-5"
+									class="flex flex-col gap-y-5 size-full"
 								>
 									<div class="flex flex-col justify-between xl:flex-row gap-1">
 										<div class="flex flex-col">
@@ -601,7 +601,7 @@
 					style={`height: ${!preview ? `calc(${image.mainImageConfig.imageSize} / 100 * 100%)` : '100%'}`}
 				/>
 				{#if !preview}
-					<div class="absolute left-0 top-0 max-w-1/2">
+					<div class="absolute left-0 top-0 max-w-1/2 bg-vector-cream/40">
 						<BgColor bind:color={image.mainImageConfig.bgColor} imageId={image.filename} />
 					</div>
 					<div class="absolute top-0 right-0">
@@ -644,7 +644,7 @@
 
 	<footer class="text-vector-cream" id="contact">
 		<div class="font-Nexa relative flex items-center justify-center gap-x-5 py-20">
-			<p class="border-vector-orange border-r-1 px-5 py-2 text-2xl">Contacto</p>
+			<p class="border-vector-orange border-r-1 pr-5 py-2 text-2xl">Contacto</p>
 			<a href="mailto:contact@vectorinterior.design" class="py-5">contact@vectorinterior.design</a>
 		</div>
 		<div class="bg-vector-grey flex h-24 justify-center p-6">

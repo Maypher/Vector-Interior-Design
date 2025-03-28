@@ -24,12 +24,12 @@
 	}: Props = $props();
 </script>
 
-<div class={`relative size-full ${props.class}`}>
+<div {...props} class={`relative ${props.class}`}>
 	{#if !preview && n !== undefined}
 		<input type="checkbox" id={`logo-border-n-${id}`} hidden bind:checked={n} />
 		<label
 			for={`logo-border-n-${id}`}
-			class={`w-full h-2 absolute -top-5 hover:cursor-pointer hover:bg-vector-orange/40 ${n ? 'bg-vector-orange' : 'bg-gray-600/40'}`}
+			class={`w-full h-2 absolute -top-5 left-0 hover:cursor-pointer hover:bg-vector-orange/40 ${n ? 'bg-vector-orange' : 'bg-gray-600/40'}`}
 		></label>
 	{/if}
 	{#if !preview && w !== undefined}
