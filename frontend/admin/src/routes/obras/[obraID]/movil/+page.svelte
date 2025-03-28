@@ -11,6 +11,7 @@
 	import graphql from '$lib/utilities/api';
 	import getArrayDifference from '$lib/utilities/arrayOrder';
 	import { success } from '$lib/utilities/toasts';
+	import BgColor from '$lib/components/editor/BgColor.svelte';
 
 	const { data }: { data: PageData } = $props();
 	let originalProjectData = $state(data.projectData);
@@ -38,15 +39,16 @@
 
 		const imageMutation = `
 			mutation updateImage($filename: String!, $descriptionEs: String, $descriptionEn: String, $descriptionFont: String,
-			$index: Int, $phoneConfig: PhoneConfigInput) {
+			$bgColor: String, $index: Int, $phoneConfig: PhoneConfigInput) {
 				updateImage(filename: $filename, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn,
-				descriptionFont: $descriptionFont, index: $index, phoneConfig: $phoneConfig) {
+				bgColor: $bgColor, descriptionFont: $descriptionFont, index: $index, phoneConfig: $phoneConfig) {
 					filename
 					imageUrl
 					altTextEs
 					descriptionEs
 					descriptionEn
 					descriptionFont
+					bgColor
 					phoneConfig {
 						borders {
 							n
@@ -96,7 +98,8 @@
 							descriptionEn: image.descriptionEn,
 							descriptionFont: image.descriptionAlignment,
 							index: ordersToUpdate.find((val) => val.id === image.filename)?.newPos,
-							phoneConfig: image.phoneConfig
+							phoneConfig: image.phoneConfig,
+							bgColor: image.bgColor
 						})
 					).updateImage;
 
@@ -117,7 +120,7 @@
 </script>
 
 {#snippet imageEditor(imageData: any)}
-	<div class="size-full">
+	<div>
 		{#if !preview}
 			<Borders
 				id={imageData.filename}
@@ -160,12 +163,14 @@
 						</Movable>
 					{/if}
 					<div
-						class={`relative transition-all ${[Alignment.Derecha, Alignment.Izquierda].includes(imageData.phoneConfig.alignment) ? 'w-2/3' : ''}`}
+						class={`relative transition-all ${[Alignment.Derecha, Alignment.Izquierda].includes(imageData.phoneConfig.alignment) ? 'w-4/5' : ''}`}
 						class:ml-auto={imageData.phoneConfig.alignment === Alignment.Derecha}
 						class:mr-auto={imageData.phoneConfig.alignment === Alignment.Izquierda}
 					>
 						<img src={imageData.imageUrl} alt={imageData.altText} class="size-full" />
-						<div class="absolute top-0 flex justify-between h-10 w-full">
+						<div
+							class="absolute top-0 right-0 flex flex-wrap justify-between w-full bg-vector-cream/40 text-vector-black"
+						>
 							<button
 								class="hover:bg-gray-700/70 h-full p-2 cursor-pointer"
 								onclick={() => {
@@ -180,19 +185,18 @@
 									{imageData.phoneConfig.descriptionPos ? 'close' : 'description'}
 								</span>
 							</button>
-							<div class="bg-gray-400 flex items-center">
-								<label for={`alignment-${imageData.filename}`} class="h-full p-2">
-									Alineación:
-								</label>
+							<div class="flex items-center">
+								<label for={`alignment-${imageData.filename}`} class="mx-2"> Alineación: </label>
 								<select
 									id={`alignment-${imageData.filename}`}
 									bind:value={imageData.phoneConfig.alignment}
 								>
 									{#each Object.entries(Alignment) as [label, val] (val)}
-										<option value={val} class="bg-black">{label}</option>
+										<option value={val}>{label}</option>
 									{/each}
 								</select>
 							</div>
+							<BgColor imageId={imageData.filename} bind:color={imageData.bgColor} />
 						</div>
 					</div>
 				</div>
@@ -200,7 +204,7 @@
 		{:else}
 			<div class:px-8={imageData.phoneConfig.alignment !== Alignment.Sangrar}>
 				<div
-					class={`border-vector-orange my-20 gap-12 flex ${
+					class={`border-vector-orange gap-12 flex ${
 						imageData.phoneConfig.borders.e && 'border-r-2 pr-30'
 					} ${imageData.phoneConfig.borders.w && 'border-l-2 pl-30'} ${
 						imageData.phoneConfig.borders.n && 'border-t-2 pt-30'
@@ -213,7 +217,7 @@
 				>
 					{#if imageData.descriptionEs && imageData.phoneConfig.descriptionPos}
 						<div
-							class={`max-w-9/10 mx-auto markdownDescription font-${imageData.descriptionFont} ${imageData.phoneConfig.descriptionAlignment}`}
+							class={`max-w-9/10 mx-auto markdownDescription text-balance font-${imageData.descriptionFont} ${imageData.phoneConfig.descriptionAlignment}`}
 						>
 							<EditorDescription
 								id={imageData.filename}
@@ -229,7 +233,7 @@
 						<img
 							src={imageData.imageUrl}
 							alt={imageData.altText}
-							class={`${[Alignment.Derecha, Alignment.Izquierda].includes(imageData.phoneConfig.alignment) ? 'w-2/3' : ''}`}
+							class={`${[Alignment.Derecha, Alignment.Izquierda].includes(imageData.phoneConfig.alignment) ? 'w-4/5' : ''}`}
 							class:ml-auto={imageData.phoneConfig.alignment === Alignment.Derecha}
 							class:mr-auto={imageData.phoneConfig.alignment === Alignment.Izquierda}
 						/>
@@ -266,121 +270,86 @@
 		>
 	</div>
 	<Phone>
-		<div class="text-white">
-			<header class="bg-vector-grey flex h-20 items-center justify-center gap-20 p-3 mb-12">
-				<a href="/" class="h-full">
+		<div class="text-vector-cream">
+			<header class="bg-vector-cream flex h-22 items-center justify-between gap-20 p-5">
+				<a href="/obras/" class="h-full">
 					<img src={logo} alt="logo" class="h-full" />
 				</a>
 				<p
-					class="font-Agency-FB hidden w-fit text-center text-4xl tracking-widest @xl:inline"
+					class="font-Agency-FB text-vector-black w-fit text-center text-4xl tracking-widest"
 					style="word-spacing: 1.5rem;"
 				>
-					Obras únicas y exclusivas
+					☰
 				</p>
 			</header>
-			{#each updatedProjectData.spaces.slice(0, 1) as space, i (space.id)}
-				{@const firstImage = space.images.find((x: any) => !x.hideInProject)}
-
-				<Movable
-					down={() => {
-						const fromIndex = 0;
-						const image = space.images[fromIndex];
-						space.images.splice(fromIndex, 1);
-						space.images.splice(fromIndex + 1, 0, image);
-					}}
-					bind:preview
-					class="my-12"
-				>
-					{@render imageEditor(firstImage)}
-				</Movable>
-				<div class="px-8 my-12 text-white">
-					{#if !preview}
-						<div
-							class="w-full flex font-Agency-FB border-b-vector-orange my-2 border-b-2 pb-2 text-3xl items-center"
-						>
-							<input
-								type="text"
-								bind:value={updatedProjectData.name}
-								id="projectName"
-								class="indent-1 z-10"
-							/>
-							<label for="projectName" class="cursor-pointer hover:bg-gray-700 p-1 rounded-md"
-								><span class="material-symbols-outlined"> edit </span></label
-							>
+			{#each updatedProjectData.spaces.slice(0, 1) as space (space.id)}
+				{#each space.images.slice(0, 1) as image}
+					<div
+						class="py-20 flex flex-col justify-evenly gap-y-20 transition-colors"
+						style={`background-color: ${image.bgColor};`}
+					>
+						{@render imageEditor(image)}
+						<div class="px-8 text-vector-cream font-Nexa">
+							{#if !preview}
+								<p class="font-Arial text-right text-sm mb-10">
+									Área: <input
+										type="number"
+										bind:value={updatedProjectData.area}
+										class="w-18 appearance-none border-dashed border-2 border-white p-1"
+									/> metros cuadrados
+								</p>
+								<div class="w-full flex gap-x-2 text-3xl items-center mb-6">
+									<input
+										type="text"
+										bind:value={updatedProjectData.name}
+										id="projectName"
+										class="indent-1 w-full z-10"
+									/>
+									<label
+										for="projectName"
+										class="cursor-pointer hover:bg-gray-700 p-1 rounded-md flex items-center"
+										><span class="material-symbols-outlined"> edit </span></label
+									>
+								</div>
+							{:else}
+								<p
+									class="mb-10 text-right text-sm w-full after:ml-2 after:inline-block after:h-2 after:w-8 after:bg-vector-orange"
+								>
+									Área: {updatedProjectData.area} metros cuadrados
+								</p>
+								<h1 class="text-3xl w-full mb-6">
+									{updatedProjectData.name}
+								</h1>
+							{/if}
+							<div class="text-left">
+								<EditorDescription
+									id={updatedProjectData.id}
+									bind:descriptionEs={updatedProjectData.descriptionEs}
+									bind:descriptionEn={updatedProjectData.descriptionEn}
+									bind:preview
+								/>
+							</div>
 						</div>
-					{:else}
-						<h1
-							class="font-Agency-FB border-b-vector-orange my-2 border-b-2 pb-2 indent-1 text-3xl w-full"
-						>
-							{updatedProjectData.name}
-						</h1>
-					{/if}
-					{#if !preview}
-						<p class="font-Arial text-right text-sm">
-							Área: <input
-								type="number"
-								bind:value={updatedProjectData.area}
-								class="w-18 appearance-none border-dashed border-2 border-white p-1"
-							/> metros cuadrados
-						</p>
-					{:else}
-						<p class="font-Arial text-right text-sm">
-							Área: {updatedProjectData.area} metros cuadrados
-						</p>
-					{/if}
-					<div class="my-6">
-						<EditorDescription
-							id={updatedProjectData.id}
-							bind:descriptionEs={updatedProjectData.descriptionEs}
-							bind:descriptionEn={updatedProjectData.descriptionEn}
-							descriptionAlignment="text-justify"
-							bind:preview
-						/>
 					</div>
-				</div>
+				{/each}
 
-				{#each space.images as image, i (image.filename)}
-					{#if image !== firstImage && !image.hideInProject}
-						<Movable
-							up={i > 0
-								? () => {
-										const fromIndex = i;
-										const image = space.images[i];
-										space.images.splice(fromIndex, 1);
-										space.images.splice(fromIndex - 1, 0, image);
-									}
-								: undefined}
-							down={i < space.images.length - 1
-								? () => {
-										const fromIndex = i;
-										const image = space.images[i];
-										space.images.splice(fromIndex, 1);
-										space.images.splice(fromIndex + 1, 0, image);
-									}
-								: undefined}
-							bind:preview
-							class="my-12"
-						>
-							{@render imageEditor(image)}
-						</Movable>
-					{/if}
+				{#each space.images.slice(1) as image, i (image.filename)}
+					<div class="py-15 transition-colors" style={`background-color: ${image.bgColor}`}>
+						{@render imageEditor(image)}
+					</div>
 				{/each}
 				{#if !preview}
 					<hr class="h-2 border-dashed border-green-600" />
 				{/if}
 			{/each}
-			{#each updatedProjectData.spaces.slice(1) as space, i (space.id)}
-				{#each space.images as image, i (image.filename)}
-					{#if !image.hideInProject}
-						<Movable
-							up={i > 0 ? () => {} : undefined}
-							down={i < space.images.length - 1 ? () => {} : undefined}
-							bind:preview
-							class="my-12"
-						>
-							{@render imageEditor(image)}
-						</Movable>
-					{/if}
+			{#each updatedProjectData.spaces.slice(1) as space (space.id)}
+				{#each space.images as image (image.filename)}
+					<div
+						class="py-15 flex flex-col justify-evenly gap-y-20 transition-colors"
+						style={`background-color: ${image.bgColor};`}
+					>
+						{@render imageEditor(image)}
+					</div>
 				{/each}
 				{#if !preview}
 					<hr class="h-2 border-dashed border-green-600" />

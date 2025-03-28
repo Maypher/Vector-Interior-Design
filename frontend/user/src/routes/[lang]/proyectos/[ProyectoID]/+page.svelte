@@ -196,13 +196,11 @@
 				>
 					<img src={image.imageUrl} alt={image.altText} class="max-w-3/4 mx-auto" />
 					<div class="px-8">
-						<div>
-							<p
-								class="font-Nexa after:bg-vector-orange w-full text-right text-sm after:ml-2 after:inline-block after:h-2 after:w-8 max-md:mb-10 md:after:mr-20"
-							>
-								Área: {projectData.area} metros cuadrados
-							</p>
-						</div>
+						<p
+							class="font-Nexa after:bg-vector-orange w-full text-right text-sm after:ml-2 after:inline-block after:h-2 after:w-8 max-md:mb-10 md:after:mr-20"
+						>
+							Área: {projectData.area} metros cuadrados
+						</p>
 						<h1 class="font-Nexa mb-6 text-3xl">
 							{projectData.name}
 						</h1>
@@ -315,7 +313,9 @@
 			{/each}
 		{/each}
 	</div>
-	<div class="-translate-1/2 hover:scale-120 absolute bottom-0 left-1/2 w-fit transition-transform">
+	<div
+		class="hover:scale-120 absolute bottom-2 left-1/2 w-fit -translate-x-1/2 transition-transform lg:bottom-5"
+	>
 		<a
 			href={finalProject
 				? `/${$i18n.language}/proyectos/conclusion`
