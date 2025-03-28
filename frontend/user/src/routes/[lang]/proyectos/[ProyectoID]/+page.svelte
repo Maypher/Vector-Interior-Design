@@ -115,7 +115,7 @@
 			<img
 				src={image.imageUrl}
 				alt={image.altText}
-				class={`border-vector-orange h-full w-auto object-contain ${hasDescription && !descTopOrBottom ? 'max-w-1/2' : ''} ${
+				class={`border-vector-orange h-full w-auto object-contain ${
 					image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
 				} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''} `}
 			/>
@@ -128,20 +128,18 @@
 								? '-bottom-5 translate-y-full'
 								: ''
 					} ${
-						descTopOrBottom ? 'min-w-9/10 absolute w-0' : 'max-w-2/5'
+						descTopOrBottom ? 'max-w-9/10 absolute' : 'max-w-2/5'
 					} ${image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
 						image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
 					} ${image.desktopConfig.descriptionBorders.e ? 'border-r-2 pr-5' : ''} ${
 						image.desktopConfig.descriptionBorders.w ? 'border-l-2 pl-5' : ''
 					}`}
 				>
-					<div>
-						{@render descriptionContainer(
-							image.description,
-							image.desktopConfig.descriptionAlignment,
-							image.descriptionFont
-						)}
-					</div>
+					{@render descriptionContainer(
+						image.description,
+						image.desktopConfig.descriptionAlignment,
+						image.descriptionFont
+					)}
 				</figcaption>
 			{/if}
 		</figure>

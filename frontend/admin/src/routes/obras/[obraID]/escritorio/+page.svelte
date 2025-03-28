@@ -184,16 +184,19 @@
 </script>
 
 {#snippet imageEditor(image: any)}
-	<div
-		class={`relative h-full ${preview ? 'w-fit' : ''} mx-auto flex justify-center items-center gap-10`}
-		class:flex-row={image.desktopConfig.logoPosition === Directions.E}
-		class:flex-row-reverse={image.desktopConfig.logoPosition === Directions.W}
-		class:flex-col={image.desktopConfig.logoPosition === Directions.S}
-		class:flex-col-reverse={image.desktopConfig.logoPosition === Directions.N}
+	<figure
+		class={`relative gap-y-20 gap-x-12 ${preview ? 'overflow-visible' : 'overflow-scroll p-10'} ${
+			preview ? 'w-fit overflow-visible' : 'w-full border-2 border-dashed'
+		} flex justify-center items-center`}
+		class:flex-row={image.desktopConfig.descriptionPosition === Directions.E}
+		class:flex-row-reverse={image.desktopConfig.descriptionPosition === Directions.W}
+		class:flex-col={image.desktopConfig.descriptionPosition === Directions.S && !preview}
+		class:flex-col-reverse={image.desktopConfig.descriptionPosition === Directions.N && !preview}
+		style={`height: ${!preview ? '100%' : `calc(${image.desktopConfig.imageSize}/100 * 100%)`};`}
 	>
 		{#if !preview}
-			<div class="absolute top-0 w-full flex justify-between z-10">
-				<div class="flex flex-wrap bg-gray-600/70 p-1 gap-2 max-w-7/8">
+			<div class="absolute pointer-events-none top-0 w-full flex justify-between z-10">
+				<div class="flex flex-wrap bg-gray-600/70 p-1 gap-2 max-w-7/8 pointer-events-auto">
 					<button
 						class="transition-colors hover:bg-gray-600/70 cursor-pointer p-2"
 						onclick={() => {
@@ -252,7 +255,7 @@
 						</span>
 					{/if}
 				</div>
-				<div class="absolute top-0 right-0 z-10 flex items-center">
+				<div class="absolute top-0 right-0 z-10 flex items-center pointer-events-auto">
 					{#if image.desktopConfig.groupAlignment}
 						<input
 							type="checkbox"
@@ -289,42 +292,36 @@
 				</div>
 			</div>
 		{/if}
-		<div
-			class={`h-full flex items-center justify-center gap-x-12 border-vector-orange ${!preview ? 'gap-y-12' : ''} ${
-				image.desktopConfig.groupAlignment === GroupAlignment.Centro ? 'items-center' : ''
-			} ${image.desktopConfig.groupAlignment === GroupAlignment.Arriba ? 'items-start' : ''} ${
-				image.desktopConfig.groupAlignment === GroupAlignment.Abajo ? 'items-end' : ''
-			} ${image.desktopConfig.imageBorders.n && preview ? 'border-t-2' : ''} ${
-				image.desktopConfig.imageBorders.s && preview ? 'border-b-2' : ''
-			}`}
-			class:flex-row={image.desktopConfig.descriptionPosition === Directions.E}
-			class:flex-row-reverse={image.desktopConfig.descriptionPosition === Directions.W}
-			class:flex-col={image.desktopConfig.descriptionPosition === Directions.S}
-			class:flex-col-reverse={image.desktopConfig.descriptionPosition === Directions.N}
+
+		<Borders
+			id={image.filename}
+			bind:n={image.desktopConfig.imageBorders.n}
+			bind:s={image.desktopConfig.imageBorders.s}
+			bind:e={image.desktopConfig.imageBorders.e}
+			bind:w={image.desktopConfig.imageBorders.w}
+			bind:preview
+			class={`${!preview ? 'h-9/10' : 'h-full'} w-fit flex items-center`}
 		>
-			<Borders
-				id={image.filename}
-				bind:n={image.desktopConfig.imageBorders.n}
-				bind:s={image.desktopConfig.imageBorders.s}
-				bind:e={image.desktopConfig.imageBorders.e}
-				bind:w={image.desktopConfig.imageBorders.w}
-				bind:preview
-				class={`flex items-center w-fit! ${
-					image.desktopConfig.groupAlignment === GroupAlignment.Centro ? 'items-center' : ''
-				} ${image.desktopConfig.groupAlignment === GroupAlignment.Arriba ? 'items-start' : ''} ${
-					image.desktopConfig.groupAlignment === GroupAlignment.Abajo ? 'items-end' : ''
-				}`}
+			<img
+				src={image.imageUrl}
+				alt={image.altTextEs}
+				class={`object-cover border-vector-orange ${
+					image.desktopConfig.imageBorders.e && preview ? 'border-r-2 px-12' : ''
+				} ${image.desktopConfig.imageBorders.w && preview ? 'border-l-2 px-12' : ''}`}
+				style={`height: ${preview ? '100%' : `calc(${image.desktopConfig.imageSize}/100 * 100%)`};`}
+			/>
+		</Borders>
+		{#if image.desktopConfig.descriptionPosition}
+			{@const descTopOrBottom = [Directions.N, Directions.S].includes(
+				image.desktopConfig.descriptionPosition
+			)}
+			<figcaption
+				class={`${descTopOrBottom && preview ? 'max-w-9/10 absolute' : preview ? 'max-w-2/5' : ''} ${
+					image.desktopConfig.descriptionPosition === Directions.S && preview
+						? '-bottom-5 translate-y-full'
+						: ''
+				} ${image.desktopConfig.descriptionPosition === Directions.N && preview ? '-top-5 -translate-y-full' : ''}`}
 			>
-				<img
-					src={image.imageUrl}
-					alt={image.altTextEs}
-					class={`object-cover transition-[height] border-vector-orange ${
-						image.desktopConfig.imageBorders.e && preview ? 'border-r-2 px-12' : ''
-					} ${image.desktopConfig.imageBorders.w && preview ? 'border-l-2 px-12' : ''}`}
-					style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
-				/>
-			</Borders>
-			{#if image.desktopConfig.descriptionPosition}
 				<Borders
 					id={`description-${image.filename}`}
 					bind:n={image.desktopConfig.descriptionBorders.n}
@@ -332,16 +329,16 @@
 					bind:e={image.desktopConfig.descriptionBorders.e}
 					bind:w={image.desktopConfig.descriptionBorders.w}
 					bind:preview
-					class={`${preview ? 'max-w-1/2 w-fit' : ''} grow h-fit border-vector-orange ${preview && image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
+					class={`h-fit border-vector-orange ${
+						preview && image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''
+					} ${
 						preview && image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
 					} ${preview && image.desktopConfig.descriptionBorders.e ? 'border-r-2 pr-5' : ''} ${
 						preview && image.desktopConfig.descriptionBorders.w ? 'border-l-2 pl-5' : ''
 					}`}
 				>
 					<Movable
-						class={`h-fit ${
-							image.desktopConfig.descriptionPosition === Directions.N ? 'absolute top-0' : ''
-						} ${image.desktopConfig.descriptionPosition === Directions.S ? 'absolute bottom-0' : ''}`}
+						class="size-full text-balance"
 						up={image.desktopConfig.descriptionPosition !== Directions.N
 							? () => (image.desktopConfig.descriptionPosition = Directions.N)
 							: undefined}
@@ -366,8 +363,8 @@
 						/>
 					</Movable>
 				</Borders>
-			{/if}
-		</div>
+			</figcaption>
+		{/if}
 		{#if image.desktopConfig.logoPosition}
 			<Movable
 				left={image.desktopConfig.logoPosition !== Directions.W
@@ -382,7 +379,7 @@
 				<img src={symbol} alt="Símbolo" class="h-full" />
 			</Movable>
 		{/if}
-	</div>
+	</figure>
 {/snippet}
 
 <div class="bg-black text-white hidden xl:block">
@@ -406,30 +403,25 @@
 		{#each space.images.slice(0, 1) as image}
 			{@const isGroup = Array.isArray(image)}
 			<div
-				class="header-screen p-15 flex justify-evenly items-center gap-5 transition-colors"
+				class="header-screen py-15 flex justify-evenly items-center transition-colors"
 				style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor}`}
 			>
-				<Movable
-					down={isGroup ? () => moveImage(0) : undefined}
-					right={isGroup ? () => moveImage(0) : undefined}
-					bind:preview
-					class={`${preview ? 'w-fit' : ''} h-[calc(100vh-7rem)]`}
-				>
+				<div class={`${preview ? 'w-fit' : 'w-1/2 border-2 border-dashed'} h-full`}>
 					{#if isGroup}
 						{@render imageEditor(image[0])}
 					{:else}
 						{@render imageEditor(image)}
 					{/if}
-				</Movable>
-				<div class="flex flex-col gap-y-5 size-full max-w-1/2 p-4 pb-0">
-					<div class="w-full flex justify-between border-vector-orange border-b-2 pb-2 px-4">
+				</div>
+				<div class="max-w-2/5">
+					<div class="w-full flex justify-between">
 						{#if !preview}
-							<div class="flex justify-between w-full">
-								<div class="flex items-center justify-start gap-2">
+							<div class="flex justify-between w-full font-Nexa gap-x-3">
+								<div class="flex items-center justify-start gap-2 text-vector-cream">
 									<input
 										type="text"
 										bind:value={updatedProjectData.name}
-										class="text-white font-Agency-FB text-4xl w-64"
+										class="text-4xl w-64"
 										id="project-name"
 									/>
 									<label for="project-name">
@@ -443,24 +435,27 @@
 								<p>
 									Área: <input
 										type="number"
-										class="w-18 border-dashed border-2 border-white p-1 text-white"
+										class="w-18 border-dashed border-2 border-white p-1"
 										bind:value={updatedProjectData.area}
 									/>
-									metros cuadrados
+									m²
 								</p>
 							</div>
 						{:else}
-							<h1 class="text-white font-Agency-FB text-4xl">
-								{updatedProjectData.name}
-							</h1>
-							<p class="text-white grow self-end text-right">
-								Área: {updatedProjectData.area}
-								metros cuadrados
-							</p>
+							<div class="font-Nexa text-vector-cream flex w-full flex-col flex-wrap gap-y-20">
+								<p
+									class="after:bg-vector-orange w-full text-right text-sm after:ml-2 after:mr-20 after:inline-block after:h-2 after:w-8"
+								>
+									Área: {updatedProjectData.area} m²
+								</p>
+								<h1 class="block text-4xl">
+									{updatedProjectData.name}
+								</h1>
+							</div>
 						{/if}
 					</div>
 
-					<div class="h-fit shrink-0 font-Nexa">
+					<div class="h-fit shrink-0 my-5 font-Nexa text-balance">
 						<EditorDescription
 							id="project-description"
 							bind:descriptionEs={updatedProjectData.descriptionEs}
@@ -484,7 +479,7 @@
 		{#each space.images.slice(1) as image}
 			{@const isGroup = Array.isArray(image)}
 			<div
-				class="h-screen p-25 flex justify-center transition-colors"
+				class="h-lvh py-25 flex justify-center transition-colors"
 				style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor};`}
 			>
 				{#if isGroup}
@@ -507,32 +502,24 @@
 										}
 									: undefined}
 								bind:preview
-								class={`h-full ${preview ? 'w-fit' : 'w-full'}`}
+								class={`h-full ${preview ? 'w-fit' : 'w-full'} flex ${
+									groupImage.desktopConfig.groupAlignment === GroupAlignment.Arriba
+										? 'items-start'
+										: groupImage.desktopConfig.groupAlignment === GroupAlignment.Centro
+											? 'items-center'
+											: groupImage.desktopConfig.groupAlignment === GroupAlignment.Abajo
+												? 'items-end'
+												: ''
+								}`}
 							>
 								{@render imageEditor(groupImage)}
 							</Movable>
 						{/each}
 					</div>
 				{:else}
-					<Movable
-						up={() => {
-							const fromIndex: number = flatSpace.images.indexOf(image);
-
-							flatSpace.images.splice(fromIndex, 1);
-							flatSpace.images.splice(fromIndex - 1, 0, image);
-						}}
-						down={() => {
-							const fromIndex: number = flatSpace.images.indexOf(image);
-
-							let imageToMove = flatSpace.images[fromIndex];
-							flatSpace.images.splice(fromIndex, 1);
-							flatSpace.images.splice(fromIndex + 1, 0, imageToMove);
-						}}
-						bind:preview
-						class="size-full relative"
-					>
+					<div class={`h-full ${preview ? 'w-fit' : 'w-full'} flex items-center justify-center`}>
 						{@render imageEditor(image)}
-					</Movable>
+					</div>
 				{/if}
 			</div>
 			{#if !preview}
@@ -542,10 +529,10 @@
 	{/each}
 	{#each groupedImageData.slice(1) as space, spaceId (space.id)}
 		{@const flatSpace = updatedProjectData.spaces[spaceId + 1]}
-		{#each space.images as image, i}
+		{#each space.images as image}
 			{@const isGroup = Array.isArray(image)}
 			<div
-				class="h-screen p-25 flex justify-center transition-colors"
+				class="h-lvh py-25 flex justify-center transition-colors"
 				style={`background-color: ${isGroup ? image.at(-1).bgColor : image.bgColor};`}
 			>
 				{#if isGroup}
@@ -568,37 +555,24 @@
 										}
 									: undefined}
 								bind:preview
-								class={`h-full ${preview ? 'w-fit' : 'w-full'}`}
+								class={`h-full ${preview ? 'w-fit' : 'w-full'} flex ${
+									groupImage.desktopConfig.groupAlignment === GroupAlignment.Arriba
+										? 'items-start'
+										: groupImage.desktopConfig.groupAlignment === GroupAlignment.Centro
+											? 'items-center'
+											: groupImage.desktopConfig.groupAlignment === GroupAlignment.Abajo
+												? 'items-end'
+												: ''
+								}`}
 							>
 								{@render imageEditor(groupImage)}
 							</Movable>
 						{/each}
 					</div>
 				{:else}
-					<Movable
-						up={i > 0
-							? () => {
-									const fromIndex = i;
-
-									let image = flatSpace.images[fromIndex];
-									flatSpace.images.splice(fromIndex, 1);
-									flatSpace.images.splice(fromIndex - 1, 0, image);
-								}
-							: undefined}
-						down={i <= space.images.length - 1
-							? () => {
-									const fromIndex = i;
-
-									let image = flatSpace.images[fromIndex];
-									flatSpace.images.splice(fromIndex, 1);
-									flatSpace.images.splice(fromIndex + 1, 0, image);
-								}
-							: undefined}
-						bind:preview
-						class="size-full relative"
-					>
+					<div class={`h-full ${preview ? 'w-fit' : 'w-full'} flex items-center justify-center`}>
 						{@render imageEditor(image)}
-					</Movable>
+					</div>
 				{/if}
 			</div>
 		{/each}
