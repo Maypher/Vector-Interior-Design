@@ -217,8 +217,13 @@
 
 		<div>
 			{#each projectData.spaces.slice(1) as space (space.id)}
-				{#each space.images as image (image.filename)}
+				{#each space.images.slice(0, -1) as image (image.filename)}
 					{@render phoneImageView(image)}
+				{/each}
+				{#each space.images.slice(-1) as image (image.filename)}
+					<div class="pb-25" style={`background-color: ${image.bgColor}`}>
+						{@render phoneImageView(image)}
+					</div>
 				{/each}
 			{/each}
 		</div>
@@ -314,39 +319,28 @@
 		{/each}
 	</div>
 	<div
-		class="hover:scale-120 absolute bottom-2 left-1/2 w-fit -translate-x-1/2 transition-transform lg:bottom-5"
+		class="hover:scale-120 absolute bottom-10 left-1/2 w-fit -translate-x-1/2 transition-transform lg:bottom-5"
 	>
 		<a
 			href={finalProject
 				? `/${$i18n.language}/proyectos/conclusion`
-				: `/${$i18n.language}/proyectos`}
-			class="font-Nexa gradient-background text-2xl text-transparent"
+				: `/${$i18n.language}/proyectos/#${data.nextProjectId}`}
+			class="font-Nexa gradient-background text-vector-cream h-fit text-6xl font-extrabold"
+			aria-label={$i18n.language === 'es' ? 'siguiente' : 'next'}
 		>
-			<img src={logoWhite} alt="Vector: Interior Design" class="h-10" />
+			<div id="arrow">&gt;</div>
 		</a>
 	</div>
 </div>
 
 <style>
-	.gradient-background {
-		background: linear-gradient(
-			90deg,
-			var(--color-vector-orange),
-			var(--color-vector-grey),
-			var(--color-vector-orange),
-			var(--color-vector-grey)
-		);
-		background-size: 300% 300%;
-		animation: gradient-animation 1s infinite;
-		background-clip: text;
+	#arrow {
+		animation: 1s ease-in-out infinite both alternate move-arrow;
 	}
 
-	@keyframes gradient-animation {
-		0% {
-			background-position: 100% 50%;
-		}
-		100% {
-			background-position: 0% 50%;
+	@keyframes move-arrow {
+		to {
+			transform: translateX(1rem);
 		}
 	}
 </style>
