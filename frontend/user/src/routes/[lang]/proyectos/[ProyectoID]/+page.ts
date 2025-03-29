@@ -82,8 +82,13 @@ export const load = async ({ params, fetch, parent }) => {
 
     const projectData = data.project;
     if (!projectData) error(404, english ? 'Project not found' : "Proyecto inexistente");
-    // Used to determine if this is the final project to link to a different page
-    const finalProject = data.projects.findIndex((project: { id: number }) => project.id === projectData.id) === data.projects.length - 1;
 
-    return { projectData, finalProject };
+    const currentProjectIndex: number = data.projects.findIndex((project: { id: number }) => project.id === projectData.id);
+
+    // Used to link to scroll to the next project on project end
+    const nextProjectId = data.projects.at(currentProjectIndex + 1)?.id;
+    // Used to determine if this is the final project to link to a different page
+    const finalProject = currentProjectIndex === data.projects.length - 1;
+
+    return { projectData, nextProjectId, finalProject };
 }
