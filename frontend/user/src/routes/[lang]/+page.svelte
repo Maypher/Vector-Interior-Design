@@ -6,13 +6,13 @@
 	import type { PageData } from './$types';
 	import tony from '$lib/images/tony.jpg';
 	import { Directions, DesktopPosition } from '$lib/utilities/enums';
-	import { onMount } from 'svelte';
 	import mdToHtml from '$lib/utilities/markdown';
 	import '$lib/styles/markdown.css';
 	import { getI18n } from '$lib/i18n';
 	import { page } from '$app/state';
 	import { scrollToTop } from '$lib/utilities/navigation';
 	import MainPageSkeleton from '$lib/components/MainPageSkeleton.svelte';
+	import NavSection from '$lib/components/NavSection.svelte';
 
 	interface Borders {
 		n: boolean;
@@ -53,29 +53,6 @@
 
 	const { data }: { data: PageData } = $props();
 	const mainImages: mainImageData[] = data.mainImages;
-
-	onMount(() => {
-		// This entire setup doesn't work in Chrome mobile app for some reason
-		const pencilObserver = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						const pencil = document.getElementById('pencil');
-						if (pencil) {
-							pencil.classList.add('pencil-animate');
-							pencilObserver.unobserve(entry.target);
-						}
-					}
-				});
-			},
-			{
-				threshold: 0.6
-			}
-		);
-
-		const pencil = document.getElementById('nav');
-		if (pencil) pencilObserver.observe(pencil);
-	});
 
 	const i18n = getI18n();
 </script>
@@ -328,36 +305,7 @@
 {/each}
 
 {#each mainImages.slice(-1) as image (image.filename)}
-	<div
-		class="lg:min-h-120 mt-20 flex w-full flex-col gap-y-10 overflow-hidden lg:mt-0 lg:h-[70svh] lg:flex-row lg:items-center lg:justify-evenly"
-		id="nav"
-		style={`background-color: ${image.mainImageConfig.bgColor};`}
-	>
-		<img
-			src={image.imageUrl}
-			alt={image.altText}
-			class="lg:max-w-2/3 max-h-full max-w-full object-contain"
-			style={`height: calc(${image.mainImageConfig.imageSize} / 100 * 100%);`}
-		/>
-		<ul
-			class="text-vector-cream relative flex items-center justify-center gap-5 p-5 text-xl lg:h-4/5"
-		>
-			<li class="hover-link font-Nexa relative top-0 z-10 h-fit w-fit">
-				<a href={`${$i18n.language}/esculturas/`} class="text-vector-cream">
-					{$i18n.t('sculptures')}
-				</a>
-			</li>
-			<div class="h-92 flex w-[2px] flex-col items-center overflow-visible" id="pencil">
-				<img src={symbol} alt="V" class="min-h-20 min-w-20" />
-				<div class="bg-vector-orange relative bottom-3 h-2/3 w-px"></div>
-			</div>
-			<li class="hover-link font-Nexa relative bottom-10 z-10 w-fit after:relative after:top-1">
-				<a href={`/${$i18n.language}/proyectos/`} class="text-vector-cream">
-					{$i18n.t('projects')}
-				</a>
-			</li>
-		</ul>
-	</div>
+	<NavSection {image} />
 {/each}
 
 <footer class="text-vector-cream" id="contact">
@@ -391,21 +339,5 @@
 
 	.hover-link:hover::after {
 		transform: scale(1, 1);
-	}
-
-	#pencil {
-		position: relative;
-		top: 110%;
-	}
-
-	.pencil-animate {
-		position: relative;
-		animation: pencil-draw 2s ease-in-out forwards;
-	}
-
-	@keyframes pencil-draw {
-		to {
-			top: 0%;
-		}
 	}
 </style>
