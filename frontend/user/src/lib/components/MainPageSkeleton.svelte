@@ -2,6 +2,7 @@
 	import { DesktopPosition, Directions } from '$lib/utilities/enums';
 	import symbol from '$lib/images/symbol.svg';
 	import mdToHtml from '$lib/utilities/markdown';
+	import '$lib/styles/skeleton.css';
 
 	const { imageData }: { imageData: any } = $props();
 	const hasDescription =
@@ -166,32 +167,3 @@
 		</div>
 	{/if}
 </figure>
-
-<style>
-	.skeleton {
-		background-color: var(--color-vector-black);
-		background-image: linear-gradient(
-			100deg,
-			color-mix(in srgb, var(--color-vector-grey), transparent 40%) 40%,
-			color-mix(in srgb, var(--color-vector-grey), transparent 0%) 50%,
-			color-mix(in srgb, var(--color-vector-grey), transparent 40%) 60%
-		);
-
-		background-size: 200% 100%;
-		background-position-x: 150%;
-		animation: 1s skeleton-load ease-in-out infinite;
-	}
-
-	.skeleton-line {
-		height: 2rem;
-		width: 20rem;
-		margin: 1rem 0;
-		border-radius: 5px;
-	}
-
-	@keyframes skeleton-load {
-		to {
-			background-position-x: -40%;
-		}
-	}
-</style>
