@@ -12,6 +12,7 @@
 	import { getI18n } from '$lib/i18n';
 	import { page } from '$app/state';
 	import { scrollToTop } from '$lib/utilities/navigation';
+	import MainPageSkeleton from '$lib/components/MainPageSkeleton.svelte';
 
 	interface Borders {
 		n: boolean;
@@ -54,13 +55,13 @@
 	const mainImages: mainImageData[] = data.mainImages;
 
 	onMount(() => {
+		// This entire setup doesn't work in Chrome mobile app for some reason
 		const pencilObserver = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						const pencil = document.getElementById('pencil');
 						if (pencil) {
-							pencil.id = '';
 							pencil.classList.add('pencil-animate');
 							pencilObserver.unobserve(entry.target);
 						}
@@ -234,7 +235,7 @@
 		class="header-screen [&_.markdownDescription]:mb-0! min-h-130 flex w-full max-lg:mb-20 xl:pr-10"
 		style={`background-color: ${image.mainImageConfig.bgColor};`}
 	>
-		{@render mainImage(image)}
+		<MainPageSkeleton imageData={image} />
 		<ul
 			class="font-Nexa text-vector-cream relative my-auto hidden h-4/5 flex-col items-end gap-y-2 text-right text-[0.7em] max-xl:pl-10 xl:flex"
 			style="letter-spacing: 0.05rem;"
@@ -284,7 +285,7 @@
 		class="lg:min-h-120 max-lg:py-20 lg:h-svh"
 		style={`background-color: ${image.mainImageConfig.bgColor};`}
 	>
-		{@render mainImage(image)}
+		<MainPageSkeleton imageData={image} />
 	</div>
 {/each}
 
@@ -310,7 +311,7 @@
 		</figcaption>
 	</figure>
 	<button
-		class="text-vector-cream w-25 lg:bottom-1/10 lg:right-1/20 hover:scale-120 absolute bottom-10 right-1/2 cursor-pointer transition-transform max-lg:translate-x-1/2"
+		class="text-vector-cream w-30 lg:bottom-1/10 lg:right-1/20 hover:scale-120 absolute bottom-10 right-1/2 cursor-pointer transition-transform max-lg:translate-x-1/2"
 		onclick={scrollToTop}
 	>
 		<img src={logoWhite} alt="Vector: Interior Design" class="w-full" />
@@ -322,7 +323,7 @@
 		class="lg:min-h-120 max-lg:py-20 lg:h-svh"
 		style={`background-color: ${image.mainImageConfig.bgColor};`}
 	>
-		{@render mainImage(image)}
+		<MainPageSkeleton imageData={image} />
 	</div>
 {/each}
 
@@ -403,10 +404,6 @@
 	}
 
 	@keyframes pencil-draw {
-		from {
-			top: 100%;
-		}
-
 		to {
 			top: 0%;
 		}
