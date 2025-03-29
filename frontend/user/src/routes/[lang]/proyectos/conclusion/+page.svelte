@@ -23,12 +23,12 @@
 />
 
 <div class="header-screen bg-vector-grey relative flex items-center justify-center overflow-clip">
-	<div class="-translate-y-1/6 absolute left-1/4 top-10 flex flex-col items-center lg:top-0">
-		<img src={symbol} alt="V" id="symbol" />
-		<div class="bg-vector-orange relative -top-10 h-screen w-px"></div>
+	<div class="w-50 left-3/5 absolute -top-24 flex flex-col items-center md:left-1/4 lg:top-0">
+		<img src={symbol} alt="V" id="symbol" class="w-full" />
+		<div class="bg-vector-orange relative -top-7 h-screen w-px"></div>
 	</div>
 	<div
-		class="font-Nexa top-20 flex size-full flex-col items-center justify-center gap-y-10 px-8 md:flex-row md:justify-around md:px-0 lg:relative lg:h-fit lg:justify-evenly"
+		class="font-Nexa relative top-20 flex size-full flex-col items-center justify-center gap-y-10 px-8 md:flex-row md:justify-around md:px-0 lg:relative lg:h-fit lg:justify-evenly"
 	>
 		<span
 			class="text-vector-cream relative self-start text-4xl font-thin italic leading-10 md:-top-[6ch] md:self-center lg:-top-[4ch] lg:self-start lg:justify-self-start [&_br]:hidden"
@@ -36,16 +36,20 @@
 		>
 			{@html mdToHtml($i18n.t('slogan'))}
 		</span>
-		<p
-			class="text-vector-cream block text-justify brightness-50 md:max-lg:hidden lg:basis-1/3 [&_strong]:text-white"
+		<div
+			class="text-vector-cream bg-vector-grey relative z-20 block py-5 text-justify md:bg-transparent md:max-lg:hidden lg:basis-1/3 [&_strong]:text-white"
 		>
 			{@html mdToHtml($i18n.t('conclusionBody'))}
-		</p>
-		<img src={whiteLogo} alt="Vector: Interior Design" class="block h-10 md:max-lg:hidden" />
+		</div>
+		<a href={`/${$i18n.language}/`} aria-label="home">
+			<img src={whiteLogo} alt="Vector: Interior Design" class="block h-10 md:max-lg:hidden" /></a
+		>
 		<div class="relative hidden basis-1/2 flex-col items-center gap-0 gap-y-10 md:max-lg:block">
-			<p class="text-vector-cream text-justify brightness-50 [&_strong]:text-white">
+			<div
+				class="text-vector-cream bg-vector-grey text-justify brightness-50 lg:bg-transparent [&_strong]:text-white"
+			>
 				{@html mdToHtml($i18n.t('conclusionBody'))}
-			</p>
+			</div>
 			<img
 				src={whiteLogo}
 				alt="Vector: Interior Design"

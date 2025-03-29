@@ -89,6 +89,12 @@
 				{/if}
 			</div>
 		{/each}
+		<button
+			onclick={scrollToTop}
+			class="hover:scale-120 relative bottom-5 mx-auto block cursor-pointer transition-transform"
+		>
+			<img src={whiteLogo} alt="Vector: Interior Design" class="h-10" />
+		</button>
 	</div>
 	<div class="relative hidden lg:block">
 		{#each groupedSculptures as sculpture, i}
@@ -138,7 +144,7 @@
 		{/each}
 		<button
 			onclick={scrollToTop}
-			class="hover:scale-120 absolute bottom-5 right-5 cursor-pointer transition-transform"
+			class="hover:scale-120 absolute bottom-20 right-20 cursor-pointer transition-transform"
 		>
 			<img src={whiteLogo} alt="Vector: Interior Design" class="h-10" />
 		</button>
