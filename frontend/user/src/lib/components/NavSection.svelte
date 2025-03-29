@@ -52,7 +52,7 @@
 		onload={() => (imgLoaded = true)}
 	/>
 	<div
-		class="skeleton w-2/3"
+		class="skeleton aspect-square"
 		class:hidden={imgLoaded}
 		style={`height: calc(${image.mainImageConfig.imageSize} / 100 * 100%);`}
 	></div>

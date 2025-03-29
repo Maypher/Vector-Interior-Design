@@ -77,7 +77,7 @@
 				class="mx-auto max-h-[80svh] object-contain"
 				onload={() => (imgLoadedMobile = true)}
 			/>
-			<div class="skeleton h-150 max-h-[50svh] w-full" class:hidden={imgLoadedMobile}></div>
+			<div class="skeleton aspect-square max-h-[50svh] w-full" class:hidden={imgLoadedMobile}></div>
 			{#if imageData.mainImageConfig.phoneConfig.imageBorders.s}
 				<div class="bg-vector-orange max-w-83/10 mx-auto mt-20 h-px w-full"></div>
 			{/if}
@@ -124,7 +124,7 @@
 		onload={() => (imgLoadedDesktop = true)}
 	/>
 	<span
-		class="max-w-3/5 bg-vector-black skeleton min-h-64 w-full"
+		class="max-w-3/5 bg-vector-black skeleton aspect-square min-h-64"
 		class:hidden={imgLoadedDesktop}
 		style={`height: calc(${imageData.mainImageConfig.imageSize} / 100 * 100%);`}
 	></span>
