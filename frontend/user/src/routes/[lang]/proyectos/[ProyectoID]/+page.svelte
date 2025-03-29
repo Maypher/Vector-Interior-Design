@@ -8,7 +8,8 @@
 	import symbol from '$lib/images/symbol.svg';
 	import { getI18n } from '$lib/i18n';
 	import { page } from '$app/state';
-	import logoWhite from '$lib/images/logo white.svg';
+	import '$lib/styles/skeleton.css';
+	import ProjectSectionSkeleton from '$lib/components/ProjectSectionSkeleton.svelte';
 
 	const { data }: { data: PageData } = $props();
 	const projectData = data.projectData;
@@ -63,6 +64,9 @@
 	});
 
 	const i18n = getI18n();
+
+	let loadedMainImageDesktop: boolean = $state(false);
+	let loadedMainImageMobile: boolean = $state(false);
 </script>
 
 <Head
@@ -190,39 +194,63 @@
 	<div class="block pb-1 lg:hidden">
 		{#each projectData.spaces.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image (image.filename)}
-				<div
+				<figure
 					class="flex flex-col justify-evenly gap-y-20 py-20"
+					class:hidden={!loadedMainImageMobile}
 					style={`background-color: ${image.bgColor};`}
 				>
-					<img src={image.imageUrl} alt={image.altText} class="max-w-3/4 mx-auto" />
-					<div class="px-8">
+					<img
+						src={image.imageUrl}
+						alt={image.altText}
+						class="max-w-3/4 mx-auto"
+						onload={() => (loadedMainImageMobile = true)}
+					/>
+					<figcaption class="px-8">
 						<p
 							class="font-Nexa after:bg-vector-orange w-full text-right text-sm after:ml-2 after:inline-block after:h-2 after:w-8 max-md:mb-10 md:after:mr-20"
 						>
-							Área: {projectData.area} metros cuadrados
+							{$i18n.t('area')}: {projectData.area}
+							{$i18n.t('areaUnits')}
 						</p>
 						<h1 class="font-Nexa mb-6 text-3xl">
 							{projectData.name}
 						</h1>
-						<div class="white markdownDescription font-Nexa text-pretty">
+						<div class="markdownDescription font-Nexa text-pretty">
 							{@html mdToHtml(projectData.description)}
+						</div>
+					</figcaption>
+				</figure>
+				<div
+					class="header-screen flex flex-col justify-evenly gap-y-20 py-20"
+					class:hidden={loadedMainImageMobile}
+					style={`background-color: ${image.bgColor};`}
+				>
+					<div class="skeleton mx-auto h-64 w-3/4"></div>
+					<div class="w-full px-8">
+						<div class="skeleton skeleton-line h-4! w-1/4! ml-auto!"></div>
+						<div class="skeleton skeleton-line h-12! w-3/4!"></div>
+						<div class="w-full">
+							<div class="skeleton skeleton-line w-full"></div>
+							<div class="skeleton skeleton-line w-full"></div>
+							<div class="skeleton skeleton-line w-full"></div>
+							<div class="skeleton skeleton-line w-full"></div>
 						</div>
 					</div>
 				</div>
 			{/each}
 			{#each space.images.slice(1) as image (image.filename)}
-				{@render phoneImageView(image)}
+				<ProjectSectionSkeleton {image} />
 			{/each}
 		{/each}
 
 		<div>
 			{#each projectData.spaces.slice(1) as space (space.id)}
 				{#each space.images.slice(0, -1) as image (image.filename)}
-					{@render phoneImageView(image)}
+					<ProjectSectionSkeleton {image} />
 				{/each}
 				{#each space.images.slice(-1) as image (image.filename)}
 					<div class="pb-25" style={`background-color: ${image.bgColor}`}>
-						{@render phoneImageView(image)}
+						<ProjectSectionSkeleton {image} />
 					</div>
 				{/each}
 			{/each}
@@ -231,8 +259,9 @@
 	<div class="hidden lg:block">
 		{#each groupedImageData.slice(0, 1) as space (space.id)}
 			{#each space.images.slice(0, 1) as image}
-				<div
+				<figure
 					class="py-15 header-screen min-h-120 flex w-full items-center justify-evenly"
+					class:hidden={!loadedMainImageDesktop}
 					style={`background-color: ${image.bgColor};`}
 				>
 					<img
@@ -242,8 +271,9 @@
 							image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
 						} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''}`}
 						style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
+						onload={() => (loadedMainImageDesktop = true)}
 					/>
-					<div class="max-w-2/5">
+					<figcaption class="max-w-2/5">
 						<div class="font-Nexa text-vector-cream flex w-full flex-col flex-wrap gap-y-20">
 							<p
 								class="after:bg-vector-orange w-full text-right text-sm after:ml-2 after:mr-20 after:inline-block after:h-2 after:w-8"
@@ -269,6 +299,30 @@
 								{/each}
 							</div>
 						{/if}
+					</figcaption>
+				</figure>
+				<div
+					class:hidden={loadedMainImageDesktop}
+					class="header-screen py-15 min-h-120 flex w-full items-center justify-evenly"
+					style={`background-color: ${image.bgColor};`}
+				>
+					<div
+						class="skeleton w-1/3"
+						style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
+					></div>
+					<div class="w-2/5">
+						<div class="flex w-full flex-col flex-wrap gap-y-20">
+							<div
+								class="skeleton skeleton-line w-1/3 self-end text-right text-sm after:ml-2 after:mr-20 after:inline-block after:h-2 after:w-8"
+							></div>
+							<div class="h-12! skeleton skeleton-line block"></div>
+						</div>
+
+						<div class="my-5 h-fit shrink-0 grow">
+							<div class="skeleton skeleton-line w-2/3!"></div>
+							<div class="skeleton skeleton-line w-2/3!"></div>
+							<div class="skeleton skeleton-line w-2/3!"></div>
+						</div>
 					</div>
 				</div>
 			{/each}
@@ -281,14 +335,12 @@
 					{#if isGroup}
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
-								<div class="max-xl:max-w-2/5 h-full w-fit grow-0">
-									{@render desktopImageView(groupImage)}
-								</div>
+								<ProjectSectionSkeleton image={groupImage} />
 							{/each}
 						</div>
 					{:else}
 						<div class="relative size-full">
-							{@render desktopImageView(image)}
+							<ProjectSectionSkeleton {image} />
 						</div>
 					{/if}
 				</div>
@@ -305,13 +357,13 @@
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
 								<div class="max-xl:max-w-2/5 h-full w-fit grow-0">
-									{@render desktopImageView(groupImage)}
+									<ProjectSectionSkeleton image={groupImage} />
 								</div>
 							{/each}
 						</div>
 					{:else}
 						<div class="size-full">
-							{@render desktopImageView(image)}
+							<ProjectSectionSkeleton {image} />
 						</div>
 					{/if}
 				</div>

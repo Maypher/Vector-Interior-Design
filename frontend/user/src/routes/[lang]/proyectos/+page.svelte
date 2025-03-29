@@ -7,7 +7,7 @@
 	import { page } from '$app/state';
 	import Glide, { Controls, Swipe } from '@glidejs/glide/dist/glide.modular.esm.js';
 	import '@glidejs/glide/dist/css/glide.core.min.css';
-	import logoWhite from '$lib/images/logo white.svg';
+	import ProjectSkeleton from '$lib/components/ProjectSkeleton.svelte';
 
 	const { data }: { data: PageData } = $props();
 	const projects: any[] = data.projects;
@@ -71,23 +71,12 @@
 	{#each projects as project, i (project.id)}
 		{#if project.thumbnail}
 			<li class="flex h-full snap-center items-center justify-center text-white" id={project.id}>
-				<div class="flex h-full flex-col justify-center">
-					<a
-						href={`/${$i18n.language}/proyectos/${project.id}`}
-						class="flex h-3/4 flex-col justify-center gap-6 px-8"
-					>
-						<figure class="h-full">
-							<img
-								src={project.thumbnail.imageUrl}
-								alt={project.thumbnail.altText}
-								class="h-full object-cover"
-							/>
-							<figcaption class="my-2">
-								<p class="font-Nexa">{project.name}</p>
-							</figcaption>
-						</figure>
-					</a>
-				</div>
+				<ProjectSkeleton
+					id={project.id}
+					imageUrl={project.thumbnail?.imageUrl}
+					imageAltText={project.thumbnail.altText}
+					projectName={project.name}
+				/>
 				{#if i === 1}
 					<div id="arrowLimit" inert></div>
 				{/if}
@@ -105,25 +94,14 @@
 		data-glide-el="track"
 	>
 		<ul class=" glide__slides h-full grow-0">
-			{#each projects as project, i (project.id)}
+			{#each projects as project (project.id)}
 				<li class="glide__slide flex items-center">
-					<a
-						href={`/${$i18n.language}/proyectos/${project.id}`}
-						class="m-auto flex h-2/3 w-fit flex-col items-start gap-y-2 transition-transform hover:scale-110 hover:cursor-pointer"
-					>
-						<figure class="size-full">
-							<img
-								src={project.thumbnail.imageUrl}
-								alt={project.thumbnail.altText}
-								class="h-full"
-							/>
-							<figcaption>
-								<p class="font-Nexa my-5 text-xs font-extralight" style="letter-spacing: 0.1rem;">
-									{project.name}
-								</p>
-							</figcaption>
-						</figure>
-					</a>
+					<ProjectSkeleton
+						id={project.id}
+						imageUrl={project.thumbnail?.imageUrl}
+						imageAltText={project.thumbnail.altText}
+						projectName={project.name}
+					/>
 				</li>
 			{/each}
 		</ul>
@@ -135,7 +113,12 @@
 				data-glide-dir=">"
 				class="font-Nexa hover:scale-120 pointer-events-auto cursor-pointer transition-transform"
 			>
-				<img src={logoWhite} alt="Vector: Interior Design" class="h-10" />
+				<div
+					class="font-Nexa gradient-background text-vector-cream h-fit text-6xl font-extrabold"
+					aria-label={$i18n.language === 'es' ? 'siguiente' : 'next'}
+				>
+					<div id="carouselArrow">&gt;</div>
+				</div>
 			</button>
 		</div>
 	</div>
@@ -179,6 +162,16 @@
 		}
 		to {
 			bottom: 3%;
+		}
+	}
+	/* 
+	#carouselArrow {
+		animation: 1s ease-in-out infinite both alternate move-arrow;
+	} */
+
+	@keyframes move-arrow {
+		to {
+			transform: translateX(1rem);
 		}
 	}
 </style>
