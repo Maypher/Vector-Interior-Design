@@ -22,7 +22,7 @@
 
 		setTimeout(() => {
 			arrow.classList.add('showing');
-		}, 3000);
+		}, 500);
 
 		const arrowLimit = document.getElementById('arrowLimit');
 
@@ -70,8 +70,8 @@
 <ul class="header-screen bg-vector-grey snap-y snap-mandatory overflow-y-scroll lg:hidden">
 	{#each projects as project, i (project.id)}
 		{#if project.thumbnail}
-			<li class="flex h-full snap-center items-center justify-center text-white">
-				<div class="flex h-[calc(100%-5.5rem)] flex-col justify-center">
+			<li class="flex h-full snap-center items-center justify-center text-white" id={project.id}>
+				<div class="flex h-full flex-col justify-center">
 					<a
 						href={`/${$i18n.language}/proyectos/${project.id}`}
 						class="flex h-3/4 flex-col justify-center gap-6 px-8"
