@@ -162,8 +162,10 @@
 			{/if}
 		</figcaption>
 
-		<div class="max-w-2/5 w-full" class:hidden={imgLoadedDesktop}>
-			{@render skeletonText()}
-		</div>
+		{#if hasDescription}
+			<div class="max-w-2/5 w-full" class:hidden={imgLoadedDesktop}>
+				{@render skeletonText()}
+			</div>
+		{/if}
 	{/if}
 </figure>
