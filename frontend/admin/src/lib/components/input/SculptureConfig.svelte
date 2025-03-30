@@ -58,7 +58,7 @@
 	<a href={`/obras/${projectId}/ambientes/${spaceId}/imagenes/${filename}`} class="h-full">
 		<img src={filename} alt={altText} class="h-full w-auto" />
 	</a>
-	<div class="flex w-full gap-2">
+	<div class="flex w-full gap-2 bg-vector-cream/40 p-1">
 		<div class="flex flex-col gap-2 h-full grow">
 			<label for="description">Descripción</label>
 			<div class="flex bg-vector-cream">
