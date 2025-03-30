@@ -19,8 +19,8 @@ if [ ! -f "$USER_PASSWORD_PATH" ] || [ ! -s "$USER_PASSWORD_PATH" ]; then
   exit 1
 fi
 
-ADMIN_PASSWORD=$(< /run/secrets/admin_password)
-USER_PASSWORD=$(< /run/secrets/user_password)
+ADMIN_PASSWORD=$(tr -d '\r' </run/secrets/admin_password);
+USER_PASSWORD=$(tr -d '\r' </run/secrets/user_password);
 
 psql -U postgres << EOF
 BEGIN;
