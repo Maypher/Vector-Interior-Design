@@ -25,6 +25,14 @@ export async function load({ params, fetch }) {
                                 filename
                                 imageUrl
                                 altTextEs
+                                mainPage
+                                space {
+                                    project {
+                                        thumbnail {
+                                            filename
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

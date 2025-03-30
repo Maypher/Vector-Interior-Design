@@ -59,10 +59,20 @@
 		{#each images as image (image.filename)}
 			<a
 				href={`/obras/${projectId}/ambientes/${spaceId}/imagenes/${image.filename}`}
-				class="image-item transition-all border-vector-orange hover:border-4"
+				class="image-item transition-all border-vector-orange hover:border-4 relative"
 				data-imageId={image.filename}
 			>
 				<img src={image.imageUrl} alt={image.altTextEs} />
+				<div
+					class="absolute top-0 left-0 text-yellow-500 bg-vector-black/70 text-4xl px-1 flex gap-x-2 items-start"
+				>
+					{#if image.space.project.thumbnail.filename === image.filename}
+						<div title="Imagen principal">★</div>
+					{/if}
+					{#if image.mainPage}
+						<div title="Imagen en página principal">⌂</div>
+					{/if}
+				</div>
 			</a>
 		{/each}
 		<a
