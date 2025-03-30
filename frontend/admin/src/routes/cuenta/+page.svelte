@@ -42,11 +42,11 @@
 </script>
 
 <div
-	class=" bg-vector-cream/40 backdrop-blur-xl w-full max-w-md p-10 md:rounded-lg shadow-lg shadow-white"
+	class=" bg-vector-cream/40 backdrop-blur-xl w-full max-w-md p-10 md:rounded-lg shadow-lg shadow-vector-cream"
 >
 	<img src={logo} alt="Logo" class="w-1/2 mx-auto" />
 	<div class="flex justify-center">
-		<form id="form" class="flex flex-col max-w-60" use:enhance>
+		<form id="form" class="flex flex-col max-w-60" use:enhance onsubmit={(e) => e.preventDefault()}>
 			<fieldset disabled={submitting} class="text-white">
 				<TextInput
 					name="email"
