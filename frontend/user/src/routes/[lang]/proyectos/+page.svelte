@@ -107,16 +107,23 @@
 		</ul>
 		<div
 			data-glide-el="controls"
-			class="pointer-events-none flex items-center justify-end px-20 text-xl"
+			class="pointer-events-none flex items-center justify-end gap-x-5 px-20 text-xl"
 		>
+			<button
+				data-glide-dir="<"
+				class="font-Nexa hover:scale-120 pointer-events-auto cursor-pointer transition-transform"
+				aria-label={$i18n.language === 'es' ? 'Anterior' : 'Previous'}
+			>
+				<div class="font-Nexa gradient-background text-vector-cream h-fit text-6xl font-extrabold">
+					<div id="carouselArrow">&lt;</div>
+				</div>
+			</button>
 			<button
 				data-glide-dir=">"
 				class="font-Nexa hover:scale-120 pointer-events-auto cursor-pointer transition-transform"
+				aria-label={$i18n.language === 'es' ? 'Siguiente' : 'Next'}
 			>
-				<div
-					class="font-Nexa gradient-background text-vector-cream h-fit text-6xl font-extrabold"
-					aria-label={$i18n.language === 'es' ? 'siguiente' : 'next'}
-				>
+				<div class="font-Nexa gradient-background text-vector-cream h-fit text-6xl font-extrabold">
 					<div id="carouselArrow">&gt;</div>
 				</div>
 			</button>
