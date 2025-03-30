@@ -3,6 +3,7 @@
 	import symbol from '$lib/images/symbol.svg';
 	import '$lib/styles/markdown.css';
 	import { onMount } from 'svelte';
+	import '$lib/styles/links.css';
 
 	interface Props {
 		image: any;
