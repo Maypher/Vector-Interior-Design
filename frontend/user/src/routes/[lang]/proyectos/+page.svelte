@@ -63,7 +63,7 @@
 	ogTitle={$i18n.language === 'es'
 		? 'Vector: Interior Design (Proyectos)'
 		: 'Vector: Interior Design (Projects)'}
-	ogDescription={$i18n.language === 'es' ? '' : ''}
+	ogDescription={$i18n.language === 'es' ? 'Proyectos' : 'Projects'}
 	imageUrl={projects.at(0).thumbnail.imageUrl}
 />
 
