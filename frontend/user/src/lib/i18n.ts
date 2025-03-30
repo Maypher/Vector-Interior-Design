@@ -53,7 +53,7 @@ export const setupI18n = async (lang: 'en' | 'es'): Promise<Writable<i18n>> => {
                     'mainPage': 'Página Principal',
                     'sculptureHeader': 'Obras únicas y exclusivas',
                     'conclusionHeader': 'Trazando líneas con dirección, pasión y estilo.',
-                    'conclusionBody': `Las **líneas** como elemento inicial y esencial de todo diseño deben estar enfocadas en una **dirección** moldeando un marco de referencia, la **pasión** por transformar y decorar los espacios siempre debe apuntar a la calidad y el confort, considerando un conjunto de características que ayuden a definir un **estilo** para garantizar exclusividad en el proyecto.`,
+                    'conclusionBody': `Las **líneas** como elemento inicial y esencial de todo diseño siempre están enfocadas en una **dirección** moldeando un marco de referencia, la **pasión** por transformar y decorar los espacios apuntan a la calidad y el confort, considerando un conjunto de características que ayuden a definir un **estilo** para garantizar exclusividad en el proyecto.`,
                     'slogan': `**Trazando líneas**
                     **con dirección,**
                     **pasión y estilo.**`,
