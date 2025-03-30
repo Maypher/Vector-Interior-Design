@@ -1,0 +1,16 @@
+.hover-link::after {
+    display: block;
+    content: '';
+    background-color: var(--color-vector-orange);
+    height: 0.13rem;
+    width: 100%;
+    transition: all 0.3s ease-out;
+    transform-origin: right;
+    border-radius: 5px;
+    transform: scale(0, 1);
+    border-radius: 50%;
+}
+
+.hover-link:hover::after {
+    transform: scale(1, 1);
+}
