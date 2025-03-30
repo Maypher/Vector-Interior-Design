@@ -8,6 +8,7 @@
 	import { Directions, DesktopPosition } from '$lib/utilities/enums';
 	import mdToHtml from '$lib/utilities/markdown';
 	import '$lib/styles/markdown.css';
+	import '$lib/styles/links.css';
 	import { getI18n } from '$lib/i18n';
 	import { page } from '$app/state';
 	import { scrollToTop } from '$lib/utilities/navigation';
@@ -64,17 +65,9 @@
 	alternateEn={`${websiteUrl}/en`}
 	alternateEs={`${websiteUrl}/es`}
 	ogTitle="Vector: Interior Design"
-	ogDescription={$i18n.language === 'es' ? '' : ''}
+	ogDescription={mainImages.at(0)?.mainImageConfig.description || ''}
+	imageUrl={mainImages.at(0)?.imageUrl}
 />
-
-<svelte:head>
-	<title>Vector: Interior Design</title>
-
-	<meta name="description" content={$i18n.language === 'es' ? '' : ''} />
-
-	<link rel="alternate" hreflang="en" href={`${websiteUrl}/en`} />
-	<link rel="alternate" hreflang="es" href={`${websiteUrl}/es`} />
-</svelte:head>
 
 {#snippet mainImage(imageData: mainImageData)}
 	{@const hasDescription =
@@ -322,22 +315,3 @@
 		</button>
 	</div>
 </footer>
-
-<style>
-	.hover-link::after {
-		display: block;
-		content: '';
-		background-color: var(--color-vector-orange);
-		height: 0.13rem;
-		width: 100%;
-		transition: all 0.3s ease-out;
-		transform-origin: right;
-		border-radius: 5px;
-		transform: scale(0, 1);
-		border-radius: 50%;
-	}
-
-	.hover-link:hover::after {
-		transform: scale(1, 1);
-	}
-</style>
