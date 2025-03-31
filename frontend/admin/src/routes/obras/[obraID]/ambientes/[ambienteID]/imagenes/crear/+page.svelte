@@ -133,7 +133,10 @@
 </script>
 
 <div class="bg-black flex items-center justify-center p-5 min-h-[calc(100svh-5rem)]">
-	<form use:enhance class="bg-gray-700 max-w-xl w-full p-3 rounded-md">
+	<form
+		use:enhance
+		class={`bg-gray-700 max-w-xl w-full p-3 rounded-md ${submitting ? 'cursor-wait' : ''}`}
+	>
 		<fieldset disabled={submitting} class="flex flex-col gap-5">
 			<input
 				type="file"
@@ -202,7 +205,8 @@
 			</div>
 			<button
 				type="submit"
-				class="bg-green-200 hover:cursor-pointer hover:bg-amber-200 p-2 rounded-md self-start"
+				disabled={submitting}
+				class="bg-green-200 hover:cursor-pointer hover:bg-amber-200 p-2 rounded-md self-start disabled:cursor-not-allowed disabled:brightness-75"
 				>Crear
 			</button>
 		</fieldset>
