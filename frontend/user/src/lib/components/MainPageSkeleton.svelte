@@ -118,7 +118,7 @@
 	<img
 		src={imageData.imageUrl}
 		alt={imageData.altText}
-		class={`${hasDescription ? 'max-w-3/5' : ''} min-h-64 object-contain`}
+		class={`${hasDescription ? 'max-w-1/2 xl:max-w-3/5' : ''} min-h-64 object-contain`}
 		class:hidden={!imgLoadedDesktop}
 		style={`height: calc(${imageData.mainImageConfig.imageSize} / 100 * 100%);`}
 		onload={() => (imgLoadedDesktop = true)}

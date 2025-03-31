@@ -130,12 +130,12 @@
 		class={`m-auto hidden size-full max-h-full items-center gap-x-20 lg:flex ${
 			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.LEFT &&
 			!imageData.mainImageConfig.desktopConfig.overflow
-				? 'pl-[5%]'
+				? 'lg:pl-[5%]'
 				: ''
 		} ${
 			imageData.mainImageConfig.desktopConfig.imagePosition === DesktopPosition.RIGHT &&
 			!imageData.mainImageConfig.desktopConfig.overflow
-				? 'pr-[5%]'
+				? 'lg:pr-[5%]'
 				: ''
 		} ${
 			imageData.mainImageConfig.desktopConfig.descriptionPosition == Directions.E ||
