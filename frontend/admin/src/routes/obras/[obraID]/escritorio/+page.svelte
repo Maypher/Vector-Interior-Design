@@ -390,8 +390,8 @@
 		onCancelClick={() => (updatedProjectData = $state.snapshot(originalProjectData))}
 	/>
 
-	{#each groupedImageData.slice(0, 1) as space, spaceId (space.id)}
-		{@const flatSpace = updatedProjectData.spaces[spaceId]}
+	{#each groupedImageData.slice(0, 1) as space, spaceIndex (space.id)}
+		{@const flatSpace = updatedProjectData.spaces[spaceIndex]}
 		{@const moveImage = (fromIndex: number, up: boolean = false) => {
 			const image = flatSpace.images.at(fromIndex);
 			if (image) {
@@ -476,7 +476,7 @@
 				</div>
 			</div>
 		{/each}
-		{#each space.images.slice(1) as image}
+		{#each space.images.slice(1) as image, imageIndex}
 			{@const isGroup = Array.isArray(image)}
 			<div
 				class="h-lvh py-25 flex justify-center transition-colors"
@@ -485,22 +485,13 @@
 				{#if isGroup}
 					<div class="size-full flex justify-evenly">
 						{#each image as groupImage, groupIndex}
+							<!--This is done because it needs to be transformed from the grouped space to the flat space-->
+							{@const totalIndex = imageIndex + groupIndex}
 							<Movable
 								right={groupIndex < image.length - 1
-									? () => {
-											const fromIndex = flatSpace.images.indexOf(groupImage);
-											flatSpace.images.splice(fromIndex, 1);
-											flatSpace.images.splice(fromIndex - 1, 0, groupImage);
-										}
+									? () => moveImage(totalIndex, false)
 									: undefined}
-								left={groupIndex > 0
-									? () => {
-											const fromIndex = flatSpace.images.indexOf(groupImage);
-
-											flatSpace.images.splice(fromIndex, 1);
-											flatSpace.images.splice(fromIndex + 1, 0, groupImage);
-										}
-									: undefined}
+								left={groupIndex > 0 ? () => moveImage(totalIndex, true) : undefined}
 								bind:preview
 								class={`h-full ${preview ? 'w-fit' : 'w-full'} flex ${
 									groupImage.desktopConfig.groupAlignment === GroupAlignment.Arriba
@@ -527,9 +518,21 @@
 			{/if}
 		{/each}
 	{/each}
-	{#each groupedImageData.slice(1) as space, spaceId (space.id)}
-		{@const flatSpace = updatedProjectData.spaces[spaceId + 1]}
-		{#each space.images as image}
+	{#each groupedImageData.slice(1) as space, spaceIndex (space.id)}
+		{@const flatSpace = updatedProjectData.spaces[spaceIndex + 1]}
+		{@const moveImage = (fromIndex: number, up: boolean = false) => {
+			const image = flatSpace.images.at(fromIndex);
+			const moveBy = up ? -1 : 1;
+
+			let moveTo = fromIndex + moveBy;
+			if (moveTo < 0) moveTo = 0;
+
+			if (image) {
+				flatSpace.images.splice(fromIndex, 1);
+				flatSpace.images.splice(moveTo, 0, image);
+			}
+		}}
+		{#each space.images as image, imageIndex}
 			{@const isGroup = Array.isArray(image)}
 			<div
 				class="h-lvh py-25 flex justify-center transition-colors"
@@ -538,22 +541,11 @@
 				{#if isGroup}
 					<div class="size-full flex justify-evenly">
 						{#each image as groupImage, groupIndex}
+							<!--This is done because it needs to be transformed from the grouped space to the flat space-->
+							{@const totalIndex = imageIndex + groupIndex}
 							<Movable
-								right={groupIndex < image.length - 1
-									? () => {
-											const fromIndex = flatSpace.images.indexOf(groupImage);
-											flatSpace.images.splice(fromIndex, 1);
-											flatSpace.images.splice(fromIndex - 1, 0, groupImage);
-										}
-									: undefined}
-								left={groupIndex > 0
-									? () => {
-											const fromIndex = flatSpace.images.indexOf(groupImage);
-
-											flatSpace.images.splice(fromIndex, 1);
-											flatSpace.images.splice(fromIndex + 1, 0, groupImage);
-										}
-									: undefined}
+								right={groupIndex < image.length - 1 ? () => moveImage(totalIndex) : undefined}
+								left={groupIndex > 0 ? () => moveImage(totalIndex, true) : undefined}
 								bind:preview
 								class={`h-full ${preview ? 'w-fit' : 'w-full'} flex ${
 									groupImage.desktopConfig.groupAlignment === GroupAlignment.Arriba
