@@ -12,7 +12,6 @@
 	}
 
 	const { up, down, left, right, children, preview = $bindable(false), ...props }: Props = $props();
-	console.log(props.class);
 </script>
 
 <div
