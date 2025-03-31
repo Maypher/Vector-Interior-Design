@@ -129,7 +129,7 @@
 		<img
 			src={image.imageUrl}
 			alt={image.altText}
-			class={`border-vector-orange h-full w-auto object-contain ${
+			class={`border-vector-orange ${hasDescription && !descTopOrBottom ? 'max-w-1/2 xl:max-w-full' : ''} h-full w-auto object-contain ${
 				image.desktopConfig.imageBorders.e ? 'border-r-2 px-12' : ''
 			} ${image.desktopConfig.imageBorders.w ? 'border-l-2 px-12' : ''} `}
 			onload={() => (imageLoadedDesktop = true)}
