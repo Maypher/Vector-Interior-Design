@@ -31,7 +31,7 @@ services:
                 - action: sync
                   path: ./backend/src/common/
                   target: /app/src/common/
-        restart: on-failure
+        restart: on-failure:3
         profiles:
             - prod
         secrets:
@@ -68,6 +68,7 @@ services:
             - prod
         secrets:
             - user_password
+        restart: on-failure:3
     admin-frontend:
         build:
             context: ./frontend/admin/
@@ -82,6 +83,7 @@ services:
             - admin-backend
         profiles:
             - prod
+        restart: on-failure:3
     user-frontend:
         build:
             context: ./frontend/user/
@@ -95,6 +97,7 @@ services:
             - user-backend
         profiles:
             - prod
+        restart: on-failure:3
     tests:
         build:
             context: ./backend/
@@ -114,12 +117,12 @@ services:
             - postgres_password
     database:
         build: ./database/
-        restart: always
+        restart: on-failure:3
         environment:
             - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
-            - POSTGRES_DB=${DATABASE_NAME}
-            - ADMIN_USERNAME=${ADMIN_USERNAME}
-            - USER_USERNAME=${USER_USERNAME}
+            - POSTGRES_DB=${DATABASE_NAME:-postgres}
+            - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+            - USER_USERNAME=${USER_USERNAME:-frontend}
             - PGPORT=${DATABASE_PORT}
             - PGUSER=postgres
             - LANG=es_ES.UTF-8
@@ -173,6 +176,7 @@ services:
                 - action: sync+restart
                   path: ./nginx/app.lua
                   target: /lua/app.lua
+        restart: on-failure:3
 
 volumes:
     images_storage:
