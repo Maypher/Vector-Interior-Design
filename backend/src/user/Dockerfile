@@ -1,4 +1,4 @@
-FROM python:3 AS dependencies
+FROM python:3-alpine AS dependencies
 
 RUN pip install poetry
 
@@ -13,7 +13,7 @@ COPY ./pyproject.toml ./poetry.lock ./
 
 RUN poetry install --without dev --without admin --no-root
 
-FROM python:3 AS prod
+FROM python:3-alpine AS prod
 
 WORKDIR /app/
 
@@ -27,6 +27,9 @@ COPY ./src/user/ ./src/user/
 COPY ./src/common/ ./src/common/
 
 WORKDIR /app/src/user/
+
+
+RUN chmod +x entrypoint.sh
 
 EXPOSE 80
 ENTRYPOINT [ "./entrypoint.sh" ]

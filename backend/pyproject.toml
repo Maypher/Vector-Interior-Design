@@ -7,11 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-psycopg = "^3.2.3"
+psycopg = {extras = ["binary"], version = "^3.2.6"}
 # strawberry-graphql = "^0.257.0" # This is a temporary change until the bug fix is merged into the official repo
 strawberry-graphql = { git = "https://github.com/Maypher/strawberry.git", branch = "sanic-file-fix" }
 sanic = { extras = ["ext"], version = "^24.12.0" }
-cloudinary = "^1.42.2"
 
 [tool.poetry.group.admin]
 optional = true
