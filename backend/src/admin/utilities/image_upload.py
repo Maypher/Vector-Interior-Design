@@ -1,9 +1,7 @@
 import aiofiles
 import uuid
 import aiofiles.os
-import cloudinary.uploader
 from sanic.request import File
-import cloudinary
 from common.utils import read_secret
 from os import environ
 from admin.utilities import file_extension

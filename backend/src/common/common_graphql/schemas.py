@@ -5,7 +5,6 @@ from common.types import ResourceInfo
 from psycopg import rows
 from os import environ
 from common.utilities.environment import dev_mode
-from common.utilities.cdn import gen_image_url
 from sanic.log import logger
 
 
