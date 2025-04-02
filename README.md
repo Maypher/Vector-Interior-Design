@@ -1,247 +1,74 @@
-# TQ Portafolio
+# Vector: Interior Design
 
-# Estructura
+![Vector: Interior Design](/images/logo.png)
 
-Utiliza Docker para dividir cada servicio. 
-Los servicios son los siguientes:
+This is the repository for the **Vector: Interior Design** porfolio website.
 
-- **Database:** Base de dato Postgresql.
-- **Admin-backend**: El backend en python para administrar todas las obras y recursos de la página.
-- **User-backend**: El backend en python para acceder a los recursos desde el frontend de usuario.
-- **Nginx**: Reverse Proxy para redirection del tráfico y enviar archivos estáticos.
-- **Admin/User-frontend**: El frontend escrito en Svelte y será desplegado en Cloudflare.
+# Architecture
 
-# Variables de Entorno
+The project is modularized into a `docker-compose` setup with 7 services:
 
-- BUILD_TARGET: Blanco para el que construir (dev o prod)
-- DATABASE_NAME: Nombre de la base de datos.
-- POSTGRES_PASSWORD: Contraseña para el root user durante la creación de la base de datos.
-- DATABASE_PORT: Puerto en el que exponer la base de datos.
-- ADMIN_PORT: Puerto en el que exponer el admin backend.
-- ADMIN_USERNAME: Nombre de usuario para el usuario de admin en la base de datos.
-- ADMIN_PASSWORD: Contraseña para el usuario admin en la base de datos.
-- ADMIN_SERVER_SECRET_KEY: Clave par encriptar el admin-backend.
-- USER_PORT: Puerto en el que exponer el backend del usuario en la base de datos.
-- USER_USERNAME: Nombre de usuario para el user backend en la base de datos.
-- USER_PASSWORD: Contraseña para el user backend en la base de datos.
+- [database](/database/)
+- [admin-backend](/backend/src/admin/)
+- [user-backend](/backend/src/user/)
+- [nginx](/nginx/)
+- [admin-frontend](/frontend/admin/)
+- [user-frontend](/frontend/user/)
+- [tests](/backend/tests/)
 
-# Rutas
+Click each one to go into depth about the inner workings of each. Here's a graph showing the general flow of the services.
 
-## Usuario
-
-> /
-
-**Método**: GET
-
-**Descripción**: Retorna todas las obras públicas paginadas.
-
-**Parámetros (URL ?=)**
-
-- **name**: str = Filtrar búsqueda por nombre.
-- **page**: int = Página de obras que retornar.
-- **page_size**: int = Tamaño de cada página.
-
-
-> /id
-
-**Método**: GET
-
-**Descripción**: Retorna la información de una obra dado su id si es pública.
-
-**Parámetros**
-
-- **id**: El id de la obra que retornar.
-
-## Admin
-
---- 
-
-### Obras
-
-Una obra es la clase principal del programa. Contiene ambientes e imágenes.
-
-> /obras/
-
-**Método**: GET
-
-**Descripción**: Retorna todas las obras paginadas.
-
-**Parámetros (URL ?=)**
-
-- **name**: str = Filtrar búsqueda por nombre.
-- **page**: int = Página de obras que retornar.
-- **page_size**: int =Tamaño de cada página.
-
-
-> /obras/id
-
-**Método**: GET
-
-**Descripción**: Retorna la información de una obra dado su id.
-
-**Parámetros**
-
-- **id**: El id de la obra que retornar.
-
-> /obras/crear/
-
-**Método**: POST
-
-**Descripción**: Crea una nueva obra.
-
-**Parámetros (form)**
-
-- **name (str)**: El nombre de la obra.
-- **Descripción (str)**: La descripción de la obra.
+```mermaid
 ---
-> /obras/borrar/id
-
-**Método**: DELETE
-
-**Descripción**: Borra la obra identificada por id junto a 
-todos los ambientes e imágenes vinculadas a esta.
-
-**Parámetros**
-
-- **id**: El id de la obra.
-
-> /obras/actualizar/id
-
-**Método**: PUT
-
-**Descripción**: Actualiza la información de una obra.
-
-**Parámetros (form)**
-
-- **name (str)**: El nuevo nombre de la obra.
-- **description (str)**: La nueva descripción de la obra.
-- **area (int)**: La nueva área de la obra.
-- **thumbnail (str) (optional)**: La imagen principal que aparecerá en la miniatura de la obra.
-- **index**: El nuevo índice (zero based) para esta obra. Utilizado para mostrarlo en la UI.
-- **public (bool)**: Establece si una obra puede ser vista por el público. 
-
-### Ambientes
-
-Un ambiente es una sección de una obra. Esta contiene imágenes.
-
-> /ambientes/crear
-
-**Método**: POST
-
-**Descripción**: Crea un nuevo ambiente.
-
-**Parámetros (form)**
-
-- **obra_id (int)**: El ID de la obra a la que vincular este ambiente.
-- **Nombre (str)**: El nombre de este ambiente. Dos ambientes no pueden tener el mismo nombre en una misma obra.
-- **Descripción (str) (opcional)**: La descripción del ambiente.
-
-> /ambientes/borrar/id
-
-**Método**: DELETE
-
-**Descripción**: Borra el ambiente identificado por ID junto a todas las imágenes asociadas a este.
-
-**Parámetros (form)**
-
-- **id**: El ID del ambiente para borrar.
-
-> /ambientes/actualizar/id
-
-**Método**: PUT
-
-**Descripción**: Actualiza la información de un ambiente.
-
-**Parámetros (form)**:
-
-- **name (str)**: El nuevo nombre del ambiente.
-- **description (str)**: La nueva descripción del ambiente.
-- **index (int)**: El nuevo indice del ambiente (zero-based). Utilizado para ordenarlos en la UI.
-
-**Explicación**: Todos los valores son opcionales.
-
-### Imágenes
-
-Una imagen. Contiene un texto alternativo.
-
-> /imagenes/crear
-
-**Método**: POST
-
-**Descripción**: Crea una nueva imagen.
-
-**Parámetros (form)**
-
-- **ambiente_id (int)**: El ID del ambiente a la que vincular esta imagen.
-- **alt_text (str)**: El texto alternativo de esta imagen.
-- **Descripción (str) (opcional)**: La descripción del ambiente.
-
-> /imagenes/borrar/filename
-
-**Método**: DELETE
-
-**Descripción**: Borra la imagen identificado por filename.
-
-**Parámetros (form)**
-
-- **filename**: El nombre de la imagen que borrar.
-
-> /imagenes/actualizar/id
-
-**Método**: PUT
-
-**Descripción**: Actualiza la información de una imagen.
-
-**Parámetros (form)**:
-
-- **alt_text (str)**: El nuevo texto alternativo de la imagen.
-- **index (int)**: El nuevo indice de la imagen (zero-based). Utilizado para ordenarlos en la UI.
-
-**Explicación**: Todos los valores son opcionales.
-****
-
-### Autenticación
-
-**Explicación**
-Todos los valores son opcionales.
-
-> /auth/usuario-creado
-
-**Método**: GET
-
-**Descripción**: Retorna la cantidad de usuarios creados.
-
-> /auth/crear-cuenta
-
-**Método**: POST
-
-**Descripción**: Crea una nueva cuenta. Funciona únicamente si no hay usuarios creados.
-
-**Parámetros**:
-
-- **email**: Correo electrónico.
-- **name**: Nombre de usuario.
-- **password**: Contraseña.
-
-> /auth/iniciar-sesion
-
-**Método**: POST
-
-**Descripción**: Inicia sesión con un usuario ya creado.
-
-**Parámetros**:
-
-- **email**: Correo electrónico.
-- **password**: Contraseña.
-
-> /auth/cerrar-sesion
-
-**Método**: POST
-
-**Descripción**: Cierra la sesión del actual usuario.
-
-> /auth/info-usuario
-
-**Método**: GET
-
-**Descripción**: Retorna la información del usuario con la sesión iniciada en el formato `{id: int, name: str, email: str}`.
+title: "Vector: Interior Design Architecture"
+---
+
+graph RL
+    D@{ shape: cyl, label: "Database" }
+    D -.- AB(Admin-backend)
+    D -.- UB(User-backend)
+    UB -.- UF[User-frontend]
+    AB -.- AF[Admin-frontend]
+    AF === N((Nginx))
+    P{Admin?}---N
+    P---|Yes|AB
+    P---|No|UB
+    UF -.- N
+    N === AW(admin.vectorinterior.design)
+    N -.- W[vectorinterior.design]
+    N ---|Called from frontends|BW(backend.vectorinterior.design)
+```
+
+# Environment
+
+## Variables
+
+| Variable             | Description                                                                                                            | Default    | Database | Admin-backend | User-backend | nginx | Admin-frontend | User-frontend | Tests |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------- | -------- | ------------- | ------------ | ----- | -------------- | ------------- | ----- |
+| `DEV_MODE`           | Enables developer tools in multiple containers                                                                         | 1          |          | ✓             | ✓            | ✓     |                |               |       |
+| `DATABASE_NAME`      | The name of the database that stores all the data                                                                      | postgres   | ✓        | ✓             | ✓            |       |                |               | ✓     |
+| `DATABASE_PORT`      | The port the database will run on                                                                                      | 5432       | ✓        | ✓             | ✓            |       |                |               | ✓     |
+| `ADMIN_USERNAME`     | The database username for the admin backend                                                                            | admin      | ✓        | ✓             |              |       |                |               |       |
+| `ADMIN_FRONTEND_URL` | The url for admin frontend *(without protocol or slashes)*. Used for CORS and reverse proxy                            | *Required* |          | ✓             |              | ✓     |                |               |       |
+| `ADMIN_BACKEND_URL`  | The url for the admin backend *(without protocol or slashes)*. Used for requests from the frontend and reverse proxy.  | *Required* |          |               |              | ✓     | ✓              |               |       |
+| `ADMIN_IMAGES_URL`   | The url to access images from the admin panel *(Include protocol and slashes)*.                                        | *Required* |          | ✓             |              |       |                |               |       |
+| `USER_USERNAME`      | The database username for the user backend.                                                                            | frontend   | ✓        |               | ✓            |       |                |               |       |
+| `USER_FRONTEND_URL`  | The url for user frontend **(without protocol or slashes)**. Used for CORS and reverse proxy                           | *Required* |          |               | ✓            | ✓     |                |               |       |
+| `USER_BACKEND_URL`   | The url for the user backend **(without protocol or slashes)**. Used for requests from the frontend and reverse proxy. | *Required* |          |               |              | ✓     |                | ✓             |       |
+| `USER_IMAGES_URL`    | The url to access images from the user frontend **(Include protocol and slashes)**.                                    | *Required* |          |               |              |       |                | ✓             |       |
+
+## Secrets
+
+Secrets must be added to `./secrets/<secret>` relative to the `docker-compose` directory. The secrets are the following:
+
+- `admin_password.txt`: The password for the admin database user.
+- `user_password.txt`: The password for the user database user.
+- `postgres_password.txt`: The password for the root user in postgres (postgres).
+
+# Development
+
+run `docker-compose --profile prod up` (or `--profile tests` to run tests). This command launches the application in production mode. To run the hmr for both backend and frontend add the options `-f docker-compose.yml -f docker-compose.dev.yml`.
+
+# Deployment
+
+Push all changes to the main branch. A github action is setup to build the docker image, push it to the VPS and deploy the application.
