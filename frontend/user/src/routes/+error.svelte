@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>{$i18n.language === 'es' ? 'Proyecto no encontrado' : 'Project not found.'}</title>
+	<title>{$i18n.language === 'es' ? 'Página no encontrada' : 'Page not found.'}</title>
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
