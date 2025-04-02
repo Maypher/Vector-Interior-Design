@@ -1,11 +1,11 @@
 import type { HandleFetch } from "@sveltejs/kit";
-import { PUBLIC_graphql } from "$env/static/public";
+import { PUBLIC_apiURL } from "$env/static/public";
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
-    if (request.url.startsWith(`https://${PUBLIC_graphql}`)) {
+    if (request.url.startsWith(`https://${PUBLIC_apiURL}`)) {
         // clone the original request, but change the URL
         request = new Request(
-            request.url.replace(`https://${PUBLIC_graphql}`, 'http://user-backend/graphql'),
+            request.url.replace(`https://${PUBLIC_apiURL}`, 'http://user-backend'),
             request
         );
 

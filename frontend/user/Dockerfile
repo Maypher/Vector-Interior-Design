@@ -22,8 +22,8 @@ RUN npm install
 
 COPY . .
 
-ARG PUBLIC_graphql
-ENV PUBLIC_graphql=$PUBLIC_graphql
+ARG PUBLIC_apiURL
+ENV PUBLIC_apiURL=$PUBLIC_apiURL
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
 CMD [ "npm", "run", "dev", "--", "--host", "0.0.0.0",  "--port", "80" ]
