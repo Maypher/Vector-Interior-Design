@@ -50,13 +50,14 @@ function _M.optimize_image()
         return ngx.exit(ngx.HTTP_OK)
     end
 
+    -- Using a thread here because checking if the file exists is blocking
     local img_exists_thread = ngx.thread.spawn(image_exists, img_path)
-
     local _, img_exists = ngx.thread.wait(img_exists_thread)
 
     if img_exists then
         ngx.log(ngx.ERR, "GENERATING IMAGE")
 
+        -- Reduce the quality to 75% and transform it to webp
         local cmd = string.format(
             'magick %s -quality 75 webp:-',
             img_path)
@@ -82,7 +83,8 @@ function _M.optimize_image()
             return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
         end
 
-        c:set(image_filename, output, 30)
+        -- Save the image in the cache
+        c:set(image_filename, output, 3600)
 
         ngx.header.content_type = 'image/webp'
         ngx.header.cache_control = "public, max-age=3600, immutable"
