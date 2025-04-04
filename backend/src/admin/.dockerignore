@@ -1,0 +1,6 @@
+Dockerfile
+.dockerignore
+graphql.yml
+__pycache__
+docs
+README.md
