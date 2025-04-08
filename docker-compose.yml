@@ -2,9 +2,13 @@ name: TQportfolio
 
 services:
     admin-backend:
+        image: ${REGISTRY_URL}/vector/admin-backend
         build:
             context: ./backend/
             dockerfile: ./src/admin/Dockerfile
+            tags:
+                - "${REGISTRY_URL}/vector/admin-backend:latest"
+                - "${REGISTRY_URL}/vector/admin-backend:${ADMIN_BACKEND_TAG:?Tag required}"
         environment:
             - DEV_MODE=${DEV_MODE:-1}
             - HOST=database
@@ -36,9 +40,13 @@ services:
         secrets:
             - admin_password
     user-backend:
+        image: ${REGISTRY_URL}/vector/user-backend
         build:
             context: ./backend/
             dockerfile: ./src/user/Dockerfile
+            tags:
+                - "${REGISTRY_URL}/vector/user-backend:latest"
+                - "${REGISTRY_URL}/vector/user-backend:${USER_BACKEND_TAG:?Tag required}"
         networks:
             user:
             backend:
@@ -68,11 +76,15 @@ services:
             - user_password
         restart: on-failure:3
     admin-frontend:
+        image: ${REGISTRY_URL}/vector/admin-frontend
         build:
             context: ./frontend/admin/
             args:
                 - PUBLIC_apiURL=${BACKEND_URL:?Required to connect to the admin backend.}
             target: production
+            tags:
+                - "${REGISTRY_URL}/vector/admin-frontend:latest"
+                - "${REGISTRY_URL}/vector/admin-frontend:${ADMIN_FRONTEND_TAG:?Tag required}"
         networks:
             - admin
             - backend
@@ -82,11 +94,15 @@ services:
             - prod
         restart: on-failure:3
     user-frontend:
+        image: ${REGISTRY_URL}/vector/user-frontend
         build:
             context: ./frontend/user/
             args:
                 - PUBLIC_apiURL=${BACKEND_URL:?Required to connect to the user backend.}
             target: production
+            tags:
+                - "${REGISTRY_URL}/vector/user-frontend:latest"
+                - "${REGISTRY_URL}/vector/user-frontend:${USER_FRONTEND_TAG:?Tag required}"
         networks:
             - user
             - backend
@@ -113,7 +129,13 @@ services:
         secrets:
             - postgres_password
     database:
-        build: ./database/
+        image: ${REGISTRY_URL}/vector/database
+        build:
+            context: ./database/
+            dockerfile: Dockerfile
+            tags:
+                - "${REGISTRY_URL}/vector/database:latest"
+                - "${REGISTRY_URL}/vector/database:${DATABASE_TAG:?Tag required}"
         restart: on-failure:3
         environment:
             - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
@@ -140,7 +162,12 @@ services:
             - user_password
             - postgres_password
     nginx:
-        build: "./nginx/"
+        image: ${REGISTRY_URL}/vector/nginx
+        build:
+            context: "./nginx/"
+            tags:
+                - "${REGISTRY_URL}/vector/nginx:latest"
+                - "${REGISTRY_URL}/vector/nginx:${NGINX_TAG:?Tag required}"
         profiles: [ prod ]
         ports:
             - "443:443"
@@ -156,6 +183,7 @@ services:
             - USER_FRONTEND_URL=${USER_FRONTEND_URL:?User frontend url required for reverse proxy.}
             - ADMIN_FRONTEND_URL=${ADMIN_FRONTEND_URL:?Admin frontend url required for reverse proxy.}
             - BACKEND_URL=${BACKEND_URL:?User backend url required for reverse proxy.}
+            - REGISTRY_URL=${REGISTRY_URL:?The url to push images to the self hosted registry}
         develop:
             watch:
                 - action: sync+restart
@@ -171,7 +199,6 @@ services:
                   path: ./nginx/app.lua
                   target: /lua/app.lua
         restart: on-failure:3
-
 volumes:
     images_storage:
     database_storage:

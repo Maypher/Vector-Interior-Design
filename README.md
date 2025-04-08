@@ -72,3 +72,13 @@ run `docker-compose --profile prod up` (or `--profile tests` to run tests). This
 # Deployment
 
 Push all changes to the main branch. A github action is setup to build the docker image, push it to the VPS and deploy the application.
+
+## Registry
+
+Since the easiest way to update a docker container is to upload the image to a registry and all registries charge for the storage than it is required for this project I have setup a self hosted registry in the same VPS that's running the website at the url `REGISTRY_URL` env variable. All you have to do to create a new version is push the changes to the master branch.
+
+To deploy the registry go to the [Dockerfile folder](/registry/Dockerfile), run `docker build . --target base` and deploy it with `docker run --mount type=bind,src=${PWD}/password,dst=/auth/htpasswd vector-registry`. The htpasswd file must contain the username and password in the following format `username:password-bcrypt-hash`. **Important to note that it requires the hash not the actual password**.
+
+All services are tagged with `service:latest` and the production [docker-compose.prod.yml](/docker-compose.prod.yml) pulls from this image so all commits will update the service. To keep some backups just in case an additional tag is added to every service which are defined by the `ADMIN_BACKEND_TAG`, `USER_BACKEND_TAG`, `ADMIN_FRONTEND_TAG`, `USER_FRONTEND_TAG`, `DATABASE_TAG`, and `NGINX_TAG` environment variables respectively. Recommended to use Semantic Versioning but anything will do.
+
+Since uploading images can get storage heavy really quick I have setup a helper script that **will only keep the latests 5 versions of an image**. To run it go to [the script](/registry/cleanup/registry.py) and run `registry.py -l "username:password" -r REGISTRY_URL --delete --num 5 --keep-tags "latest"`.
