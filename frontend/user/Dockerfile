@@ -8,8 +8,8 @@ RUN npm ci
 
 COPY . .
 
-ARG PUBLIC_graphql
-ENV PUBLIC_graphql=$PUBLIC_graphql
+ARG PUBLIC_apiURL
+ENV PUBLIC_apiURL=$PUBLIC_apiURL
 RUN npm run build
 RUN npm prune --production
 
