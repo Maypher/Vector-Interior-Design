@@ -39,21 +39,15 @@ export const setupI18n = async (lang: 'en' | 'es'): Promise<Writable<i18n>> => {
                     'contact': 'Contacto',
                     'aboutUsHead': `Como diseñador 
                 de *interiores*,`,
-                    'aboutUs': `mi enfoque es profundamente personal. No sigo un solo estilo, sino que fusiono influencias de distintas partes del mundo con las últimas tendencias para crear espacios únicos.
-
-                    Mi trabajo se basa en tres pilares fundamentales: confort, funcionalidad y distinción.
-
-                    Cada proyecto es una oportunidad para transformar ideas en ambientes que combinan estética y propósito, siempre con una atención minuciosa a los detalles. 
-                    
-                    Me involucro en cada etapa del proceso, porque el diseño es mi pasión y creo que la excelencia está en los detalles bien ejecutados.
-
-                    Más que imponer un estilo, interpreto y traduzco las necesidades y aspiraciones de mis clientes en espacios que cuentan su historia. Mi trayectoria y mis proyectos hablan por si solos, respaldados por un compromiso absoluto de calidad con creatividad.`,
+                    'aboutUs': `con más de 25 años de experiencia siempre estoy en la búsqueda de nuevas tendencias, sin apegarme o imponer un estilo, definiendo la personalidad de mis clientes interpreto sus necesidades y aspiraciones para crear espacios que cuenten su historia, logrando un impacto visual certero e inimaginable.
+ 
+Cada proyecto es una oportunidad para crear ambientes con identidad y armonía, proporcionando confort, funcionalidad y distinción. Me involucro en cada una de sus etapas, prestando atención minuciosa a los detalles porque son ellos los que marcan la diferencia.`,
                     'sculptures': 'Esculturas',
                     'projects': 'Proyectos',
                     'mainPage': 'Página Principal',
                     'sculptureHeader': 'Obras únicas y exclusivas',
                     'conclusionHeader': 'Trazando líneas con dirección, pasión y estilo.',
-                    'conclusionBody': `Las **líneas** como elemento inicial y esencial de todo diseño siempre están enfocadas en una **dirección** moldeando un marco de referencia, la **pasión** por transformar y decorar los espacios apuntan a la calidad y el confort, considerando un conjunto de características que ayuden a definir un **estilo** para garantizar exclusividad en el proyecto.`,
+                    'conclusionBody': `Las **líneas** como elemento inicial y esencial de todo diseño están enfocadas en una **dirección** moldeando un marco de referencia, la **pasión** por transformar y decorar los espacios apunta a la calidad y el confort, considerando un conjunto de características que ayuden a definir un **estilo** para garantizar exclusividad en el proyecto.`,
                     'slogan': `**Trazando líneas**
                     **con dirección,**
                     **pasión y estilo.**`,
