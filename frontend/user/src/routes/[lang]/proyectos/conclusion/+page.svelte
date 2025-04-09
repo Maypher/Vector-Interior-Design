@@ -40,7 +40,7 @@
 	</div>
 
 	<div
-		class="text-vector-cream bg-vector-grey relative z-20 hidden py-5 text-justify md:bg-transparent lg:block lg:basis-1/3 [&_strong]:text-white"
+		class="text-vector-cream bg-vector-grey relative z-20 hidden py-5 text-justify brightness-50 md:bg-transparent lg:block lg:basis-1/3 [&_strong]:text-white"
 	>
 		{@html mdToHtml($i18n.t('conclusionBody'))}
 	</div>
