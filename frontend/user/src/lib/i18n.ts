@@ -41,7 +41,7 @@ export const setupI18n = async (lang: 'en' | 'es'): Promise<Writable<i18n>> => {
                 de *interiores*,`,
                     'aboutUs': `con más de 25 años de experiencia siempre estoy en la búsqueda de nuevas tendencias, sin apegarme o imponer un estilo, definiendo la personalidad de mis clientes interpreto sus necesidades y aspiraciones para crear espacios que cuenten su historia, logrando un impacto visual certero e inimaginable.
  
-Cada proyecto es una oportunidad para crear ambientes con identidad y armonía, proporcionando confort, funcionalidad y distinción. Me involucro en cada una de sus etapas, prestando atención minuciosa a los detalles porque son ellos los que marcan la diferencia.`,
+Cada proyecto es una oportunidad para crear ambientes con identidad y armonía cumpliendo con el objetivo de proporcionar confort, funcionalidad y distinción. Me involucro en cada una de sus etapas, prestando atención minuciosa a los detalles porque son ellos los que marcan la diferencia.`,
                     'sculptures': 'Esculturas',
                     'projects': 'Proyectos',
                     'mainPage': 'Página Principal',
