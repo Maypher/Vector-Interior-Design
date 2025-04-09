@@ -7,11 +7,6 @@
 	const { children, data }: { data: PageData; children: Snippet } = $props();
 
 	setI18n(data.i18n);
-	const i18n = getI18n();
 </script>
-
-<svelte:head>
-	<meta lang={$i18n.language} />
-</svelte:head>
 
 {@render children()}
