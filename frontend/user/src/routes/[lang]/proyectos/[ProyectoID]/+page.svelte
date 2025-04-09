@@ -225,7 +225,7 @@
 					class:hidden={loadedMainImageMobile}
 					style={`background-color: ${image.bgColor};`}
 				>
-					<div class="skeleton mx-auto h-64 w-3/4"></div>
+					<div class="skeleton mx-auto aspect-square w-3/4"></div>
 					<div class="w-full px-8">
 						<div class="skeleton skeleton-line h-4! w-1/4! ml-auto!"></div>
 						<div class="skeleton skeleton-line h-12! w-3/4!"></div>
@@ -313,10 +313,7 @@
 					class="header-screen py-15 min-h-120 flex w-full items-center justify-evenly"
 					style={`background-color: ${image.bgColor};`}
 				>
-					<div
-						class="skeleton w-1/3"
-						style={`height: calc(${image.desktopConfig.imageSize}/100 * 100%);`}
-					></div>
+					<div class="skeleton aspect-square w-1/3"></div>
 					<div class="w-2/5">
 						<div class="flex w-full flex-col flex-wrap gap-y-20">
 							<div
