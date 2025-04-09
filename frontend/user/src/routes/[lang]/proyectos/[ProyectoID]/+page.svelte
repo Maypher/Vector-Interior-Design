@@ -202,7 +202,7 @@
 					<img
 						src={image.imageUrl}
 						alt={image.altText}
-						class="max-w-3/4 mx-auto"
+						class="max-w-3/4 max-h-160 mx-auto"
 						onload={() => (loadedMainImageMobile = true)}
 					/>
 					<figcaption class="px-8">
@@ -244,7 +244,14 @@
 		{/each}
 
 		<div>
-			{#each projectData.spaces.slice(1) as space (space.id)}
+			{#each projectData.spaces.slice(1, -1) as space (space.id)}
+				{#each space.images.slice(0) as image (image.filename)}
+					<ProjectSectionSkeleton {image} />
+				{/each}
+			{/each}
+		</div>
+		<div>
+			{#each projectData.spaces.slice(-1) as space (space.id)}
 				{#each space.images.slice(0, -1) as image (image.filename)}
 					<ProjectSectionSkeleton {image} />
 				{/each}
@@ -293,8 +300,8 @@
 						{#if Array.isArray(image)}
 							<div class="mt-auto flex min-h-0 w-full gap-5">
 								{#each image.slice(1) as imageGroup, i (imageGroup.filename)}
-									<div class="ml-auto w-fit">
-										{@render desktopImageView(imageGroup)}
+									<div class="size-full px-5" style={`flex-basis: calc(1/${image.length} * 100%);`}>
+										<ProjectSectionSkeleton image={imageGroup} />
 									</div>
 								{/each}
 							</div>
@@ -335,7 +342,9 @@
 					{#if isGroup}
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
-								<ProjectSectionSkeleton image={groupImage} />
+								<div class="size-full px-5" style={`flex-basis: calc(1/${image.length} * 100%);`}>
+									<ProjectSectionSkeleton image={groupImage} />
+								</div>
 							{/each}
 						</div>
 					{:else}
@@ -356,7 +365,7 @@
 					{#if isGroup}
 						<div class="flex size-full justify-evenly">
 							{#each image as groupImage}
-								<div class="max-xl:max-w-2/5 h-full w-fit grow-0">
+								<div class="size-full px-5" style={`flex-basis: calc(1/${image.length} * 100%);`}>
 									<ProjectSectionSkeleton image={groupImage} />
 								</div>
 							{/each}

@@ -21,7 +21,10 @@
 	imgLoaded: boolean = true
 )}
 	{#if imgLoaded}
-		<div class={`markdownDescription ${alignment} font-${font} size-full text-balance`}>
+		<div
+			class={`markdownDescription ${alignment} font-${font} size-full`}
+			style="text-wrap: balance; text-wrap: pretty;"
+		>
 			{@html mdToHtml(description)}
 		</div>
 	{:else}
@@ -35,7 +38,7 @@
 
 <!--Mobile view-->
 <figure
-	class={`border-vector-orange py-15 gap-12 lg:hidden ${
+	class={`border-vector-orange px-8! py-25 gap-12 lg:hidden ${
 		image.phoneConfig?.borders?.n && 'pt-30 border-t-2'
 	} ${image.phoneConfig?.borders?.s && 'pb-30 border-b-2'} ${
 		image.phoneConfig?.borders?.e && 'pr-30 border-r'
@@ -50,7 +53,7 @@
 	style={`background-color: ${image.bgColor};`}
 >
 	{#if image.description && image.phoneConfig.descriptionPos}
-		<figcaption class="max-w-9/10 mx-auto w-full">
+		<figcaption class="max-w-8/10 mx-auto w-full">
 			{@render descriptionContainer(
 				image.description,
 				image.phoneConfig.descriptionAlignment,
@@ -61,7 +64,7 @@
 	<img
 		src={image.imageUrl}
 		alt={image.altText}
-		class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig?.alignment) ? 'w-4/5' : ''} max-h-[90svh] object-contain`}
+		class={`${[enums.Alignment.RIGHT, enums.Alignment.LEFT].includes(image.phoneConfig?.alignment) ? 'w-4/5' : ''} max-h-160 object-contain`}
 		class:ml-auto={image.phoneConfig?.alignment === enums.Alignment.RIGHT}
 		class:mr-auto={image.phoneConfig?.alignment === enums.Alignment.LEFT}
 		class:mx-auto={image.phoneConfig?.alignment === enums.Alignment.CENTER}
@@ -82,7 +85,7 @@
 	style={`background-color: ${image.bgColor};`}
 >
 	{#if image.description && image.phoneConfig.descriptionPos}
-		<div class="max-w-9/10 mx-auto w-full">
+		<div class="max-w-8/10 mx-auto w-full">
 			{@render descriptionContainer(
 				image.description,
 				image.phoneConfig.descriptionAlignment,
@@ -143,7 +146,7 @@
 							? '-bottom-5 translate-y-full'
 							: ''
 				} ${
-					descTopOrBottom ? 'max-w-9/10 absolute' : 'max-w-2/5'
+					descTopOrBottom ? 'max-w-8/10 absolute' : 'max-w-2/5'
 				} ${image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
 					image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
 				} ${image.desktopConfig.descriptionBorders.e ? 'border-r-2 pr-5' : ''} ${

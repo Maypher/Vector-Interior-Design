@@ -72,8 +72,12 @@
 		onchange={(e) => changeLanguage((e.target as HTMLSelectElement).value)}
 		class="font-Nexa xl:text-vector-black pr-1"
 	>
-		<option value="en" selected={$i18n.language === 'en'}>{$i18n.t('english')}</option>
-		<option value="es" selected={$i18n.language === 'es'}>{$i18n.t('Spanish')}</option>
+		<option value="en" selected={$i18n.language === 'en'} class="bg-vector-grey">
+			{$i18n.t('english')}
+		</option>
+		<option value="es" selected={$i18n.language === 'es'} class="bg-vector-grey">
+			{$i18n.t('Spanish')}
+		</option>
 	</select>
 {/snippet}
 
@@ -121,18 +125,18 @@
 			{@render languageSelect()}
 		</li>
 		<li class="before:bg-vector-orange">
-			<a href={`/${$i18n.language}/#about`} class="hover-link">
+			<a href={`/${$i18n.language}/#about`}>
 				{$i18n.t('about')}
 			</a>
 		</li>
 		<li>
-			<a href={`/${$i18n.language}/proyectos`} class="hover-link">{$i18n.t('projects')}</a>
+			<a href={`/${$i18n.language}/proyectos`}>{$i18n.t('projects')}</a>
 		</li>
 		<li>
-			<a href={`/${$i18n.language}/esculturas`} class="hover-link">{$i18n.t('sculptures')}</a>
+			<a href={`/${$i18n.language}/esculturas`}>{$i18n.t('sculptures')}</a>
 		</li>
 		<li>
-			<a href={`/${$i18n.language}/#contact`} class="hover-link">
+			<a href={`/${$i18n.language}/#contact`}>
 				{$i18n.t('contact')}
 			</a>
 		</li>
