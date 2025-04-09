@@ -192,9 +192,12 @@ services:
                 - action: sync+restart
                   path: ./nginx/nginx.conf
                   target: /etc/nginx/templates/nginx.conf
+                - action: sync+restart
+                  path: ./nginx/includes/
+                  target: /usr/local/openresty/nginx/conf/includes/
                 - action: sync
-                  path: ./nginx/watermark.png
-                  target: /storage/watermark.png
+                  path: ./nginx/errors/
+                  target: /usr/local/openresty/nginx/conf/errors/
                 - action: sync+restart
                   path: ./nginx/app.lua
                   target: /lua/app.lua
