@@ -72,10 +72,10 @@
 		onchange={(e) => changeLanguage((e.target as HTMLSelectElement).value)}
 		class="font-Nexa xl:text-vector-black pr-1"
 	>
-		<option value="en" selected={$i18n.language === 'en'} class="bg-vector-grey">
+		<option value="en" selected={$i18n.language === 'en'} class="bg-vector-cream text-vector-black">
 			{$i18n.t('english')}
 		</option>
-		<option value="es" selected={$i18n.language === 'es'} class="bg-vector-grey">
+		<option value="es" selected={$i18n.language === 'es'} class="bg-vector-cream text-vector-black">
 			{$i18n.t('Spanish')}
 		</option>
 	</select>
