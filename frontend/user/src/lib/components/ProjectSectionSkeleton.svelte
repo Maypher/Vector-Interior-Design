@@ -22,8 +22,8 @@
 )}
 	{#if imgLoaded}
 		<div
-			class={`markdownDescription ${alignment} font-${font} size-full`}
-			style="text-wrap: balance; text-wrap: pretty;"
+			class={`markdownDescription ${alignment} font-${font} size-full text-balance`}
+			style="text-wrap: pretty;"
 		>
 			{@html mdToHtml(description)}
 		</div>
@@ -53,7 +53,7 @@
 	style={`background-color: ${image.bgColor};`}
 >
 	{#if image.description && image.phoneConfig.descriptionPos}
-		<figcaption class="max-w-8/10 mx-auto w-full">
+		<figcaption class="max-w-9/10 mx-auto w-full">
 			{@render descriptionContainer(
 				image.description,
 				image.phoneConfig.descriptionAlignment,
@@ -85,7 +85,7 @@
 	style={`background-color: ${image.bgColor};`}
 >
 	{#if image.description && image.phoneConfig.descriptionPos}
-		<div class="max-w-8/10 mx-auto w-full">
+		<div class="max-w-9/10 mx-auto w-full">
 			{@render descriptionContainer(
 				image.description,
 				image.phoneConfig.descriptionAlignment,
@@ -146,7 +146,7 @@
 							? '-bottom-5 translate-y-full'
 							: ''
 				} ${
-					descTopOrBottom ? 'max-w-8/10 absolute' : 'max-w-2/5'
+					descTopOrBottom ? 'max-w-9/10 absolute' : 'max-w-2/5'
 				} ${image.desktopConfig.descriptionBorders.n ? 'border-t-2 pt-5' : ''} ${
 					image.desktopConfig.descriptionBorders.s ? 'border-b-2 pb-5' : ''
 				} ${image.desktopConfig.descriptionBorders.e ? 'border-r-2 pr-5' : ''} ${
