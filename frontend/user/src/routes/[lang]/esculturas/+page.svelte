@@ -8,6 +8,7 @@
 	import Head from '$lib/components/Head.svelte';
 	import { page } from '$app/state';
 	import { scrollToTop } from '$lib/utilities/navigation';
+	import SculptureSkeleton from '$lib/components/SculptureSkeleton.svelte';
 
 	const { data }: { data: PageData } = $props();
 	const sculptures = data.sculptures;
@@ -78,15 +79,10 @@
 	<div class="lg:hidden">
 		{#each sculptures as image, i (image.filename)}
 			<div
-				class={`${i === 0 ? 'header-screen' : 'h-svh'} flex flex-col items-center justify-evenly`}
+				class={`${i === 0 ? 'header-screen' : 'h-svh'}`}
 				style={`background-color: ${image.sculptureData.bgColor};`}
 			>
-				<img src={image.imageUrl} alt={image.altTextEs} class="w-9/10 max-h-3/4 object-contain" />
-				{#if image.sculptureData.description}
-					<div class="markdownDescription font-Nexa [&_em]:text-vector-orange">
-						{@html mdToHtml(image.sculptureData.description)}
-					</div>
-				{/if}
+				<SculptureSkeleton {image} />
 			</div>
 		{/each}
 		<button
@@ -108,38 +104,19 @@
 					<div class="flex h-4/5 items-center justify-center gap-20">
 						{#each sculpture as sculptureGroup, groupIndex}
 							{@const groupLength = groupedSculptures.length}
-							<img
-								src={sculptureGroup.imageUrl}
-								alt={sculptureGroup.altTextEs}
-								class="max-h-4/5 w-auto"
-								style={`height: calc(${groupLength - groupIndex}/${groupLength} * 90%);`}
-							/>
+							<div style={`height: calc(${groupLength - groupIndex}/${groupLength} * 90%);`}>
+								<SculptureSkeleton image={sculptureGroup} />
+							</div>
 						{/each}
 					</div>
-					{#if finalImage.sculptureData.description}
-						<figcaption>
-							{@render desktopImageDescription(
-								finalImage.sculptureData.description,
-								i === groupedSculptures.length - 1
-							)}
-						</figcaption>
-					{/if}
 				</figure>
 			{:else}
-				<figure
-					class={`mx-auto flex items-center justify-center gap-20 ${i === 0 ? 'header-screen' : 'h-screen'}`}
+				<div
+					class={`${i === 0 ? 'header-screen' : 'h-screen'}`}
 					style={`background-color: ${sculpture.sculptureData.bgColor}`}
 				>
-					<img src={sculpture.imageUrl} alt={sculpture.altTextEs} class="max-h-4/5 h-4/5 w-auto" />
-					{#if sculpture.sculptureData.description}
-						<figcaption>
-							{@render desktopImageDescription(
-								sculpture.sculptureData.description,
-								i === groupedSculptures.length - 1
-							)}
-						</figcaption>
-					{/if}
-				</figure>
+					<SculptureSkeleton image={sculpture} />
+				</div>
 			{/if}
 		{/each}
 		<button
