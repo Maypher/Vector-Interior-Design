@@ -26,6 +26,7 @@ export async function load({ params, fetch }) {
                                 imageUrl
                                 altTextEs
                                 mainPage
+                                sculpture
                                 space {
                                     project {
                                         thumbnail {
