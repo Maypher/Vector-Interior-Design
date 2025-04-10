@@ -19,8 +19,8 @@
 
 			if (form.valid) {
 				const query = `
-					mutation createProject($name: String!, $description: String!, $area: Int!) {
-						createProject(name: $name, description: $description, area: $area) {
+					mutation createProject($name: String!, $descriptionEs: String!, $descriptionEn: String!, $area: Int!) {
+						createProject(name: $name, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
 							id
 						}
 					}
@@ -37,10 +37,11 @@
 	});
 
 	let submitting: boolean = $state(false);
+	let english: boolean = $state(false);
 </script>
 
 <div class="flex justify-center items-center h-full">
-	<form class="bg-green-500 p-4 m-5" use:enhance>
+	<form class="p-4 m-5 bg-gray-700" use:enhance>
 		<fieldset disabled={submitting}>
 			<TextInput
 				type="text"
@@ -58,13 +59,32 @@
 				errors={$errors.area}
 				{...$constraints.area}
 			/>
-			<Markdown
-				label="Descripción"
-				name="description"
-				bind:value={$form.description}
-				errors={$errors.description}
-				{...$constraints.description}
-			/>
+			<div class="my-4">
+				<input type="checkbox" id="language" hidden bind:checked={english} />
+				<label
+					for="language"
+					class="bg-vector-orange hover:cursor-pointer hover:brightness-75 p-1 border-vector-black border-2 transition-colors"
+				>
+					{english ? 'Ingles' : 'Español'}
+				</label>
+				{#if english}
+					<Markdown
+						label="Descripción"
+						name="description"
+						bind:value={$form.descriptionEn}
+						errors={$errors.descriptionEn}
+						{...$constraints.descriptionEn}
+					/>
+				{:else}
+					<Markdown
+						label="Descripción"
+						name="description"
+						bind:value={$form.descriptionEs}
+						errors={$errors.descriptionEs}
+						{...$constraints.descriptionEs}
+					/>
+				{/if}
+			</div>
 			<button type="submit" class="bg-blue-400 rounded-md m-2 p-2">Crear Proyecto</button>
 		</fieldset>
 	</form>
