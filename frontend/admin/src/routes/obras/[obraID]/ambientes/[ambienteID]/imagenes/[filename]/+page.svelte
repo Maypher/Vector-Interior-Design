@@ -166,7 +166,9 @@
 					onclick={deleteImage}
 					type="button"
 					class="w-fit p-2 text-red-500 hover:text-black transition-colors cursor-pointer"
-					>x
+					title="Borrar imagen"
+				>
+					x
 				</button>
 			</div>
 		</div>
