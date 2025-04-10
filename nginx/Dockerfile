@@ -5,8 +5,8 @@ RUN apk add --no-cache gettext
 
 COPY ./certs/* /etc/nginx/certs/
 COPY nginx.conf /etc/nginx/templates/
-COPY includes/* /usr/local/openresty/nginx/conf/includes/
-COPY errors/* /usr/local/openresty/nginx/conf/errors/
+COPY includes /usr/local/openresty/nginx/conf/includes/
+COPY errors /usr/local/openresty/nginx/conf/errors/
 COPY entrypoint.sh .
 COPY app.lua /lua/
 ENTRYPOINT [ "/entrypoint.sh" ]

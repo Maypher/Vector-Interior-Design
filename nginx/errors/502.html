@@ -5,10 +5,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Server Down</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100svh;
+            width: 100%;
+            margin: 0;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+            background-color: #101214;
+            color: #f2e5da;
+        }
+
+        img {
+            width: 20rem;
+        }
+
+        #email {
+            color: #ff682b;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Service temporarily unavailable. Please check bach again later.</h1>
+    <img src="/static/logo.svg" alt="Vector: Interior Design">
+    <h1 id="message">Service temporarily unavailable. Please check bach again later.</h1>
+    <p id="contact">
+        Contact:
+        <a href="mailto:contact@vectorinterior.design" id="email">contact@vectorinterior.design</a>
+    </p>
 </body>
+
+<script>
+    console.log("Hello");
+    if (navigator.language.startsWith("es")) {
+        document.documentElement.lang = "es";
+        document.getElementById("message").innerHTML = "Fuera de servicio temporalmente. Por favor volver a revisar más tarde";
+        document.getElementById("contact").firstChild.textContent = "Contacto: ";
+    } 
+</script>
 
 </html>
