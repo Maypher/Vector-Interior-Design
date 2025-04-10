@@ -23,8 +23,6 @@ def create_app(ctx=Context()) -> Sanic:
         methods=["POST", "GET"],
     )
 
-    app.static("/", "../common/static/")
-
     app.update_config(Config)
 
     app.config.CORS_ALLOW_HEADERS = ["Content-Type"]
