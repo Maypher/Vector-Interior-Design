@@ -4,7 +4,7 @@
 	import type { PageData } from './$types';
 	import { superForm } from 'sveltekit-superforms';
 	import { projectCreateSchema } from '$lib/utilities/yupSchemas';
-	import { success } from '$lib/utilities/toasts';
+	import { success, error as toastError } from '$lib/utilities/toasts';
 	import graphql from '$lib/utilities/api';
 	import confirmationDialog from '$lib/utilities/dialog';
 	import { goto } from '$app/navigation';
@@ -74,6 +74,27 @@
 	});
 
 	async function changeProjectStatus() {
+		if (!projectData.public) {
+			const thumbnailQuery = `
+				query thumbnail($projectId: Int!) {
+					project(id: $projectId) {
+						thumbnail {
+							imageUrl
+						}
+					}
+				}
+			`;
+
+			const projectHasThumbnail =
+				(await graphql(thumbnailQuery, { projectId: projectData.id })).project.thumbnail
+					?.imageUrl != null;
+
+			if (!projectHasThumbnail) {
+				toastError('Proyecto no puede ser publicado sin una imagen principal.');
+				return;
+			}
+		}
+
 		const query = `
 			mutation changePublicStatus($id: Int!, $public: Boolean!) {
 				updateProject(id: $id, public: $public) {
