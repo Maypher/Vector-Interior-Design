@@ -113,7 +113,9 @@
 			<input type="checkbox" bind:checked={updatedConfig.phoneConfig.imageBorders.n} />
 			<div class="flex gap-2">
 				<input type="checkbox" bind:checked={updatedConfig.phoneConfig.imageBorders.w} />
-				<a href={`/obras/${image.projectId}/ambientes/${image.spaceId}/imagenes/${image.filename}`}>
+				<a
+					href={`/proyectos/${image.projectId}/ambientes/${image.spaceId}/imagenes/${image.filename}`}
+				>
 					<img src={image.imageUrl} alt={image.altText} class="h-36" />
 				</a>
 				<input type="checkbox" bind:checked={updatedConfig.phoneConfig.imageBorders.e} />

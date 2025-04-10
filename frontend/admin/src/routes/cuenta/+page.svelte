@@ -27,7 +27,7 @@
 				});
 
 				if (res.ok) {
-					await goto(`/obras/`);
+					await goto(`/proyectos/`);
 				} else {
 					const errorMsg = await res.text();
 					error(errorMsg);

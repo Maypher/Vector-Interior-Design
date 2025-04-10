@@ -55,7 +55,7 @@
 	class="flex flex-col md:flex-row size-full p-3 gap-4 justify-stretch"
 	style={`background-color: ${updatedData.bgColor};`}
 >
-	<a href={`/obras/${projectId}/ambientes/${spaceId}/imagenes/${filename}`} class="h-full">
+	<a href={`/proyectos/${projectId}/ambientes/${spaceId}/imagenes/${filename}`} class="h-full">
 		<img src={filename} alt={altText} class="h-full w-auto" />
 	</a>
 	<div class="flex w-full gap-2 bg-vector-cream/40 p-1">

@@ -58,7 +58,7 @@
 	>
 		{#each images as image (image.filename)}
 			<a
-				href={`/obras/${projectId}/ambientes/${spaceId}/imagenes/${image.filename}`}
+				href={`/proyectos/${projectId}/ambientes/${spaceId}/imagenes/${image.filename}`}
 				class="image-item transition-all border-vector-orange hover:border-4 relative"
 				data-imageId={image.filename}
 			>
@@ -80,7 +80,7 @@
 		{/each}
 		<a
 			id={`new-image-${spaceId}`}
-			href={`/obras/${projectId}/ambientes/${spaceId}/imagenes/crear`}
+			href={`/proyectos/${projectId}/ambientes/${spaceId}/imagenes/crear`}
 			class="flex items-center justify-center size-1/2 min-h-20 hover:bg-vector-grey transition-colors rounded-md m-auto"
 		>
 			<span
