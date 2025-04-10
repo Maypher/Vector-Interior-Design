@@ -34,6 +34,8 @@ def create_app(
     app.config.CORS_ALLOW_HEADERS = ["Content-Type"]
     Extend(app)
 
+    app.static("/", "../common/static/")
+
     @app.before_server_start
     def init_context(app: AdminApp):
         db_manager = database_manager or AdminDatabaseManager(
