@@ -8,7 +8,7 @@
 	import { loginSchema } from '$lib/utilities/yupSchemas';
 	import { goto } from '$app/navigation';
 	import { error } from '$lib/utilities/toasts';
-	import { PUBLIC_apiURL } from '$env/static/public';
+	import { PUBLIC_apiURL, PUBLIC_userFrontendURL } from '$env/static/public';
 	import logo from '$lib/images/logo.svg';
 
 	const { data }: { data: PageData } = $props();
@@ -72,4 +72,11 @@
 			</fieldset>
 		</form>
 	</div>
+
+	<p class="mt-10 text-vector-black text-balance">
+		Esta página esta destinada para administradores. Si no eres un administrador por favor
+		<a href={`https://${PUBLIC_userFrontendURL}`} class="text-vector-orange underline">
+			regresa a la página principal
+		</a>.
+	</p>
 </div>

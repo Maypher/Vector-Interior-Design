@@ -81,6 +81,7 @@ services:
             context: ./frontend/admin/
             args:
                 - PUBLIC_apiURL=${BACKEND_URL:?Required to connect to the admin backend.}
+                - PUBLIC_userFrontendURL=${USER_FRONTEND_URL:?Required to link missing people to the original site.}
             target: production
             tags:
                 - "${REGISTRY_URL}/vector/admin-frontend:latest"

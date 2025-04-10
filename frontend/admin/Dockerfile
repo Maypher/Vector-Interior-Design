@@ -10,6 +10,9 @@ COPY . .
 
 ARG PUBLIC_apiURL
 ENV PUBLIC_apiURL=${PUBLIC_apiURL}
+ARG PUBLIC_userFrontendURL
+ENV PUBLIC_userFrontendURL=${PUBLIC_userFrontendURL}
+
 RUN npm run build
 RUN npm prune --production
 
@@ -26,6 +29,9 @@ ARG PUBLIC_apiURL
 ENV PUBLIC_apiURL=$PUBLIC_apiURL
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
+ARG PUBLIC_userFrontendURL
+ENV PUBLIC_userFrontendURL=${PUBLIC_userFrontendURL}
+
 CMD [ "npm", "run", "dev", "--", "--host", "0.0.0.0",  "--port", "80" ]
 
 FROM node:22-alpine AS production
@@ -34,6 +40,11 @@ COPY --from=builder /app/build/ build/
 COPY --from=builder /app/node_modules node_modules/
 COPY package.json .
 EXPOSE 3000
+
 ENV NODE_ENV=production
+ARG PUBLIC_apiURL
+ENV PUBLIC_apiURL=${PUBLIC_apiURL}
+ARG PUBLIC_userFrontendURL
+ENV PUBLIC_userFrontendURL=${PUBLIC_userFrontendURL}
 
 CMD [ "node", "build" ]
