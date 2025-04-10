@@ -6,7 +6,11 @@
 	class="header-screen w-full flex items-center justify-center flex-col text-vector-cream text-3xl font-Nexa"
 >
 	<h1 class="text-4xl">{page.status}</h1>
-	<a href="/cuenta" class="underline"
-		>{page.status === 404 ? 'Página no encontrada' : page.error?.message}</a
-	>
+	<a href="/cuenta" class="underline">
+		{page.status === 404
+			? 'Página no encontrada'
+			: page.status === 502
+				? 'Servidor fuera de servicio. Revisa que está pasando'
+				: page.error?.message}
+	</a>
 </div>
