@@ -25,19 +25,29 @@
             color: #f2e5da;
         }
 
+        p {
+            margin-block: 0;
+        }
+
         img {
             width: 20rem;
+            margin-bottom: 10rem;
         }
 
         #email {
             color: #ff682b;
+        }
+
+        h1 {
+            font-weight: 200;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
     <img src="/static/logo.svg" alt="Vector: Interior Design">
-    <h1 id="message">Service temporarily unavailable. Please check bach again later.</h1>
+    <h1 id="message">Service temporarily unavailable.</h1>
     <p id="contact">
         Contact:
         <a href="mailto:contact@vectorinterior.design" id="email">contact@vectorinterior.design</a>
@@ -48,7 +58,7 @@
     console.log("Hello");
     if (navigator.language.startsWith("es")) {
         document.documentElement.lang = "es";
-        document.getElementById("message").innerHTML = "Fuera de servicio temporalmente. Por favor volver a revisar más tarde";
+        document.getElementById("message").innerHTML = "Temporalmente fuera de servicio.";
         document.getElementById("contact").firstChild.textContent = "Contacto: ";
     } 
 </script>
