@@ -213,6 +213,7 @@
 			<div class="my-2">
 				<label for="descriptionFont">Tipografía de Descripción</label>
 				<select id="descriptionFont" bind:value={$form.descriptionFont} class="bg-white">
+					<option value="Nexa" class="font-Nexa">Nexa</option>
 					<option value="Arial" class="font-Arial">Arial</option>
 					<option value="Agency-FB" class="font-Agency-FB">Agency-FB</option>
 					<option value="Bahnschrift" class="font-Bahnschrift">Bahnschrift</option>
