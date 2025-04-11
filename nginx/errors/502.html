@@ -58,6 +58,7 @@
     console.log("Hello");
     if (navigator.language.startsWith("es")) {
         document.documentElement.lang = "es";
+        document.title = "Fuera de Servicio";
         document.getElementById("message").innerHTML = "Temporalmente fuera de servicio.";
         document.getElementById("contact").firstChild.textContent = "Contacto: ";
     } 
