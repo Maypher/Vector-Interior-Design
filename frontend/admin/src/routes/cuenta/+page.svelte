@@ -10,6 +10,7 @@
 	import { error } from '$lib/utilities/toasts';
 	import { PUBLIC_apiURL, PUBLIC_userFrontendURL } from '$env/static/public';
 	import logo from '$lib/images/logo.svg';
+	import { onMount } from 'svelte';
 
 	const { data }: { data: PageData } = $props();
 	const { form, errors, constraints, enhance } = superForm(data.loginForm, {
@@ -39,6 +40,15 @@
 	});
 
 	let submitting: boolean = $state(false);
+
+	onMount(async () => {
+		const alreadyLoggedIn = (
+			await fetch(`https://${PUBLIC_apiURL}/auth/info-usuario`, {
+				credentials: 'include'
+			})
+		).ok;
+		if (alreadyLoggedIn) goto('/proyectos');
+	});
 </script>
 
 <div
