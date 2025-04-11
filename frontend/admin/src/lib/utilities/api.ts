@@ -10,7 +10,7 @@ import { error } from "@sveltejs/kit";
  */
 export default async function graphql(query: string, variables: Record<string, any>, customFetch: (input: string | URL | globalThis.Request, init?: RequestInit) => Promise<Response> = fetch): Promise<Record<string, any>> {
     try {
-        const res = await customFetch(`https://${PUBLIC_apiURL}/graphql/`, {
+        const res = await customFetch(`${PUBLIC_apiURL}/graphql/`, {
             method: "POST",
             body: JSON.stringify({ query, variables }),
             credentials: "include",

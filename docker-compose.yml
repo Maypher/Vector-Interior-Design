@@ -39,6 +39,7 @@ services:
             - prod
         secrets:
             - admin_password
+            - nginx_forward_secret
     user-backend:
         image: ${REGISTRY_URL}/vector/user-backend
         build:
@@ -74,6 +75,7 @@ services:
             - prod
         secrets:
             - user_password
+            - nginx_forward_secret
         restart: on-failure:3
     admin-frontend:
         image: ${REGISTRY_URL}/vector/admin-frontend
@@ -203,6 +205,8 @@ services:
                   path: ./nginx/app.lua
                   target: /lua/app.lua
         restart: on-failure:3
+        secrets:
+            - nginx_forward_secret
 volumes:
     images_storage:
     database_storage:
@@ -217,3 +221,5 @@ secrets:
         file: ./secrets/admin_password.txt
     postgres_password:
         file: ./secrets/postgres_password.txt
+    nginx_forward_secret:
+        file: ./secrets/nginx_forward_secret.txt

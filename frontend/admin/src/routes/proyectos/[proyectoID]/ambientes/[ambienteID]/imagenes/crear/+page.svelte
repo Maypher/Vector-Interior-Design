@@ -76,7 +76,7 @@
 				formData.append('map', map);
 				formData.append('file', inputFile);
 
-				const res = await fetch(`https://${PUBLIC_apiURL}/graphql/`, {
+				const res = await fetch(`${PUBLIC_apiURL}/graphql/`, {
 					method: 'POST',
 					body: formData,
 					credentials: 'include'

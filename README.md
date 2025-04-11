@@ -49,9 +49,9 @@ graph RL
 | `DATABASE_NAME`         | The name of the database that stores all the data                                                                            | postgres                   | ✓        | ✓             | ✓            |       |                |               | ✓     |
 | `DATABASE_PORT`         | The port the database will run on                                                                                            | 5432                       | ✓        | ✓             | ✓            |       |                |               | ✓     |
 | `ADMIN_USERNAME`        | The database username for the admin backend                                                                                  | admin                      | ✓        | ✓             |              |       |                |               |       |
-| `ADMIN_FRONTEND_URL`    | The url for admin frontend *(without protocol or slashes)*. Used for CORS and reverse proxy                                  | *Required*                 |          | ✓             |              | ✓     |                |               |       |
-| `BACKEND_URL`           | The url for the admin backend *(without protocol or slashes)*. Used for requests from the frontend and reverse proxy.        | *Required*                 |          |               |              | ✓     | ✓              | ✓             |       |
-| `ADMIN_IMAGES_URL`      | The url to access images from the admin panel *(Include protocol and slashes)*.                                              | *Required*                 |          | ✓             |              |       |                |               |       |
+| `ADMIN_FRONTEND_URL`    | The url for admin frontend. Used for CORS and reverse proxy                                                                  | *Required*                 |          | ✓             |              | ✓     |                |               |       |
+| `BACKEND_URL`           | The url for the admin backend. Used for requests from the frontend and reverse proxy.                                        | *Required*                 |          |               |              | ✓     | ✓              | ✓             |       |
+| `ADMIN_IMAGES_URL`      | The url to access images from the admin panel.                                                                               | *Required*                 |          | ✓             |              |       |                |               |       |
 | `USER_USERNAME`         | The database username for the user backend.                                                                                  | frontend                   | ✓        |               | ✓            |       |                |               |       |
 | `USER_FRONTEND_URL`     | The url for user frontend **(without protocol or slashes)**. Used for CORS and reverse proxy                                 | *Required*                 |          |               | ✓            | ✓     | ✓              |               |       |
 | `USER_IMAGES_URL`       | The url to access images from the user frontend **(Include protocol and slashes)**.                                          | *Required*                 |          |               |              |       |                | ✓             |       |
@@ -64,6 +64,7 @@ Secrets must be added to `./secrets/<secret>` relative to the `docker-compose` d
 - `admin_password.txt`: The password for the admin database user.
 - `user_password.txt`: The password for the user database user.
 - `postgres_password.txt`: The password for the root user in postgres (postgres).
+- `nginx_forward_secret.txt`: A secret required by the Sanic backend to trust nginx and forward the protocol
 
 # Development
 

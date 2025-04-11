@@ -21,7 +21,7 @@
 			submitting = true;
 
 			if (form.valid) {
-				const res = await fetch(`https://${PUBLIC_apiURL}/auth/iniciar-sesion`, {
+				const res = await fetch(`${PUBLIC_apiURL}/auth/iniciar-sesion`, {
 					method: 'POST',
 					body: objectToFormData(form.data),
 					credentials: 'include'
@@ -43,7 +43,7 @@
 
 	onMount(async () => {
 		const alreadyLoggedIn = (
-			await fetch(`https://${PUBLIC_apiURL}/auth/info-usuario`, {
+			await fetch(`${PUBLIC_apiURL}/auth/info-usuario`, {
 				credentials: 'include'
 			})
 		).ok;

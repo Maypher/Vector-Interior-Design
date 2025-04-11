@@ -3,6 +3,7 @@ from sanic import response
 from admin.utilities.types import AdminRequest
 from admin.auth.decorators import login_required
 from os import environ
+from common.utilities.environment import dev_mode, frontend_url
 
 auth_blueprint = Blueprint("auth", "/auth")
 
@@ -30,9 +31,9 @@ async def login(request: AdminRequest):
         user_session.session_id,
         expires=user_session.expires_at,
         httponly=True,
-        samesite="None",
-        secure=True,
-        domain=environ.get("FRONTEND_URL").split(":")[0],
+        samesite="Strict",
+        secure=not dev_mode,
+        domain=frontend_url,
     )
 
     # Removing the port from the cookie domain since separating cookies per port isn't allowed. On production when

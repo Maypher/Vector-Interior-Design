@@ -6,7 +6,7 @@
 	let { children } = $props();
 
 	async function onclick() {
-		let res = await fetch(`https://${PUBLIC_apiURL}/auth/cerrar-sesion`, {
+		let res = await fetch(`${PUBLIC_apiURL}/auth/cerrar-sesion`, {
 			method: 'POST',
 			credentials: 'include'
 		});

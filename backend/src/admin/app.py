@@ -13,6 +13,7 @@ from sanic_ext import Extend, Config
 from common.utils import read_secret
 from sanic.log import logger
 import os
+from common.utilities.environment import frontend_url
 
 
 def create_app(
@@ -25,15 +26,15 @@ def create_app(
     app.blueprint(graphql_blueprint)
     app.blueprint(auth_blueprint)
     app.config.CORS_ORIGINS = [
-        environ.get("FRONTEND_URL", ""),
-        f"https://{os.environ.get("FRONTEND_URL")}",
-        f"http://{os.environ.get("FRONTEND_URL").split(":")[0]}",  # Using this one for ssr since requests from within the containers drop the port
+        frontend_url,
+        f"https://{frontend_url}",
+        f"http://{frontend_url}",  # Using this one for development. Since the vps redirects all http to https requests there's no issue
         "http://admin-frontend",
     ]
     app.config.CORS_SUPPORTS_CREDENTIALS = True
     app.config.CORS_ALLOW_HEADERS = ["Content-Type"]
+    app.config.FORWARDED_SECRET = read_secret("nginx_forward_secret")
     Extend(app)
-
 
     @app.before_server_start
     def init_context(app: AdminApp):

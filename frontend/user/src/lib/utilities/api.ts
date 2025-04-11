@@ -11,7 +11,7 @@ export default async function graphql(query: string,
     variables: Record<string, any> = {},
     customFetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response> = fetch): Promise<Record<string, any>> {
     try {
-        const res = await customFetch(`https://${PUBLIC_apiURL}/graphql`, {
+        const res = await customFetch(`${PUBLIC_apiURL}/graphql`, {
             method: "POST",
             body: JSON.stringify({ query, variables }),
             headers: {
