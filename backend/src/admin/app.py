@@ -11,9 +11,6 @@ from admin.resources.resource_manager import AdminResourceManager
 from admin.utilities.types import AdminApp
 from sanic_ext import Extend, Config
 from common.utils import read_secret
-from sanic.log import logger
-import os
-from common.utilities.environment import frontend_url
 
 
 def create_app(
@@ -25,14 +22,6 @@ def create_app(
     app.update_config(config)
     app.blueprint(graphql_blueprint)
     app.blueprint(auth_blueprint)
-    app.config.CORS_ORIGINS = [
-        frontend_url,
-        f"https://{frontend_url}",
-        f"http://{frontend_url}",  # Using this one for development. Since the vps redirects all http to https requests there's no issue
-        "http://admin-frontend",
-    ]
-    app.config.CORS_SUPPORTS_CREDENTIALS = True
-    app.config.CORS_ALLOW_HEADERS = ["Content-Type"]
     app.config.FORWARDED_SECRET = read_secret("nginx_forward_secret")
     Extend(app)
 

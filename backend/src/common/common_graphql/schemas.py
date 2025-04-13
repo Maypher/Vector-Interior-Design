@@ -194,7 +194,7 @@ class Image:
 
     @strawberry.field(description="The url used to fetch the image in the frontend")
     def image_url(self, info: ResourceInfo) -> str:
-        return f"{environ.get("IMAGES_URL")}{self.filename}"
+        return f"{self.base_url}{self.filename}"
 
 
 @strawberry.type(

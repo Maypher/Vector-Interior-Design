@@ -8,7 +8,7 @@
 	import { loginSchema } from '$lib/utilities/yupSchemas';
 	import { goto } from '$app/navigation';
 	import { error } from '$lib/utilities/toasts';
-	import { PUBLIC_apiURL, PUBLIC_userFrontendURL } from '$env/static/public';
+	import { PUBLIC_apiPath, PUBLIC_userFrontendURL } from '$env/static/public';
 	import logo from '$lib/images/logo.svg';
 	import { onMount } from 'svelte';
 
@@ -21,7 +21,7 @@
 			submitting = true;
 
 			if (form.valid) {
-				const res = await fetch(`${PUBLIC_apiURL}/auth/iniciar-sesion`, {
+				const res = await fetch(`${PUBLIC_apiPath}auth/iniciar-sesion`, {
 					method: 'POST',
 					body: objectToFormData(form.data),
 					credentials: 'include'
@@ -43,7 +43,7 @@
 
 	onMount(async () => {
 		const alreadyLoggedIn = (
-			await fetch(`${PUBLIC_apiURL}/auth/info-usuario`, {
+			await fetch(`${PUBLIC_apiPath}auth/info-usuario`, {
 				credentials: 'include'
 			})
 		).ok;

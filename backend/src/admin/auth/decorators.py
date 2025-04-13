@@ -2,7 +2,7 @@ from __future__ import annotations
 from sanic import response
 from functools import wraps
 from typing import TYPE_CHECKING
-from common.utilities.environment import dev_mode, frontend_url
+from common.utilities.environment import dev_mode
 
 if TYPE_CHECKING:
     from admin.utilities.types import AdminRequest
@@ -29,7 +29,6 @@ def login_required(f):
                     httponly=True,
                     samesite="Strict",
                     secure=not dev_mode,
-                    domain=frontend_url,
                 )
                 return res
             else:

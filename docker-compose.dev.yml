@@ -9,8 +9,6 @@ services:
           target: /app/src/
   admin-frontend:
     build:
-      args:
-        - PUBLIC_apiURL=${DEV_ADMIN_BACKEND_URL:?Required to connect to the admin backend.}
       target: development
     develop:
       watch:

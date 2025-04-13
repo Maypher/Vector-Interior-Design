@@ -43,19 +43,19 @@ graph RL
 
 ## Variables
 
-| Variable                | Description                                                                                                                  | Default                    | Database | Admin-backend | User-backend | nginx | Admin-frontend | User-frontend | Tests |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------- | -------- | ------------- | ------------ | ----- | -------------- | ------------- | ----- |
-| `DEV_MODE`              | Enables developer tools in multiple containers                                                                               | 1                          |          | ✓             | ✓            | ✓     |                |               |       |
-| `DATABASE_NAME`         | The name of the database that stores all the data                                                                            | postgres                   | ✓        | ✓             | ✓            |       |                |               | ✓     |
-| `DATABASE_PORT`         | The port the database will run on                                                                                            | 5432                       | ✓        | ✓             | ✓            |       |                |               | ✓     |
-| `ADMIN_USERNAME`        | The database username for the admin backend                                                                                  | admin                      | ✓        | ✓             |              |       |                |               |       |
-| `ADMIN_FRONTEND_URL`    | The url for admin frontend. Used for CORS and reverse proxy                                                                  | *Required*                 |          | ✓             |              | ✓     |                |               |       |
-| `BACKEND_URL`           | The url for the admin backend. Used for requests from the frontend and reverse proxy.                                        | *Required*                 |          |               |              | ✓     | ✓              | ✓             |       |
-| `ADMIN_IMAGES_URL`      | The url to access images from the admin panel.                                                                               | *Required*                 |          | ✓             |              |       |                |               |       |
-| `USER_USERNAME`         | The database username for the user backend.                                                                                  | frontend                   | ✓        |               | ✓            |       |                |               |       |
-| `USER_FRONTEND_URL`     | The url for user frontend **(without protocol or slashes)**. Used for CORS and reverse proxy                                 | *Required*                 |          |               | ✓            | ✓     | ✓              |               |       |
-| `USER_IMAGES_URL`       | The url to access images from the user frontend **(Include protocol and slashes)**.                                          | *Required*                 |          |               |              |       |                | ✓             |       |
-| `DEV_ADMIN_BACKEND_URL` | The url to access the admin backend while in development. Using a different one since ports don't behave nicely with headers | *Required for development* |          |               |              |       | ✓              |
+| Variable           | Description                                                                                                               | Default    | Database | Admin-backend | User-backend | nginx | Admin-frontend | User-frontend | Tests |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------- | ---------- | -------- | ------------- | ------------ | ----- | -------------- | ------------- | ----- |
+| `DEV_MODE`         | Enables developer tools in multiple containers                                                                            | 1          |          | ✓             | ✓            | ✓     |                |               |       |
+| `DATABASE_NAME`    | The name of the database that stores all the data                                                                         | postgres   | ✓        | ✓             | ✓            |       |                |               | ✓     |
+| `DATABASE_PORT`    | The port the database will run on                                                                                         | 5432       | ✓        | ✓             | ✓            |       |                |               | ✓     |
+| `ADMIN_USERNAME`   | The database username for the admin backend                                                                               | admin      | ✓        | ✓             |              |       |                |               |       |
+| `ADMIN_URL`        | The url for admin site (**Without protocol or slashes**). Used reverse proxy.                                             | *Required* |          |               |              | ✓     |                |               |       |
+| `ADMIN_IMAGES_URL` | The url to access images from the admin (**Include trailing slash**). **Recommended to use protocol-relative URL** panel. | *Required* |          | ✓             |              |       |                |               |       |
+| `ADMIN_API_PATH`   | The path relative to `ADMIN_URL` to access the API. ***Include slashes before and after**                                 | *Required* |          |               |              | ✓     | ✓              |               |       |
+| `USER_USERNAME`    | The database username for the user backend.                                                                               | frontend   | ✓        |               | ✓            |       |                |               |       |
+| `USER_URL`         | The url for user frontend **(without protocol or slashes)**. Used reverse proxy                                           | *Required* |          |               |              | ✓     | ✓              |               |       |
+| `USER_IMAGES_URL`  | The url to access images from the user frontend **(Include protocol and slashes)**.                                       | *Required* |          |               |              |       |                | ✓             |       |
+| `USER_API_PATH`    | The path relative to `USER_URL` to access the API. ***Include slashes before and after**                                  | *Required* |          |               |              | ✓     |                | ✓             |
 
 ## Secrets
 
@@ -68,7 +68,7 @@ Secrets must be added to `./secrets/<secret>` relative to the `docker-compose` d
 
 # Development
 
-run `docker-compose --profile prod up` (or `--profile tests` to run tests). This command launches the application in production mode. To run the hmr for both backend and frontend add the options `-f docker-compose.yml -f docker-compose.dev.yml`.
+run `docker-compose --profile -f docker-compose.yml -f docker-compose.prod.yml prod up` (or `--profile tests` to run tests). This command launches the application in production mode. To run the hmr for both backend and frontend add the options `-f docker-compose.yml -f docker-compose.dev.yml`.
 
 # Deployment
 

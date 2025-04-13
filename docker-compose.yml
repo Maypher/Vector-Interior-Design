@@ -15,8 +15,7 @@ services:
             - USERNAME=${ADMIN_USERNAME:-admin}
             - DB_PORT=${DATABASE_PORT:-5432}
             - DB_NAME=${DATABASE_NAME:-postgres}
-            - FRONTEND_URL=${ADMIN_FRONTEND_URL:?Frontend URL required for CORS.}
-            - IMAGES_URL=${ADMIN_IMAGES_URL:?URL required to return images.}
+            - IMAGES_URL=${ADMIN_IMAGES_URL:?Path required to return images.}
         volumes:
             - images_storage:/storage/images/
         networks:
@@ -69,8 +68,7 @@ services:
             - HOST=database
             - DB_PORT=${DATABASE_PORT:-5432}
             - DB_NAME=${DATABASE_NAME:-postgres}
-            - FRONTEND_URL=${USER_FRONTEND_URL:?Frontend URL required for CORS.}
-            - IMAGES_URL=${USER_IMAGES_URL:?URL required to return images.}
+            - IMAGES_URL=${USER_IMAGES_URL:?Path required to return images.}
         profiles:
             - prod
         secrets:
@@ -82,8 +80,8 @@ services:
         build:
             context: ./frontend/admin/
             args:
-                - PUBLIC_apiURL=${BACKEND_URL:?Required to connect to the admin backend.}
-                - PUBLIC_userFrontendURL=${USER_FRONTEND_URL:?Required to link missing people to the original site.}
+                - PUBLIC_apiPath=${ADMIN_API_PATH:?Required to connect to the admin backend.}
+                - PUBLIC_userFrontendURL=${USER_URL:?Required to link missing people to the original site.}
             target: production
             tags:
                 - "${REGISTRY_URL}/vector/admin-frontend:latest"
@@ -101,7 +99,7 @@ services:
         build:
             context: ./frontend/user/
             args:
-                - PUBLIC_apiURL=${BACKEND_URL:?Required to connect to the user backend.}
+                - PUBLIC_apiPath=${USER_API_PATH:?Required to connect to the user backend.}
             target: production
             tags:
                 - "${REGISTRY_URL}/vector/user-frontend:latest"
@@ -173,7 +171,6 @@ services:
                 - "${REGISTRY_URL}/vector/nginx:${NGINX_TAG:?Tag required}"
         profiles: [ prod ]
         ports:
-            - "443:443"
             - "80:80"
         volumes:
             - images_storage:/storage/images/:ro
@@ -183,9 +180,10 @@ services:
             - backend
         environment:
             - DEV_MODE=${DEV_MODE:-1}
-            - USER_FRONTEND_URL=${USER_FRONTEND_URL:?User frontend url required for reverse proxy.}
-            - ADMIN_FRONTEND_URL=${ADMIN_FRONTEND_URL:?Admin frontend url required for reverse proxy.}
-            - BACKEND_URL=${BACKEND_URL:?User backend url required for reverse proxy.}
+            - USER_URL=${USER_URL:?User url required for reverse proxy.}
+            - USER_API_PATH=${USER_API_PATH:?Path required to proxy backend requests for user}
+            - ADMIN_URL=${ADMIN_URL:?Admin url required for reverse proxy.}
+            - ADMIN_API_PATH=${ADMIN_API_PATH:?Path required to proxy backend requests for admins}
             - REGISTRY_URL=${REGISTRY_URL:?The url to push images to the self hosted registry}
         develop:
             watch:

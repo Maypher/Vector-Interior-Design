@@ -6,7 +6,7 @@
 	import { error } from '$lib/utilities/toasts';
 	import { goto } from '$app/navigation';
 	import Errors from '$lib/components/input/Errors.svelte';
-	import { PUBLIC_apiURL } from '$env/static/public';
+	import { PUBLIC_apiPath } from '$env/static/public';
 
 	const { data }: { data: PageData } = $props();
 	let inputFile: File | undefined | null = $state();
@@ -76,7 +76,7 @@
 				formData.append('map', map);
 				formData.append('file', inputFile);
 
-				const res = await fetch(`${PUBLIC_apiURL}/graphql/`, {
+				const res = await fetch(`${PUBLIC_apiPath}/graphql/`, {
 					method: 'POST',
 					body: formData,
 					credentials: 'include'

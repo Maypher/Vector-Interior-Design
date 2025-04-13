@@ -1,0 +1,4 @@
+services:
+  nginx:
+    ports: !override
+      - 127.0.0.1:80:80

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Markdown from '$lib/components/markdown/Markdown.svelte';
 	import { yup } from 'sveltekit-superforms/adapters';
 	import type { PageData } from './$types';
 	import { superForm } from 'sveltekit-superforms';

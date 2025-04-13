@@ -1,13 +1,13 @@
 import type { Handle, HandleFetch } from "@sveltejs/kit";
-import { PUBLIC_apiURL } from "$env/static/public";
+import { PUBLIC_apiPath } from "$env/static/public";
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
-    if (request.url.startsWith(`${PUBLIC_apiURL}`)) {
-        // clone the original request, but change the URL
-        request = new Request(
-            request.url.replace(`${PUBLIC_apiURL}`, 'http://user-backend'),
-            request
-        );
+    console.log(request.url);
+    if (request.url.includes(`${PUBLIC_apiPath}`)) {
+        // clone the original request, but change the URL to the docker service
+
+        const regex = new RegExp(`(.*)${PUBLIC_apiPath}(.*)?`);
+        request = new Request(request.url.replace(regex, `http://user-backend/$2`), request);
 
         request.headers.set("cookie", event.request.headers.get("cookie")!);
     }

@@ -9,7 +9,7 @@ from common.utils import read_secret
 from common.database import DatabaseManager
 from sanic_ext import Extend, Config
 import os
-from common.utilities.environment import dev_mode, frontend_url
+from common.utilities.environment import dev_mode
 
 
 def create_app(ctx=Context()) -> Sanic:
@@ -24,13 +24,6 @@ def create_app(ctx=Context()) -> Sanic:
     )
     app.config.FORWARDED_SECRET = read_secret("nginx_forward_secret")
     app.update_config(Config)
-
-    app.config.CORS_ALLOW_HEADERS = ["Content-Type"]
-    app.config.CORS_ORIGINS = [
-        f"https://{frontend_url}",
-        f"http://{frontend_url}",  # Using this one for development. Since the VPS can't be accessed with http there's no issue in prod
-        "http://user-frontend",
-    ]
 
     Extend(app)
 

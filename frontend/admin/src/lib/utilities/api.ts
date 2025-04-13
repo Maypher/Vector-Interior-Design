@@ -1,4 +1,4 @@
-import { PUBLIC_apiURL } from "$env/static/public";
+import { PUBLIC_apiPath } from "$env/static/public";
 import { error } from "@sveltejs/kit";
 
 /**
@@ -10,7 +10,7 @@ import { error } from "@sveltejs/kit";
  */
 export default async function graphql(query: string, variables: Record<string, any>, customFetch: (input: string | URL | globalThis.Request, init?: RequestInit) => Promise<Response> = fetch): Promise<Record<string, any>> {
     try {
-        const res = await customFetch(`${PUBLIC_apiURL}/graphql/`, {
+        const res = await customFetch(`${PUBLIC_apiPath}graphql/`, {
             method: "POST",
             body: JSON.stringify({ query, variables }),
             credentials: "include",

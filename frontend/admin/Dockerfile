@@ -8,8 +8,8 @@ RUN npm ci
 
 COPY . .
 
-ARG PUBLIC_apiURL
-ENV PUBLIC_apiURL=${PUBLIC_apiURL}
+ARG PUBLIC_apiPath
+ENV PUBLIC_apiPath=${PUBLIC_apiPath}
 ARG PUBLIC_userFrontendURL
 ENV PUBLIC_userFrontendURL=${PUBLIC_userFrontendURL}
 
@@ -25,14 +25,14 @@ RUN npm install
 
 COPY . .
 
-ARG PUBLIC_apiURL
-ENV PUBLIC_apiURL=$PUBLIC_apiURL
+ARG PUBLIC_apiPath
+ENV PUBLIC_apiPath=$PUBLIC_apiPath
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
 ARG PUBLIC_userFrontendURL
 ENV PUBLIC_userFrontendURL=${PUBLIC_userFrontendURL}
 
-CMD [ "npm", "run", "dev", "--", "--host", "0.0.0.0",  "--port", "80" ]
+CMD [ "npm", "run", "dev", "--", "--host", "0.0.0.0",  "--port", "3000" ]
 
 FROM node:22-alpine AS production
 WORKDIR /app
@@ -42,8 +42,8 @@ COPY package.json .
 EXPOSE 3000
 
 ENV NODE_ENV=production
-ARG PUBLIC_apiURL
-ENV PUBLIC_apiURL=${PUBLIC_apiURL}
+ARG PUBLIC_apiPath
+ENV PUBLIC_apiPath=${PUBLIC_apiPath}
 ARG PUBLIC_userFrontendURL
 ENV PUBLIC_userFrontendURL=${PUBLIC_userFrontendURL}
 

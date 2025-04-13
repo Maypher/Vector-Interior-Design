@@ -3,9 +3,10 @@ from sanic import response
 from admin.utilities.types import AdminRequest
 from admin.auth.decorators import login_required
 from os import environ
-from common.utilities.environment import dev_mode, frontend_url
+from common.utilities.environment import dev_mode
 
 auth_blueprint = Blueprint("auth", "/auth")
+API_PATH = environ.get("API_PATH")
 
 
 @auth_blueprint.post("/iniciar-sesion")
@@ -33,12 +34,7 @@ async def login(request: AdminRequest):
         httponly=True,
         samesite="Strict",
         secure=not dev_mode,
-        domain=frontend_url,
     )
-
-    # Removing the port from the cookie domain since separating cookies per port isn't allowed. On production when
-    # running the admin and user frontends in different subdomains they will not be set for both. Doing this to hide the session_id
-    # from the user frontend.
 
     return res
 
