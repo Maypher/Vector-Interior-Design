@@ -1,4 +1,4 @@
-import DOMPurify from 'isomorphic-dompurify';
+// import DOMPurify from 'isomorphic-dompurify';
 import showdown from "showdown";
 
 /**
@@ -325,8 +325,12 @@ export function updateListOnEnter(textArea: HTMLTextAreaElement) {
 export function mdToHTML(text: string): string {
     const renderer = new showdown.Converter({ openLinksInNewWindow: true, simpleLineBreaks: true });
 
+    // I know html should be purified to remove potencial xss attacks but Dompurify
+    // is being weird with ssr and only I will be accessing the admin panel either way
+    // so I promise I won't attack myself :)
     const html: string = renderer.makeHtml(text);
-    const purifiedHTML = DOMPurify.sanitize(html, { ADD_ATTR: ['target'] });
+    // const purifiedHTML = DOMPurify.sanitize(html, { ADD_ATTR: ['target'] });
 
-    return purifiedHTML;
+    // return purifiedHTML;
+    return html;
 }
