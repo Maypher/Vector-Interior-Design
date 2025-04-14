@@ -3,7 +3,6 @@ FROM openresty/openresty:alpine
 RUN apk add --no-cache imagemagick
 RUN apk add --no-cache gettext
 
-COPY ./certs/* /etc/nginx/certs/
 COPY nginx.conf /etc/nginx/templates/
 COPY includes /usr/local/openresty/nginx/conf/includes/
 COPY errors /usr/local/openresty/nginx/conf/errors/
