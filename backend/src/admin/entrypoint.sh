@@ -11,6 +11,8 @@ fi
 
 cd cli
 
+python migrations.py migrate;
+
 user_count=$(python users.py list | wc -l);
 
 # If no users have been created create a new one with a random password
@@ -23,9 +25,6 @@ if [ "$user_count" -eq 0 ]; then
 
   echo "Default user created successfully. Name: $username Email: $email password: $password";
 fi
-
-
-python migrations.py migrate;
 
 cd ..
 
