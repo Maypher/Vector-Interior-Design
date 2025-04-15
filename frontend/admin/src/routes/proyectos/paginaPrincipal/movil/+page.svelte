@@ -4,7 +4,7 @@
 	import symbol from '$lib/images/symbol.svg';
 	import logoWhite from '$lib/images/logo white.svg';
 	import tony from '$lib/images/tony.jpg';
-	import { Directions, TextAlignment, TextFont } from '$lib/utilities/enums';
+	import { Directions } from '$lib/utilities/enums';
 	import '$lib/styles/markdown.css';
 	import Movable from '$lib/components/editor/Movable.svelte';
 	import Borders from '$lib/components/editor/Borders.svelte';
@@ -24,7 +24,6 @@
 
 	let preview: boolean = $state(false);
 	let saveEnabled: boolean = $derived(!isEqual(originalMainPages, updatedMainPageImages));
-	let englishDescription: boolean = $state(false);
 
 	async function updatedMainPagePhone() {
 		const query = `
@@ -311,7 +310,7 @@
 		</button>
 	</div>
 
-	<div class="size-full flex flex-col items-center gap-10">
+	<div class="size-full flex flex-col items-center justify-center p-5">
 		<Phone>
 			<div class="flex flex-col h-full mb-20">
 				<header class="flex h-22 items-center justify-between gap-20 p-5 bg-vector-cream">

@@ -244,7 +244,7 @@
 	</div>
 {/snippet}
 
-<div class="bg-black p-5 flex justify-center">
+<div class="bg-black p-5 flex justify-center items-center">
 	<div class="fixed top-5 right-5 flex flex-col items-end gap-2 z-30 opacity-70 hover:opacity-100">
 		<input id="previewToggle" type="checkbox" bind:checked={preview} hidden />
 		<label
