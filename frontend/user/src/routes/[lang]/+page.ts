@@ -1,4 +1,5 @@
 import graphql from '$lib/utilities/api.js'
+import { error } from '@sveltejs/kit';
 
 export const load = async ({ fetch, parent }) => {
     const { selectedLanguage } = await parent();
@@ -58,6 +59,9 @@ export const load = async ({ fetch, parent }) => {
         }
     `;
 
-    const mainImages = (await graphql(query, {}, fetch)).mainPageImages;
+    const mainImages = (await graphql(query, {}, fetch))?.mainPageImages;
+
+    if (mainImages == null || (Array.isArray(mainImages) && mainImages.length === 0)) error(403);
+
     return { mainImages };
 }

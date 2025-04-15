@@ -80,7 +80,7 @@ export const load = async ({ params, fetch, parent }) => {
 
     const data = await graphql(query, { id: projectId }, fetch);
 
-    const projectData = data.project;
+    const projectData = data?.project;
     if (!projectData) error(404, english ? 'Project not found' : "Proyecto inexistente");
 
     const currentProjectIndex: number = data.projects.findIndex((project: { id: number }) => project.id === projectData.id);
