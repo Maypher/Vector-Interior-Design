@@ -66,7 +66,7 @@
 				<div
 					class="absolute top-0 left-0 text-yellow-500 bg-vector-black/70 text-2xl px-1 pb-0.5 flex gap-x-2 items-start"
 				>
-					{#if image.space.project.thumbnail.filename === image.filename}
+					{#if image.space.project.thumbnail?.filename === image.filename}
 						<div title="Imagen principal">⭐</div>
 					{/if}
 					{#if image.mainPage}
