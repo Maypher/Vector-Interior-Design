@@ -8,4 +8,7 @@ COPY includes /usr/local/openresty/nginx/conf/includes/
 COPY errors /usr/local/openresty/nginx/conf/errors/
 COPY entrypoint.sh .
 COPY app.lua /lua/
-ENTRYPOINT [ "/entrypoint.sh" ]
+
+RUN chmod +x entrypoint.sh
+
+ENTRYPOINT [ "./entrypoint.sh" ]
