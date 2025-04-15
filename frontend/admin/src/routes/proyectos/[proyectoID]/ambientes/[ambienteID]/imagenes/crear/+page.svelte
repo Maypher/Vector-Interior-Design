@@ -27,7 +27,7 @@
 					return;
 				}
 
-				if (inputFile.size > 1e7) {
+				if (inputFile.size / (1024 * 1024) > 10) {
 					fileErrors.push('Imagen debe ser menor a 10 Mb.');
 					submitting = false;
 					return;
@@ -76,7 +76,7 @@
 				formData.append('map', map);
 				formData.append('file', inputFile);
 
-				const res = await fetch(`${PUBLIC_apiPath}/graphql/`, {
+				const res = await fetch(`${PUBLIC_apiPath}graphql/`, {
 					method: 'POST',
 					body: formData,
 					credentials: 'include'
