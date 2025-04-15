@@ -74,7 +74,7 @@
 				src={imageData.imageUrl}
 				alt={imageData.altText}
 				class:hidden={!imgLoadedMobile}
-				class="mx-auto max-h-[80svh] object-contain"
+				class="min-h-120 mx-auto max-h-[80svh] object-contain"
 				onload={() => (imgLoadedMobile = true)}
 			/>
 			<div class="skeleton aspect-square max-h-[50svh] w-full" class:hidden={imgLoadedMobile}></div>

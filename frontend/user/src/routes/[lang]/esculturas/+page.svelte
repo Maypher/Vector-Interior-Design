@@ -79,7 +79,7 @@
 	<div class="lg:hidden">
 		{#each sculptures as image, i (image.filename)}
 			<div
-				class={`${i === 0 ? 'header-screen' : 'h-svh'}`}
+				class={`${i === 0 ? 'header-screen' : 'h-svh'} min-h-120 py-5`}
 				style={`background-color: ${image.sculptureData.bgColor};`}
 			>
 				<SculptureSkeleton {image} />

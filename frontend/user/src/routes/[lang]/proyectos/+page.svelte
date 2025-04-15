@@ -67,7 +67,9 @@
 	imageUrl={projects.at(0).thumbnail.imageUrl}
 />
 
-<ul class="header-screen bg-vector-grey snap-y snap-mandatory overflow-y-scroll lg:hidden">
+<ul
+	class="header-screen min-h-120 bg-vector-grey snap-y snap-mandatory overflow-y-scroll lg:hidden"
+>
 	{#each projects as project, i (project.id)}
 		{#if project.thumbnail}
 			<li class="flex h-full snap-center items-center justify-center text-white" id={project.id}>
