@@ -160,7 +160,7 @@ services:
             - user_password
             - postgres_password
     nginx:
-        image: ${REGISTRY_URL}/vector/nginx
+        image: ${REGISTRY_URL}/vector/nginx:latest
         build:
             context: "./nginx/"
             tags:
