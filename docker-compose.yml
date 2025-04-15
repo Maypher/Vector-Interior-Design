@@ -2,7 +2,7 @@ name: TQportfolio
 
 services:
     admin-backend:
-        image: ${REGISTRY_URL}/vector/admin-backend
+        image: ${REGISTRY_URL}/vector/admin-backend:latest
         build:
             context: ./backend/
             dockerfile: ./src/admin/Dockerfile
@@ -40,7 +40,7 @@ services:
             - admin_password
             - nginx_forward_secret
     user-backend:
-        image: ${REGISTRY_URL}/vector/user-backend
+        image: ${REGISTRY_URL}/vector/user-backend:latest
         build:
             context: ./backend/
             dockerfile: ./src/user/Dockerfile
@@ -76,7 +76,7 @@ services:
             - nginx_forward_secret
         restart: on-failure:3
     admin-frontend:
-        image: ${REGISTRY_URL}/vector/admin-frontend
+        image: ${REGISTRY_URL}/vector/admin-frontend:latest
         build:
             context: ./frontend/admin/
             args:
@@ -95,7 +95,7 @@ services:
             - prod
         restart: on-failure:3
     user-frontend:
-        image: ${REGISTRY_URL}/vector/user-frontend
+        image: ${REGISTRY_URL}/vector/user-frontend:latest
         build:
             context: ./frontend/user/
             args:
@@ -130,7 +130,7 @@ services:
         secrets:
             - postgres_password
     database:
-        image: ${REGISTRY_URL}/vector/database
+        image: ${REGISTRY_URL}/vector/database:latest
         build:
             context: ./database/
             dockerfile: Dockerfile
