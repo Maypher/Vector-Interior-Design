@@ -18,15 +18,14 @@
 		async onUpdate({ form }) {
 			if (form.valid) {
 				const query = `
-					mutation newSpace($projectId: Int!, $name: String!, $description: String) {
-						createSpace(projectId: $projectId, name: $name, description: $description) {
+					mutation newSpace($projectId: Int!, $name: String!) {
+						createSpace(projectId: $projectId, name: $name) {
 							__typename
 							... on ProjectNotFoundSpace {
 								projectId
 							}
 							... on Space {
 								name
-								description
 							}
 						}
 					}
