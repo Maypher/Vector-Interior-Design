@@ -12,9 +12,9 @@ It exposes the following servers:
 - `${ADMIN_URL}`: The url is set as an environment variable (planned to be admin.vectorinterior.design) and it proxies to the [admin-frontend](/frontend/admin/).
   - `location: /images/<image>`: Same as `USER_URL` location.
   - `location: ${USER_API_PATH}`: The path to access the [admin-backend](/backend/src/admin/). 
-- `PORT: 5174`: This url is only available when running with `DEV_MODE=1` and it exposes the user frontend in development.
+- `PORT: 5174`: This url is only available when running with `DEV_MODE=1` and it exposes the user site in development.
     - `PORT: 5112`: The hmr port to allow vite's for hot module reloading while developing.
-- `PORT: 5173`: This url is only available when running with `DEV_MODE=1` and it exposes the admin frontend in development.
+- `PORT: 5173`: This url is only available when running with `DEV_MODE=1` and it exposes the admin site in development.
   - `PORT: 5111:` The hmr port to allow vite's for hot module reloading while developing.
 
 
