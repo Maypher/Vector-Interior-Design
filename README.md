@@ -2,7 +2,7 @@
 
 ![Vector: Interior Design](/images/logo.png)
 
-This is the repository for the **Vector: Interior Design** porfolio website.
+This is the repository for the [**Vector: Interior Design**](https://vectorinterior.design) website.
 
 # Architecture
 
