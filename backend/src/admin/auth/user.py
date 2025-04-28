@@ -149,7 +149,7 @@ class UserManager:
         salt = bcrypt.gensalt()
         pwd = new_password.encode()
 
-        hashed_pwd = bcrypt.hashpw(pwd, salt)
+        hashed_pwd = bcrypt.hashpw(pwd, salt).decode("utf-8")
 
         updated_user = self.database_manager.query(
             """
