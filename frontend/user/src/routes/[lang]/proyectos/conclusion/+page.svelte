@@ -44,9 +44,9 @@
 	>
 		{@html mdToHtml($i18n.t('conclusionBody'))}
 	</div>
-	<a href={`/${$i18n.language}/`} aria-label="home">
-		<img src={whiteLogo} alt="Vector: Interior Design" class="hidden h-10 lg:block" /></a
-	>
+	<a href={`/${$i18n.language}/`} aria-label="home" class="transition-transform hover:scale-125">
+		<img src={whiteLogo} alt="Vector: Interior Design" class="hidden h-10 lg:block" />
+	</a>
 	<div class="top-1/9 relative flex basis-1/2 flex-col items-center gap-y-10 md:top-auto lg:hidden">
 		<div class="bg-vector-grey">
 			<div

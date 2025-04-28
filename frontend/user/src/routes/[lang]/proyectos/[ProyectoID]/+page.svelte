@@ -209,8 +209,7 @@
 						<p
 							class="font-Nexa after:bg-vector-orange w-full text-right text-sm after:ml-2 after:inline-block after:h-2 after:w-8 max-md:mb-10 md:after:mr-20"
 						>
-							{$i18n.t('area')}: {projectData.area}
-							{$i18n.t('areaUnits')}
+							{$i18n.t('area')}: {projectData.area} m²
 						</p>
 						<h1 class="font-Nexa mb-6 text-3xl">
 							{projectData.name}
@@ -285,8 +284,7 @@
 							<p
 								class="after:bg-vector-orange w-full text-right text-sm after:ml-2 after:mr-20 after:inline-block after:h-2 after:w-8"
 							>
-								{$i18n.t('area')}: {projectData.area}
-								{$i18n.t('areaUnits')}
+								{$i18n.t('area')}: {projectData.area} m²
 							</p>
 							<h1 class="block text-4xl">
 								{projectData.name}

@@ -38,7 +38,7 @@
 
 <!--Mobile view-->
 <figure
-	class={`border-vector-orange px-8! py-25 gap-12 lg:hidden ${
+	class={`border-vector-orange py-25 gap-12 lg:hidden ${
 		image.phoneConfig?.borders?.n && 'pt-30 border-t-2'
 	} ${image.phoneConfig?.borders?.s && 'pb-30 border-b-2'} ${
 		image.phoneConfig?.borders?.e && 'pr-30 border-r'

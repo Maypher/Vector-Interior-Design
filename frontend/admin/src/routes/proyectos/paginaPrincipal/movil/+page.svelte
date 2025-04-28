@@ -344,20 +344,19 @@
 					<figcaption>
 						<p class="font-Nexa text-vector-cream whitespace-pre-line text-sm">
 							<span class="text-4xl brightness-100 [&_br]:hidden [&_em]:not-italic">
-								{@html mdToHTML(`Como diseñador
-								de *interiores*`)}
+								Como diseñador,
 							</span>
 							<span class="mt-5 block brightness-50">
-								{`mi enfoque es profundamente personal. No sigo un solo estilo, sino que fusiono influencias de distintas partes del mundo con las últimas tendencias para crear espacios únicos.
-
-                    Mi trabajo se basa en tres pilares fundamentales: confort, funcionalidad y distinción.
-
-                    Cada proyecto es una oportunidad para transformar ideas en ambientes que combinan estética y propósito, siempre con una atención minuciosa a los detalles. 
-                    
-                    Me involucro en cada etapa del proceso, porque el diseño es mi pasión y creo que la excelencia está en los detalles bien ejecutados.
-
-                    Más que imponer un estilo, interpreto y traduzco las necesidades y aspiraciones de mis clientes en espacios que cuentan su historia. Mi trayectoria y mis proyectos hablan por si solos, respaldados por un compromiso absoluto de calidad con creatividad.`}
+								{`especializado en Imagen Corporativa e Interiorismo, con más de 25 años de experiencia siempre estoy en la búsqueda de nuevas tendencias, sin apegarme o imponer un estilo. 
+						
+Definiendo la personalidad de mis clientes interpreto sus necesidades y aspiraciones para crear espacios que cuenten su historia, logrando un impacto visual certero e inimaginable.
+ 
+Cada proyecto es una oportunidad para crear ambientes con identidad y armonía enfocados en proporcionar confort, funcionalidad y distinción. Me involucro en cada una de sus etapas, prestando atención minuciosa a los detalles porque son ellos los que marcan la diferencia.`}
 							</span>
+						</p>
+
+						<p class="font-Nexa mr-5 mt-5 text-right text-sm text-vector-cream">
+							Tony Quintero Gerik
 						</p>
 					</figcaption>
 				</figure>
