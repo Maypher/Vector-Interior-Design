@@ -7,3 +7,5 @@ secrets
 conf
 .env*
 password
+.secrets
+.vars
