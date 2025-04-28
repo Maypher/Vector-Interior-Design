@@ -118,10 +118,9 @@ jobs:
         run: |
           source .env
           registry_host="https://$REGISTRY_URL"
-          echo "$registry_host"
           echo "${{ secrets.registry_password }}" | docker login $registry_host --username ${{ secrets.registry_username }} --password-stdin
           docker compose --profile prod -f docker-compose.yml -f docker-compose.prod.yml --env-file .env build
-          docker compose --profile prod -f docker-compose.yml -f docker-compose.prod.yml --env-file .env push -q
+          docker compose --profile prod -f docker-compose.yml -f docker-compose.prod.yml --env-file .env push 
       - name: Pull changes
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
