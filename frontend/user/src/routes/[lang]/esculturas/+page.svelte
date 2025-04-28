@@ -58,7 +58,7 @@
 
 <Head
 	title={$i18n.language === 'es' ? 'Esculturas' : 'Sculptures'}
-	description={$i18n.language === 'es' ? '' : ''}
+	description={$i18n.t('googleDescription')}
 	url={page.url.toString()}
 	alternateEn={`${websiteUrl}/en/esculturas`}
 	alternateEs={`${websiteUrl}/es/esculturas`}

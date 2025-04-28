@@ -60,7 +60,7 @@
 
 <Head
 	title="Vector: Interior Design"
-	description={$i18n.language === 'es' ? '' : ''}
+	description={$i18n.t('googleDescription')}
 	url={page.url.toString()}
 	alternateEn={`${websiteUrl}/en`}
 	alternateEs={`${websiteUrl}/es`}
@@ -278,6 +278,7 @@
 				</span>
 				<span class="mt-5 block brightness-50">{$i18n.t('aboutUs')}</span>
 			</p>
+			<p class="font-Nexa mr-5 mt-5 text-right text-sm">Tony Quintero Gerik</p>
 		</figcaption>
 	</figure>
 	<button
