@@ -9,6 +9,7 @@ on:
       - "**/docs/*"
       - "**/*LICENSE"
       - ".vscode"
+  workflow_dispatch:
 
 permissions:
   contents: read
