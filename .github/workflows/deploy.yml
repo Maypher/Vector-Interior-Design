@@ -111,7 +111,7 @@ jobs:
           echo "${{ secrets.nginx_forward_secret }}" > "nginx_forward_secret.txt"
           cd ..
           
-          echo "${{ vars.PRODUCTION_VARIABLES }}" > ".env"
+          echo "${{ vars.PRODUCTION_VARIABLES }}" | tr -d '\r' > ".env"
 
           rsync -aqc docker-compose.yml docker-compose.prod.yml .env secrets ${{ secrets.ssh_connection }}:/vectorapp/app/compose/
       - name: Build and push changes
