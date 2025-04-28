@@ -46,7 +46,7 @@ jobs:
           "
       - name: "Install htpasswd"
         if: ${{ !env.ACT }}
-        run: apt-get update && apt-get -y install apache2-utils
+        run: sudo apt-get update && apt-get -y install apache2-utils
       - name: Install dependencies locally
         if: ${{ env.ACT }}
         run: |
