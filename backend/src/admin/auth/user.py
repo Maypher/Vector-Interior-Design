@@ -72,7 +72,7 @@ class UserManager:
         salt = bcrypt.gensalt()
         pwd = password.encode()
 
-        hashed_pwd = bcrypt.hashpw(pwd, salt)
+        hashed_pwd = bcrypt.hashpw(pwd, salt).decode("utf-8")
 
         user_id = self.database_manager.query(
             """
