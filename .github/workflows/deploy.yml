@@ -7,7 +7,7 @@ on:
     paths-ignore:
       - "**/*.md"
       - "**/docs/*"
-      - "graphql.yml"
+      - "**/graphql.yml"
       - "**/*LICENSE"
       - ".vscode"
   workflow_dispatch:
