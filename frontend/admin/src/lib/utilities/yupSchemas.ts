@@ -23,7 +23,8 @@ export const signUpForm = object({
 });
 
 export const projectCreateSchema = object({
-    name: string().required("Nombre requerido.").min(5, "Nombre debe tener un mínimo de 5 caracteres"),
+    nameEs: string().required("Nombre requerido.").min(5, "Nombre debe tener un mínimo de 5 caracteres"),
+    nameEn: string().required("Nombre requerido.").min(5, "Nombre debe tener un mínimo de 5 caracteres"),
     area: number().default(1).min(1, "El debe ser mayor a cero."),
     descriptionEs: string().required("Descripción requerida."),
     descriptionEn: string().required("Descripción en ingles requerida")

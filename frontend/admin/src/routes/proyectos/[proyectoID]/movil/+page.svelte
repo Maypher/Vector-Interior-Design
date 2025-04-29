@@ -20,13 +20,15 @@
 
 	let preview: boolean = $state(false);
 	let saveEnabled: boolean = $derived(!isEqual(originalProjectData, updatedProjectData));
+	let english: boolean = $state(false);
 
 	async function updateMobileConfig() {
 		const projectMutation = `
-			mutation updateProject($projectId: Int!, $name: String, $descriptionEs: String!, $descriptionEn: String!, $area: Int) {
-				updateProject(id: $projectId, name: $name, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
+			mutation updateProject($projectId: Int!, $nameEs: String, $nameEn: String, $descriptionEs: String!, $descriptionEn: String!, $area: Int) {
+				updateProject(id: $projectId, nameEs: $nameEs, nameEn: $nameEn, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
 					id
-					name
+					nameEs
+					nameEn
 					descriptionEs
 					descriptionEn
 					area
@@ -67,7 +69,8 @@
 		let updatedProject = (
 			await graphql(projectMutation, {
 				projectId: updatedProjectData.id,
-				name: updatedProjectData.name,
+				nameEs: updatedProjectData.nameEs,
+				nameEn: updatedProjectData.nameEn,
 				descriptionEs: updatedProjectData.descriptionEs,
 				descriptionEn: updatedProjectData.descriptionEn,
 				area: updatedProjectData.area
@@ -299,17 +302,33 @@
 									/> metros cuadrados
 								</p>
 								<div class="w-full flex gap-x-2 text-3xl items-center mb-6">
-									<input
-										type="text"
-										bind:value={updatedProjectData.name}
-										id="projectName"
-										class="indent-1 w-full z-10"
-									/>
+									{#if english}
+										<input
+											type="text"
+											bind:value={updatedProjectData.nameEn}
+											id="projectName"
+											class="indent-1 w-full z-10"
+										/>
+									{:else}
+										<input
+											type="text"
+											bind:value={updatedProjectData.nameEs}
+											id="projectName"
+											class="indent-1 w-full z-10"
+										/>{/if}
 									<label
 										for="projectName"
 										class="cursor-pointer hover:bg-gray-700 p-1 rounded-md flex items-center"
-										><span class="material-symbols-outlined"> edit </span></label
 									>
+										<span class="material-symbols-outlined"> edit </span>
+									</label>
+									<input type="checkbox" id="language" hidden bind:checked={english} />
+									<label
+										for="language"
+										class="p-1 rounded-sm bg-vector-cream text-vector-black border-2 border-vector-black text-xl"
+									>
+										{english ? 'Ingles' : 'Español'}
+									</label>
 								</div>
 							{:else}
 								<p
@@ -318,7 +337,7 @@
 									Área: {updatedProjectData.area} metros cuadrados
 								</p>
 								<h1 class="text-3xl w-full mb-6">
-									{updatedProjectData.name}
+									{english ? updatedProjectData.nameEn : updatedProjectData.nameEs}
 								</h1>
 							{/if}
 							<div class="text-left">

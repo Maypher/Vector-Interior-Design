@@ -27,7 +27,7 @@ export const load = async ({ fetch, params }) => {
                     name
                     project {
                         id
-                        name
+                        nameEs
                         thumbnail {
                             filename
                         }

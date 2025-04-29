@@ -26,14 +26,19 @@ class AdminResourceManager(ResourceManager):
         self.allow_private = True
 
     def create_project(
-        self, name: str, description_es: str, description_en: str, area: int
+        self,
+        name_es: str,
+        name_en: str,
+        description_es: str,
+        description_en: str,
+        area: int,
     ) -> schemas.Project:
         """Creates a new project. Data validation is assumed."""
         project_data = self.database_manager.query(
             """
-        INSERT INTO project (name, description_es, description_en, area) VALUES (%s, %s, %s, %s) RETURNING *;
+        INSERT INTO project (name_es, name_en, description_es, description_en, area) VALUES (%s, %s, %s, %s, %s) RETURNING *;
         """,
-            (name, description_es, description_en, area),
+            (name_es, name_en, description_es, description_en, area),
             1,
         )
 
@@ -64,7 +69,8 @@ class AdminResourceManager(ResourceManager):
     def update_project(
         self,
         id: int,
-        name: str | None = None,
+        name_es: str | None = None,
+        name_en: str | None = None,
         description_es: str | None = None,
         description_en: str | None = None,
         area: int | None = None,
@@ -108,14 +114,15 @@ class AdminResourceManager(ResourceManager):
         return self.database_manager.query(
             """
                 UPDATE project SET 
-                name = COALESCE(%s, name),
+                name_es = COALESCE(%s, name_es),
+                name_en = COALESCE(%s, name_en),
                 description_es = COALESCE(%s, description_es),
                 description_en = COALESCE(%s, description_en),
                 area = COALESCE(%s, area),
                 public = COALESCE(%s, public)
                 WHERE id = %s RETURNING *;
             """,
-            (name, description_es, description_en, area, public, id),
+            (name_es, name_en, description_es, description_en, area, public, id),
             count=1,
             row_factory=rows.class_row(schemas.Project),
         )

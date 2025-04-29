@@ -19,7 +19,7 @@
 	let projectData = $state(data.projectData!);
 	let originalSpaceNames: string[] = $state(projectData.spaces.map((space: any) => space.name));
 	let submitting: boolean = $state(false);
-	let englishDesc: boolean = $state(false);
+	let english: boolean = $state(false);
 
 	let sortable: Sortable | undefined = $state();
 	let originalOrder: string[] = $state(projectData.spaces.map((x: { id: string }) => x.id));
@@ -44,9 +44,10 @@
 		async onUpdate({ form: updateForm }) {
 			if (updateForm.valid) {
 				const query = `
-					mutation updateProject($id: Int!, $name: String, $descriptionEs: String, $descriptionEn: String, $area: Int) {
-						updateProject(id: $id, name: $name, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
-							name
+					mutation updateProject($id: Int!, $nameEs: String, $nameEn: String, $descriptionEs: String, $descriptionEn: String, $area: Int) {
+						updateProject(id: $id, nameEs: $nameEs, nameEn: $nameEn, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
+							nameEs
+							nameEn
 							descriptionEs
 							descriptionEn
 							area
@@ -55,14 +56,16 @@
 				`;
 				const variables = {
 					id: projectData.id,
-					name: updateForm.data.name,
+					nameEs: updateForm.data.nameEs,
+					nameEn: updateForm.data.nameEn,
 					descriptionEs: updateForm.data.descriptionEs,
 					descriptionEn: updateForm.data.descriptionEn,
 					area: updateForm.data.area
 				};
 
 				const updateProject = (await graphql(query, variables)).updateProject;
-				$form.name = updateProject.name;
+				$form.nameEs = updateProject.nameEs;
+				$form.nameEn = updateProject.nameEn;
 				$form.descriptionEs = updateProject.descriptionEs;
 				$form.descriptionEn = updateProject.descriptionEn;
 				$form.area = updateProject.area;
@@ -218,12 +221,21 @@
 		>
 			<div class="text-3xl">
 				<div class="w-1/2 flex items-center input-container">
-					<input
-						type="text"
-						id="project-name"
-						class="outline-0 font-Agency-FB"
-						bind:value={$form.name}
-					/>
+					{#if english}
+						<input
+							type="text"
+							id="project-name"
+							class="outline-0 font-Agency-FB"
+							bind:value={$form.nameEn}
+						/>
+					{:else}
+						<input
+							type="text"
+							id="project-name"
+							class="outline-0 font-Agency-FB"
+							bind:value={$form.nameEs}
+						/>
+					{/if}
 					<label for="project-name" class="material-symbols-outlined"> edit </label>
 				</div>
 				<div class="h-0.5 w-full bg-vector-grey input-underline"></div>
@@ -247,11 +259,11 @@
 				<div class="flex gap-2 items-center mb-2">
 					<label for="description" class="block mb-2 text-2xl">Descripción</label>
 					<label for="en-desc" class="bg-vector-orange border-2 border-black p-1"
-						>{englishDesc ? 'Ingles' : 'Español'}</label
+						>{english ? 'Ingles' : 'Español'}</label
 					>
-					<input type="checkbox" id="en-desc" hidden bind:checked={englishDesc} />
+					<input type="checkbox" id="en-desc" hidden bind:checked={english} />
 				</div>
-				{#if englishDesc}
+				{#if english}
 					<textarea
 						id="description"
 						bind:value={$form.descriptionEn}
@@ -267,7 +279,9 @@
 			</div>
 			<button
 				class="bg-vector-cream hover:brightness-75 transition-colors p-1 rounded-md cursor-pointer"
-				>Actualizar
+				type="submit"
+			>
+				Actualizar
 			</button>
 		</fieldset>
 	</form>

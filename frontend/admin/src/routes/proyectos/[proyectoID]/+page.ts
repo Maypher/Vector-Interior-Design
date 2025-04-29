@@ -13,7 +13,8 @@ export async function load({ params, fetch }) {
                 query getProject($id: Int!) {
                     project(id: $id) {
                         id
-                        name
+                        nameEs
+                        nameEn
                         descriptionEs
                         descriptionEn
                         area
@@ -44,7 +45,8 @@ export async function load({ params, fetch }) {
     const projectData = (await graphql(query, variables, fetch)).project;
 
     const formData = {
-        name: projectData.name,
+        nameEs: projectData.nameEs,
+        nameEn: projectData.nameEn,
         descriptionEs: projectData.descriptionEs,
         descriptionEn: projectData.descriptionEn,
         area: projectData.area

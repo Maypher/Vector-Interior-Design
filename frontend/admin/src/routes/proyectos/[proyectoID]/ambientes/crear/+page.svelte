@@ -55,7 +55,7 @@
 	>
 		<h1 class="text-xl text-center text-white">
 			Crear ambiente para <a href={`/proyectos/${project.id}`} class="border-b-2 border-vector-grey"
-				>{project.name}</a
+				>{project.nameEs}</a
 			>
 		</h1>
 		<fieldset disabled={submitting}>

@@ -5,7 +5,8 @@ export const load = async ({ fetch }) => {
 			query getProjects($name: String) {
 				projects(name: $name) {
 					id
-					name
+					nameEs
+					nameEn
 					public
 					thumbnail {
 						filename

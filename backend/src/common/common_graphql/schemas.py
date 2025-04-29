@@ -11,7 +11,8 @@ from sanic.log import logger
 @strawberry.type(description="The main structure of the database.")
 class Project:
     id: int = strawberry.field(description="The ID of the project in the database.")
-    name: str = strawberry.field(description="The name of the project.")
+    name_es: str = strawberry.field(description="The name of the project in Spanish.")
+    name_en: str = strawberry.field(description="The name of the project in English.")
     description_es: str = (
         strawberry.field(
             description="The description of the project in Spanish written in markdown format."

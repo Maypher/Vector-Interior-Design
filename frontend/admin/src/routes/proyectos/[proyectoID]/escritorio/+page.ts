@@ -5,7 +5,8 @@ export const load = async ({ fetch, params }) => {
         query getProject($id: Int!) {
             project(id: $id) {
                 id
-                name
+                nameEs
+                nameEn
                 descriptionEs
                 descriptionEn
                 area

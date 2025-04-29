@@ -9,7 +9,7 @@ export const load = async ({ fetch, parent }) => {
         query projects {
             projects {
                 id
-                name
+                name: ${english ? 'nameEn' : 'nameEs'}
                 thumbnail {
                     filename
                     imageUrl

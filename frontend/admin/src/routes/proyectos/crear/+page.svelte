@@ -19,8 +19,8 @@
 
 			if (form.valid) {
 				const query = `
-					mutation createProject($name: String!, $descriptionEs: String!, $descriptionEn: String!, $area: Int!) {
-						createProject(name: $name, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
+					mutation createProject($nameEs: String!, $nameEn: String!, $descriptionEs: String!, $descriptionEn: String!, $area: Int!) {
+						createProject(nameEs: $nameEs, nameEn: $nameEn, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
 							id
 						}
 					}
@@ -43,14 +43,25 @@
 <div class="flex justify-center items-center h-full">
 	<form class="p-4 m-5 bg-gray-700" use:enhance>
 		<fieldset disabled={submitting}>
-			<TextInput
-				type="text"
-				label="Nombre"
-				name="name"
-				bind:value={$form.name}
-				errors={$errors.name}
-				{...$constraints.name}
-			/>
+			{#if english}
+				<TextInput
+					type="text"
+					label="Nombre (Ingles)"
+					name="name"
+					bind:value={$form.nameEn}
+					errors={$errors.nameEn}
+					{...$constraints.nameEn}
+				/>
+			{:else}
+				<TextInput
+					type="text"
+					label="Nombre (Español)"
+					name="name"
+					bind:value={$form.nameEs}
+					errors={$errors.nameEs}
+					{...$constraints.nameEs}
+				/>
+			{/if}
 			<TextInput
 				type="number"
 				label="Área (m²)"

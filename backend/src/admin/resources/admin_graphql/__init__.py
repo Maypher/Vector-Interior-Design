@@ -89,8 +89,13 @@ class Mutation:
     def createProject(
         self,
         info: strawberry.Info[GraphQLContext],
-        name: typing.Annotated[
-            str, strawberry.argument(description="The name of the new project.")
+        name_es: typing.Annotated[
+            str,
+            strawberry.argument(description="The name of the new project in Spanish."),
+        ],
+        name_en: typing.Annotated[
+            str,
+            strawberry.argument(description="The name of the new project in English."),
         ],
         description_es: typing.Annotated[
             str,
@@ -112,7 +117,7 @@ class Mutation:
         ],
     ) -> schemas.Project:
         return info.context["resource_manager"].create_project(
-            name, description_es, description_en, area
+            name_es, name_en, description_es, description_en, area
         )
 
     @strawberry.mutation(
@@ -136,9 +141,13 @@ class Mutation:
         id: typing.Annotated[
             int, strawberry.argument(description="The ID of the project to update.")
         ],
-        name: typing.Annotated[
+        name_es: typing.Annotated[
             typing.Optional[str],
-            strawberry.argument(description="The new name of the project."),
+            strawberry.argument(description="The new name of the project in Spanish."),
+        ] = None,
+        name_en: typing.Annotated[
+            typing.Optional[str],
+            strawberry.argument(description="The new name of the project in English."),
         ] = None,
         description_es: typing.Annotated[
             typing.Optional[str],
@@ -178,7 +187,15 @@ class Mutation:
         ] = None,
     ) -> typing.Optional[schemas.Project]:
         return info.context["resource_manager"].update_project(
-            id, name, description_es, description_en, area, thumbnail, index, public
+            id,
+            name_es,
+            name_en,
+            description_es,
+            description_en,
+            area,
+            thumbnail,
+            index,
+            public,
         )
 
     @strawberry.mutation(description="Creates a new space.")

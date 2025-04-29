@@ -9,7 +9,7 @@ export const load = async ({ params, fetch, parent }) => {
         query getProject($id: Int!) {
             project(id: $id) {
                 id
-                name
+                name: ${english ? 'nameEn' : 'nameEs'}
                 description: ${english ? 'descriptionEn' : 'descriptionEs'}
                 area
                 thumbnail {

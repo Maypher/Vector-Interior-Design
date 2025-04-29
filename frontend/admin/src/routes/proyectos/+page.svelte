@@ -67,7 +67,9 @@
 							alt={project.thumbnail?.altTextEs}
 							class="h-full"
 						/>
-						<p class="font-Agency-FB ml-2 text-xl text-white">{project.name}</p>
+						<p class="font-Agency-FB ml-2 text-xl text-white">
+							{project.nameEs} ({project.nameEn})
+						</p>
 					</a>
 				</div>
 			{/each}

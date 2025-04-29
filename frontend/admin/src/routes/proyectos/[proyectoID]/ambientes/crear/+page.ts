@@ -11,7 +11,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
         query project($id: Int!) {
             project(id: $id) {
                 id
-                name
+                nameEs
             }
         }
     `;

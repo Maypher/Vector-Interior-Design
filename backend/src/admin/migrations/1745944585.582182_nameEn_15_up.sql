@@ -1,0 +1,2 @@
+ALTER TABLE project RENAME COLUMN name TO name_es;
+ALTER TABLE project ADD COLUMN name_en VARCHAR(255) NOT NULL DEFAULT '';

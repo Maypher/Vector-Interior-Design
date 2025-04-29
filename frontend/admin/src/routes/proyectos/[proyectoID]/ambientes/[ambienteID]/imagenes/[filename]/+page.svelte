@@ -100,8 +100,8 @@
 
 		success(
 			isThumbnail
-				? `Imagen colocada como imagen principal de "${projectData.name}"`
-				: `Imagen removida como imagen principal de ${projectData.name}`
+				? `Imagen colocada como imagen principal de "${projectData.nameEs}"`
+				: `Imagen removida como imagen principal de ${projectData.nameEs}`
 		);
 	}
 
@@ -135,10 +135,10 @@
 	>
 		<div class="flex flex-col justify-between h-full">
 			<h1 class="text-xl text-center">
-				Imagen de <b>{imageData.space.name}</b> en
-				<a href={`/proyectos/${imageData.space.project.id}`} class="border-b-2 border-black"
-					>{imageData.space.project.name}</a
-				>
+				Imagen de <b>{imageData.space.nameEs}</b> en
+				<a href={`/proyectos/${imageData.space.project.id}`} class="border-b-2 border-black">
+					{imageData.space.project.nameEs}
+				</a>
 			</h1>
 			<img
 				src={imageData.imageUrl}

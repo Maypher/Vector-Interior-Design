@@ -71,10 +71,11 @@
 
 	async function updateProjectDesktop() {
 		const projectMutation = `
-			mutation updateProject($projectId: Int!, $name: String, $descriptionEs: String, $descriptionEn: String, $area: Int) {
-				updateProject(id: $projectId, name: $name, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
+			mutation updateProject($projectId: Int!, $nameEs: String, $nameEn: String, $descriptionEs: String, $descriptionEn: String, $area: Int) {
+				updateProject(id: $projectId, nameEs: $nameEs, nameEn: $nameEn, descriptionEs: $descriptionEs, descriptionEn: $descriptionEn, area: $area) {
 					id
-					name
+					nameEs
+					nameEn
 					descriptionEs
 					descriptionEn
 					area
@@ -131,7 +132,8 @@
 		let updatedProject = (
 			await graphql(projectMutation, {
 				projectId: updatedProjectData.id,
-				name: updatedProjectData.name,
+				nameEs: updatedProjectData.nameEs,
+				nameEn: updatedProjectData.nameEn,
 				descriptionEs: updatedProjectData.descriptionEs,
 				descriptionEn: updatedProjectData.descriptionEn,
 				area: updatedProjectData.area
@@ -181,6 +183,8 @@
 		updatedProjectData = cloneDeep(updatedProject); // Doing a deep clone because otherwise they would reference the same value
 		success('Proyecto actualizado con éxito!');
 	}
+
+	let english: boolean = $state(false);
 </script>
 
 {#snippet imageEditor(image: any)}
@@ -418,18 +422,33 @@
 						{#if !preview}
 							<div class="flex justify-between w-full font-Nexa gap-x-3">
 								<div class="flex items-center justify-start gap-2 text-vector-cream">
-									<input
-										type="text"
-										bind:value={updatedProjectData.name}
-										class="text-4xl w-64"
-										id="project-name"
-									/>
+									{#if english}
+										<input
+											type="text"
+											bind:value={updatedProjectData.nameEn}
+											class="text-4xl w-64"
+											id="project-name"
+										/>
+									{:else}
+										<input
+											type="text"
+											bind:value={updatedProjectData.nameEs}
+											class="text-4xl w-64"
+											id="project-name"
+										/>
+									{/if}
 									<label for="project-name">
 										<span
 											class="material-symbols-outlined transition-colors hover:bg-gray-700 rounded-md p-1"
 										>
 											edit
 										</span>
+									</label>
+									<input type="checkbox" id="language" hidden bind:checked={english} />
+									<label
+										for="language"
+										class="p-1 text-xl rounded-sm bg-vector-cream text-vector-black border-2 border-vector-black"
+										>{english ? 'Ingles' : 'Español'}
 									</label>
 								</div>
 								<p>
@@ -449,7 +468,7 @@
 									Área: {updatedProjectData.area} m²
 								</p>
 								<h1 class="block text-4xl">
-									{updatedProjectData.name}
+									{english ? updatedProjectData.nameEn : updatedProjectData.nameEs}
 								</h1>
 							</div>
 						{/if}
