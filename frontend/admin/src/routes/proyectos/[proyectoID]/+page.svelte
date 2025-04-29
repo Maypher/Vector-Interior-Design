@@ -70,7 +70,7 @@
 				$form.descriptionEn = updateProject.descriptionEn;
 				$form.area = updateProject.area;
 
-				success(`Proyecto "${updateProject.name}" actualizado con éxito.`);
+				success(`Proyecto "${updateProject.nameEs}" actualizado con éxito.`);
 			}
 		}
 	});
