@@ -23,7 +23,7 @@
 />
 
 <div
-	class="header-screen bg-vector-grey min-h-150 relative flex items-center justify-evenly overflow-clip"
+	class="header-screen bg-vector-grey min-h-150 font-Nexa relative flex items-center justify-evenly overflow-clip"
 >
 	<span
 		class="text-vector-cream relative bottom-[12ch] text-xl font-thin italic leading-10 md:bottom-[4ch] md:text-4xl [&_br]:hidden"
