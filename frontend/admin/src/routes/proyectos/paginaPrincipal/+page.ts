@@ -6,31 +6,11 @@ export const load = async ({ fetch }) => {
             mainPageImages {
                 id
                 filename
+                imageUrl
                 mainPage
                 mainImageConfig  {
                     id
-                    descriptionEs
-                    descriptionEn
-                    descriptionAlignment
-                    descriptionFont
-                    descriptionFontSize
-                    phoneConfig {
-                        descriptionPosition
-                        logoPosition
-                        overflow
-                        imageBorders {
-                            n
-                            s
-                            e
-                            w
-                        }
-                        logoBorders {
-                            n
-                            s
-                            e
-                            w
-                        }
-                    }
+                    index
                 }
                 space {
                     id
