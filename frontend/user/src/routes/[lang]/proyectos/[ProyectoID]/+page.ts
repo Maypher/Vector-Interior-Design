@@ -1,21 +1,20 @@
 import graphql from '$lib/utilities/api.js'
 import { error } from '@sveltejs/kit';
 
-export const load = async ({ params, fetch, parent }) => {
-    const { selectedLanguage } = await parent();
-    const english = selectedLanguage === 'en';
+export const load = async ({ params, fetch }) => {
+    const spanish = params.lang === 'es';
 
     const query = `
         query getProject($id: Int!) {
             project(id: $id) {
                 id
-                name: ${english ? 'nameEn' : 'nameEs'}
-                description: ${english ? 'descriptionEn' : 'descriptionEs'}
+                name: ${spanish ? 'nameEs' : 'nameEn'}
+                description: ${spanish ? 'descriptionEs' : 'descriptionEn'}
                 area
                 thumbnail {
                     filename
                     imageUrl
-                    altText: ${english ? 'altTextEs' : 'altTextEs'}
+                    altText: ${spanish ? 'altTextEs' : 'altTextEn'}
                 }
                 spaces {
                     id
@@ -23,8 +22,8 @@ export const load = async ({ params, fetch, parent }) => {
                     images {
                         filename
                         imageUrl
-                        altText: ${english ? 'altTextEs' : 'altTextEn'}
-                        description: ${english ? 'descriptionEn' : 'descriptionEs'}
+                        altText: ${spanish ? 'altTextEs' : 'altTextEn'}
+                        description: ${spanish ? 'descriptionEs' : 'descriptionEn'}
                         descriptionFont
                         bgColor
                         phoneConfig {
@@ -76,12 +75,12 @@ export const load = async ({ params, fetch, parent }) => {
 
     const projectId = Number(params.ProyectoID);
 
-    if (!Number.isInteger(projectId)) error(404, english ? 'Project not found' : "Proyecto inexistente");
+    if (!Number.isInteger(projectId)) error(404, spanish ? "Proyecto inexistente" : 'Project not found');
 
     const data = await graphql(query, { id: projectId }, fetch);
 
     const projectData = data?.project;
-    if (!projectData) error(404, english ? 'Project not found' : "Proyecto inexistente");
+    if (!projectData) error(404, spanish ? "Proyecto inexistente" : 'Project not found');
 
     const currentProjectIndex: number = data.projects.findIndex((project: { id: number }) => project.id === projectData.id);
 

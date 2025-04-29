@@ -1,18 +1,17 @@
 import graphql from "$lib/utilities/api";
 import { error } from "@sveltejs/kit";
 
-export const load = async ({ fetch, parent }) => {
-    const { selectedLanguage } = await parent();
-    const english = selectedLanguage === 'en';
+export const load = async ({ fetch, params }) => {
+    const spanish = params.lang === 'es';
 
     const query = `
         query {
             sculptures {
                 filename
                 imageUrl
-                altText: ${english ? 'altTextEn' : 'altTextEs'}
+                altText: ${spanish ? 'altTextEs' : 'altTextEn'}
                 sculptureData {
-                    description: ${english ? 'descriptionEn' : 'descriptionEs'}
+                    description: ${spanish ? 'descriptionEs' : 'descriptionEn'}
                     bgColor
                 }
                 desktopConfig {

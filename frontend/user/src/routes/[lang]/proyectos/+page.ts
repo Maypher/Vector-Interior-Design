@@ -1,19 +1,18 @@
 import graphql from '$lib/utilities/api.js'
 import { error } from '@sveltejs/kit';
 
-export const load = async ({ fetch, parent }) => {
-    const { selectedLanguage } = await parent();
-    const english = selectedLanguage == 'en';
+export const load = async ({ fetch, params }) => {
+    const spanish = params.lang == 'es';
 
     const query = `
         query projects {
             projects {
                 id
-                name: ${english ? 'nameEn' : 'nameEs'}
+                name: ${spanish ? 'nameEs' : 'nameEn'}
                 thumbnail {
                     filename
                     imageUrl
-                    altText: ${english ? 'altTextEn' : 'altTextEs'}
+                    altText: ${spanish ? 'altTextEs' : 'altTextEn'}
                     altTextEn
                 }
             }
