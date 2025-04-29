@@ -3,10 +3,10 @@ spectaql:
   targetDir: "docs/"
 
 introspection:
-  url: https://192.168.0.110:8080/graphql
+  url: http://192.168.0.109:5173/api/graphql
 
 info:
-  description: |    
+  description: |
     Here are all the endpoints available to the admin backend of the **Vector: Interior Design website**.
     Queries are available to both public and private backends. The only difference being that the admin backend has
     access to private data and mutations while the public backend has read only access.
