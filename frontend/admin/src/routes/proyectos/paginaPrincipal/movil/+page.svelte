@@ -379,7 +379,7 @@ Cada proyecto es una oportunidad para crear ambientes con identidad y armonía e
 
 			{#each updatedMainPageImages.slice(-1) as image (image.filename)}
 				<div
-					class="mt-20 flex w-full flex-col gap-y-10 overflow-hidden"
+					class="mt-20 flex w-full flex-col gap-y-10 overflow-hidden relative transition-colors"
 					id="nav"
 					style={`background-color: ${image.mainImageConfig.bgColor};`}
 				>
@@ -389,6 +389,11 @@ Cada proyecto es una oportunidad para crear ambientes con identidad y armonía e
 						class="max-h-full max-w-full object-contain"
 						style={`height: calc(${image.mainImageConfig.imageSize} / 100 * 100%);`}
 					/>
+					{#if !preview}
+						<div class="absolute left-0 top-0 max-w-1/2 bg-vector-cream/40">
+							<BgColor bind:color={image.mainImageConfig.bgColor} imageId={image.filename} />
+						</div>
+					{/if}
 					<ul class="text-vector-cream relative flex items-center justify-center gap-5 p-5 text-xl">
 						<li class="hover-link font-Nexa relative top-0 z-10 h-fit w-fit">
 							<a href={`/proyectos/esculturas/`} class="text-vector-cream"> Esculturas </a>
