@@ -69,7 +69,7 @@ export async function GET({ fetch }) {
                         return ['descriptionEn', 'descriptionEs'].map((_, i) => {
                             return `
                                 <image:image>
-                                    <image:loc>${image.imageUrl}</image:loc>
+                                    <image:loc>https:${image.imageUrl}</image:loc>
                                     ${(i === 0 && image.descriptionEn) || (i === 1 && image.descriptionEs) ?
                                     `<image:caption>${i === 0 ? image.descriptionEn : image.descriptionEs}</image:caption>`
                                     : ''}
