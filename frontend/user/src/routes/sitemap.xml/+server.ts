@@ -11,7 +11,7 @@ interface Projects {
     }[]
 }
 
-export async function GET() {
+export async function GET({ fetch }) {
     const query = `
         query projects {
             projects {
@@ -27,7 +27,7 @@ export async function GET() {
         }
     `;
 
-    const projects: Projects[] = (await graphql(query, {})).projects;
+    const projects: Projects[] = (await graphql(query, {}, fetch)).projects;
     const baseURL = 'https://vectorinterior.design/';
     const langs = ['en', 'es']
     return new Response(
