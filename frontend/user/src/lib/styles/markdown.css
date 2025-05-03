@@ -8,31 +8,33 @@
   line-height: 1.8;
 }
 
-.markdownDescription>h1 {
+p.markdown-header-1 {
   font-size: 2.5em;
-  line-height: 1.1;
+  line-height: 1.1 !important;
 }
 
-.markdownDescription>h2 {
+p.markdown-header-2 {
   font-size: 1.5em;
 }
 
-.markdownDescription>h3 {
+p.markdown-header-3 {
   font-size: 1.17em;
 }
 
-.markdownDescription>h4 {
+p.markdown-header-4 {
   font-size: 1em;
 }
 
-.markdownDescription>h6 {
+p.markdown-header-5 {
   font-size: 0.67em;
 }
 
-.markdownDescription> :is(h1, h2, h3, h4, h5, h6) {
+p.markdown-header {
   letter-spacing: 0.001rem;
   word-spacing: 0.1rem;
   width: 100%;
+  margin-top: auto !important;
+  line-height: 1.5;
 }
 
 .markdownDescription>blockquote {
