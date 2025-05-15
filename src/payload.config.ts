@@ -42,6 +42,11 @@ export default buildConfig({
       url: process.env.DATABASE_URI || '',
     },
   }),
+  upload: {
+    limits: {
+      fileSize: 1e7,
+    },
+  },
   sharp,
   plugins: [
     payloadCloudPlugin(),
