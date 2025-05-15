@@ -50,6 +50,7 @@ export const Projects: CollectionConfig = {
     },
     {
       name: 'images',
+      label: 'Imágenes',
       type: 'array',
       minRows: 1,
       fields: [
@@ -232,6 +233,9 @@ export const Projects: CollectionConfig = {
       label: 'Miniatura',
       admin: {
         description: 'La imágen que aparece en la lista de selección de proyectos.',
+        components: {
+          Field: '@/components/ThumbnailSelect.tsx',
+        },
       },
       relationTo: 'media',
       filterOptions: ({ data }) => {
