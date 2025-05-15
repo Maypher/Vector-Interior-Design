@@ -15,6 +15,7 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
   },
   "dependencies": {
+    "@payloadcms/db-sqlite": "^3.33.0",
     "@payloadcms/next": "^3.33.0",
     "@payloadcms/payload-cloud": "^3.33.0",
     "@payloadcms/richtext-lexical": "^3.33.0",
@@ -24,17 +25,19 @@
     "payload": "^3.33.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "sharp": "0.32.6",
-    "@payloadcms/db-sqlite": "^3.33.0"
+    "sharp": "0.32.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
+    "@tailwindcss/postcss": "^4.1.6",
     "@types/node": "^22.5.4",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.2",
     "eslint": "^9.16.0",
     "eslint-config-next": "15.3.0",
+    "postcss": "^8.5.3",
     "prettier": "^3.4.2",
+    "tailwindcss": "^4.1.6",
     "typescript": "5.7.3"
   },
   "engines": {
