@@ -47,15 +47,13 @@ const ThumbnailSelect: RelationshipFieldClientComponent = ({ path, field }) => {
       />
       {!isLoading && imagesCount > 0 ? (
         <div>
-          <div className="grid grid-cols-4 gap-10 items-center justify-center">
+          <div className="grid">
             {imagesToShow?.slice(page - 1, page + imagesPerPage - 1).map((image: Media) => (
               <button
                 key={image.id}
                 type="button"
                 onClick={() => setValue(image.id)}
-                className={`${
-                  parseInt(value) == image.id && 'border-4'
-                } border-vector-orange transition-all hover:border-4 hover:cursor-pointer h-fit`}
+                className={`${parseInt(value) == image.id && 'selected'}`}
               >
                 <Image
                   src={image.url!}
@@ -70,9 +68,16 @@ const ThumbnailSelect: RelationshipFieldClientComponent = ({ path, field }) => {
             ))}
           </div>
 
-          <div className="flex text-xl mt-2 gap-x-5">
+          <div
+            style={{
+              display: 'flex',
+              fontSize: '1.25rem',
+              marginTop: '0.5rem',
+              columnGap: '1.25rem',
+            }}
+          >
             <button
-              className={page === 1 ? 'hidden' : ''}
+              style={{ display: page === 1 ? 'none' : 'block' }}
               type="button"
               onClick={() => setPage(Math.max(1, Math.min(page - 1, imagesCount)))}
             >
@@ -83,7 +88,7 @@ const ThumbnailSelect: RelationshipFieldClientComponent = ({ path, field }) => {
             </p>
             <button
               type="button"
-              className={page === pages ? 'hidden' : ''}
+              style={{ display: page === pages ? 'none' : 'block' }}
               onClick={() => setPage(Math.max(1, Math.min(page + 1, imagesCount)))}
             >
               &gt;
