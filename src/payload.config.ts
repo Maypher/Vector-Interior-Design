@@ -22,6 +22,28 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    livePreview: {
+      breakpoints: [
+        {
+          label: 'Móvil',
+          name: 'mobile',
+          width: 375,
+          height: 667,
+        },
+        {
+          label: 'Tablet',
+          name: 'table',
+          width: 600,
+          height: 500,
+        },
+        {
+          label: 'Escritorio',
+          name: 'desktop',
+          width: 1920,
+          height: 1080,
+        },
+      ],
+    },
   },
   localization: {
     locales: ['en', 'es'],

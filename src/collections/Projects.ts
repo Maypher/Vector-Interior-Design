@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { Directions, TextAlignment } from '@lib/selects'
 import { Where } from 'payload'
+import { Project } from '@/payload-types'
 
 export const Projects: CollectionConfig = {
   slug: 'project',
@@ -8,9 +9,34 @@ export const Projects: CollectionConfig = {
     singular: 'Proyecto',
     plural: 'Proyectos',
   },
+  access: {
+    read: ({ req }) => {
+      // Only allowed authenticated users to access drafts
+      if (req.user) return true
+
+      return {
+        or: [
+          {
+            _status: {
+              equals: 'published',
+            },
+          },
+          {
+            _status: {
+              exists: false,
+            },
+          },
+        ],
+      }
+    },
+  },
   admin: {
     description: 'Sección principal de la página. Contiene todas las imagenes de una obra.',
     useAsTitle: 'name',
+    livePreview: {
+      url: ({ data, locale }) =>
+        `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/${locale}/projects/${data.id}`,
+    },
   },
   orderable: true,
   fields: [
@@ -238,8 +264,8 @@ export const Projects: CollectionConfig = {
         },
       },
       relationTo: 'media',
-      filterOptions: ({ data }) => {
-        const projectImages = data?.images?.map((image: any) => image?.image)?.filter(Boolean) || []
+      filterOptions: ({ data }: { data: Project }) => {
+        const projectImages = data?.images?.map((image) => image?.image)?.filter(Boolean) || []
 
         const query: Where = {
           id: {
@@ -252,6 +278,11 @@ export const Projects: CollectionConfig = {
     },
   ],
   versions: {
-    drafts: true,
+    drafts: {
+      autosave: {
+        interval: 1500,
+        showSaveDraftButton: true,
+      },
+    },
   },
 }
