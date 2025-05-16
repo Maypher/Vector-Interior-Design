@@ -6,6 +6,7 @@ import { FieldLabel, FieldDescription } from '@payloadcms/ui'
 import { useFormFields, useField, FieldType, usePayloadAPI } from '@payloadcms/ui'
 import Image from 'next/image'
 import { useState } from 'react'
+import { Media } from '@/payload-types'
 
 const ThumbnailSelect: RelationshipFieldClientComponent = ({ path, field }) => {
   const { value, setValue }: FieldType<string> = useField()
@@ -47,37 +48,26 @@ const ThumbnailSelect: RelationshipFieldClientComponent = ({ path, field }) => {
       {!isLoading && imagesCount > 0 ? (
         <div>
           <div className="grid grid-cols-4 gap-10 items-center justify-center">
-            {imagesToShow
-              ?.slice(page - 1, page + imagesPerPage - 1)
-              .map(
-                (image: {
-                  url: string
-                  alt: string
-                  id: number
-                  width: number
-                  height: number
-                  sizes: any
-                }) => (
-                  <button
-                    key={image.id}
-                    type="button"
-                    onClick={() => setValue(image.id)}
-                    className={`${
-                      parseInt(value) == image.id && 'border-4'
-                    } border-vector-orange transition-all hover:border-4 hover:cursor-pointer h-fit`}
-                  >
-                    <Image
-                      src={image.url}
-                      alt={image.alt}
-                      width={image.width}
-                      height={image.height}
-                      key={image.id}
-                      placeholder="blur"
-                      blurDataURL={image.sizes.loading.url}
-                    />
-                  </button>
-                ),
-              )}
+            {imagesToShow?.slice(page - 1, page + imagesPerPage - 1).map((image: Media) => (
+              <button
+                key={image.id}
+                type="button"
+                onClick={() => setValue(image.id)}
+                className={`${
+                  parseInt(value) == image.id && 'border-4'
+                } border-vector-orange transition-all hover:border-4 hover:cursor-pointer h-fit`}
+              >
+                <Image
+                  src={image.url!}
+                  alt={image.alt}
+                  width={image.width!}
+                  height={image.height!}
+                  key={image.id}
+                  placeholder="blur"
+                  blurDataURL={image.sizes!.loading!.url!}
+                />
+              </button>
+            ))}
           </div>
 
           <div className="flex text-xl mt-2 gap-x-5">
