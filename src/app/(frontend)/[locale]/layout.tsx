@@ -21,11 +21,13 @@ export default async function RootLayout(props: {
 
   return (
     <html>
-      <body>
+      <body style={{ scrollbarGutter: 'stable', overflowY: 'scroll' }}>
         <NextIntlClientProvider>
           <header className="h-22 bg-vector-cream px-10 py-5 flex items-center justify-between">
             <Image src={logo} alt="Vector: Interior Design" className="h-full w-fit" />
-            <LanguageSelect />
+            <div className="hidden xl:block">
+              <LanguageSelect />
+            </div>
           </header>
           <main>{children}</main>
         </NextIntlClientProvider>

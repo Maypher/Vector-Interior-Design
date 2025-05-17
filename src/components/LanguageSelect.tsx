@@ -1,11 +1,11 @@
 'use client'
 
-import clsx from 'clsx'
 import { useParams } from 'next/navigation'
 import { Locale, useTranslations } from 'next-intl'
 import { ChangeEvent, useTransition } from 'react'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { routing } from '@/i18n/routing'
+import { nexaFont } from '@styles/fonts'
 
 export default function LocaleSwitcherSelect() {
   const router = useRouter()
@@ -29,8 +29,8 @@ export default function LocaleSwitcherSelect() {
 
   return (
     <select
-      className="inline-flex appearance-none bg-transparent py-3 pl-2 pr-6"
-      defaultValue="en"
+      className={`${nexaFont.className} xl:text-vector-black pr-1`}
+      defaultValue={params.locale}
       disabled={isPending}
       onChange={onSelectChange}
     >

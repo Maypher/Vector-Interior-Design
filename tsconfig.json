@@ -25,6 +25,7 @@
       "@lib/*": ["./src/lib/*"],
       "@components/*": ["./src/components/*"],
       "@public/*": ["./public/*"],
+      "@styles/*": ["./src/lib/styles/*"],
       "@payload-config": ["./src/payload.config.ts"]
     },
     "target": "ES2022"
