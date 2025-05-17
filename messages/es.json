@@ -1,0 +1,5 @@
+{
+  "LocaleSwitcher": {
+    "locale": "{locale, select, en {Ingles} es {Español} other {Desconocido}}"
+  }
+}

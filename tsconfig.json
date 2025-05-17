@@ -24,6 +24,7 @@
       "@globals/*": ["./src/globals/*"],
       "@lib/*": ["./src/lib/*"],
       "@components/*": ["./src/components/*"],
+      "@public/*": ["./public/*"],
       "@payload-config": ["./src/payload.config.ts"]
     },
     "target": "ES2022"
