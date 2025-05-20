@@ -30,3 +30,11 @@
 * {
     box-sizing: border-box;
 }
+
+.header-screen {
+    height: calc(100svh - 5.5rem);
+}
+
+h1 {
+    font-size: var(--text-4xl);
+}

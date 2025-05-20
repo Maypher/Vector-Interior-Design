@@ -86,8 +86,12 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    mainPageImages: MainPageImage;
+  };
+  globalsSelect: {
+    mainPageImages: MainPageImagesSelect<false> | MainPageImagesSelect<true>;
+  };
   locale: 'en' | 'es';
   user: User & {
     collection: 'users';
@@ -264,24 +268,16 @@ export interface Project {
            * La posición de la descripción relativa a la imagen.
            */
           descriptionPosition?: ('n' | 's' | 'e' | 'w') | null;
-          /**
-           * Alineación de la descripción.
-           */
-          descriptionAlignment?: ('left' | 'justify' | 'center' | 'right') | null;
         };
         /**
          * La configuración que determina como la imagen de un proyecto se ve en dispositvos móbiles.
          */
-        phoneConf: {
+        phoneConf?: {
           imageAlignment?: ('left' | 'right' | 'center' | 'overflow') | null;
           /**
            * La posición de la descripción relativa a la imagen.
            */
           descriptionPosition?: ('n' | 's' | 'e' | 'w') | null;
-          /**
-           * Alineación del texto de la descripción.
-           */
-          descriptionAlignment: 'left' | 'justify' | 'center' | 'right';
         };
         id?: string | null;
       }[]
@@ -453,14 +449,12 @@ export interface ProjectSelect<T extends boolean = true> {
               groupEnd?: T;
               imageSize?: T;
               descriptionPosition?: T;
-              descriptionAlignment?: T;
             };
         phoneConf?:
           | T
           | {
               imageAlignment?: T;
               descriptionPosition?: T;
-              descriptionAlignment?: T;
             };
         id?: T;
       };
@@ -500,6 +494,177 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Configuración de todas las imágenes que aparecerán en la página principal.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mainPageImages".
+ */
+export interface MainPageImage {
+  id: number;
+  /**
+   * Imágenes que apareceran en la página principal. Pueden ser imágenes, sobre nosotros o navegación. Sobre nosotros y navegación son obligatorios y debe haber uno solo de cada uno.
+   */
+  images?:
+    | (
+        | {
+            /**
+             * La imágen que mostrar en la página principal.
+             */
+            image: number | Media;
+            /**
+             * La descripción de la imágen.
+             */
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: string;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            /**
+             * El color del fondo de la imagen.
+             */
+            bgColor: string;
+            /**
+             * Configuración de la imágen en dispositivos móviles.
+             */
+            phoneConfig: {
+              /**
+               * Posición de la descripción relativa a la imagen.
+               */
+              descPos?: ('n' | 's' | 'e' | 'w') | null;
+              /**
+               * Sangrar la imagen a los bordes de la pantalla.
+               */
+              overflow?: boolean | null;
+            };
+            /**
+             * La configuración de como se verá una imágen en escritorios.
+             */
+            deskConfig: {
+              /**
+               * La posición de la imágen en su contenedor.
+               */
+              imgPos: 'left' | 'center' | 'right';
+              /**
+               * El tamaño de la imagen relativo a su contenedor.
+               */
+              imgSize: number;
+              /**
+               * La posición de la descripción relativa a la imagen.
+               */
+              descPos?: ('n' | 's' | 'e' | 'w') | null;
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'image';
+          }
+        | {
+            /**
+             * El mensaje principal de "Sobre nosotros". La primera línea será más clara que el resto.
+             */
+            description: {
+              root: {
+                type: string;
+                children: {
+                  type: string;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            /**
+             * El color del fondo de la imagen.
+             */
+            bgColor: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'aboutUs';
+          }
+        | {
+            image?: (number | null) | Media;
+            imgSize: number;
+            /**
+             * El color del fondo de la imagen.
+             */
+            bgColor: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'navigation';
+          }
+      )[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mainPageImages_select".
+ */
+export interface MainPageImagesSelect<T extends boolean = true> {
+  images?:
+    | T
+    | {
+        image?:
+          | T
+          | {
+              image?: T;
+              description?: T;
+              bgColor?: T;
+              phoneConfig?:
+                | T
+                | {
+                    descPos?: T;
+                    overflow?: T;
+                  };
+              deskConfig?:
+                | T
+                | {
+                    imgPos?: T;
+                    imgSize?: T;
+                    descPos?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        aboutUs?:
+          | T
+          | {
+              description?: T;
+              bgColor?: T;
+              id?: T;
+              blockName?: T;
+            };
+        navigation?:
+          | T
+          | {
+              image?: T;
+              imgSize?: T;
+              bgColor?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

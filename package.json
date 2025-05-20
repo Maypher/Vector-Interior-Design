@@ -19,7 +19,7 @@
     "@payloadcms/live-preview-react": "^3.38.0",
     "@payloadcms/next": "^3.33.0",
     "@payloadcms/payload-cloud": "^3.33.0",
-    "@payloadcms/richtext-lexical": "^3.33.0",
+    "@payloadcms/richtext-lexical": "^3.38.0",
     "cross-env": "^7.0.3",
     "graphql": "^16.8.1",
     "next": "15.3.0",

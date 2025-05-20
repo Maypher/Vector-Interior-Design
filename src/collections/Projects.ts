@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { Directions, TextAlignment } from '@lib/selects'
+import { Directions } from '@lib/selects'
 import { Where } from 'payload'
 import { Project } from '@/payload-types'
 
@@ -174,17 +174,6 @@ export const Projects: CollectionConfig = {
                   },
                   options: Directions,
                 },
-                {
-                  name: 'descriptionAlignment',
-                  type: 'select',
-                  label: 'Alineación de descripción',
-                  admin: {
-                    description: 'Alineación de la descripción.',
-                    isClearable: true,
-                  },
-                  options: TextAlignment,
-                  defaultValue: 'left',
-                },
               ],
             },
           ],
@@ -234,18 +223,6 @@ export const Projects: CollectionConfig = {
                     isClearable: true,
                   },
                   options: Directions,
-                },
-                {
-                  type: 'select',
-                  name: 'descriptionAlignment',
-                  label: 'Alineación descripción',
-                  admin: {
-                    description: 'Alineación del texto de la descripción.',
-                    isClearable: false,
-                  },
-                  options: TextAlignment,
-                  defaultValue: 'left',
-                  required: true,
                 },
               ],
             },

@@ -1,5 +1,11 @@
 {
   "LocaleSwitcher": {
     "locale": "{locale, select, en {English} es {Spanish} other {Unknown}}"
+  },
+  "NavBar": {
+    "aboutUs": "About Us",
+    "projects": "Projects",
+    "sculptures": "Sculptures",
+    "contact": "Contact"
   }
 }
