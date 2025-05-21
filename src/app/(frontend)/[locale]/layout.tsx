@@ -2,7 +2,7 @@ import '../globals.css'
 import Image from 'next/image'
 import logo from '@public/images/logo.svg'
 
-import LanguageSelect from '@components/LanguageSelect'
+import LanguageSelect from '@/components/global/LanguageSelect'
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { routing } from '@/i18n/routing'
 import { notFound } from 'next/navigation'

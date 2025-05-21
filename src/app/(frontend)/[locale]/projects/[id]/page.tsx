@@ -1,7 +1,7 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Project, Media } from '@/payload-types'
-import RefreshRouterOnSave from '@components/RefreshRouteOnSave'
+import RefreshRouterOnSave from '@/components/admin/RefreshRouteOnSave'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 
