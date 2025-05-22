@@ -17,7 +17,7 @@ export const colorField: Field = {
   admin: {
     description: 'El color del fondo de la imagen.',
     components: {
-      Field: 'src/components/ColorSelect.tsx',
+      Field: '@/components/admin/ColorSelect.tsx',
     },
   },
 }

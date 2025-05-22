@@ -237,7 +237,7 @@ export const Projects: CollectionConfig = {
       admin: {
         description: 'La imágen que aparece en la lista de selección de proyectos.',
         components: {
-          Field: '@/components/ThumbnailSelect.tsx',
+          Field: '@/components/admin/ThumbnailSelect.tsx',
         },
       },
       relationTo: 'media',

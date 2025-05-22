@@ -14,7 +14,6 @@ export default function NavLinks() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const pencil = document.getElementById('pencil')
-            console.log(pencil)
             if (pencil) {
               pencil.classList.add('pencil-animate')
               pencilObserver.unobserve(entry.target)

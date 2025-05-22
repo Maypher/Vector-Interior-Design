@@ -4,82 +4,28 @@ import { headers } from 'next/headers'
 import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import { MainPageImage, Media } from '@/payload-types'
 import { RichText } from '@payloadcms/richtext-lexical/react'
-import headersConverter from '@/lib/utils/converter'
 import { getTranslations } from 'next-intl/server'
 
 import ScrollToTopBtn from '@/components/mainPage/ScrollToTopBtn'
 import Footer from '@/components/mainPage/Footer'
 import NavLine from '@/components/mainPage/NavLine'
+import SkeletonImage from '@/components/mainPage/skeletonImageMainPage'
 
 import React from 'react'
-import Image from 'next/image'
 import { Link } from '@/i18n/navigation'
 
 import '@styles/descriptions.scss'
 import '@styles/nav.scss'
+import ImageSkeleton from '@/components/global/ImageSkeleton'
 
 type MainPageImageType = NonNullable<MainPageImage['images']>[number]
 
-function imageBlock(image: Extract<MainPageImageType, { blockType: 'image' }>): React.ReactElement {
-  const imageFile = image.image as Media
-
-  // Flex direction for when description in left or right of image
-  const descriptionPosition = image.deskConfig.descPos
-  const descFlexDirection = descriptionPosition === 'w' ? 'row-reverse' : 'row'
-
-  // If the description is top or bottom then absolute position will be used
-  // because using flex decenters the image
-  const descTopOrBottom = descriptionPosition === 'n' || descriptionPosition === 's'
-
-  const imgPos = image.deskConfig.imgPos
-  const justifyPos = imgPos === 'left' ? 'start' : imgPos == 'center' ? 'center' : 'end'
-  if (imageFile && imageFile.url) {
-    return (
-      <div className="h-svh w-full flex items-center">
-        <figure
-          key={image.id}
-          style={{
-            backgroundColor: image.bgColor,
-            flexDirection: descFlexDirection,
-            justifyContent: justifyPos,
-            paddingLeft: justifyPos === 'start' ? '5%' : '',
-            paddingRight: justifyPos === 'end' ? '5%' : '',
-            height: `${image.deskConfig.imgSize}%`,
-          }}
-          className={`grow w-fit flex items-center gap-x-20 ${descTopOrBottom ? 'relative' : ''}`}
-        >
-          <Image
-            src={imageFile.url}
-            alt={imageFile.alt}
-            width={imageFile.width!}
-            height={imageFile.height!}
-            placeholder="blur"
-            blurDataURL={imageFile.sizes!.loading!.url!}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="h-full w-auto"
-          />
-          {image.description && image.deskConfig.descPos && (
-            <figcaption
-              className={`${descTopOrBottom ? 'absolute max-w-4/5' : 'max-w-2/5'} ${descriptionPosition === 's' ? 'top-21/20' : descriptionPosition === 'n' ? 'bottom-21/20' : ''}`}
-            >
-              <RichText
-                data={image.description}
-                className="img-description"
-                converters={headersConverter}
-              />
-            </figcaption>
-          )}
-        </figure>
-      </div>
-    )
-  }
-
-  return <p>Sección no configurada</p>
-}
-
 function aboutUsBlock(message: Extract<MainPageImageType, { blockType: 'aboutUs' }>) {
   return (
-    <section className="relative h-svh w-full px-20 flex items-center justify-center" id="aboutUs">
+    <section
+      className="relative lg:h-svh w-full px-20 py-10 flex flex-col lg:flex-row items-center justify-center"
+      id="aboutUs"
+    >
       <RichText data={message.description} className="about-us"></RichText>
       <ScrollToTopBtn />
     </section>
@@ -95,16 +41,16 @@ function navBlock(
 
   if (imageFile && imageFile.url) {
     return (
-      <div className="h-[70svh] w-full flex items-center justify-evenly overflow-hidden" id="nav">
-        <Image
-          src={imageFile.url}
-          alt={imageFile.alt}
-          width={imageFile.width!}
-          height={imageFile.height!}
-          placeholder="blur"
-          blurDataURL={imageFile.sizes!.loading!.url!}
-          style={{ height: `${image.imgSize}%`, width: 'auto' }}
-        />
+      <div
+        className="xl:h-[70svh] w-full flex flex-col xl:flex-row mt-20 lg:mt-0 gap-y-10 items-center justify-evenly overflow-hidden"
+        id="nav"
+      >
+        <div
+          style={{ height: `${image.imgSize}%` }}
+          className="relative max-xl:h-fit! max-xl:w-full [&_img]:w-full!"
+        >
+          <ImageSkeleton image={image.image as Media} />
+        </div>
 
         <ul className="flex items-center justify-center gap-5 p-5 text-xl lg:h-4/5">
           <li className="relative top-0 z-10 size-fit hover-link">
@@ -158,9 +104,9 @@ export default async function MainPage({ params }: Props) {
             key={image.id}
             style={{ backgroundColor: image.bgColor }}
           >
-            {image.blockType === 'image' && imageBlock(image)}
+            {image.blockType === 'image' && <SkeletonImage image={image} />}
             <ul
-              className="w-fit h-4/5 my-auto text-[0.7rem] text-right pr-10 [&_li]:mb-2.5"
+              className="w-fit h-4/5 my-auto text-[0.7rem] text-right pr-10 [&_li]:w-fit hidden xl:flex flex-col gap-y-2 items-end"
               style={{ letterSpacing: '0.05rem' }}
             >
               <li>
@@ -190,7 +136,7 @@ export default async function MainPage({ params }: Props) {
       {mainPageImages.images?.slice(1).map((image) => {
         return (
           <div style={{ backgroundColor: image.bgColor }} key={image.id}>
-            {image.blockType === 'image' && imageBlock(image)}
+            {image.blockType === 'image' && <SkeletonImage image={image} />}
             {image.blockType === 'aboutUs' && aboutUsBlock(image)}
             {image.blockType === 'navigation' && navBlock(image, t('projects'), t('sculptures'))}
           </div>
