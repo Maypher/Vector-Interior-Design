@@ -22,6 +22,9 @@ export const Media: CollectionConfig = {
       label: 'Imágen',
     },
   ],
+  admin: {
+    folders: true,
+  },
   upload: {
     mimeTypes: ['image/*'],
     imageSizes: [

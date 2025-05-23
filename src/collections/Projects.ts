@@ -1,7 +1,5 @@
 import type { CollectionConfig, Field } from 'payload'
 import { Directions } from '@lib/selects'
-import { Where } from 'payload'
-import { Project } from '@/payload-types'
 
 // Extracting it from imageConfig since there's an extra field for groups so I add it manually when setting the schema
 const desktopConfig: Field = {
@@ -255,25 +253,6 @@ export const Projects: CollectionConfig = {
         description: 'La imágen que aparece en la lista de selección de proyectos.',
       },
       relationTo: 'media',
-      filterOptions: ({ data }: { data: Project }) => {
-        const projectImages =
-          data?.images
-            ?.map((image) =>
-              image.blockType === 'image'
-                ? image?.image
-                : image?.images?.map((imageInGroup) => imageInGroup.image),
-            )
-            ?.filter(Boolean)
-            .flat() || []
-
-        const query: Where = {
-          id: {
-            in: projectImages,
-          },
-        }
-
-        return query
-      },
     },
   ],
   versions: {
