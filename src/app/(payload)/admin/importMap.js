@@ -22,7 +22,6 @@ import { StrikethroughFeatureClient as StrikethroughFeatureClient_e70f5e05f09f93
 import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
-import { default as default_c5430edccbd3c5a1a4937dd0dbfdc32e } from '@/components/admin/ThumbnailSelect.tsx'
 import { default as default_302746c5ad8f45afb2a883cbeea51ae9 } from '@/components/admin/ColorSelect.tsx'
 
 export const importMap = {
@@ -50,6 +49,5 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#UnderlineFeatureClient": UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
-  "@/components/admin/ThumbnailSelect.tsx#default": default_c5430edccbd3c5a1a4937dd0dbfdc32e,
   "@/components/admin/ColorSelect.tsx#default": default_302746c5ad8f45afb2a883cbeea51ae9
 }

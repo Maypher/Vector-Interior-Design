@@ -1,7 +1,117 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, Field } from 'payload'
 import { Directions } from '@lib/selects'
 import { Where } from 'payload'
 import { Project } from '@/payload-types'
+
+// Extracting it from imageConfig since there's an extra field for groups so I add it manually when setting the schema
+const desktopConfig: Field = {
+  name: 'deskConf',
+  type: 'group',
+  label: 'Configuración Escritorio',
+  admin: {
+    description:
+      'La configuración que determina como se ve la imágen de un proyecto en escritorio.',
+  },
+  fields: [
+    {
+      name: 'imageSize',
+      type: 'number',
+      label: 'Tamaño de imagen',
+      admin: {
+        description: 'El tamaño de la imagen relativo al bloque que la contiene',
+        step: 10,
+        placeholder: '100%',
+      },
+      required: true,
+      defaultValue: 100,
+      min: 0,
+      max: 100,
+    },
+    {
+      type: 'select',
+      name: 'descPos',
+      label: 'Posición de Descripción',
+      admin: {
+        description: 'La posición de la descripción relativa a la imagen.',
+        isClearable: true,
+      },
+      options: Directions,
+    },
+  ],
+}
+
+const imageConfig: Field[] = [
+  {
+    name: 'image',
+    label: 'Imágen',
+    type: 'upload',
+    required: true,
+    relationTo: 'media',
+    admin: {
+      description: 'Las imágenes de este proyecto.',
+    },
+  },
+  {
+    name: 'decription',
+    type: 'richText',
+    label: 'Descripción',
+    admin: {
+      description: 'La descripción de la imagen',
+    },
+    required: false,
+    localized: true,
+  },
+  {
+    name: 'phoneConf',
+    type: 'group',
+    label: 'Configuración Teléfono',
+    admin: {
+      description:
+        'La configuración que determina como la imagen de un proyecto se ve en dispositvos móbiles.',
+    },
+    fields: [
+      {
+        name: 'imgAlign',
+        label: 'Alineación de Imagen',
+        type: 'select',
+        options: [
+          {
+            label: 'Izquierda',
+            value: 'left',
+          },
+          {
+            label: 'Derecha',
+            value: 'right',
+          },
+          {
+            label: 'Centrar',
+            value: 'center',
+          },
+          {
+            label: 'Sangrar',
+            value: 'overflow',
+          },
+        ],
+        defaultValue: 'center',
+      },
+      {
+        type: 'row',
+        fields: [
+          {
+            type: 'select',
+            name: 'descPos',
+            label: 'Posición de Descripción',
+            admin: {
+              description: 'La posición de la descripción relativa a la imagen.',
+              isClearable: true,
+            },
+            options: Directions,
+          },
+        ],
+      },
+    ],
+  },
+]
 
 export const Projects: CollectionConfig = {
   slug: 'project',
@@ -77,153 +187,60 @@ export const Projects: CollectionConfig = {
     {
       name: 'images',
       label: 'Imágenes',
-      type: 'array',
+      type: 'blocks',
       minRows: 1,
-      fields: [
+      blocks: [
         {
-          name: 'image',
-          label: 'Imágen',
-          type: 'upload',
-          required: true,
-          relationTo: 'media',
-          admin: {
-            description: 'Las imágenes de este proyecto.',
+          slug: 'image',
+          labels: {
+            singular: 'Imágen',
+            plural: 'Imágenes',
           },
+          fields: [...imageConfig, desktopConfig],
         },
         {
-          name: 'decription',
-          type: 'richText',
-          label: 'Descripción',
-          admin: {
-            description: 'La descripción de la imagen',
-          },
-          required: false,
-          localized: true,
-        },
-        {
-          name: 'deskConf',
-          type: 'group',
-          label: 'Configuración Escritorio',
-          admin: {
-            description:
-              'La configuración que determina como se ve la imágen de un proyecto en escritorio.',
+          slug: 'imageGroup',
+          labels: {
+            singular: 'Grupo de imágenes',
+            plural: 'Grupos de imágenes',
           },
           fields: [
             {
-              type: 'row',
+              type: 'array',
+              name: 'images',
+              label: 'Imágenes',
               fields: [
+                ...imageConfig,
                 {
-                  type: 'select',
-                  name: 'groupAlignment',
-                  label: 'Alineación de grupo',
-                  admin: {
-                    description:
-                      'Establece esta imagen como parte de un grupo y donde debería ser alineado en el contenedor del grupo.',
-                    width: '50%',
-                  },
-                  options: [
+                  ...desktopConfig,
+                  fields: [
+                    ...desktopConfig.fields,
                     {
-                      label: 'Arriba',
-                      value: 'top',
-                    },
-                    {
-                      label: 'Medio',
-                      value: 'middle',
-                    },
-                    {
-                      label: 'Abajo',
-                      value: 'bottom',
+                      type: 'select',
+                      name: 'groupAlign',
+                      label: 'Alineación de grupo',
+                      admin: {
+                        description:
+                          'Establece esta imagen como parte de un grupo y donde debería ser alineado en el contenedor del grupo.',
+                        width: '50%',
+                      },
+                      options: [
+                        {
+                          label: 'Arriba',
+                          value: 'top',
+                        },
+                        {
+                          label: 'Medio',
+                          value: 'middle',
+                        },
+                        {
+                          label: 'Abajo',
+                          value: 'bottom',
+                        },
+                      ],
                     },
                   ],
-                },
-                {
-                  name: 'groupEnd',
-                  type: 'checkbox',
-                  label: 'Forzar fin de grupo.',
-                  admin: {
-                    description:
-                      'Forza un grupo a finalizar. Utilizado para lograr grupos consecutivos sin que se combinen.',
-                  },
-                },
-              ],
-            },
-            {
-              name: 'imageSize',
-              type: 'number',
-              label: 'Tamaño de imagen',
-              admin: {
-                description: 'El tamaño de la imagen relativo al bloque que la contiene',
-                step: 10,
-                placeholder: '100%',
-              },
-              required: true,
-              defaultValue: 100,
-              min: 0,
-              max: 100,
-            },
-            {
-              type: 'row',
-              fields: [
-                {
-                  type: 'select',
-                  name: 'descriptionPosition',
-                  label: 'Posición de Descripción',
-                  admin: {
-                    description: 'La posición de la descripción relativa a la imagen.',
-                    isClearable: true,
-                  },
-                  options: Directions,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          name: 'phoneConf',
-          type: 'group',
-          label: 'Configuración Teléfono',
-          admin: {
-            description:
-              'La configuración que determina como la imagen de un proyecto se ve en dispositvos móbiles.',
-          },
-          fields: [
-            {
-              name: 'imageAlignment',
-              label: 'Alineación de Imagen',
-              type: 'select',
-              options: [
-                {
-                  label: 'Izquierda',
-                  value: 'left',
-                },
-                {
-                  label: 'Derecha',
-                  value: 'right',
-                },
-                {
-                  label: 'Centrar',
-                  value: 'center',
-                },
-                {
-                  label: 'Sangrar',
-                  value: 'overflow',
-                },
-              ],
-              defaultValue: 'center',
-            },
-            {
-              type: 'row',
-              fields: [
-                {
-                  type: 'select',
-                  name: 'descriptionPosition',
-                  label: 'Posición de Descripción',
-                  admin: {
-                    description: 'La posición de la descripción relativa a la imagen.',
-                    isClearable: true,
-                  },
-                  options: Directions,
-                },
+                } as Field,
               ],
             },
           ],
@@ -231,18 +248,23 @@ export const Projects: CollectionConfig = {
       ],
     },
     {
-      type: 'relationship',
+      type: 'upload',
       name: 'thumbnail',
       label: 'Miniatura',
       admin: {
         description: 'La imágen que aparece en la lista de selección de proyectos.',
-        components: {
-          Field: '@/components/admin/ThumbnailSelect.tsx',
-        },
       },
       relationTo: 'media',
       filterOptions: ({ data }: { data: Project }) => {
-        const projectImages = data?.images?.map((image) => image?.image)?.filter(Boolean) || []
+        const projectImages =
+          data?.images
+            ?.map((image) =>
+              image.blockType === 'image'
+                ? image?.image
+                : image?.images?.map((imageInGroup) => imageInGroup.image),
+            )
+            ?.filter(Boolean)
+            .flat() || []
 
         const query: Where = {
           id: {
