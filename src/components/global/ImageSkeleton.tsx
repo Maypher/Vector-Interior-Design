@@ -1,16 +1,13 @@
-'use client'
-
 import { Media } from '@/payload-types'
-import { useState } from 'react'
 import Image from 'next/image'
 import '@styles/skeleton.scss'
 
 interface Props {
   image: Media
-  onLoad?: () => void
+  className?: string
 }
 
-export default function ImageSkeleton({ image }: Props) {
+export default function ImageSkeleton({ image, className }: Props) {
   return (
     <Image
       src={image.url!}
@@ -19,7 +16,7 @@ export default function ImageSkeleton({ image }: Props) {
       height={image.height!}
       placeholder="blur"
       blurDataURL={image.sizes!.loading!.url!}
-      className="h-full w-auto object-contain"
+      className={`h-full w-auto object-contain ${className}`}
     />
   )
 }

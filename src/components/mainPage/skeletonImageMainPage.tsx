@@ -35,7 +35,7 @@ export default function SkeletonImage({ image }: Props) {
     return (
       <>
         <div
-          className="h-svh max-h-full items-center w-full relative hidden xl:flex desktop"
+          className="min-h-svh max-h-full items-center w-full relative hidden xl:flex desktop"
           style={{
             backgroundColor: image.bgColor,
             justifyContent: justifyPosDesktop,
@@ -46,10 +46,10 @@ export default function SkeletonImage({ image }: Props) {
           <figure
             key={image.id}
             style={{
-              height: `${image.deskConfig.imgSize}%`,
+              height: `${image.deskConfig.imgSize}svh`,
               flexDirection: descFlexDirectionDesktop,
             }}
-            className={`items-center gap-x-20 ${descTopOrBottomDesktop ? 'relative' : ''} flex`} // Using opacity-0 absolute because using hidden causes the image to not load
+            className={`items-center gap-x-20 ${descTopOrBottomDesktop ? 'relative' : ''} flex flex-wrap`} // Using opacity-0 absolute because using hidden causes the image to not load
           >
             <div className="h-full shrink">
               <ImageSkeleton image={image.image as Media} />

@@ -32,7 +32,14 @@
 }
 
 .header-screen {
-    height: calc(100svh - 5.5rem);
+    @media screen and (width < 64rem) {
+        height: calc(100svh - 5.5rem);
+    }
+
+    @media screen and (width >= 64rem) {
+        height: auto;
+        min-height: calc(100svh - 5.5rem);
+    }
 }
 
 h1 {

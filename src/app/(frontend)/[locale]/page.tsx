@@ -5,11 +5,11 @@ import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import { MainPageImage, Media } from '@/payload-types'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { getTranslations } from 'next-intl/server'
+import headersConverter from '@/lib/utils/converter'
 
 import ScrollToTopBtn from '@/components/mainPage/ScrollToTopBtn'
 import Footer from '@/components/mainPage/Footer'
 import NavLine from '@/components/mainPage/NavLine'
-import SkeletonImage from '@/components/mainPage/skeletonImageMainPage'
 
 import React from 'react'
 import { Link } from '@/i18n/navigation'
@@ -19,6 +19,91 @@ import '@styles/nav.scss'
 import ImageSkeleton from '@/components/global/ImageSkeleton'
 
 type MainPageImageType = NonNullable<MainPageImage['images']>[number]
+
+function imageBlock(
+  image: Extract<NonNullable<MainPageImage['images']>[number], { blockType: 'image' }>,
+) {
+  // Flex direction for when description in left or right of image
+  const descriptionPositionDesktop = image.deskConfig.descPos
+  const descFlexDirectionDesktop =
+    descriptionPositionDesktop === 'w'
+      ? 'row-reverse'
+      : descriptionPositionDesktop === 'e'
+        ? 'row'
+        : descriptionPositionDesktop === 'n'
+          ? 'column-reverse'
+          : 'column'
+
+  // If the description is top or bottom then absolute position will be used
+  // because using flex decenters the image
+  const descTopOrBottomDesktop =
+    descriptionPositionDesktop === 'n' || descriptionPositionDesktop === 's'
+
+  const imgPosDesktop = image.deskConfig.imgPos
+  const justifyPosDesktop = 'center'
+
+  const imageFile = image.image as Media
+
+  const descPosMobile = image.phoneConfig.descPos
+  const flexDirectionMobile = descPosMobile === 's' ? 'column' : 'column-reverse'
+  const overflowMobile = image.phoneConfig.overflow
+
+  if (imageFile?.url)
+    return (
+      <>
+        <div
+          className="items-center w-full relative h-full hidden lg:block desktop"
+          style={{
+            backgroundColor: image.bgColor,
+            justifyContent: justifyPosDesktop,
+            paddingInline: '5%',
+          }}
+        >
+          <figure
+            key={image.id}
+            style={{
+              flexDirection: descFlexDirectionDesktop,
+            }}
+            className={`min-h-160 w-fit items-center gap-x-20 flex gap-y-10 ${imgPosDesktop === 'left' ? 'mr-auto' : imgPosDesktop === 'right' ? 'ml-auto' : 'mx-auto'}`}
+          >
+            <div style={{ height: `${image.deskConfig.imgSize}svh` }}>
+              <ImageSkeleton image={image.image as Media} />
+            </div>
+            {image.description && descriptionPositionDesktop && (
+              <figcaption
+                className={`${descTopOrBottomDesktop ? 'max-w-4/5 w-full' : 'max-w-2/5 w-fit'} text-pretty`}
+              >
+                <RichText
+                  data={image.description}
+                  className="img-description"
+                  converters={headersConverter}
+                />
+              </figcaption>
+            )}
+          </figure>
+        </div>
+        <figure
+          className={`flex py-20 lg:hidden justify-center gap-y-16 w-full h-full [&_img]:w-full [&_img]:h-auto! ${overflowMobile ? '' : 'px-17'} mobile`}
+          style={{
+            flexDirection: flexDirectionMobile,
+          }}
+        >
+          <ImageSkeleton image={imageFile} className="shrink" />
+          {image.description && descPosMobile && (
+            <figcaption className="max-w-5/6 mx-auto grow">
+              <RichText
+                data={image.description}
+                converters={headersConverter}
+                className="img-description"
+              />
+            </figcaption>
+          )}
+        </figure>
+      </>
+    )
+
+  return <p>Sección no configurada</p>
+}
 
 function aboutUsBlock(message: Extract<MainPageImageType, { blockType: 'aboutUs' }>) {
   return (
@@ -100,13 +185,13 @@ export default async function MainPage({ params }: Props) {
         return (
           <div
             id="welcome"
-            className="header-screen flex justify-stretch grow"
+            className="header-screen flex justify-stretch items-center grow"
             key={image.id}
             style={{ backgroundColor: image.bgColor }}
           >
-            {image.blockType === 'image' && <SkeletonImage image={image} />}
+            {image.blockType === 'image' && imageBlock(image)}
             <ul
-              className="w-fit h-4/5 my-auto text-[0.7rem] text-right pr-10 [&_li]:w-fit hidden xl:flex flex-col gap-y-2 items-end"
+              className="w-fit mt-17 mb-auto text-[0.7rem] text-right pr-10 [&_li]:w-fit hidden xl:flex flex-col gap-y-2 items-end"
               style={{ letterSpacing: '0.05rem' }}
             >
               <li>
@@ -135,8 +220,12 @@ export default async function MainPage({ params }: Props) {
       })}
       {mainPageImages.images?.slice(1).map((image) => {
         return (
-          <div style={{ backgroundColor: image.bgColor }} key={image.id}>
-            {image.blockType === 'image' && <SkeletonImage image={image} />}
+          <div
+            style={{ backgroundColor: image.bgColor }}
+            key={image.id}
+            className="min-h-svh flex items-center"
+          >
+            {image.blockType === 'image' && imageBlock(image)}
             {image.blockType === 'aboutUs' && aboutUsBlock(image)}
             {image.blockType === 'navigation' && navBlock(image, t('projects'), t('sculptures'))}
           </div>
