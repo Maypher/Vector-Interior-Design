@@ -1,5 +1,7 @@
 import type { CollectionConfig, Field } from 'payload'
 import { Directions } from '@lib/selects'
+import { Project } from '@/payload-types'
+import { colorField } from '@/lib/utils/colors'
 
 // Extracting it from imageConfig since there's an extra field for groups so I add it manually when setting the schema
 const desktopConfig: Field = {
@@ -50,7 +52,7 @@ const imageConfig: Field[] = [
     },
   },
   {
-    name: 'decription',
+    name: 'description',
     type: 'richText',
     label: 'Descripción',
     admin: {
@@ -59,6 +61,7 @@ const imageConfig: Field[] = [
     required: false,
     localized: true,
   },
+  colorField,
   {
     name: 'phoneConf',
     type: 'group',
@@ -72,6 +75,7 @@ const imageConfig: Field[] = [
         name: 'imgAlign',
         label: 'Alineación de Imagen',
         type: 'select',
+        required: true,
         options: [
           {
             label: 'Izquierda',
@@ -244,6 +248,13 @@ export const Projects: CollectionConfig = {
           ],
         },
       ],
+      validate: (imgs) => {
+        const images = imgs as Project['images'] // Doing this because typing it in the function definition causes an error
+
+        if (images?.at(0)?.blockType === 'imageGroup')
+          return 'Primera imágen no puede ser un grupo.'
+        return true
+      },
     },
     {
       type: 'upload',

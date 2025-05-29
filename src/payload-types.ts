@@ -266,7 +266,7 @@ export interface Project {
             /**
              * La descripción de la imagen
              */
-            decription?: {
+            description?: {
               root: {
                 type: string;
                 children: {
@@ -282,10 +282,14 @@ export interface Project {
               [k: string]: unknown;
             } | null;
             /**
+             * El color del fondo de la imagen.
+             */
+            bgColor: string;
+            /**
              * La configuración que determina como la imagen de un proyecto se ve en dispositvos móbiles.
              */
-            phoneConf?: {
-              imgAlign?: ('left' | 'right' | 'center' | 'overflow') | null;
+            phoneConf: {
+              imgAlign: 'left' | 'right' | 'center' | 'overflow';
               /**
                * La posición de la descripción relativa a la imagen.
                */
@@ -318,7 +322,7 @@ export interface Project {
                   /**
                    * La descripción de la imagen
                    */
-                  decription?: {
+                  description?: {
                     root: {
                       type: string;
                       children: {
@@ -334,10 +338,14 @@ export interface Project {
                     [k: string]: unknown;
                   } | null;
                   /**
+                   * El color del fondo de la imagen.
+                   */
+                  bgColor: string;
+                  /**
                    * La configuración que determina como la imagen de un proyecto se ve en dispositvos móbiles.
                    */
-                  phoneConf?: {
-                    imgAlign?: ('left' | 'right' | 'center' | 'overflow') | null;
+                  phoneConf: {
+                    imgAlign: 'left' | 'right' | 'center' | 'overflow';
                     /**
                      * La posición de la descripción relativa a la imagen.
                      */
@@ -536,7 +544,8 @@ export interface ProjectSelect<T extends boolean = true> {
           | T
           | {
               image?: T;
-              decription?: T;
+              description?: T;
+              bgColor?: T;
               phoneConf?:
                 | T
                 | {
@@ -559,7 +568,8 @@ export interface ProjectSelect<T extends boolean = true> {
                 | T
                 | {
                     image?: T;
-                    decription?: T;
+                    description?: T;
+                    bgColor?: T;
                     phoneConf?:
                       | T
                       | {
