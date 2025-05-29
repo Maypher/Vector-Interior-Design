@@ -1,5 +1,6 @@
 import '../globals.css'
 import Header from '@/components/global/Header'
+import { nexaFont } from '@styles/fonts'
 
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { routing } from '@/i18n/routing'
@@ -27,7 +28,7 @@ export default async function RootLayout(props: {
     <html>
       <body
         style={{ scrollbarGutter: 'stable', overflowY: 'scroll' }}
-        className="font-Nexa text-vector-cream bg-vector-black"
+        className={`${nexaFont.className} text-vector-cream bg-vector-black`}
       >
         {user && (
           <p className="fixed top-5 right-5 bg-vector-black/50 p-2 pointer-events-none opacity-20">
