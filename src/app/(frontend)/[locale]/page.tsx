@@ -56,7 +56,6 @@ function imageBlock(
           style={{
             backgroundColor: image.bgColor,
             justifyContent: justifyPosDesktop,
-            paddingInline: '5%',
           }}
         >
           <figure
@@ -64,9 +63,12 @@ function imageBlock(
             style={{
               flexDirection: descFlexDirectionDesktop,
             }}
-            className={`min-h-160 w-fit items-center gap-x-20 flex gap-y-10 ${imgPosDesktop === 'left' ? 'mr-auto' : imgPosDesktop === 'right' ? 'ml-auto' : 'mx-auto'}`}
+            className={`min-h-160 w-fit items-center gap-x-15 xl:gap-x-15 flex gap-y-10 ${imgPosDesktop === 'left' ? 'mr-auto' : imgPosDesktop === 'right' ? 'ml-auto' : 'mx-auto'}`}
           >
-            <div style={{ height: `${image.deskConfig.imgSize}svh` }}>
+            <div
+              style={{ height: `${image.deskConfig.imgSize}svh` }}
+              className="max-w-3/5 xl:max-w-11/20 2xl:max-w-full"
+            >
               <ImageSkeleton image={image.image as Media} />
             </div>
             {image.description && descriptionPositionDesktop && (
@@ -185,13 +187,13 @@ export default async function MainPage({ params }: Props) {
         return (
           <div
             id="welcome"
-            className="header-screen flex justify-stretch items-center grow"
+            className="header-screen flex justify-stretch items-center grow lg:px-10"
             key={image.id}
             style={{ backgroundColor: image.bgColor }}
           >
             {image.blockType === 'image' && imageBlock(image)}
             <ul
-              className="w-fit mt-17 mb-auto text-[0.7rem] text-right pr-10 [&_li]:w-fit hidden xl:flex flex-col gap-y-2 items-end"
+              className="w-fit mt-17 mb-auto text-[0.7rem] text-right [&_li]:w-fit hidden xl:flex flex-col gap-y-2 items-end ml-19"
               style={{ letterSpacing: '0.05rem' }}
             >
               <li>
