@@ -7,5 +7,8 @@
     "projects": "Proyectos",
     "sculptures": "Esculturas",
     "contact": "Contacto"
+  },
+  "Project": {
+    "area": "Área"
   }
 }

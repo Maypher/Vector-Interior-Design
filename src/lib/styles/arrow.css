@@ -1,0 +1,8 @@
+#arrow {
+    animation: 1s ease-in-out infinite both alternate move-arrow;
+}
+
+@keyframes move-arrow {
+    from {left: 49%;}
+    to {left: 51%;}
+}
