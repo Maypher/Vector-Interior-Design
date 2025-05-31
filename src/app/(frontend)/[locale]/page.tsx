@@ -85,12 +85,15 @@ function imageBlock(
           </figure>
         </div>
         <figure
-          className={`flex py-20 lg:hidden justify-center gap-y-16 w-full h-full [&_img]:w-full [&_img]:h-auto! ${overflowMobile ? '' : 'px-17'} mobile`}
+          className={`flex py-20 lg:hidden justify-center gap-y-16 w-full h-full [&_img]:w-full [&_img]:h-auto! mobile`}
           style={{
             flexDirection: flexDirectionMobile,
           }}
         >
-          <ImageSkeleton image={imageFile} className="shrink" />
+          <ImageSkeleton
+            image={imageFile}
+            className={`shrink  ${overflowMobile ? '' : 'max-w-5/6 mx-auto'}`}
+          />
           {image.description && descPosMobile && (
             <figcaption className="max-w-5/6 mx-auto grow">
               <RichText
@@ -187,7 +190,7 @@ export default async function MainPage({ params }: Props) {
         return (
           <div
             id="welcome"
-            className="header-screen flex justify-stretch items-center grow lg:px-10"
+            className="header-screen flex justify-stretch items-center grow lg:px-10 mb-20 lg:mb-0"
             key={image.id}
             style={{ backgroundColor: image.bgColor }}
           >
@@ -225,7 +228,7 @@ export default async function MainPage({ params }: Props) {
           <div
             style={{ backgroundColor: image.bgColor }}
             key={image.id}
-            className="min-h-svh flex items-center"
+            className="min-h-svh flex items-center lg:px-10"
           >
             {image.blockType === 'image' && imageBlock(image)}
             {image.blockType === 'aboutUs' && aboutUsBlock(image)}
