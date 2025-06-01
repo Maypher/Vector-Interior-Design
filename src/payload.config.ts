@@ -50,6 +50,14 @@ export default buildConfig({
         },
       ],
     },
+    autoLogin:
+      process.env.NODE_ENV !== 'production'
+        ? {
+            email: 'a@gmail.com',
+            password: '1234',
+            prefillOnly: false,
+          }
+        : false,
   },
   localization: {
     locales: ['en', 'es'],
