@@ -63,7 +63,7 @@ function imageBlock(
             style={{
               flexDirection: descFlexDirectionDesktop,
             }}
-            className={`min-h-160 w-fit items-center gap-x-15 xl:gap-x-15 flex gap-y-10 ${imgPosDesktop === 'left' ? 'mr-auto' : imgPosDesktop === 'right' ? 'ml-auto' : 'mx-auto'}`}
+            className={`min-h-160 w-fit items-center justify-center gap-x-15 xl:gap-x-15 flex gap-y-10 ${imgPosDesktop === 'left' ? 'mr-auto' : imgPosDesktop === 'right' ? 'ml-auto' : 'mx-auto'}`}
           >
             <div
               style={{ height: `${image.deskConfig.imgSize}svh` }}
