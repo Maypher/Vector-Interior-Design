@@ -12,6 +12,7 @@ import { ReactNode } from 'react'
 
 import '@styles/arrow.css'
 import '@styles/descriptions.scss'
+import { Link } from '@/i18n/navigation'
 
 interface Props {
   params: Promise<{
@@ -131,6 +132,16 @@ const Page = async ({ params }: Props) => {
 
   if (!project) notFound()
 
+  const projects = await payload.find({
+    collection: 'project',
+    user,
+    draft: true,
+    overrideAccess: false,
+  })
+
+  const currentProjectIndex = projects.docs.findIndex((x) => x.id === project.id)
+  const lastProject = currentProjectIndex === projects.totalDocs - 1
+
   return (
     <div className="relative">
       <div>
@@ -233,9 +244,13 @@ const Page = async ({ params }: Props) => {
           </div>
         </>
       </div>
-      <div className="absolute bottom-10 left-49/100 text-6xl font-bold" id="arrow">
+      <Link
+        href={lastProject ? '/conclusion' : `/projects?project=${currentProjectIndex + 1}`}
+        className="absolute bottom-10 left-49/100 text-6xl font-bold"
+        id="arrow"
+      >
         &gt;
-      </div>
+      </Link>
     </div>
   )
 }
