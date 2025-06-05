@@ -69,7 +69,10 @@ function imageBlock(
               style={{ height: `${image.deskConfig.imgSize}svh` }}
               className="max-w-3/5 xl:max-w-11/20 2xl:max-w-full"
             >
-              <ImageSkeleton image={image.image as Media} />
+              <ImageSkeleton
+                image={image.image as Media}
+                sizes={`(min-width: 1280px) 55vw, (min-width: 1440px) 70vw, 60vw`}
+              />
             </div>
             {image.description && descriptionPositionDesktop && (
               <figcaption
@@ -93,6 +96,7 @@ function imageBlock(
           <ImageSkeleton
             image={imageFile}
             className={`shrink  ${overflowMobile ? '' : 'max-w-5/6 mx-auto'}`}
+            sizes={overflowMobile ? '100vw' : '83.3vw'}
           />
           {image.description && descPosMobile && (
             <figcaption className="max-w-5/6 mx-auto grow">
@@ -139,7 +143,7 @@ function navBlock(
           style={{ height: `${image.imgSize}%` }}
           className="relative max-xl:h-fit! max-xl:w-full [&_img]:w-full!"
         >
-          <ImageSkeleton image={image.image as Media} />
+          <ImageSkeleton image={image.image as Media} sizes={`(max-width: 1024px) 100vw, 50vw`} />
         </div>
 
         <ul className="flex items-center justify-center gap-5 p-5 text-xl lg:h-4/5">

@@ -4,7 +4,8 @@ import createNextIntlPlugin from 'next-intl/plugin'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    imageSizes: [800, 1500, 1920],
+    deviceSizes: [640, 750, 828, 1024, 1280, 1440, 1920, 2048, 3840],
+    formats: ['image/webp'],
   },
   devIndicators: {
     position: 'bottom-right',

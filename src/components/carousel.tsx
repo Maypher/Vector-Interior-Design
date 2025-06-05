@@ -72,6 +72,7 @@ export default function Carousel({ projects }: Props) {
                         alt={thumbnail.alt!}
                         width={thumbnail.width!}
                         height={thumbnail.height!}
+                        sizes="33vw"
                         className="h-90 object-cover w-auto"
                       />
                       <figcaption>
@@ -134,6 +135,7 @@ export default function Carousel({ projects }: Props) {
                         alt={thumbnail.alt!}
                         width={thumbnail.width!}
                         height={thumbnail.height!}
+                        sizes="80vw"
                         className="h-90 object-cover w-auto"
                       />
                       <figcaption>

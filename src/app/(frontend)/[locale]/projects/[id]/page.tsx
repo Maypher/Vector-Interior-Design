@@ -3,12 +3,12 @@ import config from '@payload-config'
 import { Project, Media } from '@/payload-types'
 import RefreshRouterOnSave from '@/components/admin/RefreshRouteOnSave'
 import { notFound } from 'next/navigation'
-import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 
 import { headers as getHeaders } from 'next/headers'
 import { ReactNode } from 'react'
+import ImageSkeleton from '@/components/global/ImageSkeleton'
 
 import '@styles/arrow.css'
 import '@styles/descriptions.scss'
@@ -40,14 +40,9 @@ function DesktopImage(img: ProjectImage): ReactNode {
       className="relative flex justify-center items-center gap-x-12 size-fit"
       style={{ flexDirection }}
     >
-      <Image
-        src={imageFile.url!}
-        alt={imageFile.alt}
-        width={imageFile.width!}
-        height={imageFile.height!}
-        placeholder="blur"
-        blurDataURL={imageFile.sizes!.loading!.url!}
-        className="w-auto"
+      <ImageSkeleton
+        image={imageFile}
+        sizes={imageFile.width! <= imageFile.height! ? '40vw' : '70vw'}
         style={{ height: `${img.deskConf.imageSize}svh` }}
       />
       {img.description && img.deskConf.descPos && (
@@ -86,13 +81,8 @@ function PhoneImage(img: ProjectImage): ReactNode {
       className={`${img.phoneConf?.imgAlign === 'overflow' ? '' : 'px-8'} py-25 gap-12 flex ${img.phoneConf.descPos === 'n' ? 'flex-col-reverse' : 'flex-col'}`}
       style={{ backgroundColor: img.bgColor }}
     >
-      <Image
-        src={imageFile.url!}
-        alt={imageFile.alt}
-        width={imageFile.width!}
-        height={imageFile.height!}
-        placeholder="blur"
-        blurDataURL={imageFile.sizes!.loading!.url!}
+      <ImageSkeleton
+        image={imageFile}
         className={`max-h-160 ${
           img.phoneConf?.imgAlign === 'left'
             ? 'w-4/5 mr-auto'
@@ -100,6 +90,13 @@ function PhoneImage(img: ProjectImage): ReactNode {
               ? 'w-4/5 ml-auto'
               : 'mx-auto'
         }`}
+        sizes={
+          img.phoneConf?.imgAlign === 'overflow'
+            ? '100vw'
+            : img.phoneConf?.imgAlign === 'center'
+              ? '80vw'
+              : '70vw'
+        }
       />
       {img.description && img.phoneConf.descPos && (
         <figcaption className="max-w-9/10 mx-auto">
@@ -160,14 +157,9 @@ const Page = async ({ params }: Props) => {
                 style={{ backgroundColor: image.bgColor }}
                 key={`${img.id}-desktop`}
               >
-                <Image
-                  src={imageFile.url!}
-                  alt={imageFile.alt}
-                  width={imageFile.width!}
-                  height={imageFile.height!}
-                  placeholder="blur"
-                  blurDataURL={imageFile.sizes!.loading!.url!}
-                  className="w-auto"
+                <ImageSkeleton
+                  image={imageFile}
+                  sizes={imageFile.width! <= imageFile.height! ? '40vw' : '70vw'}
                   style={{ height: `${image.deskConf.imageSize}svh` }}
                 />
                 <figcaption className="max-w-2/5">
@@ -190,13 +182,9 @@ const Page = async ({ params }: Props) => {
                 style={{ backgroundColor: image.bgColor }}
                 key={`${img.id}-mobile`}
               >
-                <Image
-                  src={imageFile.url!}
-                  alt={imageFile.alt}
-                  width={imageFile.width!}
-                  height={imageFile.height!}
-                  placeholder="blur"
-                  blurDataURL={imageFile.sizes!.loading!.url!}
+                <ImageSkeleton
+                  image={imageFile}
+                  sizes={`(min-width: 1280px) 60vw, 75vw`}
                   className="max-w-3/4 mx-auto xl:max-w-full md:h-80 md:w-auto"
                 />
 
