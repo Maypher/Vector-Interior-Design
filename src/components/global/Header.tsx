@@ -11,6 +11,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
   const t = useTranslations('NavBar')
   const menuElement = useRef<HTMLDivElement>(null)
+  const menuBtn = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     // If the menu was opened then add an event listener to close it when clicking outside it
@@ -22,10 +23,9 @@ export default function Header() {
         // Now menuRef.current is known to be an HTMLDivElement, so .contains() is safe
         const clickInsideMenu = menuElement.current?.contains(clickedElement)
         const clickedUrl = clickedElement.nodeName === 'A'
+        const clickedBtn = menuBtn.current === clickedElement
 
-        if (!clickInsideMenu || clickedUrl) {
-          setMenuOpen(false)
-        }
+        if ((!clickInsideMenu || clickedUrl) && !clickedBtn) setMenuOpen(false)
       }
 
       // Using setTimeout with delay 0 because since the 'click' event
@@ -52,7 +52,11 @@ export default function Header() {
         <button
           type="button"
           className={`text-vector-black flex flex-col gap-y-2 transition-transform xl:hidden ${menuOpen ? '-rotate-90' : ''}`}
-          onClick={() => setMenuOpen((prevValue) => !prevValue)}
+          onClick={() => {
+            console.log('Clicked')
+            setMenuOpen((prevValue) => !prevValue)
+          }}
+          ref={menuBtn}
         >
           <div className="w-7 h-1 rounded-sm bg-vector-black"></div>
           <div className="w-7 h-1 rounded-sm bg-vector-black"></div>
