@@ -15,7 +15,6 @@ interface Props {
 }
 
 export default function Carousel({ projects }: Props) {
-  console.log(projects)
   const searchParams = useSearchParams()
 
   // Get the index of the poject to show as the starting one
