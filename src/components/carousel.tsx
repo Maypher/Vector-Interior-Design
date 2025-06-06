@@ -52,7 +52,7 @@ export default function Carousel({ projects }: Props) {
     <>
       <div id="carousel" className="hidden lg:block">
         <div
-          className="glide__track bg-vector-grey header-screen relative flex flex-col pb-10"
+          className="glide__track bg-vector-grey header-screen relative flex flex-col"
           data-glide-el="track"
         >
           <ul className=" glide__slides grow flex items-center">
@@ -72,7 +72,8 @@ export default function Carousel({ projects }: Props) {
                         width={thumbnail.width!}
                         height={thumbnail.height!}
                         sizes="33vw"
-                        className="h-90 object-cover w-auto"
+                        className="h-100 object-cover w-auto"
+                        style={{ aspectRatio: '2/3' }}
                       />
                       <figcaption>
                         <p
@@ -115,7 +116,7 @@ export default function Carousel({ projects }: Props) {
       </div>
       <div
         id="carousel-mobile"
-        className="lg:hidden flex flex-col justify-center header-screen bg-vector-grey"
+        className="lg:hidden flex flex-col justify-center header-screen min-h-150 bg-vector-grey"
       >
         <div className="glide__track bg-vector-grey" data-glide-el="track">
           <ul className=" glide__slides">
@@ -135,7 +136,11 @@ export default function Carousel({ projects }: Props) {
                         width={thumbnail.width!}
                         height={thumbnail.height!}
                         sizes="80vw"
-                        className="h-90 object-cover w-auto"
+                        className="h-100 object-cover w-auto"
+                        style={{
+                          aspectRatio: '3/5',
+                          objectPosition: `${thumbnail.focalX}% ${thumbnail.focalY}%`,
+                        }}
                       />
                       <figcaption>
                         <p
