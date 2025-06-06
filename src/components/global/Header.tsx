@@ -6,6 +6,7 @@ import LanguageSelect from './LanguageSelect'
 import { useState, useEffect, useRef } from 'react'
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
@@ -42,16 +43,49 @@ export default function Header() {
     }
   }, [menuOpen])
 
+  const pathname = usePathname()
+
   return (
     <div>
       <header className="h-22 bg-vector-cream px-10 py-5 flex items-center justify-between">
-        <Image src={logo} alt="Vector: Interior Design" className="h-full w-fit" />
-        <div className="hidden xl:block">
+        <Link href="/" className="h-full hover:scale-120 transition-transform">
+          <Image src={logo} alt="Vector: Interior Design" className="h-full w-fit" />
+        </Link>
+        <ul
+          className={`${['/es', '/en', '/es/', '/en/'].includes(pathname) ? '' : 'lg:flex'} text-vector-black hidden gap-10 xl:gap-20 [&_a]:transition-colors`}
+        >
+          <li>
+            <Link href="/" className="hover:text-vector-orange">
+              {t('home')}
+            </Link>
+          </li>
+          <li>
+            <Link href="/projects" className="hover:text-vector-orange">
+              {t('projects')}
+            </Link>
+          </li>
+          <li>
+            <Link href="/sculptures" className="hover:text-vector-orange">
+              {t('sculptures')}
+            </Link>
+          </li>
+          <li>
+            <Link href="/#aboutUs" className="hover:text-vector-orange">
+              {t('aboutUs')}
+            </Link>
+          </li>
+          <li>
+            <Link href="/#contact" className="hover:text-vector-orange">
+              {t('contact')}
+            </Link>
+          </li>
+        </ul>
+        <div className="hidden lg:block">
           <LanguageSelect />
         </div>
         <button
           type="button"
-          className={`text-vector-black flex flex-col gap-y-2 transition-transform xl:hidden ${menuOpen ? '-rotate-90' : ''}`}
+          className={`text-vector-black flex flex-col gap-y-2 transition-transform lg:hidden ${menuOpen ? '-rotate-90' : ''}`}
           onClick={() => {
             console.log('Clicked')
             setMenuOpen((prevValue) => !prevValue)
