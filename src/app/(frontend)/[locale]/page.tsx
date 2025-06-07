@@ -52,7 +52,7 @@ function imageBlock(
     return (
       <>
         <div
-          className="items-center w-full relative h-full hidden lg:block desktop"
+          className="items-center relative hidden lg:flex desktop w-full"
           style={{
             backgroundColor: image.bgColor,
             justifyContent: justifyPosDesktop,
@@ -63,7 +63,7 @@ function imageBlock(
             style={{
               flexDirection: descFlexDirectionDesktop,
             }}
-            className={`min-h-160 w-fit items-center justify-center gap-x-15 xl:gap-x-15 flex gap-y-10 ${imgPosDesktop === 'left' ? 'mr-auto' : imgPosDesktop === 'right' ? 'ml-auto' : 'mx-auto'}`}
+            className={`min-h-160 w-full items-center justify-center gap-x-15 xl:gap-x-15 flex gap-y-10 ${imgPosDesktop === 'left' ? 'mr-auto' : imgPosDesktop === 'right' ? 'ml-auto' : 'mx-auto'}`}
           >
             <div
               style={{ height: `${image.deskConfig.imgSize}svh` }}
@@ -88,15 +88,15 @@ function imageBlock(
           </figure>
         </div>
         <figure
-          className={`flex py-20 lg:hidden justify-center gap-y-16 w-full h-full [&_img]:w-full [&_img]:h-auto! mobile`}
+          className={`flex py-20 lg:hidden justify-center gap-y-16 size-full`}
           style={{
             flexDirection: flexDirectionMobile,
           }}
         >
           <ImageSkeleton
             image={imageFile}
-            className={`shrink  ${overflowMobile ? '' : 'max-w-5/6 mx-auto'}`}
-            sizes={overflowMobile ? '100vw' : '83.3vw'}
+            className={`shrink  ${overflowMobile ? '' : 'max-w-5/6 mx-auto'} max-h-140`}
+            sizes={overflowMobile ? '100vw' : '90vw'}
           />
           {image.description && descPosMobile && (
             <figcaption className="max-w-5/6 mx-auto grow">
@@ -188,63 +188,63 @@ export default async function MainPage({ params }: Props) {
   })
 
   return (
-    <div>
+    <div className="grow flex flex-col justify-between">
       <RefreshRouteOnSave />
-      {mainPageImages.images?.slice(0, 1).map((image) => {
-        return (
-          <div
-            id="welcome"
-            className="header-screen flex justify-stretch items-center grow lg:px-10 mb-20 lg:mb-0"
-            key={image.id}
-            style={{ backgroundColor: image.bgColor }}
-          >
-            {image.blockType === 'image' && imageBlock(image)}
-            <ul
-              className="w-fit mt-17 mb-auto text-[0.7rem] text-right [&_li]:w-fit hidden xl:flex flex-col gap-y-2 items-end ml-19"
-              style={{ letterSpacing: '0.05rem' }}
+      <div className="grow flex flex-col justify-between">
+        {!mainPageImages.images || mainPageImages.images.length === 0 ? (
+          <div className="grow flex items-center justify-center">En configuración</div>
+        ) : (
+          mainPageImages.images?.slice(0, 1).map((image) => {
+            return (
+              <div
+                id="welcome"
+                className="header-screen flex justify-stretch items-center grow lg:px-10 mb-20 lg:mb-0"
+                key={image.id}
+                style={{ backgroundColor: image.bgColor }}
+              >
+                {image.blockType === 'image' && imageBlock(image)}
+                <ul
+                  className="w-fit mt-17 mb-auto text-[0.7rem] text-right [&_li]:w-fit hidden xl:flex flex-col gap-y-2 items-end ml-19"
+                  style={{ letterSpacing: '0.05rem' }}
+                >
+                  <li>
+                    <Link href="#aboutUs" className="hover-link">
+                      {t('aboutUs')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/projects" className="hover-link">
+                      {t('projects')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/sculptures" className="hover-link">
+                      {t('sculptures')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#contact" className="hover-link">
+                      {t('contact')}
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            )
+          })
+        )}
+        {mainPageImages.images?.slice(1).map((image) => {
+          return (
+            <div
+              style={{ backgroundColor: image.bgColor }}
+              key={image.id}
+              className="min-h-svh flex items-center lg:px-10"
             >
-              <li>
-                <Link href="#aboutUs" className="hover-link">
-                  {t('aboutUs')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/projects" className="hover-link">
-                  {t('projects')}
-                </Link>
-              </li>
-              <li>
-                <Link href="/sculptures" className="hover-link">
-                  {t('sculptures')}
-                </Link>
-              </li>
-              <li>
-                <Link href="#contact" className="hover-link">
-                  {t('contact')}
-                </Link>
-              </li>
-            </ul>
-          </div>
-        )
-      })}
-      {mainPageImages.images?.slice(1).map((image) => {
-        return (
-          <div
-            style={{ backgroundColor: image.bgColor }}
-            key={image.id}
-            className="min-h-svh flex items-center lg:px-10"
-          >
-            {image.blockType === 'image' && imageBlock(image)}
-            {image.blockType === 'aboutUs' && aboutUsBlock(image)}
-            {image.blockType === 'navigation' && navBlock(image, t('projects'), t('sculptures'))}
-          </div>
-        )
-      })}
-      <div className="relative flex items-center justify-center gap-x-5 py-20 bg-vector-black">
-        <p className="border-vector-orange border-r-1 py-2 pr-5 text-2xl">Contacto</p>
-        <a href="mailto:contact@vectorinterior.design" className="py-5">
-          contact@vectorinterior.design
-        </a>
+              {image.blockType === 'image' && imageBlock(image)}
+              {image.blockType === 'aboutUs' && aboutUsBlock(image)}
+              {image.blockType === 'navigation' && navBlock(image, t('projects'), t('sculptures'))}
+            </div>
+          )
+        })}
       </div>
       <Footer />
     </div>

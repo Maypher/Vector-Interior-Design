@@ -8,6 +8,7 @@
 
     --font-Nexa: "Nexa", "Arial", "sans-serif";
 
+    --breakpoint-xs: 24rem;
     --breakpoint-2xl: 90rem;
 }
   
@@ -42,6 +43,10 @@
         height: auto;
         min-height: calc(100svh - 5.5rem);
     }
+}
+
+.min-header-screen {
+    min-height: calc(100svh - 5.5rem);
 }
 
 h1 {

@@ -28,7 +28,7 @@ export default async function RootLayout(props: {
     <html>
       <body
         style={{ scrollbarGutter: 'stable', overflowY: 'scroll' }}
-        className={`${nexaFont.className} text-vector-cream bg-vector-black`}
+        className={`${nexaFont.className} text-vector-cream bg-vector-black min-h-svh flex flex-col`}
       >
         {user && (
           <p className="fixed top-5 right-5 bg-vector-black/50 p-2 pointer-events-none opacity-20">
@@ -37,7 +37,7 @@ export default async function RootLayout(props: {
         )}
         <NextIntlClientProvider>
           <Header />
-          <main>{children}</main>
+          <main className="grow flex flex-col">{children}</main>
         </NextIntlClientProvider>
       </body>
     </html>
