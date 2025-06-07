@@ -6,7 +6,7 @@ import logoWhite from '@public/images/logoWhite.svg'
 export default function Footer() {
   return (
     <div>
-      <div className="relative flex flex-wrap items-center justify-center gap-x-5 px-2 py-20 bg-vector-black">
+      <div className="relative flex flex-wrap items-center justify-center gap-x-5 px-2 my-20 bg-vector-black">
         <p className="border-vector-orange border-b-1 xs:border-b-0 xs:border-r-1 py-2 xs:pr-5 text-2xl">
           Contacto
         </p>
