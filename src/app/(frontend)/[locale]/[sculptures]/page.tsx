@@ -75,7 +75,7 @@ function sculptureGroup(
             </div>
             <div
               className="hidden lg:block max-w-1/3"
-              style={{ height: `calc(${groupLength - i * 0.4}/${groupLength} * 80%);` }}
+              style={{ height: `calc(${groupLength - i * 0.4}/${groupLength} * 80%)` }}
             >
               {image(imageFile)}
             </div>
