@@ -94,9 +94,11 @@ export interface Config {
   };
   globals: {
     mainPageImages: MainPageImage;
+    sculpture: Sculpture;
   };
   globalsSelect: {
     mainPageImages: MainPageImagesSelect<false> | MainPageImagesSelect<true>;
+    sculpture: SculptureSelect<false> | SculptureSelect<true>;
   };
   locale: 'en' | 'es';
   user: User & {
@@ -702,6 +704,83 @@ export interface MainPageImage {
   createdAt?: string | null;
 }
 /**
+ * Una imágen que contiene una escultura.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sculpture".
+ */
+export interface Sculpture {
+  id: number;
+  sculptures?:
+    | (
+        | {
+            image: number | Media;
+            /**
+             * La descripción de la imagen. Colocar texto en itático para cambiar el color.
+             */
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: string;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            /**
+             * El color del fondo de la imagen.
+             */
+            bgColor: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'sculpture';
+          }
+        | {
+            images?:
+              | {
+                  image?: (number | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            /**
+             * La descripción del  grupo de imágenes. Colocar texto en itálico para cambiar el color.
+             */
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: string;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            /**
+             * El color del fondo de la imagen.
+             */
+            bgColor: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'sculptureGroup';
+          }
+      )[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mainPageImages_select".
  */
@@ -744,6 +823,43 @@ export interface MainPageImagesSelect<T extends boolean = true> {
           | {
               image?: T;
               imgSize?: T;
+              bgColor?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sculpture_select".
+ */
+export interface SculptureSelect<T extends boolean = true> {
+  sculptures?:
+    | T
+    | {
+        sculpture?:
+          | T
+          | {
+              image?: T;
+              description?: T;
+              bgColor?: T;
+              id?: T;
+              blockName?: T;
+            };
+        sculptureGroup?:
+          | T
+          | {
+              images?:
+                | T
+                | {
+                    image?: T;
+                    id?: T;
+                  };
+              description?: T;
               bgColor?: T;
               id?: T;
               blockName?: T;
