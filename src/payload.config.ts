@@ -16,6 +16,7 @@ import { Users } from '@collections/Users'
 import { Media } from '@collections/Media'
 import { Projects } from '@collections/Projects'
 import { Sculptures } from './globals/Sculptures'
+import { Conclusion } from './globals/Conclusion'
 import MainPage from '@globals/MainPage'
 
 import { es } from 'payload/i18n/es'
@@ -69,7 +70,7 @@ export default buildConfig({
     fallbackLanguage: 'es',
   },
   collections: [Users, Media, Projects],
-  globals: [MainPage, Sculptures],
+  globals: [MainPage, Sculptures, Conclusion],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,

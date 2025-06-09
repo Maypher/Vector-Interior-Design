@@ -95,10 +95,12 @@ export interface Config {
   globals: {
     mainPageImages: MainPageImage;
     sculpture: Sculpture;
+    conclusion: Conclusion;
   };
   globalsSelect: {
     mainPageImages: MainPageImagesSelect<false> | MainPageImagesSelect<true>;
     sculpture: SculptureSelect<false> | SculptureSelect<true>;
+    conclusion: ConclusionSelect<false> | ConclusionSelect<true>;
   };
   locale: 'en' | 'es';
   user: User & {
@@ -781,6 +783,40 @@ export interface Sculpture {
   createdAt?: string | null;
 }
 /**
+ * Mesaje que aparece en la página de conclusión.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "conclusion".
+ */
+export interface Conclusion {
+  id: number;
+  /**
+   * El eslogan de la página.
+   */
+  slogal: string;
+  /**
+   * El mensaje explicativo del eslogan.
+   */
+  message: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mainPageImages_select".
  */
@@ -865,6 +901,18 @@ export interface SculptureSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "conclusion_select".
+ */
+export interface ConclusionSelect<T extends boolean = true> {
+  slogal?: T;
+  message?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;
