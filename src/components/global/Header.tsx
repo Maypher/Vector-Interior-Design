@@ -87,7 +87,6 @@ export default function Header() {
           type="button"
           className={`text-vector-black flex flex-col gap-y-2 transition-transform lg:hidden ${menuOpen ? '-rotate-90' : ''}`}
           onClick={() => {
-            console.log('Clicked')
             setMenuOpen((prevValue) => !prevValue)
           }}
           ref={menuBtn}
