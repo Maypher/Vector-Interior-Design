@@ -1,24 +1,32 @@
 import { getPayload } from 'payload'
 import config from '@/payload.config'
-import { headers } from 'next/headers'
 import Carousel from '@/components/carousel'
+import { Suspense } from 'react'
+import { draftMode } from 'next/headers'
+import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 
 export default async function Page() {
-  const reqHeaders = await headers()
+  const { isEnabled } = await draftMode()
   const payload = await getPayload({ config })
-  const { user } = await payload.auth({ headers: reqHeaders })
 
   const projects = await payload.find({
     collection: 'project',
-    user,
     select: {
       name: true,
       thumbnail: true,
+      _status: true,
     },
-    overrideAccess: false,
-    disableErrors: true,
-    draft: Boolean(user),
+    draft: isEnabled,
+    overrideAccess: isEnabled,
   })
 
-  return <Carousel projects={projects.docs} />
+  if (projects.docs.length === 0)
+    return <div className="grow flex items-center justify-center">No projects to show</div>
+
+  return (
+    <Suspense>
+      <RefreshRouteOnSave />
+      <Carousel projects={projects.docs} />
+    </Suspense>
+  )
 }

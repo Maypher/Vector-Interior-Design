@@ -1,18 +1,18 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Project, Media } from '@/payload-types'
-import RefreshRouterOnSave from '@/components/admin/RefreshRouteOnSave'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 
-import { headers as getHeaders } from 'next/headers'
 import { ReactNode } from 'react'
 import ImageSkeleton from '@/components/global/ImageSkeleton'
 
 import '@styles/arrow.css'
 import '@styles/descriptions.scss'
 import { Link } from '@/i18n/navigation'
+import { draftMode } from 'next/headers'
 
 interface Props {
   params: Promise<{
@@ -40,11 +40,15 @@ function DesktopImage(img: ProjectImage): ReactNode {
       className="relative flex justify-center items-center gap-x-12 size-fit"
       style={{ flexDirection }}
     >
-      <ImageSkeleton
-        image={imageFile}
-        sizes={imageFile.width! <= imageFile.height! ? '40vw' : '70vw'}
-        style={{ height: `${img.deskConf.imageSize}svh` }}
-      />
+      {imageFile?.url ? (
+        <ImageSkeleton
+          image={imageFile}
+          sizes={imageFile.width! <= imageFile.height! ? '40vw' : '70vw'}
+          style={{ height: `${img.deskConf.imageSize}svh` }}
+        />
+      ) : (
+        'Imágen no configurada'
+      )}
       {img.description && img.deskConf.descPos && (
         <figcaption
           className={`${descTopOrBottom ? 'max-w-9/10 absolute' : 'max-w-2/5'} ${descPos === 'n' ? 'bottom-21/20' : descPos === 's' ? 'top-21/20' : ''}`}
@@ -73,7 +77,7 @@ function DesktopImageGroup(imgGroup: ProjectImageGroup): ReactNode {
 
 function PhoneImage(img: ProjectImage): ReactNode {
   const imageFile = img.image as Media
-  if (!imageFile?.url) return 'No configurado'
+  if (!imageFile?.url) return 'Imágen no configurada'
 
   return (
     <figure
@@ -110,20 +114,19 @@ function PhoneImage(img: ProjectImage): ReactNode {
 const Page = async ({ params }: Props) => {
   const payload = await getPayload({ config })
   const { locale, id } = await params
-  const t = await getTranslations('Project')
 
-  // Checking if the user is authenticated
-  const headers = await getHeaders()
-  const { user } = await payload.auth({ headers })
+  setRequestLocale(locale)
+  const t = await getTranslations({ locale, namespace: 'Project' })
+
+  const { isEnabled: draft } = await draftMode()
 
   const project: Project | null = await payload.findByID({
     collection: 'project',
     id,
-    user,
     locale,
     depth: 2,
-    draft: true, // Used for live preview. When an unauthenticated user access the site the published version will be returned
-    overrideAccess: false,
+    draft,
+    overrideAccess: draft,
     disableErrors: true, // Return null instead of throwing an error if the project doesn't exist
   })
 
@@ -131,8 +134,6 @@ const Page = async ({ params }: Props) => {
 
   const projects = await payload.find({
     collection: 'project',
-    user,
-    draft: true,
     overrideAccess: false,
   })
 
@@ -141,8 +142,8 @@ const Page = async ({ params }: Props) => {
 
   return (
     <div className="relative">
+      {draft && <RefreshRouteOnSave />}
       <div>
-        <RefreshRouterOnSave />
         {project.images?.slice(0, 1).map((img) => {
           // This is assured to be a single image due to backend validation
           const image = img as ProjectImageSingle
@@ -244,3 +245,28 @@ const Page = async ({ params }: Props) => {
 }
 
 export default Page
+export const dynamic = 'error'
+
+export async function generateStaticParams({
+  params: { locale },
+}: {
+  params: { locale: 'es' | 'en' }
+}) {
+  const payload = await getPayload({ config })
+
+  const projects = await payload.find({
+    collection: 'project',
+    where: {
+      _status: {
+        equals: 'published',
+      },
+    },
+    select: {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      id: true,
+    },
+  })
+
+  return projects.docs?.map((project) => `/${locale}/projects/${project.id}`)
+}

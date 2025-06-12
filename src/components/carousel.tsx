@@ -52,12 +52,14 @@ export default function Carousel({ projects }: Props) {
     <>
       <div id="carousel" className="hidden lg:block">
         <div
-          className="glide__track bg-vector-grey header-screen relative flex flex-col"
+          className="glide__track bg-vector-grey header-screen min-h-150 relative flex flex-col"
           data-glide-el="track"
         >
           <ul className=" glide__slides grow flex items-center">
             {projects.map(({ id, name, thumbnail }) => {
               thumbnail = thumbnail as Media
+
+              if (!thumbnail?.url) return 'Imagen no configurada'
 
               return (
                 <li className="glide__slide flex items-center" key={id}>
@@ -116,12 +118,14 @@ export default function Carousel({ projects }: Props) {
       </div>
       <div
         id="carousel-mobile"
-        className="lg:hidden flex flex-col justify-center header-screen min-h-150 bg-vector-grey"
+        className="lg:hidden flex flex-col justify-center header-screen min-h-150! bg-vector-grey"
       >
         <div className="glide__track bg-vector-grey" data-glide-el="track">
           <ul className=" glide__slides">
             {projects.map(({ id, name, thumbnail }) => {
               thumbnail = thumbnail as Media
+
+              if (!thumbnail?.url) return 'Sin miniatura seleccionada'
 
               return (
                 <li className="glide__slide flex items-center" key={id}>

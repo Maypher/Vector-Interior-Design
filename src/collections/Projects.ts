@@ -2,6 +2,9 @@ import type { CollectionConfig, Field } from 'payload'
 import { Directions } from '@lib/selects'
 import { Project } from '@/payload-types'
 import { colorField } from '@/lib/utils/colors'
+import { revalidatePath } from 'next/cache'
+import { AssertionError, deepStrictEqual } from 'assert' // Validation always runs on the server so it's safe to use this
+import { routing } from '@/i18n/routing'
 
 // Extracting it from imageConfig since there's an extra field for groups so I add it manually when setting the schema
 const desktopConfig: Field = {
@@ -146,8 +149,14 @@ export const Projects: CollectionConfig = {
     description: 'Sección principal de la página. Contiene todas las imagenes de una obra.',
     useAsTitle: 'name',
     livePreview: {
-      url: ({ data, locale }) =>
-        `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/${locale}/projects/${data.id}`,
+      url: ({ data, locale }) => {
+        const params = new URLSearchParams({
+          path: `${locale}/projects/${data.id}`,
+          secret: process.env.DRAFT_MODE_SECRET || '',
+        })
+
+        return `/draft?${params.toString()}`
+      },
     },
   },
   orderable: true,
@@ -273,5 +282,33 @@ export const Projects: CollectionConfig = {
         showSaveDraftButton: true,
       },
     },
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc, req, previousDoc }) => {
+        // Ignore draft updates
+        // Only revalidate cache when a document has been published
+        if (doc._status === 'published') {
+          const updatedLocale = req.locale
+          const updateURL = `/projects/${doc.id}`
+
+          // If all locales were updated then revalidate all languages otherwise only the updated locale
+          if (updatedLocale === 'all')
+            routing.locales.forEach((locale) => revalidatePath(`/${locale}${updateURL}`))
+          else revalidatePath(`/${updatedLocale}${updateURL}`)
+
+          // If either the thumbnail or project name was changed revalidate the projects page
+          // Using try...catch since deeepStrictEqual raises an AssertionError if the values don't match
+          try {
+            if (doc.name !== previousDoc.name) throw new AssertionError()
+            deepStrictEqual(doc.thumbnail, previousDoc.thumbnail)
+          } catch {
+            if (updatedLocale === 'all')
+              routing.locales.forEach((locale) => revalidatePath(`/${locale}/projects`))
+            else revalidatePath(`/${updatedLocale}/projects`)
+          }
+        }
+      },
+    ],
   },
 }
