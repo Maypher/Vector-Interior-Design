@@ -2,6 +2,7 @@ import { GlobalConfig } from 'payload'
 import { Directions, ImagePositionMainPageDesktop } from '@/lib/selects'
 import { colorField } from '@lib/utils/colors'
 import { MainPageImage } from '@/payload-types'
+import draftAccess from '@/lib/utils/access'
 
 const MainPage: GlobalConfig = {
   slug: 'mainPageImages',
@@ -9,29 +10,18 @@ const MainPage: GlobalConfig = {
   admin: {
     description: 'Configuración de todas las imágenes que aparecerán en la página principal.',
     livePreview: {
-      url: ({ locale }) => `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/${locale}/`,
+      url: ({ locale }) => {
+        const params = new URLSearchParams({
+          path: `${locale}/`,
+          secret: process.env.DRAFT_MODE_SECRET || '',
+        })
+
+        return `/draft?${params.toString()}`
+      },
     },
   },
   access: {
-    read: ({ req }) => {
-      // Only allowed authenticated users to access drafts
-      if (req.user) return true
-
-      return {
-        or: [
-          {
-            _status: {
-              equals: 'published',
-            },
-          },
-          {
-            _status: {
-              exists: false,
-            },
-          },
-        ],
-      }
-    },
+    read: draftAccess,
   },
   fields: [
     {

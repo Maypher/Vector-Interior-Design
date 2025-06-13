@@ -1,6 +1,5 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { headers } from 'next/headers'
 import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import symbol from '@public/images/symbol.svg'
 import whiteLogo from '@public/images/logoWhite.svg'
@@ -8,30 +7,29 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Link } from '@/i18n/navigation'
 import Image from 'next/image'
 import '@styles/conclusion.css'
+import { draftMode } from 'next/headers'
+
+export const dynamic = 'error'
 
 export default async function Page() {
   const payload = await getPayload({ config })
-  const reqHeaders = await headers()
-  const user = await payload.auth({ headers: reqHeaders })
+  const { isEnabled } = await draftMode()
 
   const conclusionData = await payload.findGlobal({
     slug: 'conclusion',
-    user,
-    overrideAccess: false,
-    draft: true,
+    overrideAccess: isEnabled,
+    draft: isEnabled,
   })
-
-  console.log(conclusionData)
 
   return (
     <>
-      <RefreshRouteOnSave />
+      {isEnabled && <RefreshRouteOnSave />}
       <div className="set-header-screen bg-vector-grey min-h-150 relative flex items-center justify-evenly overflow-clip">
         <p
           className="text-vector-cream flex flex-col relative bottom-[12ch] text-xl font-thin italic leading-10 md:bottom-[4ch] md:text-4xl [&_br]:hidden whitespace-pre"
           id="slogan"
         >
-          {conclusionData.slogal.split('\n').map((line, i) => (
+          {conclusionData.slogal?.split('\n').map((line, i) => (
             <span key={i}>{`${line}\n`}</span> // Mapping them to spans so I can style each line separetly
           ))}
         </p>

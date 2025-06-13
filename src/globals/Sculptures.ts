@@ -1,34 +1,24 @@
 import { GlobalConfig } from 'payload'
 import { colorField } from '@/lib/utils/colors'
+import draftAccess from '@/lib/utils/access'
 
 export const Sculptures: GlobalConfig = {
   slug: 'sculpture',
   label: 'Esculturas',
   access: {
-    read: ({ req }) => {
-      // Only allowed authenticated users to access drafts
-      if (req.user) return true
-
-      return {
-        or: [
-          {
-            _status: {
-              equals: 'published',
-            },
-          },
-          {
-            _status: {
-              exists: false,
-            },
-          },
-        ],
-      }
-    },
+    read: draftAccess,
   },
   admin: {
     description: 'Una imágen que contiene una escultura.',
     livePreview: {
-      url: ({ locale }) => `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/${locale}/sculptures`,
+      url: ({ locale }) => {
+        const params = new URLSearchParams({
+          path: `${locale}/sculptures`,
+          secret: process.env.DRAFT_MODE_SECRET || '',
+        })
+
+        return `/draft?${params.toString()}`
+      },
     },
   },
   fields: [

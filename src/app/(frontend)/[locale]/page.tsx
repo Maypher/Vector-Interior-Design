@@ -1,6 +1,6 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { headers } from 'next/headers'
+import { draftMode } from 'next/headers'
 import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import { MainPageImage, Media } from '@/payload-types'
 import { RichText } from '@payloadcms/richtext-lexical/react'
@@ -170,26 +170,26 @@ interface Props {
   }>
 }
 
+export const dynamic = 'error'
+
 export default async function MainPage({ params }: Props) {
   const payload = await getPayload({ config })
   const { locale } = await params
-  const reqHeaders = await headers()
-  const t = await getTranslations('NavBar')
+  const t = await getTranslations({ locale, namespace: 'NavBar' })
 
-  const { user } = await payload.auth({ headers: reqHeaders })
+  const { isEnabled } = await draftMode()
 
   const mainPageImages: MainPageImage = await payload.findGlobal({
     slug: 'mainPageImages',
     depth: 5,
-    draft: true,
-    overrideAccess: false,
-    user,
+    draft: isEnabled,
+    overrideAccess: isEnabled,
     locale,
   })
 
   return (
     <div className="grow flex flex-col justify-between">
-      <RefreshRouteOnSave />
+      {isEnabled && <RefreshRouteOnSave />}
       <div className="grow flex flex-col justify-between">
         {!mainPageImages.images || mainPageImages.images.length === 0 ? (
           <div className="grow flex items-center justify-center">En configuración</div>

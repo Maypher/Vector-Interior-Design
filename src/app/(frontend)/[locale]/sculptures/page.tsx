@@ -1,10 +1,11 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { headers } from 'next/headers'
 import { Media, Sculpture } from '@/payload-types'
 import Image from 'next/image'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import ScrollToTop from '@/components/sculptures/ScrollToTop'
+import { draftMode } from 'next/headers'
+import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 
 import '@styles/descriptions.scss'
 import { Fragment } from 'react'
@@ -91,21 +92,22 @@ function sculptureGroup(
   )
 }
 
-export default async function Sculptures() {
-  const payload = await getPayload({ config })
-  const reqHeaders = await headers()
+export const dynamic = 'error'
 
-  const { user } = await payload.auth({ headers: reqHeaders })
+export default async function Sculptures({ locale }: { locale: 'es' | 'es' }) {
+  const payload = await getPayload({ config })
+  const { isEnabled } = await draftMode()
 
   const sculptures = await payload.findGlobal({
     slug: 'sculpture',
-    user,
-    overrideAccess: true,
-    draft: true,
+    overrideAccess: isEnabled,
+    draft: isEnabled,
+    locale,
   })
 
   return (
     <div>
+      {isEnabled && <RefreshRouteOnSave />}
       {sculptures.sculptures?.slice(0, 1).map((sculpture) => (
         <div className="set-header-screen flex items-stretch justify-stretch" key={sculpture.id}>
           {sculpture.blockType === 'sculpture'

@@ -1,10 +1,26 @@
 import { GlobalConfig } from 'payload'
+import { routing } from '@/i18n/routing'
+import { revalidatePath } from 'next/cache'
+import draftAccess from '@/lib/utils/access'
 
 export const Conclusion: GlobalConfig = {
   slug: 'conclusion',
   label: 'Conclusión',
+  access: {
+    read: draftAccess,
+  },
   admin: {
     description: 'Mesaje que aparece en la página de conclusión.',
+    livePreview: {
+      url: ({ locale }) => {
+        const params = new URLSearchParams({
+          path: `${locale}/conclusion`,
+          secret: process.env.DRAFT_MODE_SECRET || '',
+        })
+
+        return `/draft?${params.toString()}`
+      },
+    },
   },
   fields: [
     {
@@ -36,5 +52,17 @@ export const Conclusion: GlobalConfig = {
         showSaveDraftButton: true,
       },
     },
+  },
+  hooks: {
+    afterChange: [
+      ({ req, doc }) => {
+        if (doc._status === 'published') {
+          const updatedLocale = req.locale
+          if (updatedLocale === 'all')
+            routing.locales.map((locale) => revalidatePath(`/${locale}/conclusion`))
+          else revalidatePath(`/${updatedLocale}/conclusion`)
+        }
+      },
+    ],
   },
 }

@@ -5,6 +5,7 @@ import { colorField } from '@/lib/utils/colors'
 import { revalidatePath } from 'next/cache'
 import { AssertionError, deepStrictEqual } from 'assert' // Validation always runs on the server so it's safe to use this
 import { routing } from '@/i18n/routing'
+import draftAccess from '@/lib/utils/access'
 
 // Extracting it from imageConfig since there's an extra field for groups so I add it manually when setting the schema
 const desktopConfig: Field = {
@@ -125,25 +126,7 @@ export const Projects: CollectionConfig = {
     plural: 'Proyectos',
   },
   access: {
-    read: ({ req }) => {
-      // Only allowed authenticated users to access drafts
-      if (req.user) return true
-
-      return {
-        or: [
-          {
-            _status: {
-              equals: 'published',
-            },
-          },
-          {
-            _status: {
-              exists: false,
-            },
-          },
-        ],
-      }
-    },
+    read: draftAccess,
   },
   admin: {
     description: 'Sección principal de la página. Contiene todas las imagenes de una obra.',
