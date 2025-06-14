@@ -1,0 +1,17 @@
+services:
+  payload:
+    build:
+      target: development
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore: node_modules
+    stdin_open: true
+    tty: true
+    volumes:
+      # Since payload only has access to the database from within the same network running
+      # "npm run payload migrate:create" isn't possible from within the host machine
+      # 
+      - "./src/migrations:/app/src/migrations" 
