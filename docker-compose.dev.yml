@@ -10,8 +10,9 @@ services:
           ignore: node_modules
     stdin_open: true
     tty: true
-    volumes:
+  postgres:
+    ports:
       # Since payload only has access to the database from within the same network running
-      # "npm run payload migrate:create" isn't possible from within the host machine
-      # 
-      - "./src/migrations:/app/src/migrations" 
+      # "npm run payload migrate:create" isn't possible from within the host machine unless the port is exposed
+      # and access throught localhost:5432 instead of postgres:5432
+      - 5432:5432
