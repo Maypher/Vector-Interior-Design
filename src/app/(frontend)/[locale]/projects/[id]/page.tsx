@@ -246,27 +246,3 @@ const Page = async ({ params }: Props) => {
 
 export default Page
 export const dynamic = 'error'
-
-export async function generateStaticParams({
-  params: { locale },
-}: {
-  params: { locale: 'es' | 'en' }
-}) {
-  const payload = await getPayload({ config })
-
-  const projects = await payload.find({
-    collection: 'project',
-    where: {
-      _status: {
-        equals: 'published',
-      },
-    },
-    select: {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      id: true,
-    },
-  })
-
-  return projects.docs?.map((project) => `/${locale}/projects/${project.id}`)
-}

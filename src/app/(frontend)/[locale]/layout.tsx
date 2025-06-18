@@ -40,14 +40,3 @@ export default async function RootLayout(props: {
     </html>
   )
 }
-
-export function generateStaticParams() {
-  return [
-    {
-      locale: 'es',
-    },
-    {
-      locale: 'en',
-    },
-  ]
-}
