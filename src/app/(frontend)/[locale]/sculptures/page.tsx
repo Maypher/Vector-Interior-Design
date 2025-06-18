@@ -94,8 +94,9 @@ function sculptureGroup(
 
 export const dynamic = 'error'
 
-export default async function Sculptures({ locale }: { locale: 'es' | 'es' }) {
+export default async function Sculptures({ params }: { params: Promise<{ locale: 'es' | 'es' }> }) {
   const payload = await getPayload({ config })
+  const { locale } = await params
   const { isEnabled } = await draftMode()
 
   const sculptures = await payload.findGlobal({
@@ -127,7 +128,7 @@ export default async function Sculptures({ locale }: { locale: 'es' | 'es' }) {
           </div>
         )
       })}
-      <ScrollToTop backgroundColor={sculptures.sculptures!.at(-1)!.bgColor} />
+      <ScrollToTop backgroundColor={sculptures.sculptures!.at(-1)?.bgColor} />
     </div>
   )
 }
