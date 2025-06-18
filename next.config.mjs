@@ -10,6 +10,7 @@ const nextConfig = {
   devIndicators: {
     position: 'bottom-right',
   },
+  output: 'standalone',
 }
 
 const withNextIntl = createNextIntlPlugin()
