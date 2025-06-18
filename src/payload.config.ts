@@ -18,6 +18,7 @@ import { Projects } from '@collections/Projects'
 import { Sculptures } from './globals/Sculptures'
 import { Conclusion } from './globals/Conclusion'
 import MainPage from '@globals/MainPage'
+import { migrations } from './migrations'
 
 import { es } from 'payload/i18n/es'
 
@@ -87,6 +88,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
+    prodMigrations: migrations,
   }),
   upload: {
     limits: {
