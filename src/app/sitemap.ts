@@ -5,6 +5,12 @@ import { routing } from '@/i18n/routing'
 import { AssertionError } from 'assert'
 import { Media } from '@/payload-types'
 
+// Forcing dynamic since by default this is cached at build time
+// but because everything is dockerized the databased isn't accessible then
+// and regardless the sitemap isn't the most accessed content so performance wise there
+// shouldn't be issues.
+export const dynamic = 'force-dynamic'
+
 const baseURL = process.env.NEXT_PUBLIC_PAYLOAD_URL
 
 function alternateUrls(path: string): { languages: Record<string, string> } | undefined {
