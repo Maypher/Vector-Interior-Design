@@ -5,6 +5,8 @@ import { Suspense } from 'react'
 import { draftMode } from 'next/headers'
 import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 
+export const dynamic = 'error'
+
 export default async function Page() {
   const { isEnabled } = await draftMode()
   const payload = await getPayload({ config })
@@ -25,8 +27,8 @@ export default async function Page() {
 
   return (
     <Suspense>
-      <RefreshRouteOnSave />
       <Carousel projects={projects.docs} />
+      {isEnabled && <RefreshRouteOnSave />}
     </Suspense>
   )
 }
