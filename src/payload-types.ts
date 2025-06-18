@@ -236,131 +236,129 @@ export interface Project {
     };
     [k: string]: unknown;
   };
-  images?:
-    | (
-        | {
-            /**
-             * Las imágenes de este proyecto.
-             */
-            image: number | Media;
-            /**
-             * La descripción de la imagen
-             */
-            description?: {
-              root: {
-                type: string;
-                children: {
-                  type: string;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
+  images: (
+    | {
+        /**
+         * Las imágenes de este proyecto.
+         */
+        image: number | Media;
+        /**
+         * La descripción de la imagen
+         */
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
               [k: string]: unknown;
-            } | null;
-            /**
-             * El color del fondo de la imagen.
-             */
-            bgColor: string;
-            /**
-             * La configuración que determina como la imagen de un proyecto se ve en dispositvos móbiles.
-             */
-            phoneConf: {
-              imgAlign: 'left' | 'right' | 'center' | 'overflow';
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        /**
+         * El color del fondo de la imagen.
+         */
+        bgColor: string;
+        /**
+         * La configuración que determina como la imagen de un proyecto se ve en dispositvos móbiles.
+         */
+        phoneConf: {
+          imgAlign: 'left' | 'right' | 'center' | 'overflow';
+          /**
+           * La posición de la descripción relativa a la imagen.
+           */
+          descPos?: ('n' | 's' | 'e' | 'w') | null;
+        };
+        /**
+         * La configuración que determina como se ve la imágen de un proyecto en escritorio.
+         */
+        deskConf: {
+          /**
+           * El tamaño de la imagen relativo al bloque que la contiene
+           */
+          imageSize: number;
+          /**
+           * La posición de la descripción relativa a la imagen.
+           */
+          descPos?: ('n' | 's' | 'e' | 'w') | null;
+        };
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'image';
+      }
+    | {
+        images?:
+          | {
               /**
-               * La posición de la descripción relativa a la imagen.
+               * Las imágenes de este proyecto.
                */
-              descPos?: ('n' | 's' | 'e' | 'w') | null;
-            };
-            /**
-             * La configuración que determina como se ve la imágen de un proyecto en escritorio.
-             */
-            deskConf: {
+              image: number | Media;
               /**
-               * El tamaño de la imagen relativo al bloque que la contiene
+               * La descripción de la imagen
                */
-              imageSize: number;
-              /**
-               * La posición de la descripción relativa a la imagen.
-               */
-              descPos?: ('n' | 's' | 'e' | 'w') | null;
-            };
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'image';
-          }
-        | {
-            images?:
-              | {
-                  /**
-                   * Las imágenes de este proyecto.
-                   */
-                  image: number | Media;
-                  /**
-                   * La descripción de la imagen
-                   */
-                  description?: {
-                    root: {
-                      type: string;
-                      children: {
-                        type: string;
-                        version: number;
-                        [k: string]: unknown;
-                      }[];
-                      direction: ('ltr' | 'rtl') | null;
-                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                      indent: number;
-                      version: number;
-                    };
+              description?: {
+                root: {
+                  type: string;
+                  children: {
+                    type: string;
+                    version: number;
                     [k: string]: unknown;
-                  } | null;
-                  /**
-                   * El color del fondo de la imagen.
-                   */
-                  bgColor: string;
-                  /**
-                   * La configuración que determina como la imagen de un proyecto se ve en dispositvos móbiles.
-                   */
-                  phoneConf: {
-                    imgAlign: 'left' | 'right' | 'center' | 'overflow';
-                    /**
-                     * La posición de la descripción relativa a la imagen.
-                     */
-                    descPos?: ('n' | 's' | 'e' | 'w') | null;
-                  };
-                  /**
-                   * La configuración que determina como se ve la imágen de un proyecto en escritorio.
-                   */
-                  deskConf: {
-                    /**
-                     * El tamaño de la imagen relativo al bloque que la contiene
-                     */
-                    imageSize: number;
-                    /**
-                     * La posición de la descripción relativa a la imagen.
-                     */
-                    descPos?: ('n' | 's' | 'e' | 'w') | null;
-                    /**
-                     * Establece esta imagen como parte de un grupo y donde debería ser alineado en el contenedor del grupo.
-                     */
-                    groupAlign?: ('top' | 'middle' | 'bottom') | null;
-                  };
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'imageGroup';
-          }
-      )[]
-    | null;
+                  }[];
+                  direction: ('ltr' | 'rtl') | null;
+                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                  indent: number;
+                  version: number;
+                };
+                [k: string]: unknown;
+              } | null;
+              /**
+               * El color del fondo de la imagen.
+               */
+              bgColor: string;
+              /**
+               * La configuración que determina como la imagen de un proyecto se ve en dispositvos móbiles.
+               */
+              phoneConf: {
+                imgAlign: 'left' | 'right' | 'center' | 'overflow';
+                /**
+                 * La posición de la descripción relativa a la imagen.
+                 */
+                descPos?: ('n' | 's' | 'e' | 'w') | null;
+              };
+              /**
+               * La configuración que determina como se ve la imágen de un proyecto en escritorio.
+               */
+              deskConf: {
+                /**
+                 * El tamaño de la imagen relativo al bloque que la contiene
+                 */
+                imageSize: number;
+                /**
+                 * La posición de la descripción relativa a la imagen.
+                 */
+                descPos?: ('n' | 's' | 'e' | 'w') | null;
+                /**
+                 * Establece esta imagen como parte de un grupo y donde debería ser alineado en el contenedor del grupo.
+                 */
+                groupAlign?: ('top' | 'middle' | 'bottom') | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'imageGroup';
+      }
+  )[];
   /**
    * La imágen que aparece en la lista de selección de proyectos.
    */
-  thumbnail?: (number | null) | Media;
+  thumbnail: number | Media;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;

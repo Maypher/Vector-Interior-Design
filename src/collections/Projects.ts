@@ -183,6 +183,7 @@ export const Projects: CollectionConfig = {
       label: 'Imágenes',
       type: 'blocks',
       minRows: 1,
+      required: true,
       blocks: [
         {
           slug: 'image',
@@ -243,6 +244,8 @@ export const Projects: CollectionConfig = {
       validate: (imgs) => {
         const images = imgs as Project['images'] // Doing this because typing it in the function definition causes an error
 
+        if (!images || images.length === 0) return 'Projecto debe tener al menos 1 imagen.'
+
         if (images?.at(0)?.blockType === 'imageGroup')
           return 'Primera imágen no puede ser un grupo.'
         return true
@@ -252,6 +255,7 @@ export const Projects: CollectionConfig = {
       type: 'upload',
       name: 'thumbnail',
       label: 'Miniatura',
+      required: true,
       admin: {
         description: 'La imágen que aparece en la lista de selección de proyectos.',
       },
