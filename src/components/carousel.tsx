@@ -118,7 +118,7 @@ export default function Carousel({ projects }: Props) {
       </div>
       <div
         id="carousel-mobile"
-        className="lg:hidden flex flex-col justify-center header-screen min-h-150! bg-vector-grey"
+        className="lg:hidden flex flex-col justify-center set-header-screen min-h-150! bg-vector-grey"
       >
         <div className="glide__track bg-vector-grey" data-glide-el="track">
           <ul className=" glide__slides">
