@@ -3,14 +3,15 @@ import { draftMode } from 'next/headers'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
+import { PAYLOAD_SECRET } from '@/lib/secrets'
+
 export async function GET(request: Request) {
   // Parse query string parameters
   const { searchParams } = new URL(request.url)
   const secret = searchParams.get('secret')
   const path = searchParams.get('path')
 
-  if (secret !== process.env.DRAFT_MODE_SECRET || !path)
-    return new Response('Invalid params', { status: 401 })
+  if (secret !== PAYLOAD_SECRET || !path) return new Response('Invalid params', { status: 401 })
 
   const payload = await getPayload({ config })
   const { user } = await payload.auth({ headers: request.headers })
