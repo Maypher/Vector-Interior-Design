@@ -1,5 +1,6 @@
 services:
   payload:
+    restart: unless-stopped
     build: .
     ports:
       - '3000:3000'
@@ -26,7 +27,7 @@ services:
 
   # Uncomment the following to use postgres
   postgres:
-    restart: always
+    restart: unless-stopped
     image: postgres:17.5-alpine
     volumes:
       - pgdata:/var/lib/postgresql/data

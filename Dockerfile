@@ -18,7 +18,9 @@ RUN \
 # Target for development
 FROM base AS development
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+COPY package.json .
+COPY package-lock.json .
+RUN npm install
 COPY . .
 
 CMD ["npm", "run", "dev"]
