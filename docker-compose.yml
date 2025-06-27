@@ -12,6 +12,9 @@ services:
       - postgres
     env_file:
       - .env
+    secrets:
+      - postgres-password
+      - payload-secret
 
   # Ensure your DATABASE_URI uses 'mongo' as the hostname ie. mongodb://mongo/my-db-name
   # mongo:
@@ -31,10 +34,18 @@ services:
     image: postgres:17.5-alpine
     volumes:
       - pgdata:/var/lib/postgresql/data
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
+    secrets:
+      - postgres-password
 
 volumes:
   # data:
   pgdata:
   images:
+
+secrets:
+  postgres-password:
+    file: .secrets/postgres-password.txt
+  payload-secret:
+    file: .secrets/payload-secret.txt

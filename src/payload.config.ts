@@ -1,6 +1,9 @@
 // storage-adapter-import-placeholder
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
+import { PAYLOAD_SECRET } from './lib/secrets'
+import { DATABASE_URI } from './lib/secrets'
+
 import {
   lexicalEditor,
   FixedToolbarFeature,
@@ -80,13 +83,13 @@ export default buildConfig({
       UploadFeature(),
     ],
   }),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI || '',
+      connectionString: DATABASE_URI,
     },
     prodMigrations: migrations,
   }),
