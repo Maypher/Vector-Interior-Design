@@ -1,17 +1,18 @@
 services:
   payload:
+    image: vector-portfolio-payload
     restart: unless-stopped
     build: .
     ports:
       - '3000:3000'
     volumes:
       - images:/app/media
+    environment:
+      - NEXT_PUBLIC_PAYLOAD_URL=${NEXT_PUBLIC_PAYLOAD_URL:?Website URL required}
     # command: sh -c "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm dev"
     depends_on:
       # - mongo
       - postgres
-    env_file:
-      - .env
     secrets:
       - postgres-password
       - payload-secret
