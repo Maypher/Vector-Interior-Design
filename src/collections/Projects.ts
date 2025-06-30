@@ -173,6 +173,7 @@ export const Projects: CollectionConfig = {
       label: {
         es: 'Descripción',
       },
+      localized: true,
       admin: {
         description: 'Descripción general del projecto.',
       },
