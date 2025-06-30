@@ -6,6 +6,8 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import ScrollToTop from '@/components/sculptures/ScrollToTop'
 import { draftMode } from 'next/headers'
 import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
+import { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
 
 import '@styles/descriptions.scss'
 import { Fragment } from 'react'
@@ -131,4 +133,35 @@ export default async function Sculptures({ params }: { params: Promise<{ locale:
       <ScrollToTop backgroundColor={sculptures.sculptures!.at(-1)?.bgColor} />
     </div>
   )
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = (await params) as { locale: 'en' | 'en' }
+
+  const t = await getTranslations({ locale })
+  const payload = await getPayload({ config })
+
+  const sculptures = await payload.findGlobal({
+    slug: 'sculpture',
+    locale,
+  })
+
+  const firstImage = sculptures.sculptures?.at(0)
+
+  const ogImage = (
+    firstImage?.blockType === 'sculpture' ? firstImage.image : firstImage?.images
+  ) as Media
+
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_PAYLOAD_URL || ''),
+    title: t('NavBar.sculptures'),
+    openGraph: {
+      title: t('NavBar.sculptures'),
+      images: ogImage.url!,
+    },
+  }
 }

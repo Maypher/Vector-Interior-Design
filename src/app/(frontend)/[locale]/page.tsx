@@ -6,6 +6,7 @@ import { MainPageImage, Media } from '@/payload-types'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { getTranslations } from 'next-intl/server'
 import headersConverter from '@/lib/utils/converter'
+import { Metadata } from 'next'
 
 import ScrollToTopBtn from '@/components/mainPage/ScrollToTopBtn'
 import Footer from '@/components/mainPage/Footer'
@@ -249,4 +250,29 @@ export default async function MainPage({ params }: Props) {
       <Footer />
     </div>
   )
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+
+  const payload = await getPayload({ config })
+
+  const data = await payload.findGlobal({
+    slug: 'mainPageImages',
+    locale: locale as 'es' | 'en',
+  })
+
+  const firstImage = data.images?.at(0)
+  const ogImage = firstImage?.blockType === 'image' && (firstImage.image as Media)
+
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_PAYLOAD_URL || ''),
+    openGraph: {
+      images: (ogImage && ogImage.url!) || undefined,
+    },
+  }
 }

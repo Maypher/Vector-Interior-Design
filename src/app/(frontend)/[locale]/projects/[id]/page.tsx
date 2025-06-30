@@ -13,6 +13,8 @@ import '@styles/arrow.css'
 import '@styles/descriptions.scss'
 import { Link } from '@/i18n/navigation'
 import { draftMode } from 'next/headers'
+import { Metadata } from 'next'
+import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
 
 interface Props {
   params: Promise<{
@@ -153,8 +155,8 @@ const Page = async ({ params }: Props) => {
 
           return (
             <div key={img.id}>
-              <div
-                className="hidden lg:flex header-screen  items-center justify-evenly"
+              <figure
+                className="hidden lg:flex header-screen  items-center justify-evenly h-50"
                 style={{ backgroundColor: image.bgColor }}
                 key={`${img.id}-desktop`}
               >
@@ -177,7 +179,7 @@ const Page = async ({ params }: Props) => {
                     />
                   </div>
                 </figcaption>
-              </div>
+              </figure>
               <div
                 className="flex flex-col justify-evenly gap-y-20 py-20 lg:hidden"
                 style={{ backgroundColor: image.bgColor }}
@@ -246,3 +248,39 @@ const Page = async ({ params }: Props) => {
 
 export default Page
 export const dynamic = 'error'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: 'en' | 'es'; id: number }>
+}): Promise<Metadata> {
+  const { id, locale } = await params
+  const payload = await getPayload({ config })
+
+  const project: Project | null = await payload.findByID({
+    collection: 'project',
+    id,
+    locale,
+    depth: 2,
+    draft: false,
+    overrideAccess: false,
+    disableErrors: true, // Return null instead of throwing an error if the project doesn't exist
+  })
+
+  const thumbnail = project?.thumbnail as Media
+
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_PAYLOAD_URL || ''),
+    title: project?.name,
+    description: project && convertLexicalToPlaintext({ data: project?.description }),
+    openGraph: {
+      images: [
+        {
+          url: thumbnail.url!,
+          width: thumbnail.width!,
+          height: thumbnail.height!,
+        },
+      ],
+    },
+  }
+}
