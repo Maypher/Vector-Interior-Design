@@ -1,0 +1,96 @@
+name: Build and deploy Vector Interior Design Website
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "**/*.md"
+      - "**/docs/*"
+      - "**/graphql.yml"
+      - "**/*LICENSE"
+      - ".vscode"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and deploy Vector site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout locally
+        if: ${{ env.ACT }}
+        uses: actions/checkout@v4
+        with: 
+          repository: Maypher/Vector-Interior-Design
+          ref: "nextjs"
+          token: "${{ secrets.GITHUB_PAT }}"
+      - name: Checkout
+        if: ${{ !env.ACT }}
+        uses: actions/checkout@v4
+      - name: Setup ssh key
+        run: |
+          ssh_key="${{ secrets.ssh_key }}"
+          set -e
+          mkdir -p ~/.ssh
+          echo "$ssh_key" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ip=$(echo "${{ secrets.ssh_connection }}" | cut -d'@' -f2)
+          echo "Before keyscan $ip"
+          ssh-keyscan -H "$ip" >> ~/.ssh/known_hosts
+          echo "After keyscan"
+      - name: Make directories
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
+            set -e
+            mkdir -p ~/vectorapp/vector-portfolio
+          "
+      - name: Install dependencies locally
+        if: ${{ env.ACT }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install ca-certificates curl
+          sudo install -m 0755 -d /etc/apt/keyrings
+          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+          sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+          # Add the repository to Apt sources:
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+            $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+
+          apt-get update && apt-get -y install rsync pigz apache2-utils docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+      - name: Copy docker-compose and env variables
+        run: |
+          mkdir .secrets
+          rsync -aqc docker-compose.yml ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
+          ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
+              cd ~/vectorapp/vector-portfolio/
+              echo "${{ env.NEXT_PUBLIC_PAYLOAD_URL }}" > .env
+
+              mkdir .secrets
+              echo "${{ secrets.payload_secret }}" > .secrets/payload-secret.txt
+              echo "${{ secrets.postgres_password }}" > .secrets/postgres-password.txt
+            "
+      - name: Build and push changes
+        run: |
+          docker compose build
+          docker save -o payload.tar vector-portfolio-payload:latest
+          pigz payload.tar
+          rsync -aqc payload.tar.gz ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
+      - name: Pull changes
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
+            cd ~/vectorapp/vector-portfolio
+
+            docker load -q -i payload.tar.gz
+            rm payload.tar.gz
+
+            export NEXT_PUBLIC_PAYLOAD_URL="${{ env.NEXT_PUBLIC_PAYLOAD_URL }}"
+            docker compose up -d --no-build
+            docker image prune -f
+          "
