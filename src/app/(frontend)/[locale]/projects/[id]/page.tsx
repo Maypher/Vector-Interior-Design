@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
+import headersConverter from '@/lib/utils/converter'
 
 import { ReactNode } from 'react'
 import ImageSkeleton from '@/components/global/ImageSkeleton'
@@ -55,7 +56,11 @@ function DesktopImage(img: ProjectImage): ReactNode {
         <figcaption
           className={`${descTopOrBottom ? 'max-w-9/10 absolute' : 'max-w-2/5'} ${descPos === 'n' ? 'bottom-21/20' : descPos === 's' ? 'top-21/20' : ''}`}
         >
-          <RichText data={img.description} className="img-description" />
+          <RichText
+            data={img.description}
+            className="img-description"
+            converters={headersConverter}
+          />
         </figcaption>
       )}
     </figure>
@@ -64,7 +69,7 @@ function DesktopImage(img: ProjectImage): ReactNode {
 
 function DesktopImageGroup(imgGroup: ProjectImageGroup): ReactNode {
   return (
-    <div className="flex w-full min-h-svh py-25 justify-evenly">
+    <div className="flex w-full min-h-svh py-25 justify-around">
       {imgGroup.images?.map((img) => (
         <div
           key={img.id}
@@ -106,7 +111,11 @@ function PhoneImage(img: ProjectImage): ReactNode {
       />
       {img.description && img.phoneConf.descPos && (
         <figcaption className="max-w-9/10 mx-auto">
-          <RichText data={img.description} className="img-description" />
+          <RichText
+            data={img.description}
+            className="img-description"
+            converters={headersConverter}
+          />
         </figcaption>
       )}
     </figure>
@@ -176,6 +185,7 @@ const Page = async ({ params }: Props) => {
                     <RichText
                       data={project.description}
                       className="img-description text-left font-Nexa size-full text-balance"
+                      converters={headersConverter}
                     />
                   </div>
                 </figcaption>
@@ -196,7 +206,11 @@ const Page = async ({ params }: Props) => {
                     {t('area')}: {project.area} m²
                   </p>
                   <h1 className="text-3xl! mb-6">{project.name}</h1>
-                  <RichText data={project.description} className="img-description text-pretty" />
+                  <RichText
+                    data={project.description}
+                    className="img-description text-pretty"
+                    converters={headersConverter}
+                  />
                 </div>
               </div>
             </div>
