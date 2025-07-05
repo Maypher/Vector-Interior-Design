@@ -2,6 +2,7 @@ import { GlobalConfig } from 'payload'
 import { routing } from '@/i18n/routing'
 import { revalidatePath } from 'next/cache'
 import draftAccess from '@/lib/utils/access'
+import purgeRoute from '@/lib/utils/purge'
 
 export const Conclusion: GlobalConfig = {
   slug: 'conclusion',
@@ -55,12 +56,18 @@ export const Conclusion: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      ({ req, doc }) => {
+      async ({ req, doc }) => {
         if (doc._status === 'published') {
           const updatedLocale = req.locale
           if (updatedLocale === 'all')
-            routing.locales.map((locale) => revalidatePath(`/${locale}/conclusion`))
-          else revalidatePath(`/${updatedLocale}/conclusion`)
+            routing.locales.map(async (locale) => {
+              revalidatePath(`/${locale}/conclusion`)
+              await purgeRoute(`${locale}/conclusion`)
+            })
+          else {
+            revalidatePath(`/${updatedLocale}/conclusion`)
+            await purgeRoute(`${updatedLocale}/conclusion`)
+          }
         }
       },
     ],

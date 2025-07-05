@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { AssertionError, deepStrictEqual } from 'assert' // Validation always runs on the server so it's safe to use this
 import { routing } from '@/i18n/routing'
 import draftAccess from '@/lib/utils/access'
+import purgeURL from '@/lib/utils/purge'
 
 // Extracting it from imageConfig since there's an extra field for groups so I add it manually when setting the schema
 const desktopConfig: Field = {
@@ -282,8 +283,14 @@ export const Projects: CollectionConfig = {
 
           // If all locales were updated then revalidate all languages otherwise only the updated locale
           if (updatedLocale === 'all')
-            routing.locales.forEach((locale) => revalidatePath(`/${locale}${updateURL}`))
-          else revalidatePath(`/${updatedLocale}${updateURL}`)
+            routing.locales.forEach(async (locale) => {
+              revalidatePath(`/${locale}${updateURL}`)
+              await purgeURL(`${locale}${updateURL}`) // Purge nginx cache
+            })
+          else {
+            revalidatePath(`/${updatedLocale}${updateURL}`)
+            await purgeURL(`${updatedLocale}${updateURL}`)
+          }
 
           // If either the thumbnail or project name was changed revalidate the projects page
           // Using try...catch since deeepStrictEqual raises an AssertionError if the values don't match
@@ -292,8 +299,14 @@ export const Projects: CollectionConfig = {
             deepStrictEqual(doc.thumbnail, previousDoc.thumbnail)
           } catch {
             if (updatedLocale === 'all')
-              routing.locales.forEach((locale) => revalidatePath(`/${locale}/projects`))
-            else revalidatePath(`/${updatedLocale}/projects`)
+              routing.locales.forEach(async (locale) => {
+                revalidatePath(`/${locale}/projects`)
+                await purgeURL(`${purgeURL}/${locale}/projects`)
+              })
+            else {
+              revalidatePath(`/${updatedLocale}/projects`)
+              await purgeURL(`${updatedLocale}/projects`)
+            }
           }
         }
       },

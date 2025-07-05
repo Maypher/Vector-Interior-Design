@@ -61,7 +61,7 @@ export default buildConfig({
         ? {
             email: 'a@gmail.com',
             password: '1234',
-            prefillOnly: false,
+            prefillOnly: true,
           }
         : false,
   },

@@ -7,7 +7,9 @@ services:
         - action: sync
           path: .
           target: /app
-          ignore: node_modules
+          ignore: 
+          - node_modules
+          - nginx
     stdin_open: true
     tty: true
   postgres:
@@ -16,3 +18,16 @@ services:
       # "npm run payload migrate:create" isn't possible from within the host machine unless the port is exposed
       # and access throught localhost:5432 instead of postgres:5432
       - 5432:5432
+  nginx:
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./nginx/nginx.conf
+          target: /etc/nginx/nginx.conf
+        - action: rebuild
+          path: ./nginx/templates
+          target: /etc/nginx/templates/
+    volumes:
+      - type: bind
+        source: ./nginx/certificates/
+        target: /certificates/nginx/

@@ -3,33 +3,16 @@ services:
     image: vector-portfolio-payload
     restart: unless-stopped
     build: .
-    ports:
-      - '3000:3000'
     volumes:
       - images:/app/media
     environment:
-      - NEXT_PUBLIC_PAYLOAD_URL=${NEXT_PUBLIC_PAYLOAD_URL:?Website URL required}
-    # command: sh -c "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm dev"
+      - NEXT_PUBLIC_PAYLOAD_URL=https://${DOMAIN:?Website URL required}
     depends_on:
-      # - mongo
       - postgres
+      - nginx
     secrets:
       - postgres-password
       - payload-secret
-
-  # Ensure your DATABASE_URI uses 'mongo' as the hostname ie. mongodb://mongo/my-db-name
-  # mongo:
-  #   image: mongo:latest
-  #   ports:
-  #     - '27017:27017'
-  #   command:
-  #     - --storageEngine=wiredTiger
-  #   volumes:
-  #     - data:/data/db
-  #   logging:
-  #     driver: none
-
-  # Uncomment the following to use postgres
   postgres:
     restart: unless-stopped
     image: postgres:17.5-alpine
@@ -39,9 +22,20 @@ services:
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
     secrets:
       - postgres-password
+  nginx:
+    build:
+      context: ./nginx
+      args:
+        ENABLED_MODULES: cachepurge
+    restart: unless-stopped
+    ports:
+      - 443:443
+      - 80:80
+    environment:
+      - NGINX_HOST=${DOMAIN:?Website URL required}
+      - NGINX_ADMIN_HOST=${ADMIN_DOMAIN:?Admin URL required}
 
 volumes:
-  # data:
   pgdata:
   images:
 
