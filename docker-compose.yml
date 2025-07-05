@@ -33,7 +33,6 @@ services:
       - 80:80
     environment:
       - NGINX_HOST=${DOMAIN:?Website URL required}
-      - NGINX_ADMIN_HOST=${ADMIN_DOMAIN:?Admin URL required}
 
 volumes:
   pgdata:
