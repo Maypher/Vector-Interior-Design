@@ -68,7 +68,7 @@ jobs:
           rsync -aqc docker-compose.yml ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
           ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
               cd ~/vectorapp/vector-portfolio/
-              echo "${{ env.NEXT_PUBLIC_PAYLOAD_URL }}" > .env
+              echo "${{ env.DOMAIN }}" > .env
 
               mkdir -p .secrets
               echo "${{ secrets.payload_secret }}" > .secrets/payload-secret.txt
@@ -93,7 +93,7 @@ jobs:
             rm payload.tar.gz
             rm nginx.tar.gz
 
-            export DOMAIN="${{ env.NEXT_PUBLIC_PAYLOAD_URL }}"
+            export DOMAIN="${{ env.DOMAIN }}"
             docker compose up -d --no-build
             docker image prune -f
           "
