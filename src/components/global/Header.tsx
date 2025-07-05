@@ -33,12 +33,12 @@ export default function Header() {
       // triggers with the click to open the menu this delays it to the next
       // cycle which is enough to not trigger it automatically.
       const timerId = setTimeout(() => {
-        document.addEventListener('mousedown', handleClickOutside)
+        document.addEventListener('click', handleClickOutside)
       }, 0)
 
       return () => {
         clearTimeout(timerId)
-        document.removeEventListener('mousedown', handleClickOutside)
+        document.removeEventListener('click', handleClickOutside)
       }
     }
   }, [menuOpen])
@@ -85,15 +85,19 @@ export default function Header() {
         </div>
         <button
           type="button"
-          className={`text-vector-black flex flex-col gap-y-2 transition-transform lg:hidden ${menuOpen ? '-rotate-90' : ''}`}
-          onClick={() => {
-            setMenuOpen((prevValue) => !prevValue)
-          }}
+          className={`text-vector-black text-3xl transition-transform lg:hidden ${menuOpen ? '-rotate-90' : ''}`}
+          onClick={() => setMenuOpen((prevValue) => !prevValue)}
           ref={menuBtn}
         >
-          <div className="w-7 h-1 rounded-sm bg-vector-black"></div>
-          <div className="w-7 h-1 rounded-sm bg-vector-black"></div>
-          <div className="w-7 h-1 rounded-sm bg-vector-black"></div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            fill="#000"
+          >
+            <path d="M120-120v-80h720v80H120Zm0-320v-80h720v80H120Zm0-320v-80h720v80H120Z" />
+          </svg>
         </button>
       </header>
       <div
