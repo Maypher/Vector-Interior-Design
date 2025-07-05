@@ -38,9 +38,7 @@ jobs:
           echo "$ssh_key" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ip=$(echo "${{ secrets.ssh_connection }}" | cut -d'@' -f2)
-          echo "Before keyscan $ip"
           ssh-keyscan -H "$ip" >> ~/.ssh/known_hosts
-          echo "After keyscan"
       - name: Make directories
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
@@ -80,17 +78,22 @@ jobs:
         run: |
           docker compose build
           docker save -o payload.tar vector-portfolio-payload:latest
+          docker save -o nginx.tar vector-portfolio-nginx:latest
           pigz payload.tar
+          pigz nginx.tar
           rsync -aqc payload.tar.gz ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
+          rsync -aqc nginx.tar.gz ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
       - name: Pull changes
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
             cd ~/vectorapp/vector-portfolio
 
             docker load -q -i payload.tar.gz
+            docker load -q -i nginx.tar.gz
             rm payload.tar.gz
+            rm nginx.tar.gz
 
-            export NEXT_PUBLIC_PAYLOAD_URL="${{ env.NEXT_PUBLIC_PAYLOAD_URL }}"
+            export DOMAIN="${{ env.NEXT_PUBLIC_PAYLOAD_URL }}"
             docker compose up -d --no-build
             docker image prune -f
           "
