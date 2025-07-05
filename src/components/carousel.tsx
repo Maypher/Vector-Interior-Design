@@ -57,7 +57,7 @@ export default function Carousel({ projects }: Props) {
 
   return (
     <div className="bg-vector-grey flex flex-col justify-evenly lg:pt-10 lg:gap-y-10 set-header-screen">
-      <h1 className="text-6xl font-bold text-center">{t('NavBar.projects')}</h1>
+      <h1 className="text-2xl! font-bold text-center">{t('NavBar.projects')}</h1>
       <div id="carousel" className="hidden grow lg:block">
         <div
           className="glide__track h-full bg-vector-grey relative flex flex-col"
@@ -157,10 +157,7 @@ export default function Carousel({ projects }: Props) {
                         />
                       </div>
                       <figcaption>
-                        <p
-                          className="font-Nexa my-5 text-xs font-extralight"
-                          style={{ letterSpacing: '0.1rem' }}
-                        >
+                        <p className="font-Nexa my-5" style={{ letterSpacing: '0.1rem' }}>
                           {name}
                         </p>
                       </figcaption>
