@@ -66,13 +66,13 @@ jobs:
           apt-get update && apt-get -y install rsync pigz apache2-utils docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
       - name: Copy docker-compose and env variables
         run: |
-          mkdir .secrets
+          mkdir -p .secrets
           rsync -aqc docker-compose.yml ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
           ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
               cd ~/vectorapp/vector-portfolio/
               echo "${{ env.NEXT_PUBLIC_PAYLOAD_URL }}" > .env
 
-              mkdir .secrets
+              mkdir -p .secrets
               echo "${{ secrets.payload_secret }}" > .secrets/payload-secret.txt
               echo "${{ secrets.postgres_password }}" > .secrets/postgres-password.txt
             "
