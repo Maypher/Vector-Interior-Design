@@ -6,7 +6,7 @@ services:
     volumes:
       - images:/app/media
     environment:
-      - NEXT_PUBLIC_PAYLOAD_URL=https://${DOMAIN:?Website URL required}
+      - NEXT_PUBLIC_PAYLOAD_URL=https://${DOMAIN:?Website domain required}
     depends_on:
       - postgres
       - nginx
@@ -32,8 +32,11 @@ services:
       - 443:443
       - 80:80
     environment:
-      - NGINX_HOST=${DOMAIN:?Website URL required}
-
+      - NGINX_HOST=${DOMAIN:?Website domain required}
+    volumes:
+      - type: bind
+        source: /etc/letsencrypt/live/${DOMAIN:?Website domain required}
+        target: /certificates/nginx/
 volumes:
   pgdata:
   images:

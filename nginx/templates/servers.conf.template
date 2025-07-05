@@ -1,8 +1,8 @@
 server {
     listen 443 ssl;
     server_name ${NGINX_HOST};
-    ssl_certificate /certificates/nginx/vectorinterior.local.crt;
-    ssl_certificate_key /certificates/nginx/vectorinterior.local.key;
+    ssl_certificate /certificates/nginx/fullchain.pem;
+    ssl_certificate_key /certificates/nginx/privkey.pem;
 
     location / {
         proxy_pass http://payload:3000;
