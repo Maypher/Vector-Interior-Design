@@ -130,7 +130,9 @@ export default async function Sculptures({ params }: { params: Promise<{ locale:
           </div>
         )
       })}
-      <ScrollToTop backgroundColor={sculptures.sculptures!.at(-1)?.bgColor} />
+      {sculptures.sculptures && sculptures.sculptures.length > 0 && (
+        <ScrollToTop backgroundColor={sculptures.sculptures.at(-1)?.bgColor} />
+      )}
     </div>
   )
 }
@@ -161,7 +163,7 @@ export async function generateMetadata({
     title: t('NavBar.sculptures'),
     openGraph: {
       title: t('NavBar.sculptures'),
-      images: ogImage.url!,
+      images: ogImage?.url || '',
     },
   }
 }
