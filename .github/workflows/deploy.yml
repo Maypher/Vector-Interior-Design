@@ -68,11 +68,11 @@ jobs:
           rsync -aqc docker-compose.yml ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
           ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
               cd ~/vectorapp/vector-portfolio/
-              echo "${{ env.DOMAIN }}" > .env
 
               mkdir -p .secrets
-              echo "${{ secrets.payload_secret }}" > .secrets/payload-secret.txt
-              echo "${{ secrets.postgres_password }}" > .secrets/postgres-password.txt
+              echo "${{ secrets.payload-secret }}" > .secrets/payload-secret.txt
+              echo "${{ secrets.postgres-password }}" > .secrets/postgres-password.txt
+              echo "${{ secrets.email-password }}" > .secrets/email-password.txt
             "
       - name: Build and push changes
         run: |
@@ -94,6 +94,7 @@ jobs:
             rm nginx.tar.gz
 
             export DOMAIN="${{ env.DOMAIN }}"
+            export EMAIL_USER="${{ env.EMAIL_USER }}"
             docker compose up -d --no-build
             docker image prune -f
           "

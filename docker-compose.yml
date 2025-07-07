@@ -7,12 +7,15 @@ services:
       - images:/app/media
     environment:
       - NEXT_PUBLIC_PAYLOAD_URL=https://${DOMAIN:?Website domain required}
+      - SMTP_HOST=${SMTP_HOST:?SMTP_HOST required for email functionality}
+      - EMAIL_USER=${EMAIL_USER:?EMAIL_USER required for email functionality}
     depends_on:
       - postgres
       - nginx
     secrets:
       - postgres-password
       - payload-secret
+      - email-password
   postgres:
     restart: unless-stopped
     image: postgres:17.5-alpine
@@ -46,3 +49,5 @@ secrets:
     file: .secrets/postgres-password.txt
   payload-secret:
     file: .secrets/payload-secret.txt
+  email-password:
+    file: .secrets/email-password.txt

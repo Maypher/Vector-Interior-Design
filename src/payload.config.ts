@@ -1,8 +1,9 @@
 // storage-adapter-import-placeholder
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
-import { PAYLOAD_SECRET } from './lib/secrets'
+import { EMAIL_PASSWORD, PAYLOAD_SECRET } from './lib/secrets'
 import { DATABASE_URI } from './lib/secrets'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 
 import {
   lexicalEditor,
@@ -65,6 +66,18 @@ export default buildConfig({
           }
         : false,
   },
+  email: nodemailerAdapter({
+    defaultFromAddress: 'contact@vectorinterior.design',
+    defaultFromName: 'Vector: Interior Design',
+    transportOptions: {
+      host: process.env.SMTP_HOST,
+      port: 587,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: EMAIL_PASSWORD,
+      },
+    },
+  }),
   localization: {
     locales: ['en', 'es'],
     defaultLocale: 'es',
