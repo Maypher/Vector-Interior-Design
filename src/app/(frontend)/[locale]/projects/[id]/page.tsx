@@ -290,9 +290,9 @@ export async function generateMetadata({
     openGraph: {
       images: [
         {
-          url: thumbnail.url!,
-          width: thumbnail.width!,
-          height: thumbnail.height!,
+          url: thumbnail.url || '',
+          width: thumbnail.width || 0,
+          height: thumbnail.height || 0,
         },
       ],
     },
