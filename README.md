@@ -27,6 +27,8 @@ Saved in `.secrets/<secret-name>.txt`
 | payload-secret    | A random secret used for payload encryption          |
 | postgres-password | The password used for the root user of the database  |
 
+For github actions they are named using snake case `email_password`.
+
 # Running
 
 This site is deploy to a docker compose setup and can be run in any VPS. There are two ways of running this project:
