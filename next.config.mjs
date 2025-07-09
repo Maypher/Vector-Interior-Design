@@ -11,6 +11,11 @@ const nextConfig = {
     position: 'bottom-right',
   },
   output: 'standalone',
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['payload:3000', 'localhost'],
+    },
+  },
 }
 
 const withNextIntl = createNextIntlPlugin()
