@@ -70,9 +70,13 @@ jobs:
               cd ~/vectorapp/vector-portfolio/
 
               mkdir -p .secrets
-              echo "${{ secrets.payload-secret }}" > .secrets/payload-secret.txt
-              echo "${{ secrets.postgres-password }}" > .secrets/postgres-password.txt
-              echo "${{ secrets.email-password }}" > .secrets/email-password.txt
+              cd .secrets
+              touch payload-secret.txt
+              touch postgres-password.txt
+              touch email-password.txt
+              echo '${{ secrets.payload_secret }}' > payload-secret.txt
+              echo '${{ secrets.postgres_password }}' > postgres-password.txt
+              echo '${{ secrets.email_password }}' > email-password.txt
             "
       - name: Build and push changes
         run: |
@@ -95,6 +99,7 @@ jobs:
 
             export DOMAIN="${{ env.DOMAIN }}"
             export EMAIL_USER="${{ env.EMAIL_USER }}"
+            export SMTP_HOST="${{env.SMTP_HOST}}"
             docker compose up -d --no-build
             docker image prune -f
           "
