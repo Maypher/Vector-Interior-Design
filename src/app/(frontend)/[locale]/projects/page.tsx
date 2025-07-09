@@ -5,7 +5,7 @@ import { Suspense } from 'react'
 import { draftMode } from 'next/headers'
 import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Media } from '@/payload-types'
 
 export const dynamic = 'error'
@@ -44,6 +44,8 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
+
+  setRequestLocale(locale)
 
   const t = await getTranslations({ locale })
   const title = t('NavBar.projects')

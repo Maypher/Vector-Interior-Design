@@ -4,7 +4,7 @@ import { draftMode } from 'next/headers'
 import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import { MainPageImage, Media } from '@/payload-types'
 import { RichText } from '@payloadcms/richtext-lexical/react'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import headersConverter from '@/lib/utils/converter'
 import { Metadata } from 'next'
 
@@ -192,6 +192,7 @@ export const dynamic = 'error'
 export default async function MainPage({ params }: Props) {
   const payload = await getPayload({ config })
   const { locale } = await params
+  setRequestLocale(locale)
   const t = await getTranslations({ locale, namespace: 'NavBar' })
 
   const { isEnabled } = await draftMode()
@@ -215,7 +216,7 @@ export default async function MainPage({ params }: Props) {
             return (
               <div
                 id="welcome"
-                className="header-screen flex flex-col lg:flex-row [&_figcaption]:flex [&_figcaption]:items-center [&_figcaption]:justify-center [&_figure]:pb-0! justify-stretch items-center grow lg:px-10 mb-20 lg:mb-0"
+                className="header-screen flex flex-col lg:flex-row [&_figcaption]:flex [&_figcaption]:items-center [&_figcaption]:justify-center [&_figure]:pb-0! [&>div]:px-0! justify-stretch items-center grow lg:px-10 mb-20 lg:mb-0"
                 key={image.id}
                 style={{ backgroundColor: image.bgColor }}
               >
