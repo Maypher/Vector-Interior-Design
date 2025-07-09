@@ -29,6 +29,13 @@ Saved in `.secrets/<secret-name>.txt`
 
 For github actions they are named using snake case `email_password`.
 
+## Github secrets
+
+| Secret         | Description                                           |
+|----------------|-------------------------------------------------------|
+| ssh_key        | The private key to connect to the VPS                 |
+| ssh_connection | The ssh connection string in the form user@ip_address |
+
 # Running
 
 This site is deploy to a docker compose setup and can be run in any VPS. There are two ways of running this project:
