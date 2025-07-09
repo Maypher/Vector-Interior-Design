@@ -85,6 +85,7 @@ jobs:
           export SMTP_HOST="${{vars.SMTP_HOST}}"
 
           docker compose build
+          docker image ls
           docker save -o payload.tar vector-portfolio-payload:latest
           docker save -o nginx.tar vector-portfolio-nginx:latest
           pigz payload.tar
