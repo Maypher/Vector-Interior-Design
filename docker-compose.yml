@@ -26,6 +26,7 @@ services:
     secrets:
       - postgres-password
   nginx:
+    image: vector-portfolio-nginx
     build:
       context: ./nginx
       args:
