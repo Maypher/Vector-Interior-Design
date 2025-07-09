@@ -3,7 +3,7 @@ name: Build and deploy Vector Interior Design Website
 on:
   push:
     branches:
-      - master
+      - nextjs
     paths-ignore:
       - "**/*.md"
       - "**/docs/*"
@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
         with: 
           repository: Maypher/Vector-Interior-Design
-          ref: "nextjs"
+          ref: "dev"
           token: "${{ secrets.GITHUB_PAT }}"
       - name: Checkout
         if: ${{ !env.ACT }}
