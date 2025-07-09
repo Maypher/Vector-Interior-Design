@@ -80,9 +80,9 @@ jobs:
             "
       - name: Build and push changes
         run: |
-          export DOMAIN="${{ env.DOMAIN }}"
-          export EMAIL_USER="${{ env.EMAIL_USER }}"
-          export SMTP_HOST="${{env.SMTP_HOST}}"
+          export DOMAIN="${{ vars.DOMAIN }}"
+          export EMAIL_USER="${{ vars.EMAIL_USER }}"
+          export SMTP_HOST="${{ vars.SMTP_HOST}}"
 
           docker compose build
           docker save -o payload.tar vector-portfolio-payload:latest
@@ -101,9 +101,9 @@ jobs:
             rm payload.tar.gz
             rm nginx.tar.gz
 
-            export DOMAIN="${{ env.DOMAIN }}"
-            export EMAIL_USER="${{ env.EMAIL_USER }}"
-            export SMTP_HOST="${{env.SMTP_HOST}}"
+            export DOMAIN="${{ vars.DOMAIN }}"
+            export EMAIL_USER="${{ vars.EMAIL_USER }}"
+            export SMTP_HOST="${{ vars.SMTP_HOST }}"
             docker compose up -d --no-build
             docker image prune -f
           "
