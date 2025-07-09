@@ -132,7 +132,7 @@ function aboutUsBlock(message: Extract<MainPageImageType, { blockType: 'aboutUs'
       <Image
         src={designer}
         alt="designer"
-        sizes="30vw"
+        sizes="(max-width: 1024px) 95vw, 30vw"
         className="h-auto w-full lg:h-7/10 lg:w-auto"
       />
       <figcaption className="lg:max-w-1/2">
