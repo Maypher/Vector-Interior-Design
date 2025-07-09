@@ -1,0 +1,77 @@
+.img-description {
+    color: var(--color-vector-cream);
+
+    p {
+        width: 100%;
+        font-size: 0.9rem;
+        line-height: 1.8;
+    }
+    
+    p:has(br) {
+       height: 1rem;
+    }
+
+    .level-1 {
+        font-size: 2.5em;
+        line-height: 1.1 !important;
+    }
+
+    .level-2 {
+        font-size: 1.5em;
+    }
+
+    .level-3 {
+        font-size: 1.17em;
+    }
+
+    .level-4 {
+        font-size: 1em;
+    }
+
+    .level-5 {
+        font-size: 0.67em;
+    }
+
+    .level {
+        letter-spacing: 0.001rem;
+        word-spacing: 0.1rem;
+        width: 100%;
+        margin-top: auto !important;
+        line-height: 1.5;
+    }
+}
+
+.about-us {
+    // Make the first line brighter than the rest
+    color: color-mix(in srgb, var(--color-vector-cream), black 50%);
+    
+    &::first-line {
+        color: var(--color-vector-cream);
+    }
+
+    p {
+        font-weight: bold;
+    }
+    
+    em {
+        font-style: normal;
+        color: var(--color-vector-cream);
+    }
+}
+
+// The elements blocks by default have h-svh. The first element in the page should have header-screen height
+// so this overrides it's size
+#welcome {
+    & > .mobile {
+        height: 100%;
+        padding-block: 0;
+        row-gap: 0;
+
+        figcaption {
+            flex-grow: 1;
+            
+            display: flex;
+            align-items: center;
+        }
+    }
+}

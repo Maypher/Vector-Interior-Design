@@ -1,0 +1,21 @@
+{
+  "LocaleSwitcher": {
+    "locale": "{locale, select, en {Ingles} es {Español} other {Desconocido}}"
+  },
+  "NavBar": {
+    "aboutUs": "Nosotros",
+    "projects": "Proyectos",
+    "sculptures": "Esculturas",
+    "contact": "Contacto",
+    "home": "Página Principal"
+  },
+  "Project": {
+    "area": "Área"
+  },
+  "Metadata": {
+    "google": "Especializados en Imagen Corporativa y Diseño Interior con más de 25 años de experiencia dedicados a transformar espacios en obras únicas y exclusivas. Contacto: contact@vectorinterior.design"
+  },
+  "errors": {
+    "404": "Página no encontrada"
+  }
+}

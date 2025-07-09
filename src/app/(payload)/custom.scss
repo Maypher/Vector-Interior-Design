@@ -1,0 +1,22 @@
+
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2.5rem;
+    box-sizing: border-box;
+    align-items: center;
+    justify-items: center;
+
+    button {
+        padding: 0;
+        transition: all 0.2s ease-in-out;
+        height: fit-content;
+        border-color: var(--theme-elevation-250);
+
+        &.selected, &:hover {
+            cursor: pointer;
+            border: 0.5rem solid var(--theme-elevation-250);
+        }
+    }
+}

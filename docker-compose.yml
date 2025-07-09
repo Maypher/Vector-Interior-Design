@@ -1,220 +1,53 @@
-name: vector-interior-design
-
 services:
-    admin-backend:
-        image: ${REGISTRY_URL}/vector/admin-backend:latest
-        build:
-            context: ./backend/
-            dockerfile: ./src/admin/Dockerfile
-            tags:
-                - "${REGISTRY_URL}/vector/admin-backend:latest"
-                - "${REGISTRY_URL}/vector/admin-backend:${ADMIN_BACKEND_TAG:?Tag required}"
-        environment:
-            - DEV_MODE=${DEV_MODE:-1}
-            - HOST=database
-            - USERNAME=${ADMIN_USERNAME:-admin}
-            - DB_PORT=${DATABASE_PORT:-5432}
-            - DB_NAME=${DATABASE_NAME:-postgres}
-            - IMAGES_URL=${ADMIN_IMAGES_URL:?Path required to return images.}
-        volumes:
-            - images_storage:/storage/images/
-        networks:
-            - admin
-            - backend
-        depends_on:
-            database:
-                condition: service_healthy
-                restart: true
-        develop:
-            watch:
-                - action: sync
-                  path: ./backend/src/admin/
-                  target: /app/src/admin/
-                - action: sync
-                  path: ./backend/src/common/
-                  target: /app/src/common/
-        restart: on-failure:3
-        profiles:
-            - prod
-        secrets:
-            - admin_password
-            - nginx_forward_secret
-    user-backend:
-        image: ${REGISTRY_URL}/vector/user-backend:latest
-        build:
-            context: ./backend/
-            dockerfile: ./src/user/Dockerfile
-            tags:
-                - "${REGISTRY_URL}/vector/user-backend:latest"
-                - "${REGISTRY_URL}/vector/user-backend:${USER_BACKEND_TAG:?Tag required}"
-        networks:
-            user:
-            backend:
-        depends_on:
-            database:
-                condition: service_healthy
-                restart: true
-        develop:
-            watch:
-                - action: sync
-                  path: ./backend/src/user/
-                  target: /app/src/
-                - action: sync
-                  path: ./backend/src/common/
-                  target: /app/src/common/
-        environment:
-            - DEV_MODE=${DEV_MODE:-1}
-            - USERNAME=${USER_USERNAME:-frontend}
-            - HOST=database
-            - DB_PORT=${DATABASE_PORT:-5432}
-            - DB_NAME=${DATABASE_NAME:-postgres}
-            - IMAGES_URL=${USER_IMAGES_URL:?Path required to return images.}
-        profiles:
-            - prod
-        secrets:
-            - user_password
-            - nginx_forward_secret
-        restart: on-failure:3
-    admin-frontend:
-        image: ${REGISTRY_URL}/vector/admin-frontend:latest
-        build:
-            context: ./frontend/admin/
-            args:
-                - PUBLIC_apiPath=${ADMIN_API_PATH:?Required to connect to the admin backend.}
-                - PUBLIC_userFrontendURL=${USER_URL:?Required to link missing people to the original site.}
-            target: production
-            tags:
-                - "${REGISTRY_URL}/vector/admin-frontend:latest"
-                - "${REGISTRY_URL}/vector/admin-frontend:${ADMIN_FRONTEND_TAG:?Tag required}"
-        networks:
-            - admin
-            - backend
-        depends_on:
-            - admin-backend
-        profiles:
-            - prod
-        restart: on-failure:3
-    user-frontend:
-        image: ${REGISTRY_URL}/vector/user-frontend:latest
-        build:
-            context: ./frontend/user/
-            args:
-                - PUBLIC_apiPath=${USER_API_PATH:?Required to connect to the user backend.}
-            target: production
-            tags:
-                - "${REGISTRY_URL}/vector/user-frontend:latest"
-                - "${REGISTRY_URL}/vector/user-frontend:${USER_FRONTEND_TAG:?Tag required}"
-        networks:
-            - user
-            - backend
-        depends_on:
-            - user-backend
-        profiles:
-            - prod
-        restart: on-failure:3
-    tests:
-        build:
-            context: ./backend/
-            dockerfile: ./tests/Dockerfile
-        profiles:
-            - tests
-        depends_on:
-            database:
-                condition: service_healthy
-                restart: true
-        networks:
-            - backend
-        environment:
-            - DB_NAME=${DATABASE_NAME:-postgres}
-            - DB_PORT=${DATABASE_PORT:-5432}
-        secrets:
-            - postgres_password
-    database:
-        image: ${REGISTRY_URL}/vector/database:latest
-        build:
-            context: ./database/
-            dockerfile: Dockerfile
-            tags:
-                - "${REGISTRY_URL}/vector/database:latest"
-                - "${REGISTRY_URL}/vector/database:${DATABASE_TAG:?Tag required}"
-        restart: on-failure:3
-        environment:
-            - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
-            - POSTGRES_DB=${DATABASE_NAME:-postgres}
-            - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
-            - USER_USERNAME=${USER_USERNAME:-frontend}
-            - PGPORT=${DATABASE_PORT:-5432}
-            - PGUSER=postgres
-        volumes:
-            - database_storage:/var/lib/postgresql/data/
-        networks:
-            - backend
-        healthcheck:
-            test: [ "CMD-SHELL", "pg_isready", "-d", "postgres" ]
-            interval: 1m30s
-            timeout: 30s
-            retries: 5
-            start_period: 30s
-        secrets:
-            - admin_password
-            - user_password
-            - postgres_password
-    nginx:
-        image: ${REGISTRY_URL}/vector/nginx:latest
-        build:
-            context: "./nginx/"
-            tags:
-                - "${REGISTRY_URL}/vector/nginx:latest"
-                - "${REGISTRY_URL}/vector/nginx:${NGINX_TAG:?Tag required}"
-        profiles: [ prod ]
-        ports:
-            - "80:80"
-        volumes:
-            - images_storage:/storage/images/:ro
-        depends_on:
-            - admin-backend
-        networks:
-            - backend
-        environment:
-            - DEV_MODE=${DEV_MODE:-1}
-            - USER_URL=${USER_URL:?User url required for reverse proxy.}
-            - USER_API_PATH=${USER_API_PATH:?Path required to proxy backend requests for user}
-            - ADMIN_URL=${ADMIN_URL:?Admin url required for reverse proxy.}
-            - ADMIN_API_PATH=${ADMIN_API_PATH:?Path required to proxy backend requests for admins}
-            - REGISTRY_URL=${REGISTRY_URL:?The url to push images to the self hosted registry}
-        develop:
-            watch:
-                - action: sync+restart
-                  path: ./nginx/entrypoint.sh
-                  target: /entrypoint.sh
-                - action: sync+restart
-                  path: ./nginx/nginx.conf
-                  target: /etc/nginx/templates/nginx.conf
-                - action: sync+restart
-                  path: ./nginx/includes/
-                  target: /usr/local/openresty/nginx/conf/includes/
-                - action: sync
-                  path: ./nginx/errors/
-                  target: /usr/local/openresty/nginx/conf/errors/
-                - action: sync+restart
-                  path: ./nginx/app.lua
-                  target: /lua/app.lua
-        restart: on-failure:3
-        secrets:
-            - nginx_forward_secret
+  payload:
+    image: vector-portfolio-payload
+    restart: unless-stopped
+    build: .
+    volumes:
+      - images:/app/media
+    environment:
+      - NEXT_PUBLIC_PAYLOAD_URL=https://${DOMAIN:?Website domain required}
+      - SMTP_HOST=${SMTP_HOST:?SMTP_HOST required for email functionality}
+      - EMAIL_USER=${EMAIL_USER:?EMAIL_USER required for email functionality}
+    depends_on:
+      - postgres
+      - nginx
+    secrets:
+      - postgres-password
+      - payload-secret
+      - email-password
+  postgres:
+    restart: unless-stopped
+    image: postgres:17.5-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
+    secrets:
+      - postgres-password
+  nginx:
+    build:
+      context: ./nginx
+      args:
+        ENABLED_MODULES: cachepurge
+    restart: unless-stopped
+    ports:
+      - 443:443
+      - 80:80
+    environment:
+      - NGINX_HOST=${DOMAIN:?Website domain required}
+    volumes:
+      - type: bind
+        source: /etc/letsencrypt/live/${DOMAIN:?Website domain required}
+        target: /certificates/nginx/
 volumes:
-    images_storage:
-    database_storage:
-networks:
-    user:
-    admin:
-    backend:
+  pgdata:
+  images:
+
 secrets:
-    user_password:
-        file: ./secrets/user_password.txt
-    admin_password:
-        file: ./secrets/admin_password.txt
-    postgres_password:
-        file: ./secrets/postgres_password.txt
-    nginx_forward_secret:
-        file: ./secrets/nginx_forward_secret.txt
+  postgres-password:
+    file: .secrets/postgres-password.txt
+  payload-secret:
+    file: .secrets/payload-secret.txt
+  email-password:
+    file: .secrets/email-password.txt

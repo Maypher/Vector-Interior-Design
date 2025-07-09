@@ -25,16 +25,17 @@ jobs:
         uses: actions/checkout@v4
         with: 
           repository: Maypher/Vector-Interior-Design
-          ref: "development"
+          ref: "nextjs"
           token: "${{ secrets.GITHUB_PAT }}"
       - name: Checkout
         if: ${{ !env.ACT }}
         uses: actions/checkout@v4
       - name: Setup ssh key
         run: |
+          ssh_key="${{ secrets.ssh_key }}"
           set -e
           mkdir -p ~/.ssh
-          echo "${{ secrets.ssh_key }}" > ~/.ssh/id_rsa
+          echo "$ssh_key" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ip=$(echo "${{ secrets.ssh_connection }}" | cut -d'@' -f2)
           ssh-keyscan -H "$ip" >> ~/.ssh/known_hosts
@@ -42,13 +43,8 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
             set -e
-            mkdir -p /vectorapp/
-            cd /vectorapp
-            mkdir -p app
+            mkdir -p ~/vectorapp/vector-portfolio
           "
-      - name: "Install htpasswd"
-        if: ${{ !env.ACT }}
-        run: sudo apt-get update && sudo apt-get -y install apache2-utils
       - name: Install dependencies locally
         if: ${{ env.ACT }}
         run: |
@@ -65,86 +61,45 @@ jobs:
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
           sudo apt-get update
 
-          apt-get update && apt-get -y install rsync apache2-utils docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-      - name: Update Registry Dockerfile
-        run: |
-          cd $GITHUB_WORKSPACE/registry/
-
-          # Check if the registry dockerfile has changed
-          local_checksum=$(sha256sum "Dockerfile" | awk '{print $1}')
-          remote_checksum=$(ssh "${{ secrets.ssh_connection }}" "sha256sum '/vectorapp/registry/Dockerfile' 2>/dev/null" | awk '{print $1}')        
-
-          # If so update it and restart the server
-          if [[ $local_checksum != $remote_checksum ]]; then
-          
-            # Make a password file
-            mkdir password
-            cd password
-            touch htpasswd
-
-            # Generate a bcrypt for the password and store in the file
-            htpasswd -bnBC 10 "${{ secrets.registry_username }}" "${{ secrets.registry_password }}" | tr -d '\n' > htpasswd
-
-            cd ..  
-
-            # Sync all data to the vps
-            rsync -aqc . ${{ secrets.ssh_connection }}:/vectorapp/app/registry/
-            
-            # Rebuild docker image
-            ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
-              cd /vectorapp/app/registry
-
-              docker stop 'vector-registry' || true
-              docker rm 'vector-registry' || true
-              docker build -t 'vector-registry' . --target 'base'
-              docker run -d --mount "type=bind,src=\${PWD}/password,dst=/auth/htpasswd" -p 127.0.0.1:5000:5000 -v registry-data:/var/lib/registry --name 'vector-registry' 'vector-registry'
-            "
-          else
-            echo "Registry Dockerfile hasn't changed skipping update"
-          fi
+          apt-get update && apt-get -y install rsync pigz apache2-utils docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
       - name: Copy docker-compose and env variables
         run: |
-          mkdir secrets
-          cd secrets
-          echo "${{ secrets.admin_password }}" > "admin_password.txt"
-          echo "${{ secrets.user_password }}" > "user_password.txt"
-          echo "${{ secrets.postgres_password }}" > "postgres_password.txt"
-          echo "${{ secrets.nginx_forward_secret }}" > "nginx_forward_secret.txt"
-          cd ..
-          
-          echo "${{ vars.PRODUCTION_VARIABLES }}" | tr -d '\r' > ".env"
+          mkdir -p .secrets
+          rsync -aqc docker-compose.yml ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
+          ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
+              cd ~/vectorapp/vector-portfolio/
 
-          rsync -aqc docker-compose.yml docker-compose.prod.yml .env secrets ${{ secrets.ssh_connection }}:/vectorapp/app/compose/
+              mkdir -p .secrets
+              cd .secrets
+              touch payload-secret.txt
+              touch postgres-password.txt
+              touch email-password.txt
+              echo '${{ secrets.payload_secret }}' > payload-secret.txt
+              echo '${{ secrets.postgres_password }}' > postgres-password.txt
+              echo '${{ secrets.email_password }}' > email-password.txt
+            "
       - name: Build and push changes
         run: |
-          source .env
-          registry_host="https://$REGISTRY_URL"
-          echo "${{ secrets.registry_password }}" | docker login $registry_host --username ${{ secrets.registry_username }} --password-stdin
-          docker compose --profile prod -f docker-compose.yml -f docker-compose.prod.yml --env-file .env build
-          docker compose --profile prod -f docker-compose.yml -f docker-compose.prod.yml --env-file .env push 
+          docker compose build
+          docker save -o payload.tar vector-portfolio-payload:latest
+          docker save -o nginx.tar vector-portfolio-nginx:latest
+          pigz payload.tar
+          pigz nginx.tar
+          rsync -aqc payload.tar.gz ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
+          rsync -aqc nginx.tar.gz ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
       - name: Pull changes
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
-            cd /vectorapp/app/compose
+            cd ~/vectorapp/vector-portfolio
 
-            source .env
+            docker load -q -i payload.tar.gz
+            docker load -q -i nginx.tar.gz
+            rm payload.tar.gz
+            rm nginx.tar.gz
 
-            echo "${{ secrets.registry_password }}" | docker login https://$REGISTRY_URL --username ${{ secrets.registry_username }} --password-stdin
-
-            docker compose --profile prod pull
-            docker compose --profile prod -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d
+            export DOMAIN="${{ env.DOMAIN }}"
+            export EMAIL_USER="${{ env.EMAIL_USER }}"
+            export SMTP_HOST="${{env.SMTP_HOST}}"
+            docker compose up -d --no-build
             docker image prune -f
           "
-      - name: Install cleanup dependencies
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-          cache: 'pip'
-      - name: Cleanup registry
-        run: |
-          cd registry/cleanup
-          pip install -r requirements-build.txt
-
-          source ../../.env
-
-          python registry.py -l "${{ secrets.registry_username }}:${{ secrets.registry_password }}" -r "https://$REGISTRY_URL" --delete --num 5 --keep-tags "latest"

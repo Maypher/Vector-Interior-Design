@@ -1,0 +1,21 @@
+{
+  "LocaleSwitcher": {
+    "locale": "{locale, select, en {English} es {Spanish} other {Unknown}}"
+  },
+  "NavBar": {
+    "aboutUs": "About Us",
+    "projects": "Projects",
+    "sculptures": "Sculptures",
+    "contact": "Contact",
+    "home": "Main Page"
+  },
+  "Project": {
+    "area": "Area"
+  },
+  "Metadata": {
+    "google": "Specialized in Corporate Image and Interior Design with more than 25 years of experience dedicated to transforming spaces in unique and exclusive environments. Contact: contact@vectorinterior.design"
+  },
+  "errors": {
+    "404": "Page not found"
+  }
+}

@@ -1,24 +1,33 @@
 services:
-  user-frontend:
+  payload:
     build:
       target: development
     develop:
       watch:
         - action: sync
-          path: ./frontend/user/src/
-          target: /app/src/
-  admin-frontend:
-    build:
-      target: development
-    develop:
-      watch:
-        - action: sync
-          path: ./frontend/admin/src/
-          target: /app/src/
-  nginx:
+          path: .
+          target: /app
+          ignore: 
+          - node_modules
+          - nginx
+    stdin_open: true
+    tty: true
+  postgres:
     ports:
-      - "5111:5111" # Admin frontend websocket for hmr
-      - "5173:5173" # Admin frontend
-      - "8080:8080" # Admin backend
-      - "5174:5174" # User frontend (user backend at port 443 thus no port)
-      - "5112:5112" # User frontend websocket for hmr
+      # Since payload only has access to the database from within the same network running
+      # "npm run payload migrate:create" isn't possible from within the host machine unless the port is exposed
+      # and access throught localhost:5432 instead of postgres:5432
+      - 5432:5432
+  nginx:
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./nginx/nginx.conf
+          target: /etc/nginx/nginx.conf
+        - action: rebuild
+          path: ./nginx/templates
+          target: /etc/nginx/templates/
+    volumes: !override
+      - type: bind
+        source: ./nginx/certificates/
+        target: /certificates/nginx/
