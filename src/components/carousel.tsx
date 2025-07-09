@@ -56,45 +56,36 @@ export default function Carousel({ projects }: Props) {
   const t = useTranslations()
 
   return (
-    <div className="bg-vector-grey flex flex-col justify-evenly lg:pt-10 lg:gap-y-10 set-header-screen">
+    <div className="bg-vector-grey flex flex-col justify-evenly lg:gap-y-10 set-header-screen">
       <h1 className="text-2xl! font-bold text-center">{t('NavBar.projects')}</h1>
-      <div id="carousel" className="hidden grow lg:block">
-        <div
-          className="glide__track h-full bg-vector-grey relative flex flex-col"
-          data-glide-el="track"
-        >
-          <ol className=" glide__slides grow flex items-center justify-center">
+      <div id="carousel" className="hidden lg:block">
+        <div className="glide__track h-fit bg-vector-grey relative" data-glide-el="track">
+          <ol className=" glide__slides h-fit! flex items-center justify-center">
             {projects.map(({ id, name, thumbnail }, i) => {
               thumbnail = thumbnail as Media
 
               if (!thumbnail?.url) return 'Imagen no configurada'
 
               return (
-                <li className="glide__slide flex justify-center items-center" key={id}>
+                <li className="glide__slide h-fit! flex justify-center items-center" key={id}>
                   <Link
                     href={`/projects/${id}`}
                     className="size-fit flex-col items-start transition-transform hover:scale-110 hover:cursor-pointer flex"
                   >
-                    <figure>
-                      <div
-                        className="h-100 relative"
-                        style={{ aspectRatio: '2/3', maxHeight: '45svh' }}
-                      >
-                        <Image
-                          src={thumbnail.url!}
-                          alt={thumbnail.alt!}
-                          fill
-                          sizes="33vw"
-                          className="object-cover"
-                        />
-                      </div>
-                      <figcaption>
-                        <p
-                          className="font-Nexa my-5 text-xs font-extralight"
-                          style={{ letterSpacing: '0.1rem' }}
-                        >
-                          {i + 1}. {name}
-                        </p>
+                    <figure
+                      className="h-100 relative overflow-hidden"
+                      style={{ aspectRatio: '0.705' }}
+                    >
+                      <Image
+                        src={thumbnail.url!}
+                        alt={thumbnail.alt!}
+                        fill
+                        sizes="33vw"
+                        className="object-cover blur-[2px]"
+                      />
+                      <div className="img-overlay"></div>
+                      <figcaption className="font-Nexa uppercase text-center text-sm w-4/5 absolute z-20 top-1/2 left-1/2 bg-vector-black/70 -translate-1/2 border-1 border-vector-cream/30 p-2">
+                        {i + 1}. {name}
                       </figcaption>
                     </figure>
                   </Link>
@@ -104,7 +95,7 @@ export default function Carousel({ projects }: Props) {
           </ol>
           <div
             data-glide-el="controls"
-            className="pointer-events-none flex items-center justify-end gap-x-5 px-20 text-xl"
+            className="pointer-events-none flex items-center justify-end gap-x-5 px-20 text-xl mt-5"
           >
             <button
               data-glide-dir="<"
@@ -127,10 +118,13 @@ export default function Carousel({ projects }: Props) {
           </div>
         </div>
       </div>
-      <div id="carousel-mobile" className="lg:hidden flex flex-col justify-center bg-vector-grey">
+      <div
+        id="carousel-mobile"
+        className="lg:hidden flex flex-col gap-y-5 justify-center bg-vector-grey"
+      >
         <div className="glide__track bg-vector-grey" data-glide-el="track">
           <ol className=" glide__slides">
-            {projects.map(({ id, name, thumbnail }) => {
+            {projects.map(({ id, name, thumbnail }, i) => {
               thumbnail = thumbnail as Media
 
               if (!thumbnail?.url) return 'Sin miniatura seleccionada'
@@ -141,25 +135,26 @@ export default function Carousel({ projects }: Props) {
                     href={`/projects/${id}`}
                     className="mx-auto w-fit flex-col items-start transition-transform hover:scale-110 hover:cursor-pointer flex"
                   >
-                    <figure>
-                      <div className="h-100 relative" style={{ aspectRatio: '3/5' }}>
-                        <Image
-                          src={thumbnail.url!}
-                          alt={thumbnail.alt!}
-                          fill
-                          sizes="80vw"
-                          className="object-cover"
-                          placeholder="blur"
-                          blurDataURL={thumbnail.sizes!.loading!.url!}
-                          style={{
-                            objectPosition: `${thumbnail.focalX}% ${thumbnail.focalY}%`,
-                          }}
-                        />
-                      </div>
-                      <figcaption>
-                        <p className="font-Nexa my-5" style={{ letterSpacing: '0.1rem' }}>
-                          {name}
-                        </p>
+                    <figure
+                      className="h-100 relative overflow-hidden"
+                      style={{ aspectRatio: '0.705' }}
+                    >
+                      <Image
+                        src={thumbnail.url!}
+                        alt={thumbnail.alt!}
+                        fill
+                        sizes="80vw"
+                        className="object-cover zoom"
+                        placeholder="blur"
+                        priority={i === projectIndex}
+                        blurDataURL={thumbnail.sizes!.loading!.url!}
+                        style={{
+                          objectPosition: `${thumbnail.focalX}% ${thumbnail.focalY}%`,
+                        }}
+                      />
+                      <div className="img-overlay"></div>
+                      <figcaption className="font-Nexa uppercase font-bold text-center text-sm w-4/5 absolute z-20 top-1/2 left-1/2 bg-vector-black/40 -translate-1/2 border-1 border-vector-cream/30 p-2">
+                        {i + 1}. {name}
                       </figcaption>
                     </figure>
                   </Link>

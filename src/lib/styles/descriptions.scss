@@ -48,6 +48,15 @@
     &::first-line {
         color: var(--color-vector-cream);
     }
+
+    p {
+        font-weight: bold;
+    }
+    
+    em {
+        font-style: normal;
+        color: var(--color-vector-cream);
+    }
 }
 
 // The elements blocks by default have h-svh. The first element in the page should have header-screen height

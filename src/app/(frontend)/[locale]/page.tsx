@@ -18,6 +18,8 @@ import { Link } from '@/i18n/navigation'
 import '@styles/descriptions.scss'
 import '@styles/nav.scss'
 import ImageSkeleton from '@/components/global/ImageSkeleton'
+import designer from '@public/images/tony.jpg'
+import Image from 'next/image'
 
 type MainPageImageType = NonNullable<MainPageImage['images']>[number]
 
@@ -53,7 +55,7 @@ function imageBlock(
     return (
       <>
         <div
-          className="items-center relative hidden lg:flex desktop w-full"
+          className="items-center relative hidden lg:flex desktop w-full px-20"
           style={{
             backgroundColor: image.bgColor,
             justifyContent: justifyPosDesktop,
@@ -63,8 +65,14 @@ function imageBlock(
             key={image.id}
             style={{
               flexDirection: descFlexDirectionDesktop,
+              justifyContent:
+                descriptionPositionDesktop === 'w'
+                  ? 'end'
+                  : descriptionPositionDesktop === 'e'
+                    ? 'start'
+                    : 'center',
             }}
-            className={`min-h-160 w-full items-center justify-center gap-x-15 xl:gap-x-15 flex gap-y-10 ${imgPosDesktop === 'left' ? 'mr-auto' : imgPosDesktop === 'right' ? 'ml-auto' : 'mx-auto'}`}
+            className={`min-h-160 w-full items-center gap-x-20 flex gap-y-10 ${imgPosDesktop === 'left' ? 'mr-auto' : imgPosDesktop === 'right' ? 'ml-auto' : 'mx-auto'}`}
           >
             <div
               style={{ height: `${image.deskConfig.imgSize}svh` }}
@@ -77,7 +85,7 @@ function imageBlock(
             </div>
             {image.description && descriptionPositionDesktop && (
               <figcaption
-                className={`${descTopOrBottomDesktop ? 'max-w-4/5 w-full' : 'max-w-2/5 w-fit'} text-pretty`}
+                className={`${descTopOrBottomDesktop ? 'max-w-4/5 w-full' : 'max-w-43/100 w-fit'} text-pretty`}
               >
                 <RichText
                   data={image.description}
@@ -89,7 +97,7 @@ function imageBlock(
           </figure>
         </div>
         <figure
-          className={`flex py-20 lg:hidden justify-center gap-y-16 size-full`}
+          className={`flex py-20 lg:hidden justify-center gap-y-16 grow`}
           style={{
             flexDirection: flexDirectionMobile,
           }}
@@ -117,13 +125,21 @@ function imageBlock(
 
 function aboutUsBlock(message: Extract<MainPageImageType, { blockType: 'aboutUs' }>) {
   return (
-    <section
-      className="relative lg:h-svh w-full px-20 py-10 flex flex-col lg:flex-row items-center justify-center"
+    <figure
+      className="relative lg:h-svh w-full flex flex-col gap-x-20 gap-y-10 py-10 lg:py-0 lg:flex-row items-center justify-center px-8 lg:px-0"
       id="aboutUs"
     >
-      <RichText data={message.description} className="about-us"></RichText>
+      <Image
+        src={designer}
+        alt="designer"
+        sizes="30vw"
+        className="h-auto w-full lg:h-7/10 lg:w-auto"
+      />
+      <figcaption className="lg:max-w-1/2">
+        <RichText data={message.description} className="about-us text-sm"></RichText>
+      </figcaption>
       <ScrollToTopBtn />
-    </section>
+    </figure>
   )
 }
 
@@ -137,7 +153,7 @@ function navBlock(
   if (imageFile && imageFile.url) {
     return (
       <div
-        className="xl:h-[70svh] w-full flex flex-col xl:flex-row mt-20 lg:mt-0 gap-y-10 items-center justify-evenly overflow-hidden"
+        className="xl:h-[70svh] w-full flex flex-col xl:flex-row gap-y-10 items-center justify-evenly overflow-hidden"
         id="nav"
       >
         <div
@@ -199,7 +215,7 @@ export default async function MainPage({ params }: Props) {
             return (
               <div
                 id="welcome"
-                className="header-screen flex justify-stretch items-center grow lg:px-10 mb-20 lg:mb-0"
+                className="header-screen flex flex-col lg:flex-row [&_figcaption]:flex [&_figcaption]:items-center [&_figcaption]:justify-center [&_figure]:pb-0! justify-stretch items-center grow lg:px-10 mb-20 lg:mb-0"
                 key={image.id}
                 style={{ backgroundColor: image.bgColor }}
               >
@@ -238,7 +254,7 @@ export default async function MainPage({ params }: Props) {
             <div
               style={{ backgroundColor: image.bgColor }}
               key={image.id}
-              className="min-h-svh flex items-center lg:px-10"
+              className={`${image.blockType !== 'navigation' ? 'min-h-svh' : ''} flex items-center`}
             >
               {image.blockType === 'image' && imageBlock(image)}
               {image.blockType === 'aboutUs' && aboutUsBlock(image)}
