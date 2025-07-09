@@ -1,67 +1,40 @@
-# Payload Blank Template
+# Vector: Interior Design Website
 
-This template comes configured with the bare minimum to get started on anything you need.
+This is the website hosting the portfolio for [Vector: Intrior Design](https://vectorinterior.design/). 
+It is written using [Nextjs](https://nextjs.org/) and [PayloadCMS](https://payloadcms.com/).
 
-## Quick start
+It is a rewrite of the arguably cooler and more intricate [first version](./tree/development) due to optimization issues.
+This version uses Nextjs ISR functionality and nginx caching to deliver prerendered pages instead of generating the same page over
+and over at request time. It also using Next's image optimization to better deliver images that are the correct size for every screen.
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+# Environment Variables and Secrets
 
-## Quick Start - local setup
+## Environment Variables
 
-To spin up this template locally, follow these steps:
+| Variable   | Description                                              |
+|------------|----------------------------------------------------------|
+| DOMAIN     | The domain of the website (without protocol)             |
+| SMTP_HOST  | The smtp host of the email address for password recovery |
+| EMAIL_USER | The email address to use for password recovery           |
 
-### Clone
+## Secrets
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+Saved in `.secrets/<secret-name>.txt`
 
-### Development
+| Secret            | Description                                          |
+|-------------------|------------------------------------------------------|
+| email-password    | The password of the email used for password recovery |
+| payload-secret    | A random secret used for payload encryption          |
+| postgres-password | The password used for the root user of the database  |
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URI` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+# Running
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+This site is deploy to a docker compose setup and can be run in any VPS. There are two ways of running this project:
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+- **Development:** Ran by using docker's file override system using the command `docker compose -f docker-compose.yml -f docker-compose.dev.yml up -w`. This copies over the entire source code and enables hmr in nextjs.
+- **Deployment**: Ran by using the default `docker-compose.yml` file this method using a multi stage build to only deploy the production ready code.
 
-#### Docker (Optional)
+## Notes
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
-
-To do so, follow these steps:
-
-- Modify the `MONGODB_URI` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URI` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
-
-## How it works
-
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
-
-### Collections
-
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
-
-- #### Users (Authentication)
-
-  Users are auth-enabled collections that have access to the admin panel.
-
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
-
-- #### Media
-
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
-
-### Docker
-
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
-
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
-
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+1. Nginx is one of the services in the docker compose setup and is used as a reverse proxy for nextjs using an encrypted connection. If running in development mode the files `./nginx/fullchain.pem` and `./nginx/privkey.pem` should exist. They can be a self signed certificate. For deployment they should live at `/etc/letsencrypt/live/${DOMAIN}`
+2. Payload CMS has the ability to hot reload database changes without having to migrate. In some cases where it can't determine on its own what to do it will prompt the user. Since the promps aren't answerable through docker, in this case the nextjs server should be run locally with `npm run dev` with the environemnt variable `DATABASE_URI="postgres://postgres:<password>@localhost:5432/postgres"` set. This should be the only reason to run the server locally, everything else should be done through docker dev mode.
