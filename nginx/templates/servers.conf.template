@@ -22,6 +22,8 @@ server {
         proxy_cache_valid any 1m;
         proxy_cache_revalidate on;
         proxy_cache_use_stale error timeout updating;
+    
+        proxy_cache_bypass $http_pragma $http_cache_control;
 
         proxy_pass http://payload:3000;
     }
