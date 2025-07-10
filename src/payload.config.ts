@@ -71,11 +71,14 @@ export default buildConfig({
     defaultFromName: 'Vector: Interior Design',
     transportOptions: {
       host: process.env.SMTP_HOST,
-      port: 587,
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: EMAIL_PASSWORD,
       },
+      debug: true,
+      logger: true,
     },
   }),
   localization: {
