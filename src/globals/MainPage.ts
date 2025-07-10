@@ -3,6 +3,9 @@ import { Directions, ImagePositionMainPageDesktop } from '@/lib/selects'
 import { colorField } from '@lib/utils/colors'
 import { MainPageImage } from '@/payload-types'
 import draftAccess from '@/lib/utils/access'
+import { routing } from '@/i18n/routing'
+import { revalidatePath } from 'next/cache'
+import purgeRoute from '@/lib/utils/purge'
 
 const MainPage: GlobalConfig = {
   slug: 'mainPageImages',
@@ -221,6 +224,24 @@ const MainPage: GlobalConfig = {
         showSaveDraftButton: true,
       },
     },
+  },
+  hooks: {
+    afterChange: [
+      async ({ req, doc }) => {
+        if (doc._status === 'published') {
+          const updatedLocale = req.locale
+          if (updatedLocale === 'all')
+            routing.locales.map(async (locale) => {
+              revalidatePath(`/${locale}`)
+              await purgeRoute(`${locale}`)
+            })
+          else {
+            revalidatePath(`/${updatedLocale}`)
+            await purgeRoute(`${updatedLocale}`)
+          }
+        }
+      },
+    ],
   },
 }
 

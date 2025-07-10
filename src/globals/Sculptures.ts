@@ -1,6 +1,9 @@
 import { GlobalConfig } from 'payload'
 import { colorField } from '@/lib/utils/colors'
 import draftAccess from '@/lib/utils/access'
+import { routing } from '@/i18n/routing'
+import { revalidatePath } from 'next/cache'
+import purgeRoute from '@/lib/utils/purge'
 
 export const Sculptures: GlobalConfig = {
   slug: 'sculpture',
@@ -96,5 +99,23 @@ export const Sculptures: GlobalConfig = {
         showSaveDraftButton: true,
       },
     },
+  },
+  hooks: {
+    afterChange: [
+      async ({ req, doc }) => {
+        if (doc._status === 'published') {
+          const updatedLocale = req.locale
+          if (updatedLocale === 'all')
+            routing.locales.map(async (locale) => {
+              revalidatePath(`/${locale}/sculptures`)
+              await purgeRoute(`${locale}/sculptures`)
+            })
+          else {
+            revalidatePath(`/${updatedLocale}/sculptures`)
+            await purgeRoute(`${updatedLocale}/sculptures`)
+          }
+        }
+      },
+    ],
   },
 }
