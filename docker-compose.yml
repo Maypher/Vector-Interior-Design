@@ -11,7 +11,6 @@ services:
       - EMAIL_USER=${EMAIL_USER:?EMAIL_USER required for email functionality}
     depends_on:
       - postgres
-      - nginx
     secrets:
       - postgres-password
       - payload-secret
@@ -32,6 +31,8 @@ services:
       args:
         ENABLED_MODULES: cachepurge
     restart: unless-stopped
+    depends_on:
+      - payload
     ports:
       - 443:443
       - 80:80
