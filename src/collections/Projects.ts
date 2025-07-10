@@ -301,7 +301,7 @@ export const Projects: CollectionConfig = {
             if (updatedLocale === 'all')
               routing.locales.forEach(async (locale) => {
                 revalidatePath(`/${locale}/projects`)
-                await purgeURL(`${purgeURL}/${locale}/projects`)
+                await purgeURL(`${locale}/projects`)
               })
             else {
               revalidatePath(`/${updatedLocale}/projects`)
