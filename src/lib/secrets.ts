@@ -2,7 +2,7 @@ import fs from 'node:fs'
 
 function readSecret(path: string, fallback: string = ''): string {
   try {
-    return fs.readFileSync(path).toString()
+    return fs.readFileSync(path).toString().trim()
   } catch {
     return fallback || ''
   }
