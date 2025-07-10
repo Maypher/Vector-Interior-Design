@@ -1,8 +1,6 @@
 server {
-    listen 443 ssl;
+    listen 443;
     server_name ${NGINX_HOST};
-    ssl_certificate /etc/letsencrypt/live/${NGINX_HOST}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/${NGINX_HOST}/privkey.pem;
 
     location / {
         proxy_pass http://payload:3000;

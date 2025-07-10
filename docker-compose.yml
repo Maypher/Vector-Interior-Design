@@ -7,6 +7,7 @@ services:
       - images:/app/media
     environment:
       - NEXT_PUBLIC_PAYLOAD_URL=https://${DOMAIN:?Website domain required}
+      - DOMAIN=${DOMAIN?Website domain required}
       - SMTP_HOST=${SMTP_HOST:?SMTP_HOST required for email functionality}
       - EMAIL_USER=${EMAIL_USER:?EMAIL_USER required for email functionality}
     depends_on:
@@ -34,15 +35,9 @@ services:
     depends_on:
       - payload
     ports:
-      - 443:443
-      - 80:80
+      -  127.0.0.1:1000:443
     environment:
       - NGINX_HOST=${DOMAIN:?Website domain required}
-    volumes:
-      - type: bind
-        source:  /etc/letsencrypt/
-        target:  /etc/letsencrypt/
-        read_only: true
 volumes:
   pgdata:
   images:

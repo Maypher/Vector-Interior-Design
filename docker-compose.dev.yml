@@ -27,7 +27,3 @@ services:
         - action: rebuild
           path: ./nginx/templates
           target: /etc/nginx/templates/
-    volumes: !override
-      - type: bind
-        source: ./nginx/certificates/
-        target: /certificates/nginx/

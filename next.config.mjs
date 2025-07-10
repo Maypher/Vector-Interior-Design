@@ -13,7 +13,7 @@ const nextConfig = {
   output: 'standalone',
   experimental: {
     serverActions: {
-      allowedOrigins: ['payload:3000', 'localhost'],
+      allowedOrigins: ['payload:3000', 'localhost', process.env.DOMAIN],
     },
   },
 }
