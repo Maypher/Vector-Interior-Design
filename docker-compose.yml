@@ -40,8 +40,9 @@ services:
       - NGINX_HOST=${DOMAIN:?Website domain required}
     volumes:
       - type: bind
-        source:  /etc/letsencrypt/:ro
+        source:  /etc/letsencrypt/
         target:  /etc/letsencrypt/
+        read_only: true
 volumes:
   pgdata:
   images:
