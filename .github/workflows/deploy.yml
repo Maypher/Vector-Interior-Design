@@ -97,6 +97,9 @@ jobs:
           ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
             cd ~/vectorapp/vector-portfolio
 
+            docker rmi -f vector-portfolio-nginx:latest
+            docker rmi -f vector-portfolio-payload:latest
+
             docker load -q -i payload.tar.gz
             docker load -q -i nginx.tar.gz
             rm payload.tar.gz
