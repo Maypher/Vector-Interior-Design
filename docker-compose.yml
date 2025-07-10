@@ -39,7 +39,7 @@ services:
       - NGINX_HOST=${DOMAIN:?Website domain required}
     volumes:
       - type: bind
-        source: /etc/letsencrypt/live/${DOMAIN:?Website domain required}
+        source: /etc/letsencrypt/live/${DOMAIN:?Website domain required}/
         target: /certificates/nginx/
 volumes:
   pgdata:
