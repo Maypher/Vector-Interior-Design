@@ -29,8 +29,6 @@ import { es } from 'payload/i18n/es'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-console.log(process.env.EMAIL_USER, EMAIL_PASSWORD)
-
 export default buildConfig({
   admin: {
     user: Users.slug,
