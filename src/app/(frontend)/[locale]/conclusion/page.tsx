@@ -11,14 +11,16 @@ import { draftMode } from 'next/headers'
 
 export const dynamic = 'error'
 
-export default async function Page() {
+export default async function Page({ params }: { params: Promise<{ locale: 'en' | 'es' }> }) {
   const payload = await getPayload({ config })
   const { isEnabled } = await draftMode()
+  const { locale } = await params
 
   const conclusionData = await payload.findGlobal({
     slug: 'conclusion',
     overrideAccess: isEnabled,
     draft: isEnabled,
+    locale: locale as 'es' | 'en',
   })
 
   return (
