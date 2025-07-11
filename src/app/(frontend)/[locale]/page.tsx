@@ -97,14 +97,14 @@ function imageBlock(
           </figure>
         </div>
         <figure
-          className={`flex py-20 lg:hidden justify-center gap-y-16 grow w-full`}
+          className={`flex py-25 lg:hidden justify-center gap-y-16 grow w-full ${overflowMobile ? '' : 'px-8'}`}
           style={{
             flexDirection: flexDirectionMobile,
           }}
         >
           <ImageSkeleton
             image={imageFile}
-            className={`shrink  ${overflowMobile ? '' : 'max-w-5/6 mx-auto max-h-1/2'}`}
+            className="shrink"
             sizes={overflowMobile ? '100vw' : '90vw'}
           />
           {image.description && descPosMobile && (
@@ -126,7 +126,7 @@ function imageBlock(
 function aboutUsBlock(message: Extract<MainPageImageType, { blockType: 'aboutUs' }>) {
   return (
     <figure
-      className="relative lg:h-svh w-full flex flex-col gap-x-20 gap-y-10 py-10 lg:py-0 lg:flex-row items-center justify-center px-8 lg:px-0"
+      className="relative lg:h-svh w-full flex flex-col gap-x-20 gap-y-10 py-25 lg:py-0 lg:flex-row items-center justify-center px-8 lg:px-0"
       id="aboutUs"
     >
       <Image
@@ -216,7 +216,7 @@ export default async function MainPage({ params }: Props) {
             return (
               <div
                 id="welcome"
-                className="header-screen flex flex-col lg:flex-row [&_figcaption]:flex [&_figcaption]:items-center [&_figcaption]:justify-center [&_figure]:pb-0! [&>div]:px-0! justify-stretch items-center grow lg:px-10 mb-20 lg:mb-0"
+                className="header-screen flex flex-col lg:flex-row [&_figcaption]:flex [&_figcaption]:items-center [&_figcaption]:justify-center [&_figure]:pb-0! [&>div]:px-0! justify-stretch items-center grow lg:px-10 lg:mb-0"
                 key={image.id}
                 style={{ backgroundColor: image.bgColor }}
               >
@@ -255,7 +255,7 @@ export default async function MainPage({ params }: Props) {
             <div
               style={{ backgroundColor: image.bgColor }}
               key={image.id}
-              className={`${image.blockType !== 'navigation' ? 'min-h-svh' : ''} flex items-center`}
+              className={`${image.blockType !== 'navigation' ? 'lg:min-h-svh' : ''} flex items-center`}
             >
               {image.blockType === 'image' && imageBlock(image)}
               {image.blockType === 'aboutUs' && aboutUsBlock(image)}

@@ -70,7 +70,7 @@ export default function Carousel({ projects }: Props) {
                 <li className="glide__slide h-fit! flex justify-center items-center" key={id}>
                   <Link
                     href={`/projects/${id}`}
-                    className="size-fit flex-col items-start transition-transform hover:cursor-pointer flex gap-y-5"
+                    className="size-fit flex-col items-start transition-transform hover:cursor-pointer flex gap-y-5 pb-1"
                   >
                     <figure
                       className="h-100 relative overflow-hidden"
@@ -88,7 +88,7 @@ export default function Carousel({ projects }: Props) {
                         {i + 1}. {name}
                       </figcaption>
                     </figure>
-                    <div className="text-vector-black bg-vector-orange hover:bg-vector-black hover:text-vector-cream transition-colors mx-auto py-2 px-5 rounded-lg">
+                    <div className="text-vector-cream border-1 hover:scale-115 border-vector-cream transition-transform mx-auto py-2 px-5 rounded-lg">
                       {locale === 'es' ? 'Ver' : 'View'}
                     </div>
                   </Link>
