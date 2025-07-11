@@ -52,7 +52,7 @@ export default function Header() {
           <Image src={logo} alt="Vector: Interior Design" className="h-full w-fit" />
         </Link>
         <ul
-          className={`${['/es', '/en', '/es/', '/en/'].includes(pathname) ? '' : 'lg:flex'} text-vector-black hidden gap-10 xl:gap-20 [&_a]:transition-colors`}
+          className={`${['/es', '/en', '/es/', '/en/'].includes(pathname) ? '' : 'xl:flex'} text-vector-black hidden gap-10 xl:gap-20 [&_a]:transition-colors`}
         >
           <li>
             <Link href="/" className="hover:text-vector-orange">
@@ -80,12 +80,12 @@ export default function Header() {
             </Link>
           </li>
         </ul>
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <LanguageSelect />
         </div>
         <button
           type="button"
-          className={`text-vector-black text-3xl transition-transform lg:hidden ${menuOpen ? '-rotate-90' : ''}`}
+          className={`text-vector-black text-3xl transition-transform xl:hidden ${menuOpen ? '-rotate-90' : ''}`}
           onClick={() => setMenuOpen((prevValue) => !prevValue)}
           ref={menuBtn}
         >

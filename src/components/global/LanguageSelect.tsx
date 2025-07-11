@@ -29,7 +29,7 @@ export default function LocaleSwitcherSelect() {
 
   return (
     <select
-      className={`${nexaFont.className} lg:text-vector-black pr-1`}
+      className={`${nexaFont.className} xl:text-vector-black text-vector-cream pr-1`}
       defaultValue={params.locale}
       disabled={isPending}
       onChange={onSelectChange}

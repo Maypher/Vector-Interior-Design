@@ -97,14 +97,14 @@ function imageBlock(
           </figure>
         </div>
         <figure
-          className={`flex py-20 lg:hidden justify-center gap-y-16 grow`}
+          className={`flex py-20 lg:hidden justify-center gap-y-16 grow w-full`}
           style={{
             flexDirection: flexDirectionMobile,
           }}
         >
           <ImageSkeleton
             image={imageFile}
-            className={`shrink  ${overflowMobile ? '' : 'max-w-5/6 mx-auto'} max-h-140`}
+            className={`shrink  ${overflowMobile ? '' : 'max-w-5/6 mx-auto max-h-1/2'}`}
             sizes={overflowMobile ? '100vw' : '90vw'}
           />
           {image.description && descPosMobile && (
@@ -153,12 +153,12 @@ function navBlock(
   if (imageFile && imageFile.url) {
     return (
       <div
-        className="xl:h-[70svh] w-full flex flex-col xl:flex-row gap-y-10 items-center justify-evenly overflow-hidden"
+        className="lg:h-[70svh] w-full flex flex-col lg:flex-row gap-y-10 items-center justify-evenly overflow-hidden"
         id="nav"
       >
         <div
           style={{ height: `${image.imgSize}%` }}
-          className="relative max-xl:h-fit! max-xl:w-full [&_img]:w-full!"
+          className="relative max-xl:h-fit! max-xl:w-full lg:max-w-1/2 max-xl:max-w-none [&_img]:w-full!"
         >
           <ImageSkeleton image={image.image as Media} sizes={`(max-width: 1024px) 100vw, 50vw`} />
         </div>

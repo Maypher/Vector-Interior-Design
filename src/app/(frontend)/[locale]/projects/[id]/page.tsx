@@ -99,7 +99,7 @@ function PhoneImage(img: ProjectImage): ReactNode {
         alt={imageFile.alt}
         width={imageFile.width!}
         height={imageFile.height!}
-        className={`max-h-160 ${
+        className={`${
           img.phoneConf?.imgAlign === 'left'
             ? 'w-4/5 mr-auto'
             : img.phoneConf.imgAlign === 'right'
@@ -113,6 +113,8 @@ function PhoneImage(img: ProjectImage): ReactNode {
               ? '80vw'
               : '70vw'
         }
+        placeholder="blur"
+        blurDataURL={imageFile.sizes!.loading!.url!}
       />
       {img.description && img.phoneConf.descPos && (
         <figcaption className="max-w-9/10 mx-auto text-pretty!" style={{ textWrap: 'balance' }}>
@@ -174,10 +176,14 @@ const Page = async ({ params }: Props) => {
                 style={{ backgroundColor: image.bgColor }}
                 key={`${img.id}-desktop`}
               >
-                <ImageSkeleton
-                  image={imageFile}
+                <Image
+                  src={imageFile.url!}
+                  alt={imageFile.alt}
                   sizes={imageFile.width! <= imageFile.height! ? '40vw' : '70vw'}
                   style={{ height: `${image.deskConf.imageSize}svh` }}
+                  placeholder="blur"
+                  blurDataURL={imageFile.sizes!.loading!.url!}
+                  priority
                 />
                 <figcaption className="max-w-2/5">
                   <div className="font-Nexa text-vector-cream flex w-full flex-col flex-wrap gap-y-20">

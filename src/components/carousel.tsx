@@ -56,7 +56,7 @@ export default function Carousel({ projects }: Props) {
   const t = useTranslations()
 
   return (
-    <div className="bg-vector-grey flex flex-col justify-evenly lg:gap-y-10 set-header-screen">
+    <div className="bg-vector-grey flex flex-col justify-around set-header-screen">
       <h1 className="text-2xl! font-bold text-center">{t('NavBar.projects')}</h1>
       <div id="carousel" className="hidden lg:block">
         <div className="glide__track h-fit bg-vector-grey relative" data-glide-el="track">
@@ -70,24 +70,27 @@ export default function Carousel({ projects }: Props) {
                 <li className="glide__slide h-fit! flex justify-center items-center" key={id}>
                   <Link
                     href={`/projects/${id}`}
-                    className="size-fit flex-col items-start transition-transform hover:scale-110 hover:cursor-pointer flex"
+                    className="size-fit flex-col items-start transition-transform hover:cursor-pointer flex gap-y-5"
                   >
                     <figure
                       className="h-100 relative overflow-hidden"
-                      style={{ aspectRatio: '0.705' }}
+                      style={{ aspectRatio: '0.705', maxHeight: '50svh' }}
                     >
                       <Image
                         src={thumbnail.url!}
                         alt={thumbnail.alt!}
                         fill
                         sizes="33vw"
-                        className="object-cover blur-[2px]"
+                        className="object-cover"
                       />
                       <div className="img-overlay"></div>
                       <figcaption className="font-Nexa uppercase text-center text-sm w-4/5 absolute z-20 top-1/2 left-1/2 bg-vector-black/70 -translate-1/2 border-1 border-vector-cream/30 p-2">
                         {i + 1}. {name}
                       </figcaption>
                     </figure>
+                    <div className="text-vector-black bg-vector-orange hover:bg-vector-black hover:text-vector-cream transition-colors mx-auto py-2 px-5 rounded-lg">
+                      {locale === 'es' ? 'Ver' : 'View'}
+                    </div>
                   </Link>
                 </li>
               )
@@ -95,14 +98,14 @@ export default function Carousel({ projects }: Props) {
           </ol>
           <div
             data-glide-el="controls"
-            className="pointer-events-none flex items-center justify-end gap-x-5 px-20 text-xl mt-5"
+            className="pointer-events-none flex items-center justify-end gap-x-5 px-20 text-4xl mt-5"
           >
             <button
               data-glide-dir="<"
               className="font-Nexa hover:scale-120 pointer-events-auto cursor-pointer transition-transform"
               aria-label={locale === 'es' ? 'Anterior' : 'Previous'}
             >
-              <div className="font-Nexa gradient-background text-vector-cream h-fit text-6xl font-extrabold">
+              <div className="font-Nexa gradient-background text-vector-cream h-fit font-extrabold">
                 <div id="carouselArrow">&lt;</div>
               </div>
             </button>
@@ -111,7 +114,7 @@ export default function Carousel({ projects }: Props) {
               className="font-Nexa hover:scale-120 pointer-events-auto cursor-pointer transition-transform"
               aria-label={locale === 'es' ? 'Siguiente' : 'Next'}
             >
-              <div className="font-Nexa gradient-background text-vector-cream h-fit text-6xl font-extrabold">
+              <div className="font-Nexa gradient-background text-vector-cream h-fit font-extrabold">
                 <div id="carouselArrow">&gt;</div>
               </div>
             </button>
@@ -133,7 +136,7 @@ export default function Carousel({ projects }: Props) {
                 <li className="glide__slide h-fit!" key={id}>
                   <Link
                     href={`/projects/${id}`}
-                    className="mx-auto w-fit flex-col items-start transition-transform hover:scale-110 hover:cursor-pointer flex"
+                    className="mx-auto w-fit flex-col items-start transition-transform hover:cursor-pointer flex"
                   >
                     <figure
                       className="h-100 relative overflow-hidden"
