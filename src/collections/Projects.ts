@@ -7,6 +7,7 @@ import { AssertionError, deepStrictEqual } from 'assert' // Validation always ru
 import { routing } from '@/i18n/routing'
 import draftAccess from '@/lib/utils/access'
 import purgeURL from '@/lib/utils/purge'
+import { PAYLOAD_SECRET } from '@/lib/secrets'
 
 // Extracting it from imageConfig since there's an extra field for groups so I add it manually when setting the schema
 const desktopConfig: Field = {
@@ -136,7 +137,7 @@ export const Projects: CollectionConfig = {
       url: ({ data, locale }) => {
         const params = new URLSearchParams({
           path: `${locale}/projects/${data.id}`,
-          secret: process.env.DRAFT_MODE_SECRET || '',
+          secret: PAYLOAD_SECRET,
         })
 
         return `/draft?${params.toString()}`

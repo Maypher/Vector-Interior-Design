@@ -4,6 +4,7 @@ import draftAccess from '@/lib/utils/access'
 import { routing } from '@/i18n/routing'
 import { revalidatePath } from 'next/cache'
 import purgeRoute from '@/lib/utils/purge'
+import { PAYLOAD_SECRET } from '@/lib/secrets'
 
 export const Sculptures: GlobalConfig = {
   slug: 'sculpture',
@@ -17,7 +18,7 @@ export const Sculptures: GlobalConfig = {
       url: ({ locale }) => {
         const params = new URLSearchParams({
           path: `${locale}/sculptures`,
-          secret: process.env.DRAFT_MODE_SECRET || '',
+          secret: PAYLOAD_SECRET,
         })
 
         return `/draft?${params.toString()}`

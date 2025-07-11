@@ -3,6 +3,7 @@ import { routing } from '@/i18n/routing'
 import { revalidatePath } from 'next/cache'
 import draftAccess from '@/lib/utils/access'
 import purgeRoute from '@/lib/utils/purge'
+import { PAYLOAD_SECRET } from '@/lib/secrets'
 
 export const Conclusion: GlobalConfig = {
   slug: 'conclusion',
@@ -16,7 +17,7 @@ export const Conclusion: GlobalConfig = {
       url: ({ locale }) => {
         const params = new URLSearchParams({
           path: `${locale}/conclusion`,
-          secret: process.env.DRAFT_MODE_SECRET || '',
+          secret: PAYLOAD_SECRET,
         })
 
         return `/draft?${params.toString()}`
