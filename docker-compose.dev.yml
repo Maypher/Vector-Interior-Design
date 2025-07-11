@@ -12,6 +12,8 @@ services:
           - nginx
     stdin_open: true
     tty: true
+    environment:
+      - NEXT_PUBLIC_PAYLOAD_URL=http://${DOMAIN:?Website domain required}
   postgres:
     ports:
       # Since payload only has access to the database from within the same network running
