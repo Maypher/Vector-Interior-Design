@@ -179,7 +179,10 @@ const Page = async ({ params }: Props) => {
                 <Image
                   src={imageFile.url!}
                   alt={imageFile.alt}
+                  width={imageFile.width!}
+                  height={imageFile.height!}
                   sizes={imageFile.width! <= imageFile.height! ? '40vw' : '70vw'}
+                  className="w-auto"
                   style={{ height: `${image.deskConf.imageSize}svh` }}
                   placeholder="blur"
                   blurDataURL={imageFile.sizes!.loading!.url!}
