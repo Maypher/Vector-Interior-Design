@@ -16,6 +16,7 @@ import { Link } from '@/i18n/navigation'
 import { draftMode } from 'next/headers'
 import { Metadata } from 'next'
 import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import Image from 'next/image'
 
 interface Props {
   params: Promise<{
@@ -92,8 +93,11 @@ function PhoneImage(img: ProjectImage): ReactNode {
       className={`${img.phoneConf?.imgAlign === 'overflow' ? '' : 'px-8'} py-25 gap-12 flex ${img.phoneConf.descPos === 'n' ? 'flex-col-reverse' : 'flex-col'}`}
       style={{ backgroundColor: img.bgColor }}
     >
-      <ImageSkeleton
-        image={imageFile}
+      <Image
+        src={imageFile.url!}
+        alt={imageFile.alt}
+        width={imageFile.width!}
+        height={imageFile.height!}
         className={`max-h-160 ${
           img.phoneConf?.imgAlign === 'left'
             ? 'w-4/5 mr-auto'
