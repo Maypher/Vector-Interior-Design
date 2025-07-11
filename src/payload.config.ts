@@ -77,8 +77,6 @@ export default buildConfig({
         user: process.env.EMAIL_USER,
         pass: EMAIL_PASSWORD,
       },
-      debug: true,
-      logger: true,
     },
   }),
   localization: {
