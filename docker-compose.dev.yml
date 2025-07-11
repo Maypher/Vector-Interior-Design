@@ -27,3 +27,5 @@ services:
         - action: rebuild
           path: ./nginx/templates
           target: /etc/nginx/templates/
+    ports:
+      -  1001:443
