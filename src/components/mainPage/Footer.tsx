@@ -8,7 +8,7 @@ export default function Footer() {
   const t = useTranslations('NavBar')
 
   return (
-    <div>
+    <footer id="contact">
       <div className="relative flex flex-wrap items-center justify-center gap-x-5 px-2 my-20 bg-vector-black">
         <p className="border-vector-orange border-b-1 xs:border-b-0 xs:border-r-1 py-2 xs:pr-5 text-2xl">
           {t('contact')}
@@ -25,6 +25,6 @@ export default function Footer() {
           <Image alt="vector: Interior Design" className="h-full" src={logoWhite} />
         </button>
       </div>
-    </div>
+    </footer>
   )
 }

@@ -110,7 +110,7 @@ export default function Header() {
             <LanguageSelect />
           </li>
           <li>
-            <Link href="#aboutUs">{t('aboutUs')}</Link>
+            <Link href="/#aboutUs">{t('aboutUs')}</Link>
           </li>
           <li>
             <Link href="/projects">{t('projects')}</Link>
@@ -119,7 +119,7 @@ export default function Header() {
             <Link href="/sculptures">{t('sculptures')}</Link>
           </li>
           <li>
-            <Link href="#contact">{t('contact')}</Link>
+            <Link href="/#contact">{t('contact')}</Link>
           </li>
         </ul>
       </div>
