@@ -222,7 +222,7 @@ const Page = async ({ params }: Props) => {
           )
         })}
         <>
-          <div className="hidden xl:block">
+          <div className="hidden lg:block">
             {project.images?.slice(1).map((img) => (
               <div
                 key={img.id}
@@ -240,7 +240,7 @@ const Page = async ({ params }: Props) => {
               </div>
             ))}
           </div>
-          <div className="block xl:hidden">
+          <div className="block lg:hidden">
             {project.images?.slice(1).map((img, i, arr) => (
               <div
                 key={img.id}
