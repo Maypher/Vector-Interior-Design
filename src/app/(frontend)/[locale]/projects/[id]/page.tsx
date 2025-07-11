@@ -55,7 +55,8 @@ function DesktopImage(img: ProjectImage): ReactNode {
       )}
       {img.description && img.deskConf.descPos && (
         <figcaption
-          className={`${descTopOrBottom ? 'max-w-9/10 absolute' : 'max-w-2/5'} ${descPos === 'n' ? 'bottom-21/20' : descPos === 's' ? 'top-21/20' : ''}`}
+          className={`text-pretty! ${descTopOrBottom ? 'max-w-9/10 absolute' : 'max-w-2/5'} ${descPos === 'n' ? 'bottom-21/20' : descPos === 's' ? 'top-21/20' : ''}`}
+          style={{ textWrap: 'balance' }}
         >
           <RichText
             data={img.description}
@@ -114,7 +115,7 @@ function PhoneImage(img: ProjectImage): ReactNode {
         }
       />
       {img.description && img.phoneConf.descPos && (
-        <figcaption className="max-w-9/10 mx-auto">
+        <figcaption className="max-w-9/10 mx-auto text-pretty!" style={{ textWrap: 'balance' }}>
           <RichText
             data={img.description}
             className="img-description"
