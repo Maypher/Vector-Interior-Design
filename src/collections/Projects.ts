@@ -140,9 +140,7 @@ export const Projects: CollectionConfig = {
           secret: PAYLOAD_SECRET,
         })
 
-        console.log(process.env.NEXT_PUBLIC_PAYLOAD_URL)
-
-        return `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/draft?${params.toString()}`
+        return `https://vectorinterior.design/draft?${params.toString()}`
       },
     },
   },

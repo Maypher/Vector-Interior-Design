@@ -36,7 +36,6 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     livePreview: {
-      url: process.env.NEXT_PUBLIC_PAYLOAD_URL,
       breakpoints: [
         {
           label: 'Móvil',
