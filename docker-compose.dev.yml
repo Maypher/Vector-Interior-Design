@@ -20,6 +20,8 @@ services:
       # "npm run payload migrate:create" isn't possible from within the host machine unless the port is exposed
       # and access throught localhost:5432 instead of postgres:5432
       - 5432:5432
+    volumes: !override
+      - pgdata_dev:/var/lib/postgresql/data
   nginx:
     develop:
       watch:
@@ -31,3 +33,6 @@ services:
           target: /etc/nginx/templates/
     ports:
       -  1001:443
+
+volumes:
+  pgdata_dev:
