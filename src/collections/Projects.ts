@@ -140,7 +140,9 @@ export const Projects: CollectionConfig = {
           secret: PAYLOAD_SECRET,
         })
 
-        return `/draft?${params.toString()}`
+        console.log(process.env.NEXT_PUBLIC_PAYLOAD_URL)
+
+        return `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/draft?${params.toString()}`
       },
     },
   },
