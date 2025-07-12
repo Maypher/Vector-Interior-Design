@@ -16,11 +16,11 @@ export const Conclusion: GlobalConfig = {
     livePreview: {
       url: ({ locale }) => {
         const params = new URLSearchParams({
-          path: `/${locale}/conclusion`,
+          path: `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/${locale}/conclusion`,
           secret: PAYLOAD_SECRET,
         })
 
-        return `/draft?${params.toString()}`
+        return `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/draft?${params.toString()}`
       },
     },
   },
