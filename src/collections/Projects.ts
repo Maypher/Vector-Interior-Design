@@ -133,15 +133,13 @@ export const Projects: CollectionConfig = {
   admin: {
     description: 'Sección principal de la página. Contiene todas las imagenes de una obra.',
     useAsTitle: 'name',
-    livePreview: {
-      url: ({ data, locale }) => {
-        const params = new URLSearchParams({
-          path: `${locale}/projects/${data.id}`,
-          secret: PAYLOAD_SECRET,
-        })
+    preview: (doc, { locale }) => {
+      const params = new URLSearchParams({
+        path: `${locale}/projects/${doc.id}`,
+        secret: PAYLOAD_SECRET,
+      })
 
-        return `/draft?${params.toString()}`
-      },
+      return `/draft?${params.toString()}`
     },
   },
   orderable: true,

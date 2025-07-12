@@ -13,15 +13,13 @@ export const Conclusion: GlobalConfig = {
   },
   admin: {
     description: 'Mesaje que aparece en la página de conclusión.',
-    livePreview: {
-      url: ({ locale }) => {
-        const params = new URLSearchParams({
-          path: `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/${locale}/conclusion`,
-          secret: PAYLOAD_SECRET,
-        })
+    preview: (_, { locale }) => {
+      const params = new URLSearchParams({
+        path: `${locale}/conclusion`,
+        secret: PAYLOAD_SECRET,
+      })
 
-        return `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/draft?${params.toString()}`
-      },
+      return `/draft?${params.toString()}`
     },
   },
   fields: [

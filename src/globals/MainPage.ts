@@ -13,15 +13,13 @@ const MainPage: GlobalConfig = {
   label: 'Página principal',
   admin: {
     description: 'Configuración de todas las imágenes que aparecerán en la página principal.',
-    livePreview: {
-      url: ({ locale }) => {
-        const params = new URLSearchParams({
-          path: `/${locale}/`,
-          secret: PAYLOAD_SECRET,
-        })
+    preview: (_, { locale }) => {
+      const params = new URLSearchParams({
+        path: `${locale}/`,
+        secret: PAYLOAD_SECRET,
+      })
 
-        return `/draft?${params.toString()}`
-      },
+      return `/draft?${params.toString()}`
     },
   },
   access: {

@@ -14,15 +14,13 @@ export const Sculptures: GlobalConfig = {
   },
   admin: {
     description: 'Una imágen que contiene una escultura.',
-    livePreview: {
-      url: ({ locale }) => {
-        const params = new URLSearchParams({
-          path: `/${locale}/sculptures`,
-          secret: PAYLOAD_SECRET,
-        })
+    preview: (_, { locale }) => {
+      const params = new URLSearchParams({
+        path: `${locale}/sculptures`,
+        secret: PAYLOAD_SECRET,
+      })
 
-        return `/draft?${params.toString()}`
-      },
+      return `/draft?${params.toString()}`
     },
   },
   fields: [
