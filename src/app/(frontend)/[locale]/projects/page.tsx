@@ -3,7 +3,6 @@ import config from '@/payload.config'
 import Carousel from '@/components/carousel'
 import { Suspense } from 'react'
 import { draftMode } from 'next/headers'
-import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Media } from '@/payload-types'
@@ -33,7 +32,6 @@ export default async function Page({ params }: { params: Promise<{ locale: 'es' 
   return (
     <Suspense>
       <Carousel projects={projects.docs} />
-      {isEnabled && <RefreshRouteOnSave />}
     </Suspense>
   )
 }

@@ -1,6 +1,5 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import symbol from '@public/images/symbol.svg'
 import whiteLogo from '@public/images/logoWhite.svg'
 import { RichText } from '@payloadcms/richtext-lexical/react'
@@ -24,7 +23,6 @@ export default async function Page({ params }: { params: Promise<{ locale: 'en' 
 
   return (
     <>
-      {isEnabled && <RefreshRouteOnSave />}
       <div className="set-header-screen bg-vector-grey min-h-150 relative flex items-center justify-evenly overflow-clip">
         <p
           className="text-vector-cream flex flex-col relative bottom-[12ch] text-xl font-thin italic leading-10 md:bottom-[4ch] md:text-4xl whitespace-pre"

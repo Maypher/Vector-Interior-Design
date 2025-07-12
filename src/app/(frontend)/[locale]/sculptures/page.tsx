@@ -5,7 +5,6 @@ import Image from '@/components/global/Image'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import ScrollToTop from '@/components/sculptures/ScrollToTop'
 import { draftMode } from 'next/headers'
-import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 
@@ -110,7 +109,6 @@ export default async function Sculptures({ params }: { params: Promise<{ locale:
 
   return (
     <div>
-      {isEnabled && <RefreshRouteOnSave />}
       {sculptures.sculptures?.slice(0, 1).map((sculpture) => (
         <div className="set-header-screen flex items-stretch justify-stretch" key={sculpture.id}>
           {sculpture.blockType === 'sculpture'

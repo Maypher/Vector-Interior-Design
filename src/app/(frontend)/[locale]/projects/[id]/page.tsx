@@ -4,7 +4,6 @@ import { Project, Media } from '@/payload-types'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { RichText } from '@payloadcms/richtext-lexical/react'
-import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import headersConverter from '@/lib/utils/converter'
 
 import { ReactNode } from 'react'
@@ -162,7 +161,6 @@ const Page = async ({ params }: Props) => {
 
   return (
     <div className="relative">
-      {draft && <RefreshRouteOnSave />}
       <div>
         {project.images?.slice(0, 1).map((img) => {
           // This is assured to be a single image due to backend validation

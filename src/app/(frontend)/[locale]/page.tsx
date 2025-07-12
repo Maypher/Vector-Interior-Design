@@ -1,7 +1,6 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { draftMode } from 'next/headers'
-import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import { MainPageImage, Media } from '@/payload-types'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -226,7 +225,6 @@ export default async function MainPage({ params }: Props) {
 
   return (
     <div className="grow flex flex-col justify-between">
-      {isEnabled && <RefreshRouteOnSave />}
       <div className="grow flex flex-col justify-between">
         {!mainPageImages.images || mainPageImages.images.length === 0 ? (
           <div className="grow flex items-center justify-center">En configuración</div>
