@@ -16,7 +16,7 @@ const MainPage: GlobalConfig = {
     livePreview: {
       url: ({ locale }) => {
         const params = new URLSearchParams({
-          path: `${locale}/`,
+          path: `/${locale}/`,
           secret: PAYLOAD_SECRET,
         })
 

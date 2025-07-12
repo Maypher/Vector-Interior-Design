@@ -16,7 +16,7 @@ export const Conclusion: GlobalConfig = {
     livePreview: {
       url: ({ locale }) => {
         const params = new URLSearchParams({
-          path: `${locale}/conclusion`,
+          path: `/${locale}/conclusion`,
           secret: PAYLOAD_SECRET,
         })
 

@@ -17,7 +17,7 @@ export const Sculptures: GlobalConfig = {
     livePreview: {
       url: ({ locale }) => {
         const params = new URLSearchParams({
-          path: `${locale}/sculptures`,
+          path: `/${locale}/sculptures`,
           secret: PAYLOAD_SECRET,
         })
 
