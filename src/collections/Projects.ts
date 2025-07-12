@@ -140,7 +140,7 @@ export const Projects: CollectionConfig = {
           secret: PAYLOAD_SECRET,
         })
 
-        return `https://vectorinterior.design/draft?${params.toString()}`
+        return `https://vectorinterior.design/${locale}/projects/${data.id}`
       },
     },
   },
