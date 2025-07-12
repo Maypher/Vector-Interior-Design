@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import Image from '@/components/global/Image'
 import logoWhite from '@public/images/logoWhite.svg'
 import { useTranslations } from 'next-intl'
 

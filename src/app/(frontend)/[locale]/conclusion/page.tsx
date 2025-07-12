@@ -5,7 +5,7 @@ import symbol from '@public/images/symbol.svg'
 import whiteLogo from '@public/images/logoWhite.svg'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { Link } from '@/i18n/navigation'
-import Image from 'next/image'
+import Image from '@/components/global/Image'
 import { draftMode } from 'next/headers'
 
 export const dynamic = 'error'
@@ -57,7 +57,7 @@ export default async function Page({ params }: { params: Promise<{ locale: 'en' 
           <Image
             src={whiteLogo}
             alt="Vector: Interior Design"
-            className="h-10 self-start md:self-center w-fit"
+            className="h-10 self-center bg-vector-grey w-fit"
           />
           <div className="bg-vector-orange -bottom-15 absolute right-0 h-2 w-8"></div>
         </div>

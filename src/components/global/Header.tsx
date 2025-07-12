@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import Image from '@/components/global/Image'
 import logo from '@public/images/logo.svg'
 import LanguageSelect from './LanguageSelect'
 import { useState, useEffect, useRef } from 'react'

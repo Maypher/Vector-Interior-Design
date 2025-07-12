@@ -1,7 +1,6 @@
 'use client'
 
-import Image from 'next/image'
-
+import Image from '@/components/global/Image'
 import '@styles/descriptions.scss'
 import logoWhite from '@public/images/logoWhite.svg'
 

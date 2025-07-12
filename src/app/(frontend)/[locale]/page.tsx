@@ -17,9 +17,8 @@ import { Link } from '@/i18n/navigation'
 
 import '@styles/descriptions.scss'
 import '@styles/nav.scss'
-import ImageSkeleton from '@/components/global/ImageSkeleton'
+import Image from '@/components/global/Image'
 import designer from '@public/images/tony.jpg'
-import Image from 'next/image'
 
 type MainPageImageType = NonNullable<MainPageImage['images']>[number]
 
@@ -78,9 +77,15 @@ function imageBlock(
               style={{ height: `${image.deskConfig.imgSize}svh` }}
               className="max-w-3/5 xl:max-w-11/20 2xl:max-w-full"
             >
-              <ImageSkeleton
-                image={image.image as Media}
-                sizes={`(min-width: 1280px) 55vw, (min-width: 1440px) 70vw, 60vw`}
+              <Image
+                src={imageFile.url!}
+                alt={imageFile.alt}
+                className="h-full w-auto object-contain"
+                width={imageFile.width!}
+                height={imageFile.height!}
+                placeholder="blur"
+                blurDataURL={imageFile.sizes!.loading!.url!}
+                sizes="(min-width: 1280px) 55vw, (min-width: 1440px) 70vw, 60vw"
               />
             </div>
             {image.description && descriptionPositionDesktop && (
@@ -102,9 +107,14 @@ function imageBlock(
             flexDirection: flexDirectionMobile,
           }}
         >
-          <ImageSkeleton
-            image={imageFile}
-            className="shrink"
+          <Image
+            src={imageFile.url!}
+            alt={imageFile.alt}
+            className="h-full w-auto object-contain shrink"
+            width={imageFile.width!}
+            height={imageFile.height!}
+            placeholder="blur"
+            blurDataURL={imageFile.sizes!.loading!.url!}
             sizes={overflowMobile ? '100vw' : '90vw'}
           />
           {image.description && descPosMobile && (
@@ -160,7 +170,16 @@ function navBlock(
           style={{ height: `${image.imgSize}%` }}
           className="relative max-xl:h-fit! max-xl:w-full lg:max-w-1/2 max-xl:max-w-none [&_img]:w-full!"
         >
-          <ImageSkeleton image={image.image as Media} sizes={`(max-width: 1024px) 100vw, 50vw`} />
+          <Image
+            src={imageFile.url!}
+            alt={imageFile.alt}
+            className="h-full w-auto object-contain"
+            width={imageFile.width!}
+            height={imageFile.height!}
+            placeholder="blur"
+            blurDataURL={imageFile.sizes!.loading!.url!}
+            sizes={`(max-width: 1024px) 100vw, 50vw`}
+          />
         </div>
 
         <ul className="flex items-center justify-center gap-5 p-5 text-xl lg:h-4/5">

@@ -1,7 +1,7 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Media, Sculpture } from '@/payload-types'
-import Image from 'next/image'
+import Image from '@/components/global/Image'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import ScrollToTop from '@/components/sculptures/ScrollToTop'
 import { draftMode } from 'next/headers'

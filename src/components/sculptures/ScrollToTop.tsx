@@ -1,5 +1,5 @@
 'use client'
-import Image from 'next/image'
+import Image from '@/components/global/Image'
 import logoWhite from '@public/images/logoWhite.svg'
 
 export default function ScrollToTop({ backgroundColor }: { backgroundColor?: string }) {

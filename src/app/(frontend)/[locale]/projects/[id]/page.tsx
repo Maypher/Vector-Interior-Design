@@ -8,7 +8,6 @@ import RefreshRouteOnSave from '@/components/admin/RefreshRouteOnSave'
 import headersConverter from '@/lib/utils/converter'
 
 import { ReactNode } from 'react'
-import ImageSkeleton from '@/components/global/ImageSkeleton'
 
 import '@styles/arrow.css'
 import '@styles/descriptions.scss'
@@ -16,8 +15,7 @@ import { Link } from '@/i18n/navigation'
 import { draftMode } from 'next/headers'
 import { Metadata } from 'next'
 import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
-import Image from 'next/image'
-
+import Image from '@/components/global/Image'
 interface Props {
   params: Promise<{
     locale: 'en' | 'es'
@@ -45,8 +43,12 @@ function DesktopImage(img: ProjectImage): ReactNode {
       style={{ flexDirection }}
     >
       {imageFile?.url ? (
-        <ImageSkeleton
-          image={imageFile}
+        <Image
+          src={imageFile.url!}
+          alt={imageFile.alt}
+          width={imageFile.width!}
+          height={imageFile.height!}
+          className="h-full w-auto object-contain"
           sizes={imageFile.width! <= imageFile.height! ? '40vw' : '70vw'}
           style={{ height: `${img.deskConf.imageSize}svh` }}
         />
@@ -209,10 +211,13 @@ const Page = async ({ params }: Props) => {
                 style={{ backgroundColor: image.bgColor }}
                 key={`${img.id}-mobile`}
               >
-                <ImageSkeleton
-                  image={imageFile}
-                  sizes={`(min-width: 1280px) 60vw, 75vw`}
-                  className="max-w-3/4 mx-auto xl:max-w-full md:h-80 md:w-auto"
+                <Image
+                  src={imageFile.url!}
+                  alt={imageFile.alt}
+                  width={imageFile.width!}
+                  height={imageFile.height!}
+                  className="max-w-3/4 mx-auto xl:max-w-full md:h-80 md:w-auto h-full w-auto object-contain"
+                  sizes="(min-width: 1280px) 60vw, 75vw"
                 />
 
                 <div className="px-8">
