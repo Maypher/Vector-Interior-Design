@@ -20,8 +20,6 @@ export const Conclusion: GlobalConfig = {
           secret: PAYLOAD_SECRET,
         })
 
-        console.log(params)
-
         return `/draft?${params.toString()}`
       },
     },
