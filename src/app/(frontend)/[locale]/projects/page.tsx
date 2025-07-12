@@ -64,7 +64,7 @@ export async function generateMetadata({
     metadataBase: new URL(process.env.NEXT_PUBLIC_PAYLOAD_URL || ''),
     title,
     openGraph: {
-      images: ogImage.url!,
+      images: ogImage?.url || '',
     },
   }
 }
