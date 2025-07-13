@@ -139,8 +139,8 @@ export default function Carousel({ projects }: Props) {
                     className="mx-auto w-fit flex-col items-start transition-transform hover:cursor-pointer flex"
                   >
                     <figure
-                      className="h-100 relative overflow-hidden"
-                      style={{ aspectRatio: '0.705' }}
+                      className="min-h-100 relative overflow-hidden"
+                      style={{ aspectRatio: '0.705', height: '50svh' }}
                     >
                       <Image
                         src={thumbnail.url!}

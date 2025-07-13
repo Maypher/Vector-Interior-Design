@@ -205,7 +205,7 @@ const Page = async ({ params }: Props) => {
                 </figcaption>
               </figure>
               <div
-                className="flex flex-col justify-evenly gap-y-20 py-20 lg:hidden"
+                className={`${image.phoneConf.imgAlign === 'overflow' ? '' : 'px-8'} flex flex-col justify-evenly gap-y-20 py-20 lg:hidden`}
                 style={{ backgroundColor: image.bgColor }}
                 key={`${img.id}-mobile`}
               >
@@ -214,7 +214,7 @@ const Page = async ({ params }: Props) => {
                   alt={imageFile.alt}
                   width={imageFile.width!}
                   height={imageFile.height!}
-                  className="max-w-3/4 mx-auto xl:max-w-full md:h-80 md:w-auto h-full w-auto object-contain"
+                  className="mx-auto xl:max-w-full h-auto object-contain"
                   sizes="(min-width: 1280px) 60vw, 75vw"
                 />
 
