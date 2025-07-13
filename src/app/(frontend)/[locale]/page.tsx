@@ -16,6 +16,7 @@ import { Link } from '@/i18n/navigation'
 
 import '@styles/descriptions.scss'
 import '@styles/nav.scss'
+import '@styles/homePage.scss'
 import Image from '@/components/global/Image'
 import designer from '@public/images/tony.jpg'
 

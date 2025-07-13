@@ -1,0 +1,26 @@
+.img-container:last-child {
+    padding-bottom: 8.75rem;
+}
+
+#next-link {
+    opacity: 0;
+    transition: transform 0.2s ease-in-out;
+    display: inline-block;
+    
+    &:hover {
+        transform: scale(1.1);
+    }
+
+    &.visible {
+        animation: fade-in 1s ease-out 0.5s 1 forwards;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

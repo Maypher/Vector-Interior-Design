@@ -5,12 +5,13 @@ import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import headersConverter from '@/lib/utils/converter'
+import NextProject from '@/components/nextProjects'
+import '@styles/project.scss'
 
 import { ReactNode } from 'react'
 
 import '@styles/arrow.css'
 import '@styles/descriptions.scss'
-import { Link } from '@/i18n/navigation'
 import { draftMode } from 'next/headers'
 import { Metadata } from 'next'
 import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
@@ -240,7 +241,7 @@ const Page = async ({ params }: Props) => {
             {project.images?.slice(1).map((img) => (
               <div
                 key={img.id}
-                className="min-h-svh flex items-center justify-center"
+                className="min-h-svh flex items-center justify-center img-container"
                 style={{
                   backgroundColor:
                     img.blockType === 'image'
@@ -255,10 +256,18 @@ const Page = async ({ params }: Props) => {
             ))}
           </div>
           <div className="block lg:hidden">
-            {project.images?.slice(1).map((img, i, arr) => (
+            {project.images?.slice(1).map((img) => (
               <div
                 key={img.id}
-                className={`${i === arr.length - 1 ? '[&>figure]:last:pb-50!' : ''}`}
+                className="img-container"
+                style={{
+                  backgroundColor:
+                    img.blockType === 'image'
+                      ? img.bgColor
+                      : img.blockType === 'imageGroup'
+                        ? img.images?.at(-1)?.bgColor
+                        : 'transparent',
+                }}
               >
                 {img.blockType === 'image'
                   ? PhoneImage(img)
@@ -268,13 +277,9 @@ const Page = async ({ params }: Props) => {
           </div>
         </>
       </div>
-      <Link
-        href={lastProject ? '/conclusion' : `/projects?project=${currentProjectIndex + 1}`}
-        className="absolute bottom-10 left-49/100 text-6xl font-bold"
-        id="arrow"
-      >
-        &gt;
-      </Link>
+      <div className="absolute bottom-18 left-1/2 -translate-x-1/2">
+        <NextProject next={lastProject ? 'conclusion' : project.id + 1} />
+      </div>
     </div>
   )
 }

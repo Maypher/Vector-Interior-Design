@@ -1,0 +1,14 @@
+#welcome figcaption {
+    opacity: 0;
+    animation: fade-text 1s ease-in-out 1 forwards;
+    animation-delay: 1s;
+}
+
+@keyframes fade-text {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

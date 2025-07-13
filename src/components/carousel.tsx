@@ -156,7 +156,7 @@ export default function Carousel({ projects }: Props) {
                         }}
                       />
                       <div className="img-overlay"></div>
-                      <figcaption className="font-Nexa uppercase font-bold text-center text-sm w-4/5 absolute z-20 top-1/2 left-1/2 bg-vector-black/40 -translate-1/2 border-1 border-vector-cream/30 p-2">
+                      <figcaption className="font-Nexa uppercase font-bold text-center text-sm w-4/5 absolute z-20 top-1/2 left-1/2 bg-vector-black/70 -translate-1/2 border-1 border-vector-cream/30 p-2">
                         {i + 1}. {name}
                       </figcaption>
                     </figure>
