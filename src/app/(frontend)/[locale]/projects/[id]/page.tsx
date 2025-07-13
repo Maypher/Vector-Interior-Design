@@ -169,6 +169,8 @@ const Page = async ({ params }: Props) => {
 
           if (!imageFile) return 'Imagen no seleccionada.'
 
+          const imageOverflow = image.phoneConf.imgAlign === 'overflow'
+
           return (
             <div key={img.id}>
               <figure
@@ -205,7 +207,7 @@ const Page = async ({ params }: Props) => {
                 </figcaption>
               </figure>
               <div
-                className={`${image.phoneConf.imgAlign === 'overflow' ? '' : 'px-8'} flex flex-col justify-evenly gap-y-20 py-20 lg:hidden`}
+                className={`${imageOverflow ? '' : 'px-8'} flex flex-col justify-evenly gap-y-20 py-20 lg:hidden`}
                 style={{ backgroundColor: image.bgColor }}
                 key={`${img.id}-mobile`}
               >
@@ -214,8 +216,8 @@ const Page = async ({ params }: Props) => {
                   alt={imageFile.alt}
                   width={imageFile.width!}
                   height={imageFile.height!}
-                  className="mx-auto xl:max-w-full h-auto object-contain"
-                  sizes="(min-width: 1280px) 60vw, 75vw"
+                  className="mx-auto w-full h-auto object-contain max-h-150"
+                  sizes={imageOverflow ? '100vw' : '95vw'}
                 />
 
                 <div className="px-8">
