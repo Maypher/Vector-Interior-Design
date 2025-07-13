@@ -3,7 +3,6 @@ import { Directions } from '@lib/selects'
 import { Project } from '@/payload-types'
 import { colorField } from '@/lib/utils/colors'
 import { revalidatePath } from 'next/cache'
-import { AssertionError, deepStrictEqual } from 'assert' // Validation always runs on the server so it's safe to use this
 import { routing } from '@/i18n/routing'
 import draftAccess from '@/lib/utils/access'
 import purgeURL from '@/lib/utils/purge'
@@ -273,7 +272,7 @@ export const Projects: CollectionConfig = {
   },
   hooks: {
     afterChange: [
-      async ({ doc, req, previousDoc }) => {
+      async ({ doc, req }) => {
         // Ignore draft updates
         // Only revalidate cache when a document has been published
         if (doc._status === 'published') {
@@ -285,27 +284,18 @@ export const Projects: CollectionConfig = {
             routing.locales.forEach(async (locale) => {
               revalidatePath(`/${locale}${updateURL}`)
               await purgeURL(`${locale}${updateURL}`) // Purge nginx cache
+
+              // Revalidate projects page in case name or thumbnail were changed
+              revalidatePath(`/${locale}/projects`)
+              await purgeURL(`${locale}/projects`)
             })
           else {
             revalidatePath(`/${updatedLocale}${updateURL}`)
             await purgeURL(`${updatedLocale}${updateURL}`)
-          }
 
-          // If either the thumbnail or project name was changed revalidate the projects page
-          // Using try...catch since deeepStrictEqual raises an AssertionError if the values don't match
-          try {
-            if (doc.name !== previousDoc.name) throw new AssertionError()
-            deepStrictEqual(doc.thumbnail, previousDoc.thumbnail)
-          } catch {
-            if (updatedLocale === 'all')
-              routing.locales.forEach(async (locale) => {
-                revalidatePath(`/${locale}/projects`)
-                await purgeURL(`${locale}/projects`)
-              })
-            else {
-              revalidatePath(`/${updatedLocale}/projects`)
-              await purgeURL(`${updatedLocale}/projects`)
-            }
+            // Revalidate projects page in case name or thumbnail were changed
+            revalidatePath(`/${updatedLocale}/projects`)
+            await purgeURL(`${updatedLocale}/projects`)
           }
         }
       },
