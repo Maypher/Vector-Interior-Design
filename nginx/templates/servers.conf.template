@@ -15,13 +15,13 @@ server {
 
         client_max_body_size 15M;
 
-        proxy_cache_key $uri;
-        proxy_cache vector_cache;
-        proxy_cache_valid 200 302 10m;
-        proxy_cache_valid 404 1m;
-        proxy_cache_valid any 1m;
-        proxy_cache_revalidate on;
-        proxy_cache_use_stale error timeout updating;
+        # proxy_cache_key $uri;
+        # proxy_cache vector_cache;
+        # proxy_cache_valid 200 302 10m;
+        # proxy_cache_valid 404 1m;
+        # proxy_cache_valid any 1m;
+        # proxy_cache_revalidate on;
+        # proxy_cache_use_stale error timeout updating;
     
         proxy_cache_bypass $http_cache_control;
 
