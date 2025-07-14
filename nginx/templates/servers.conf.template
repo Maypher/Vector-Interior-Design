@@ -15,7 +15,7 @@ server {
 
         client_max_body_size 15M;
 
-        proxy_cache_key $uri$is_args$args;
+        proxy_cache_key $uri;
         proxy_cache vector_cache;
         proxy_cache_valid 200 302 10m;
         proxy_cache_valid 404 1m;
@@ -23,7 +23,7 @@ server {
         proxy_cache_revalidate on;
         proxy_cache_use_stale error timeout updating;
     
-        proxy_cache_bypass $http_pragma $http_cache_control;
+        proxy_cache_bypass $http_cache_control;
 
         proxy_pass http://payload:3000;
     }
@@ -60,7 +60,7 @@ server {
     listen 1810;
 
     location ~ ^/purge(/.*) {
-        proxy_cache_purge vector_cache $1$is_args$args;
+        proxy_cache_purge vector_cache $1;
 
         return 200;
     }
