@@ -108,6 +108,6 @@ jobs:
             export DOMAIN="${{ vars.DOMAIN }}"
             export EMAIL_USER="${{ vars.EMAIL_USER }}"
             export SMTP_HOST="${{vars.SMTP_HOST}}"
-            docker compose up -d --no-build
+            docker compose up -d --no-build --force-recreate
             docker image prune -f
           "
