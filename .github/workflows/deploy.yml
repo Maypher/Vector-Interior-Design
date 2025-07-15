@@ -87,23 +87,23 @@ jobs:
           docker compose build
           docker image ls
           docker save -o payload.tar vector-portfolio-payload:latest
-          docker save -o nginx.tar vector-portfolio-nginx:latest
+          docker save -o varnish.tar vector-portfolio-varnish:latest
           pigz payload.tar
-          pigz nginx.tar
+          pigz varnish.tar
           rsync -aqc payload.tar.gz ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
-          rsync -aqc nginx.tar.gz ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
+          rsync -aqc varnish.tar.gz ${{ secrets.ssh_connection }}:~/vectorapp/vector-portfolio/
       - name: Pull changes
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.ssh_connection }} "
             cd ~/vectorapp/vector-portfolio
 
-            docker rmi -f vector-portfolio-nginx:latest
+            docker rmi -f vector-portfolio-varnish:latest
             docker rmi -f vector-portfolio-payload:latest
 
             docker load -q -i payload.tar.gz
-            docker load -q -i nginx.tar.gz
+            docker load -q -i varnish.tar.gz
             rm payload.tar.gz
-            rm nginx.tar.gz
+            rm varnish.tar.gz
 
             export DOMAIN="${{ vars.DOMAIN }}"
             export EMAIL_USER="${{ vars.EMAIL_USER }}"

@@ -1,6 +1,6 @@
 'use server'
 
-const purgePath = 'http://nginx:1810/purge'
+const purgePath = 'http://varnish'
 
 /**Purges the given path from the nginx cache*/
 export default async function purgeRoute(path: string) {

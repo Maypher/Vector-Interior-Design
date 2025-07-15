@@ -8,10 +8,8 @@ services:
           path: .
           target: /app
           ignore: 
-          - node_modules
-          - nginx
-    stdin_open: true
-    tty: true
+          - node_modules/
+          - varnish/
     environment:
       - NEXT_PUBLIC_PAYLOAD_URL=http://${DOMAIN:?Website domain required}
   postgres:
@@ -22,17 +20,14 @@ services:
       - 5432:5432
     volumes: !override
       - pgdata_dev:/var/lib/postgresql/data
-  nginx:
+  varnish:
+    ports:
+      - 1001:80
     develop:
       watch:
-        - action: sync+restart
-          path: ./nginx/nginx.conf
-          target: /etc/nginx/nginx.conf
-        - action: rebuild
-          path: ./nginx/templates
-          target: /etc/nginx/templates/
-    ports:
-      -  1001:443
+        - path: ./varnish
+          action: sync+restart
+          target: /etc/varnish/
 
 volumes:
   pgdata_dev:

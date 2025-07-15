@@ -25,19 +25,14 @@ services:
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
     secrets:
       - postgres-password
-  nginx:
-    image: vector-portfolio-nginx
-    build:
-      context: ./nginx
-      args:
-        ENABLED_MODULES: cachepurge
+  varnish:
+    image: vector-portfolio-varnish
+    build: ./varnish
     restart: unless-stopped
     depends_on:
       - payload
     ports:
-      -  127.0.0.1:1000:443
-    environment:
-      - NGINX_HOST=${DOMAIN:?Website domain required}
+      -  127.0.0.1:1000:80
 volumes:
   pgdata:
   images:
