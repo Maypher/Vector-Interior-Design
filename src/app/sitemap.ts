@@ -110,7 +110,7 @@ async function sitemap(): Promise<MetadataRoute.Sitemap> {
   projects?.docs.forEach((project) => {
     const path = `projects/${project.id}`
     sitemap.push({
-      url: `${baseURL}${path}`,
+      url: `${baseURL}/${path}`,
       alternates: alternateUrls(path),
       changeFrequency: 'yearly',
       priority: 0.4,
@@ -118,7 +118,9 @@ async function sitemap(): Promise<MetadataRoute.Sitemap> {
       images: project.images?.flatMap((image) =>
         image.blockType === 'image'
           ? `${baseURL}${(image.image as Media).url!}`
-          : image.images!.map((image) => `${baseURL}${(image.image as Media).url!}`),
+          : image.blockType === 'imageGroup'
+            ? image.images!.map((image) => `${baseURL}${(image.image as Media).url!}`)
+            : '',
       ),
     })
   })
