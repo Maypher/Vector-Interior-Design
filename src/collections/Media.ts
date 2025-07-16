@@ -40,7 +40,7 @@ export const Media: CollectionConfig = {
   },
   hooks: {
     afterChange: [
-      async ({ req, data }) => {
+      async ({ req, doc }) => {
         const payload = await getPayload({ config })
 
         // Determine if the image is a thumbnail of any project.
@@ -51,7 +51,7 @@ export const Media: CollectionConfig = {
           collection: 'project',
           where: {
             thumbnail: {
-              equals: data.id,
+              equals: doc.id,
             },
           },
           req,
