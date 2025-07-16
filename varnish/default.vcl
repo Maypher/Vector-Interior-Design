@@ -28,8 +28,8 @@ sub vcl_recv {
             return(synth(405, "Not allowed"));
         }
         return(purge);
-    } elseif (req.method == "POST") {
-        // Don't cache post requests
+    } elseif (req.method != "GET") {
+        // Don't cache non-GET requests
         return(pass);
     }
 
