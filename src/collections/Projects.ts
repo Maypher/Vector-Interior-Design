@@ -7,6 +7,7 @@ import { routing } from '@/i18n/routing'
 import draftAccess from '@/lib/utils/access'
 import purgeURL from '@/lib/utils/purge'
 import { PAYLOAD_SECRET } from '@/lib/secrets'
+import { ScrollingText } from '@/lib/payloadFields'
 
 // Extracting it from imageConfig since there's an extra field for groups so I add it manually when setting the schema
 const desktopConfig: Field = {
@@ -240,6 +241,7 @@ export const Projects: CollectionConfig = {
             },
           ],
         },
+        ScrollingText,
       ],
       validate: (imgs) => {
         const images = imgs as Project['images'] // Doing this because typing it in the function definition causes an error

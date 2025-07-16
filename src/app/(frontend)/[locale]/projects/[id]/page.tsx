@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import headersConverter from '@/lib/utils/converter'
 import NextProject from '@/components/nextProjects'
+import ScrollingText from '@/components/ScrollingText'
 import '@styles/project.scss'
 
 import { ReactNode } from 'react'
@@ -238,42 +239,75 @@ const Page = async ({ params }: Props) => {
         })}
         <>
           <div className="hidden lg:block">
-            {project.images?.slice(1).map((img) => (
-              <div
-                key={img.id}
-                className="min-h-svh flex items-center justify-center img-container"
-                style={{
-                  backgroundColor:
-                    img.blockType === 'image'
-                      ? img.bgColor
-                      : img.blockType === 'imageGroup'
-                        ? img.images?.at(-1)?.bgColor
-                        : 'transparent',
-                }}
-              >
-                {img.blockType === 'image' ? DesktopImage(img) : DesktopImageGroup(img)}
-              </div>
-            ))}
+            {project.images?.slice(1).map((img, i, arr) => {
+              const prevElement = arr.at(Math.max(i - 1, 0)) // To not cause it to wrap to -1
+              const previousElementColor =
+                prevElement?.blockType === 'image'
+                  ? prevElement.bgColor
+                  : prevElement?.blockType === 'imageGroup'
+                    ? prevElement.images?.at(-1)?.bgColor
+                    : 'transparent'
+
+              return (
+                <div
+                  key={img.id}
+                  className={`${img.blockType !== 'animatedText' ? 'min-h-svh' : ''} flex items-center justify-center img-container`}
+                  style={{
+                    backgroundColor:
+                      img.blockType === 'image'
+                        ? img.bgColor
+                        : img.blockType === 'imageGroup'
+                          ? img.images?.at(-1)?.bgColor
+                          : 'transparent',
+                  }}
+                >
+                  {img.blockType === 'image' ? (
+                    DesktopImage(img)
+                  ) : img.blockType === 'imageGroup' ? (
+                    DesktopImageGroup(img)
+                  ) : (
+                    <div style={{ backgroundColor: previousElementColor }}>
+                      <ScrollingText text={img.text} color={img.textColor} />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
           <div className="block lg:hidden">
-            {project.images?.slice(1).map((img) => (
-              <div
-                key={img.id}
-                className="img-container"
-                style={{
-                  backgroundColor:
-                    img.blockType === 'image'
-                      ? img.bgColor
-                      : img.blockType === 'imageGroup'
-                        ? img.images?.at(-1)?.bgColor
-                        : 'transparent',
-                }}
-              >
-                {img.blockType === 'image'
-                  ? PhoneImage(img)
-                  : img.images?.map((groupedImg) => PhoneImage(groupedImg as ProjectImageSingle))}
-              </div>
-            ))}
+            {project.images?.slice(1).map((img, i, arr) => {
+              const prevElement = arr.at(Math.max(i - 1, 0)) // To not cause it to wrap to -1
+              const previousElementColor =
+                prevElement?.blockType === 'image'
+                  ? prevElement.bgColor
+                  : prevElement?.blockType === 'imageGroup'
+                    ? prevElement.images?.at(-1)?.bgColor
+                    : 'transparent'
+              return (
+                <div
+                  key={img.id}
+                  className="img-container"
+                  style={{
+                    backgroundColor:
+                      img.blockType === 'image'
+                        ? img.bgColor
+                        : img.blockType === 'imageGroup'
+                          ? img.images?.at(-1)?.bgColor
+                          : 'transparent',
+                  }}
+                >
+                  {img.blockType === 'image' ? (
+                    PhoneImage(img)
+                  ) : img.blockType === 'imageGroup' ? (
+                    img.images?.map((groupedImg) => PhoneImage(groupedImg as ProjectImageSingle))
+                  ) : (
+                    <div style={{ backgroundColor: previousElementColor }}>
+                      <ScrollingText text={img.text} color={img.textColor} />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </>
       </div>

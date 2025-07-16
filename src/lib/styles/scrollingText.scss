@@ -1,0 +1,16 @@
+.scroll-text {
+    animation: scroll 5s linear infinite forwards;
+    display: inline-block;
+    will-change: transform;
+}
+
+// This works just fine in everything except firefox for some reason it
+// flickers when restarting.
+@keyframes scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(var(--scroll-amount));
+    }
+}

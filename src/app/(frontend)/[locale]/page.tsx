@@ -10,6 +10,7 @@ import { Metadata } from 'next'
 import ScrollToTopBtn from '@/components/mainPage/ScrollToTopBtn'
 import Footer from '@/components/mainPage/Footer'
 import NavLine from '@/components/mainPage/NavLine'
+import ScrollingText from '@/components/ScrollingText'
 
 import React from 'react'
 import { Link } from '@/i18n/navigation'
@@ -236,7 +237,10 @@ export default async function MainPage({ params }: Props) {
                 id="welcome"
                 className="header-screen flex flex-col lg:flex-row [&_figcaption]:flex [&_figcaption]:items-center [&_figcaption]:justify-center [&_figure]:pb-0! [&>div]:px-0! justify-stretch items-center grow lg:px-10 lg:mb-0"
                 key={image.id}
-                style={{ backgroundColor: image.bgColor }}
+                style={{
+                  backgroundColor:
+                    image.blockType !== 'animatedText' ? image.bgColor : 'transparent',
+                }}
               >
                 {image.blockType === 'image' && imageBlock(image)}
                 <ul
@@ -268,16 +272,24 @@ export default async function MainPage({ params }: Props) {
             )
           })
         )}
-        {mainPageImages.images?.slice(1).map((image) => {
+        {mainPageImages.images?.slice(1).map((image, i) => {
+          const scrollableText = image.blockType === 'animatedText'
+          const previousElement = mainPageImages.images?.slice(1).at(i - 1)
+          const previousColor =
+            previousElement?.blockType !== 'animatedText' ? previousElement?.bgColor : 'transparent'
+
           return (
             <div
-              style={{ backgroundColor: image.bgColor }}
+              style={{ backgroundColor: scrollableText ? previousColor : image.bgColor }}
               key={image.id}
-              className={`${image.blockType !== 'navigation' ? 'lg:min-h-svh' : ''} flex items-center`}
+              className={`${image.blockType !== 'navigation' && !scrollableText ? 'lg:min-h-svh' : ''} flex items-center`}
             >
               {image.blockType === 'image' && imageBlock(image)}
               {image.blockType === 'aboutUs' && aboutUsBlock(image)}
               {image.blockType === 'navigation' && navBlock(image, t('projects'), t('sculptures'))}
+              {image.blockType === 'animatedText' && (
+                <ScrollingText text={image.text} color={image.textColor} />
+              )}
             </div>
           )
         })}

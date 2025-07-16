@@ -31,7 +31,7 @@ export default async function RootLayout(props: Props) {
     <html lang={locale}>
       <body
         style={{ scrollbarGutter: 'stable', overflowY: 'scroll' }}
-        className={`${nexaFont.className} text-vector-cream bg-vector-black min-h-svh flex flex-col`}
+        className={`${nexaFont.className} text-vector-cream bg-vector-black min-h-svh flex flex-col overflow-x-clip`}
       >
         <NextIntlClientProvider>
           <Header />

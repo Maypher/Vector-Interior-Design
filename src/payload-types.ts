@@ -361,6 +361,19 @@ export interface Project {
         blockName?: string | null;
         blockType: 'imageGroup';
       }
+    | {
+        /**
+         * El texto a mostar moviendose a través de la pantalla
+         */
+        text?: string | null;
+        /**
+         * El color del texto
+         */
+        textColor: string;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'animatedText';
+      }
   )[];
   /**
    * La imágen que aparece en la lista de selección de proyectos.
@@ -550,6 +563,14 @@ export interface ProjectSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        animatedText?:
+          | T
+          | {
+              text?: T;
+              textColor?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   thumbnail?: T;
   updatedAt?: T;
@@ -710,6 +731,19 @@ export interface MainPageImage {
             id?: string | null;
             blockName?: string | null;
             blockType: 'navigation';
+          }
+        | {
+            /**
+             * El texto a mostar moviendose a través de la pantalla
+             */
+            text?: string | null;
+            /**
+             * El color del texto
+             */
+            textColor: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'animatedText';
           }
       )[]
     | null;
@@ -872,6 +906,14 @@ export interface MainPageImagesSelect<T extends boolean = true> {
               image?: T;
               imgSize?: T;
               bgColor?: T;
+              id?: T;
+              blockName?: T;
+            };
+        animatedText?:
+          | T
+          | {
+              text?: T;
+              textColor?: T;
               id?: T;
               blockName?: T;
             };

@@ -7,6 +7,7 @@ import { routing } from '@/i18n/routing'
 import { revalidatePath } from 'next/cache'
 import purgeRoute from '@/lib/utils/purge'
 import { PAYLOAD_SECRET } from '@/lib/secrets'
+import { ScrollingText } from '@/lib/payloadFields'
 
 const MainPage: GlobalConfig = {
   slug: 'mainPageImages',
@@ -213,6 +214,7 @@ const MainPage: GlobalConfig = {
             colorField,
           ],
         },
+        ScrollingText,
       ],
     },
   ],
