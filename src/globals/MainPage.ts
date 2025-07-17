@@ -228,18 +228,12 @@ const MainPage: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      async ({ req, doc }) => {
+      async ({ doc }) => {
         if (doc._status === 'published') {
-          const updatedLocale = req.locale
-          if (updatedLocale === 'all')
-            routing.locales.map(async (locale) => {
-              revalidatePath(`/${locale}`)
-              await purgeRoute(`${locale}`)
-            })
-          else {
-            revalidatePath(`/${updatedLocale}`)
-            await purgeRoute(`${updatedLocale}`)
-          }
+          routing.locales.map(async (locale) => {
+            revalidatePath(`/${locale}`)
+            await purgeRoute(`${locale}`)
+          })
         }
       },
     ],

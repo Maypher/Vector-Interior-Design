@@ -274,31 +274,24 @@ export const Projects: CollectionConfig = {
   },
   hooks: {
     afterChange: [
-      async ({ doc, req }) => {
+      async ({ doc }) => {
         // Ignore draft updates
         // Only revalidate cache when a document has been published
         if (doc._status === 'published') {
-          const updatedLocale = req.locale
           const updateURL = `/projects/${doc.id}`
 
-          // If all locales were updated then revalidate all languages otherwise only the updated locale
-          if (updatedLocale === 'all')
-            routing.locales.forEach(async (locale) => {
-              revalidatePath(`/${locale}${updateURL}`)
-              await purgeURL(`${locale}${updateURL}`) // Purge nginx cache
-
-              // Revalidate projects page in case name or thumbnail were changed
-              revalidatePath(`/${locale}/projects`)
-              await purgeURL(`${locale}/projects`)
-            })
-          else {
-            revalidatePath(`/${updatedLocale}${updateURL}`)
-            await purgeURL(`${updatedLocale}${updateURL}`)
+          // Revalidate all locales since when making changes not related
+          // to localization it only updates that locale instead of all.
+          // Revalidating everything (even if not needed) is an ease of use
+          // tradeoff.
+          routing.locales.forEach(async (locale) => {
+            revalidatePath(`/${locale}${updateURL}`)
+            await purgeURL(`${locale}${updateURL}`) // Purge nginx cache
 
             // Revalidate projects page in case name or thumbnail were changed
-            revalidatePath(`/${updatedLocale}/projects`)
-            await purgeURL(`${updatedLocale}/projects`)
-          }
+            revalidatePath(`/${locale}/projects`)
+            await purgeURL(`${locale}/projects`)
+          })
         }
       },
     ],

@@ -101,18 +101,12 @@ export const Sculptures: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      async ({ req, doc }) => {
+      async ({ doc }) => {
         if (doc._status === 'published') {
-          const updatedLocale = req.locale
-          if (updatedLocale === 'all')
-            routing.locales.map(async (locale) => {
-              revalidatePath(`/${locale}/sculptures`)
-              await purgeRoute(`${locale}/sculptures`)
-            })
-          else {
-            revalidatePath(`/${updatedLocale}/sculptures`)
-            await purgeRoute(`${updatedLocale}/sculptures`)
-          }
+          routing.locales.map(async (locale) => {
+            revalidatePath(`/${locale}/sculptures`)
+            await purgeRoute(`${locale}/sculptures`)
+          })
         }
       },
     ],

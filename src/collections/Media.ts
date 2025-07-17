@@ -59,15 +59,10 @@ export const Media: CollectionConfig = {
         })
 
         if (isThumbnail.totalDocs > 0) {
-          if (req.locale === 'all') {
-            routing.locales.forEach((locale) => {
-              revalidatePath(`/${locale}/projects`)
-              purgeRoute(`${locale}/projects`)
-            })
-          } else {
-            revalidatePath(`/${req.locale}/projects`)
-            purgeRoute(`${req.locale}/projects`)
-          }
+          routing.locales.forEach((locale) => {
+            revalidatePath(`/${locale}/projects`)
+            purgeRoute(`${locale}/projects`)
+          })
         }
       },
     ],

@@ -55,18 +55,12 @@ export const Conclusion: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      async ({ req, doc }) => {
+      async ({ doc }) => {
         if (doc._status === 'published') {
-          const updatedLocale = req.locale
-          if (updatedLocale === 'all')
-            routing.locales.map(async (locale) => {
-              revalidatePath(`/${locale}/conclusion`)
-              await purgeRoute(`${locale}/conclusion`)
-            })
-          else {
-            revalidatePath(`/${updatedLocale}/conclusion`)
-            await purgeRoute(`${updatedLocale}/conclusion`)
-          }
+          routing.locales.map(async (locale) => {
+            revalidatePath(`/${locale}/conclusion`)
+            await purgeRoute(`${locale}/conclusion`)
+          })
         }
       },
     ],
